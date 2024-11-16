@@ -69,7 +69,7 @@ int main(int argc, char const *argv[])
         
 
         // Appliquer la détection seulement toutes les 5 images
-        if (frame_count % 1 == 0) {
+        if (frame_count % 5 == 0) {
     
             hog.detectMultiScale(small_frame, detections);
 
