@@ -1,0 +1,25 @@
+Soumission d'un formulaire : change de page 
+<form action="main.cgi">
+<input type="text" name="data"/>
+
+<input name="dir" type="submit" value="N" />
+<input name="dir" type="submit" value="S" />
+<input name="dir" type="submit" value="E" />
+<input name="dir" type="submit" value="O" /> 
+</form>
+
+On peut envoyer des données à la page main.cgi SAns changer de page ! => en javascript 
+
+
+<input type="button" value="Envoyer" onclick="envoi();"/> 
+
+<script src="jquery.js"> </script>
+<script>
+function envoi() {
+	console.log("click sur envoyer");
+	// requete AJAX (Asynchronous JS & XML)
+	//$.get("main.cgi", "data=toto"); 
+	$.get("main.cgi", {data:"toto", dir:"N"}); 
+	
+}
+</script>

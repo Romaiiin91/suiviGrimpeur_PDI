@@ -8,7 +8,7 @@ LIBS+= -lcurl
 
 SRC = $(wildcard ./src/*.c)
 
-all: bin/main bin/mainDEBUG bin/detection bin/detectionDEBUG
+all: bin/main bin/mainDEBUG bin/detection bin/detectionDEBUG serveur
 
 bin/detection: src/detection.cpp
 	@g++ $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4`
@@ -28,6 +28,9 @@ bin/mainDEBUG: $(SRC)
 
 bin/positions: src/positions.c
 	@gcc $(CFLAGS) $^ -o $@ $(LIBS)
+
+serveur: serveur/main.c
+	@gcc $^ -o serveur/main.cgi
 
 clean:
 	@rm -f ./bin/*
