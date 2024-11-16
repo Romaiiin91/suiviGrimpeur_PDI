@@ -1,0 +1,354 @@
+<!--#set var="helpURL" val="javascript:launch('/help/transparency_h.shtml')" -->
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#set var="activeMenu" val="videoImage" -->
+<!--#set var="activePage" val="overlay" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<!--#include virtual="/java/chkbox.shtml" -->
+
+<script language="JavaScript">
+<!--
+var langObjOvlSet16;
+var submitOnce = false;
+
+function onInit()
+{
+  langObjOvlSet16 = new Language("videoImage_overlay", "ovl_settings_16");
+  langObjOvlSet16.init();
+}
+
+function globalLanguageVars()
+{
+  var color = langObjOvlSet16.getText("colTxt");
+  var colorArr = new Array();
+  colorArr[0] = {val: "solid", text: langObjOvlSet16.getText("opaqueTxt")};
+  colorArr[1] = {val: "halftransparent", text: langObjOvlSet16.getText("semTraTxt")};
+  colorArr[2] = {val: "transparent", text: langObjOvlSet16.getText("traTxt")};
+  
+  for(var i=1; i <= 16; i++)
+  {
+    document.getElementById("color"+i).innerHTML = color+"&nbsp;"+i;
+    langObjOvlSet16.addOptionsToList(document.getElementById("o_t"+i), colorArr);
+  }
+}
+// -->
+</script>
+
+</head>
+
+<body <!--#include virtual="/incl/bodytag.shtml" --> onload="onInit();">
+
+<!--#include virtual="/incl/top_incl2.shtml" -->
+
+<table border="<!--#echo var="zero" option="encoding:html" -->" cellpadding="<!--#echo var="cellpadding3" option="encoding:html" -->" cellspacing="<!--#echo var="zero" option="encoding:html" -->" width="100%" class="<!--#echo var="bgcolor1" option="encoding:html" -->">
+  <tr>
+    <td colspan="4" valign="top" class="topTitle">
+      <div align="left"><span id="transSetTxt"></span></div>
+    </td>
+    <td class="topTitle" align="right"><a href="<!--#echo var="helpURL" option="encoding:url" -->"><img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="hlpPic"></a></td>
+  </tr>
+</table>
+
+<form name="paletteForm" onSubmit="if (submitOnce) return false; else return submitOnce = true;" action="/axis-cgi/operator/create_overlay.cgi" method="POST">
+
+<table cellspacing="5">
+  <tr>
+    <td>
+      <table border="0" bgcolor="#FFFFFF">
+        <tr>
+          <td>
+            <table border="1">
+              <tr>
+                <td bgcolor="<!--#echo var="col1" option="encoding:html" -->">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+          <td width="45%" class="oddItem"><span id="color1"></span></td>
+          <td width="55%" class="oddItem">
+            <select name="o_t1" id="o_t1"></select>
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td>
+      <table border="0" bgcolor="#FFFFFF">
+        <tr>
+          <td>
+            <table border="1">
+              <tr>
+                <td bgcolor="<!--#echo var="col2" option="encoding:html" -->">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+          <td width="45%" class="oddItem"><span id="color2"></span></td>
+          <td width="55%" class="oddItem">
+            <select name="o_t2" id="o_t2"></select>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <table border="0" bgcolor="#FFFFFF">
+        <tr>
+          <td>
+            <table border="1">
+              <tr>
+                <td bgcolor="<!--#echo var="col3" option="encoding:html" -->">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+          <td width="45%" class="oddItem"><span id="color3"></span></td>
+          <td width="55%" class="oddItem">
+            <select name="o_t3" id="o_t3"></select>
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td>
+      <table border="0" bgcolor="#FFFFFF">
+        <tr>
+          <td>
+            <table border="1">
+              <tr>
+                <td bgcolor="<!--#echo var="col4" option="encoding:html" -->">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+          <td width="45%" class="oddItem"><span id="color4"></span></td>
+          <td width="55%" class="oddItem">
+            <select name="o_t4" id="o_t4"></select>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <table border="0" bgcolor="#FFFFFF">
+        <tr>
+          <td>
+            <table border="1">
+              <tr>
+                <td bgcolor="<!--#echo var="col5" option="encoding:html" -->">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+          <td width="45%" class="oddItem"><span id="color5"></span></td>
+          <td width="55%" class="oddItem"> 
+            <select name="o_t5" id="o_t5"></select>
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td>
+      <table border="0" bgcolor="#FFFFFF">
+        <tr>
+          <td>
+            <table border="1">
+              <tr>
+                <td bgcolor="<!--#echo var="col6" option="encoding:html" -->">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+          <td width="45%" class="oddItem"><span id="color6"></span></td>
+          <td width="55%" class="oddItem">
+            <select name="o_t6" id="o_t6"></select>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <table border="0" bgcolor="#FFFFFF">
+        <tr>
+          <td>
+            <table border="1">
+              <tr>
+                <td bgcolor="<!--#echo var="col7" option="encoding:html" -->">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+          <td width="45%" class="oddItem"><span id="color7"></span></td>
+          <td width="55%" class="oddItem">
+            <select name="o_t7" id="o_t7"></select>
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td>
+      <table border="0" bgcolor="#FFFFFF">
+        <tr>
+          <td>
+            <table border="1">
+              <tr>
+                <td bgcolor="<!--#echo var="col8" option="encoding:html" -->">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+          <td width="45%" class="oddItem"><span id="color8"></span></td>
+          <td width="55%" class="oddItem">
+            <select name="o_t8" id="o_t8"></select>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <table border="0" bgcolor="#FFFFFF">
+        <tr>
+          <td>
+            <table border="1">
+              <tr>
+                <td bgcolor="<!--#echo var="col9" option="encoding:html" -->">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+          <td width="45%" class="oddItem"><span id="color9"></span></td>
+          <td width="55%" class="oddItem">
+            <select name="o_t9" id="o_t9"></select>
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td>
+      <table border="0" bgcolor="#FFFFFF">
+        <tr>
+          <td>
+            <table border="1">
+              <tr>
+                <td bgcolor="<!--#echo var="col10" option="encoding:html" -->">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+          <td width="45%" class="oddItem"><span id="color10"></span></td>
+          <td width="55%" class="oddItem">
+            <select name="o_t10" id="o_t10"></select>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <table border="0" bgcolor="#FFFFFF">
+        <tr>
+          <td>
+            <table border="1">
+              <tr>
+                <td bgcolor="<!--#echo var="col11" option="encoding:html" -->">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+          <td width="45%" class="oddItem"><span id="color11"></span></td>
+          <td width="55%" class="oddItem">
+            <select name="o_t11" id="o_t11"></select>
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td>
+      <table border="0" bgcolor="#FFFFFF">
+        <tr>
+          <td>
+            <table border="1">
+              <tr>
+                <td bgcolor="<!--#echo var="col12" option="encoding:html" -->">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+          <td width="45%" class="oddItem"><span id="color12"></span></td>
+          <td width="55%" class="oddItem">
+            <select name="o_t12" id="o_t12"></select>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <table border="0" bgcolor="#FFFFFF">
+        <tr>
+          <td>
+            <table border="1">
+              <tr>
+                <td bgcolor="<!--#echo var="col13" option="encoding:html" -->">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+          <td width="45%" class="oddItem"><span id="color13"></span></td>
+          <td width="55%" class="oddItem">
+            <select name="o_t13" id="o_t13"></select>
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td>
+      <table border="0" bgcolor="#FFFFFF">
+        <tr>
+          <td>
+            <table border="1">
+              <tr>
+                <td bgcolor="<!--#echo var="col14" option="encoding:html" -->">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+          <td width="45%" class="oddItem"><span id="color14"></span></td>
+          <td width="55%" class="oddItem">
+            <select name="o_t14" id="o_t14"></select>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <table border="0" bgcolor="#FFFFFF">
+        <tr>
+          <td>
+            <table border="1">
+              <tr>
+                <td bgcolor="<!--#echo var="col15" option="encoding:html" -->">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+          <td width="45%" class="oddItem"><span id="color15"></span></td>
+          <td width="55%" class="oddItem">
+            <select name="o_t15" id="o_t15"></select>
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td>
+      <table border="0" bgcolor="#FFFFFF">
+        <tr>
+          <td>
+            <table border="1">
+              <tr>
+                <td bgcolor="<!--#echo var="col16" option="encoding:html" -->">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+          <td width="45%" class="oddItem"><span id="color16"></span></td>
+          <td width="55%" class="oddItem">
+            <select name="o_t16" id="o_t16"></select>
+          </td>
+        </tr>
+      </table>
+    </td>	
+  </tr>
+</table>
+
+<p></p>
+<input type="hidden" name="type" value="fourbits">
+<input type="hidden" name="ov_path" value="<!--#echo var="ov_path" option="encoding:html" -->">
+<center>
+<input type="submit" class="btnNormal" value="" width="75" id="saveBtn">
+<input type="reset" value="" name="undo" id="undoBtn" class="btnNormal" width="75">
+</center>
+
+</form>
+<!--#include virtual="/incl/bottom_incl.shtml" -->

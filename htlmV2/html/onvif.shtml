@@ -1,0 +1,254 @@
+<!--#set var="helpURL" val="javascript:launch('/help/onvif_users_h.shtml')" -->
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#set var="activeMenu" val="system" -->
+<!--#set var="activeMenu1" val="security" -->
+<!--#set var="activePage" val="onvif" -->
+<!--#include virtual="/incl/page_header.shtml" -->
+
+  <script src="/incl/soapclient.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->" language="javascript" type="text/javascript"></script>
+  <script src="/incl/select_input_class.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->" language="javascript" type="text/javascript"></script>
+
+  <script language="javascript" type="text/javascript">
+  <!--
+    var langObjOnvif;
+
+var _list_obj;
+
+function initSelect() 
+{
+  createSelect();
+  getUserList();
+}
+
+function createSelect() 
+{
+  var headers = [ langObjOnvif.getText("userNameTxt"),
+                  langObjOnvif.getText("userGroupTxt") ];
+  var colWidths = [ "190px", "210px" ];
+  var list_container = document.getElementById("idListContainer");
+  list_container.style.width = (190 + 210) + "px";
+  _list_obj = new select_input_class(list_container, headers);
+  _list_obj.setColumnWidths(colWidths);
+  _list_obj.setSortByColumn(1);
+  _list_obj.drawTable();
+}
+  
+    var emptyOptionAlertTxt;
+    var listColumns = new Array( 25, 30 );
+  
+    function onInit()
+    {
+      langObjOnvif = new Language("onvif_users", "onvif");
+      langObjOnvif.init();
+
+      emptyOptionAlertTxt = langObjOnvif.getText("selAlert");
+      initSelect();
+    }
+
+    var nameSpaces = new SOAPClientNS();
+    nameSpaces.add("tt", "http://www.onvif.org/ver10/schema" );
+    nameSpaces.add("tds", "http://www.onvif.org/ver10/device/wsdl" );
+    nameSpaces.add("tev", "http://www.onvif.org/ver10/event/wsdl" );
+    nameSpaces.add("ter", "http://www.onvif.org/ver10/error" );
+    nameSpaces.add("wsnt", "http://docs.oasis-open.org/wsn/b-2" );
+    var wsdlUrl = "/wsdl/onvif/devicemgmt.wsdl";
+    
+    function getUserList()
+    {
+      var params = new SOAPClientParameters();
+
+      var now = new Date();
+      var timestamp = "?timestamp="+now.getTime();
+      
+      var url = "/vapix/services"+timestamp;
+      var method = "tds:GetUsers";
+
+      SOAPClient.invoke( wsdlUrl, url, nameSpaces, method, params, true, loadUserList );
+    }
+
+    function loadUserList( responseObj )
+    {
+      _list_obj.selectedIndex = -1;
+      var isEmpty = true;
+      if( responseObj )
+      {
+        if( responseObj.name == "Error" )
+        {
+          var errorMsg = ( ( responseObj.description )?responseObj.description:(responseObj.fileName)?responseObj.fileName:responseObj.message );
+          alert( errorMsg );
+        }
+        else
+        {
+          var userArr = responseObj.User;
+          var len = userArr.length;
+          if( isNaN( len ) )
+          {
+            if( userArr.Username )
+            {
+              var name = userArr.Username;
+              var level;
+              
+              if(userArr.UserLevel == "Administrator")
+                level = langObjOnvif.getText("adminTxt");
+              else if(userArr.UserLevel == "Operator")
+                level = langObjOnvif.getText("oprTxt");
+              else
+                level = langObjOnvif.getText("usrTxt");
+              
+              var rowArr = [ name, level ];
+              _list_obj.addRow(rowArr, level + "#" + name,"");
+            }
+          }
+          else if( len > 0 )
+          {
+            isEmpty = false;
+            userArr.sort( sortUsers );
+            var name, level, rowArr;
+            for( var i = 0; i < len; i++ )
+            {
+              name = userArr[i].Username;
+              
+              if(userArr[i].UserLevel == "Administrator")
+                level = langObjOnvif.getText("adminTxt");
+              else if(userArr[i].UserLevel == "Operator")
+                level = langObjOnvif.getText("oprTxt");
+              else
+                level = langObjOnvif.getText("usrTxt");
+              
+              rowArr = [ name, level ];
+              _list_obj.addRow(rowArr, level + "#" + name,"");
+            }
+          }
+        }
+      }//if response
+
+      _list_obj.drawTable();
+    }
+
+    function sortUsers( firstItem, secondItem )
+    {
+      var retVal = 0;
+      if( firstItem.Username && firstItem.UserLevel && secondItem.Username && secondItem.UserLevel )
+      {
+        retVal = ( firstItem.UserLevel ).localeCompare( secondItem.UserLevel );
+        if( retVal == 0 )
+        {
+          retVal = ( firstItem.Username ).localeCompare( secondItem.Username );
+        }
+      }
+      return retVal;
+    }
+
+    function setupItem( action )
+    {
+      var itemBtn = document.getElementById( action+"Btn" );
+      itemBtn.disabled = true;
+
+      var url = "/operator/onvif_user_setup.shtml?doAction="+action;
+      if( action != "add" )
+      {
+        if( _list_obj.selectedIndex == -1 )
+        {
+          alert( emptyOptionAlertTxt );
+          itemBtn.disabled = false;
+          return;
+        }
+        var tmpArr = String(_list_obj.selectedValue).split("#");
+        url += "&userLevel="+tmpArr[0]+"&userName="+tmpArr[1];
+      }
+      var now = new Date();
+      openPopUp( url + '&timestamp=' + now.getTime(), 'OnvifUserSetup', 310 , 215);
+      itemBtn.disabled = false;
+    }
+  
+    function removeItem()
+    {
+      var itemBtn = document.getElementById( "removeBtn" );
+      itemBtn.disabled = true;
+
+      if( _list_obj.selectedIndex == -1 )
+      {
+        alert( emptyOptionAlertTxt );
+        itemBtn.disabled = false;
+        return;
+      }
+
+      var tmpArr = String(_list_obj.selectedValue).split("#");
+      var nameValue = tmpArr[1];
+      if( confirm( langObjOnvif.getText("remSerConfirm")+" \""+nameValue+"\"?"))
+      {
+        var params = new SOAPClientParameters();
+        params.add("Username", nameValue );
+
+        var now = new Date();
+        var timestamp = "?timestamp="+now.getTime();
+      
+        var url = "/vapix/services"+timestamp;
+        var method = "tds:DeleteUsers";
+
+        SOAPClient.invoke( wsdlUrl, url, nameSpaces, method, params, true, onRemoveItem );
+      }
+      else
+      {
+        itemBtn.disabled = false;
+      }
+    }
+
+    function onRemoveItem( responseObj )
+    {
+      if( responseObj )
+      {
+        if( responseObj.name == "Error" )
+        {
+          var errorMsg = ( ( responseObj.description )?responseObj.description:(responseObj.fileName)?responseObj.fileName:responseObj.message );
+          alert( errorMsg );
+          document.getElementById( "removeBtn" ).disabled = false;
+          return;
+        }
+      }//if response
+
+      document.getElementById( "removeBtn" ).disabled = false;
+      reloadList();
+    }
+
+    function reloadList()
+    {
+      _list_obj.selectedIndex = -1;
+      _list_obj.clear();
+      getUserList();
+    }
+
+    var AddBtnStatTxt;
+    var ModBtnStatTxt;
+    var RemBtnStatTxt;
+    function globalLanguageVars()
+    {
+      AddBtnStatTxt = langObjOnvif.getText("addBtnStatTxt");
+      ModBtnStatTxt = langObjOnvif.getText("modBtnStatTxt");
+      RemBtnStatTxt = langObjOnvif.getText("remBtnStatTxt");
+    }
+// -->
+</script>
+
+</head>
+<body onLoad="onInit();">
+  <!--#include virtual="/incl/page_top.shtml" -->
+
+  <h2><span id="onvifTxt"></span></h2>
+  
+  <a href="<!--#echo var="helpURL" option="encoding:url" -->" id="helpLink"><img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="hlpPic" /></a>
+
+  <div class="normal_text row"><span id="versionTxt"></span><br /><br /></div>
+
+  <h3><span id="liTxt"></span></h3>
+  <div class="normal_text">
+    <div id="idListContainer" class="selectList"></div>
+    <div class="listButtons">
+      <input type="button" value="" class="btnNormal" onclick="javascript:setupItem('add')" onmouseover="return showStatus(AddBtnStatTxt)" onmouseout="return showStatus('')" id="addBtn" />
+      <input type="button" value="" class="btnNormal" onclick="javascript:setupItem('modify');" onmouseover="return showStatus(ModBtnStatTxt)" onmouseout="return showStatus('')" id="modifyBtn" />
+      <input type="button" value="" class="btnNormal" onclick="javascript:removeItem()" onmouseover="return showStatus(RemBtnStatTxt)" onmouseout="return showStatus('')" id="removeBtn" />
+    </div>
+  </div>
+<!--#include virtual="/incl/page_footer.shtml" -->
+
+

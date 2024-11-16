@@ -1,0 +1,23 @@
+p                { font-size: 9px }
+a                { font-size: 9px }
+
+.cornerVideoBox .content img.hover { filter:alpha(opacity=80);}
+
+select.tiny{ width:40px;}
+select.smaller{ width:40px;}
+select.small{ width:75px;}
+select.medium{ width:150px;}
+select.large{ width:250px;}
+
+#pageFooter .footerMenu { font-size:1px; background: url(/pics/line_corner_r_box.gif) bottom left no-repeat; padding-top:7px; margin-left:7px; border-right:1px solid #ccc; width:176px; float:left;}
+#pageFooter .footerRight { font-size:1px; background: url(/pics/line_corner_r_box.gif) bottom right no-repeat; padding-top:7px; margin-left:183px; border-left:1px solid #ccc;}
+
+.cornerBox, 
+.cornerVideoBox	{ float:left; background: url(/pics/line_corner_r_box.gif) top right no-repeat;border: 0;margin:3px 3px;}
+.cornerBox .content, 
+.cornerVideoBox .content  { background: url(/pics/line_corner_l_box.gif) top left no-repeat;margin:0 0;padding:7px 1px;}
+.cornerBox .footerLeft,
+.cornerVideoBox .footerLeft   { float:none;clear:both;background: url(/pics/line_corner_l_box.gif) bottom left no-repeat; padding:0 0;}
+.cornerBox .footerRight,
+.cornerVideoBox .footerRight  { background: url(/pics/line_corner_r_box.gif) bottom right no-repeat; padding-top:7px; margin-left:7px;}
+

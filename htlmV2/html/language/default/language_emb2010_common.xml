@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+  <help_footer>
+    <hlpFotContTxt type="text" minor="0">Contents</hlpFotContTxt>
+    <hlpFotPrevTxt type="image" minor="0" imageid="prevFotPic">Previous Page</hlpFotPrevTxt>
+    <hlpFotNextTxt type="image" minor="0" imageid="nextFotPic">Next Page</hlpFotNextTxt>
+  </help_footer>
+
+  <help_top>
+		<hlpTopContTxt type="text" minor="0">Contents</hlpTopContTxt>
+		<hlpTopPrevTxt type="image" minor="0" imageid="prevTopPic">Previous Page</hlpTopPrevTxt>
+		<hlpTopNextTxt type="image" minor="0" imageid="nextTopPic">Next Page</hlpTopNextTxt>
+	</help_top>
+
+  <page_footer>
+	</page_footer>
+
+  <page_header>
+  </page_header>
+
+  <page_top>
+    <ptLViewTxt type="text" minor="0">Live View</ptLViewTxt>
+    <ptSetTxt type="text" minor="0">Setup</ptSetTxt>
+    <ptHelpTxt type="text" minor="0">Help</ptHelpTxt>
+  </page_top>
+
+  <popup_footer>
+	</popup_footer>
+
+  <popup_header>
+  </popup_header>
+
+  <popup_top>
+  </popup_top>
+</language_xml>

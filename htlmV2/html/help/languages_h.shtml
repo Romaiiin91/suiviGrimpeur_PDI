@@ -1,0 +1,62 @@
+<!--#set var="backButton" val="yes" -->
+<!--#set var="forwardButton" val="yes" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<script src="/incl/zxml.js" language="javascript" type="text/javascript"></script>
+<script src="/incl/xmlPrototypes.js" language="javascript" type="text/javascript"></script>
+<script src="/incl/language_incl.js" language="javascript" type="text/javascript"></script>
+<script language="JavaScript">
+<!--
+var langObjLLH = new Language("language_h", "languages_h");
+
+function globalLanguageVars()
+{
+	document.getElementById("titleId").innerHTML = langObjLLH.getText("titleTxt");
+}
+// -->
+</script>
+
+</head>
+<body onload="langObjLLH.init()">
+<!--#include virtual="/incl/helpTop_incl2.shtml" -->
+<table class="alternateRows" border="0" cellpadding="3" cellspacing="0" width="440" bgcolor="white">
+<!--#include virtual="/incl/helpTop_incl3.shtml" -->
+
+<tr>
+	<td colspan="2">
+		<span id="help1Txt1"></span><br></br>
+		<span id="help1Txt2"></span>
+		<span id="help1Txt4"></span><br></br>
+		<span id="help1Txt5"></span><br></br>
+		<span id="help1Txt6"></span><br></br>
+	</td>
+</tr>
+<tr>
+	<td colspan="2">
+		<span id="help4Txt1"></span>
+		<ul>
+			<li>
+				<span id="help4Txt2"></span>&nbsp;English.<br></br>
+			</li>
+			<li>
+				<span id="help4Txt3"></span><br></br>
+			</li>
+			<li>
+				<span id="help4Txt4"></span><br></br>
+			</li>
+			<li>
+				<span id="help4Txt5"></span>&nbsp;
+				<span id="help4Txt7"></span><br></br>
+			</li>
+			<li>
+				<span id="help4Txt8"></span>
+			</li>
+		</ul>
+		<br></br>
+	</td>
+</tr>
+
+</table>
+<!--#include virtual="/incl/helpBottom_incl.shtml" -->
+</body>
+</html>

@@ -1,0 +1,117 @@
+
+<!--#set var="id" val="send_snmp_trap" -->
+
+<!--#if expr="$action = scripts" -->
+  var langObjEvTySendSnmpTrap = new Language("event_types", "action_send_snmp_trap");
+  langObjEvTySendSnmpTrap.init(false, true);
+
+  var actionName = langObjEvTySendSnmpTrap.getText("astActionNameTxt");
+  var hideAction = false;
+  var isPTZAction = false;
+
+  addToActionMaps( "com.axis.action.fixed.snmp.trap", "<!--#echo var="id" option="encoding:javascript" -->", actionName, hideAction, isPTZAction );
+  addToActionMaps( "com.axis.action.unlimited.snmp.trap", "<!--#echo var="id" option="encoding:javascript" -->", actionName, hideAction, isPTZAction );
+
+  <!--#if expr="$map_only != yes" -->
+    function init_<!--#echo var="id" option="encoding:javascript" -->( actionTypeId, configParamArr )
+    {
+      if( configParamArr )
+      {
+        if( configParamArr["alarm_name"] && configParamArr["alarm_name"] == "General Trap" )
+        {
+          document.getElementById("<!--#echo var="id" option="encoding:javascript" -->_alarm_text").value = configParamArr["alarm_text"];
+        }
+      }
+    }
+
+    function lengthInUtf8Bytes(str) {
+      var m = encodeURIComponent(str).match(/%[89ABab]/g);
+      return str.length + (m ? m.length : 0);
+    }
+
+    <!--#if expr="$id = send_snmp_trap" -->
+    function validate_<!--#echo var="id" option="encoding:javascript" -->(actionTypeId) {
+      var oTxt = document.getElementById("<!--#echo var="id" option="encoding:javascript" -->_alarm_text");
+      var txt = oTxt.value.trim();
+      if( lengthInUtf8Bytes(txt) > 80 ) {
+        alert( langObjEvTySendSnmpTrap.getText("astInvalidTxtLength") );
+        oTxt.focus();
+        return false;
+      }
+      return true;
+    }
+    <!--#else -->
+    function validate_<!--#echo var="id" option="encoding:javascript" -->( actionTypeId )
+    {
+      var oTxt = document.getElementById("<!--#echo var="id" option="encoding:javascript" -->_alarm_text");
+      var txt = oTxt.value;
+      if( txt.length > 80 )
+      {
+        alert( langObjEvTySendSnmpTrap.getText("astInvalidTxtLength") );
+        oTxt.focus();
+        return false;
+      }
+      var re = /[^\x20-\x7E]/gi;
+      if( re.test(txt) )
+      {
+        alert( langObjEvTySendSnmpTrap.getText("astInvalidChars") );
+        oTxt.focus();
+        return false;
+      }
+      return true;
+    }
+    <!--#endif -->
+
+    function is_action_while_active<!--#echo var="id" option="encoding:javascript" -->()
+    {
+      var filter = getSelectedTopicFilter();
+      return filter.isCondition;
+    }
+
+    function setup_save_<!--#echo var="id" option="encoding:javascript" -->( actionTypeId )
+    {
+      var returnObj = new Object();
+      if( is_action_while_active<!--#echo var="id" option="encoding:javascript" -->() )
+        returnObj.TemplateToken = "com.axis.action.unlimited.snmp.trap";
+      else
+        returnObj.TemplateToken = "com.axis.action.fixed.snmp.trap";
+      returnObj.Name = actionTemplateMap[ returnObj.TemplateToken ].name;
+
+      var paramArray = new Array();
+      <!--#if expr="$id = send_snmp_trap" -->
+      var txt = document.getElementById("<!--#echo var="id" option="encoding:javascript" -->_alarm_text").value.trim();
+      <!--#else -->
+      var txt = document.getElementById("<!--#echo var="id" option="encoding:javascript" -->_alarm_text").value;
+      <!--#endif -->
+      paramArray.push( new Parameter( "alarm_name", "General Trap" ) );
+      paramArray.push( new Parameter( "alarm_text", txt ) );
+
+      returnObj.Parameters = paramArray;
+
+      return returnObj;
+    }
+  <!--#endif -->
+
+<!--#elif expr="$action = render" -->
+  
+  <!--#if expr="_$prefix != _" -->
+    <!--#set var="id" val="$prefix$_snmp_trap" -->
+  <!--#endif -->
+
+  <div id="div_<!--#echo var="id" option="encoding:javascript" -->" class="actionContainer">
+    <div class="row">
+      <label for="<!--#echo var="id" option="encoding:html" -->_alarm_text"><span id="<!--#echo var="id" option="encoding:javascript" -->_alarm_text_label"></span></label>
+      <input type="text" id="<!--#echo var="id" option="encoding:html" -->_alarm_text" class="large" maxlength="80">
+    </div>
+  </div>
+  <script language="javascript" type="text/javascript">
+  <!--
+    var langObjEvTySendSnmpTrapRender = new Language("event_types", "action_send_snmp_trap");
+    langObjEvTySendSnmpTrapRender.init(false, true);
+    
+    document.getElementById("<!--#echo var="id" option="encoding:javascript" -->_alarm_text_label").innerHTML = langObjEvTySendSnmpTrapRender.getText("astTrapTextTxt"); 
+  // -->
+  </script>
+<!--#else -->
+  ERROR: Missing parameter.
+<!--#endif -->

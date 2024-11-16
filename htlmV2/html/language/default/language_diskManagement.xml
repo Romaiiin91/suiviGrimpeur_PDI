@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+
+  <diskInfo>
+    <pageTitle type="title" minor="0">System Options/Storage/Disk Management</pageTitle>
+    <loadingTxt type="msgAsText" minor="0">Loading disk status list. Please wait...</loadingTxt>
+    <sdCardTxt type="msgAsText" minor="0">SD Card</sdCardTxt>
+    <sdCard2Txt type="msgAsText" minor="0">SD Card 2</sdCard2Txt>
+    <nsTxt type="msgAsText" minor="0">Network Share</nsTxt>
+    <mountedTxt type="msgAsText" minor="0">ready</mountedTxt>
+    <notMountedSDTxt type="msgAsText" minor="0">unmounted</notMountedSDTxt>
+    <notPresentSDTxt type="msgAsText" minor="0">no card</notPresentSDTxt>
+    <failTxt type="msgAsText" minor="0">failed</failTxt>
+    <illegalTxt type="msgAsText" minor="0">illegal</illegalTxt>
+    <unmountTxt type="msgAsText" minor="0">Unmount</unmountTxt>
+    <mountTxt type="msgAsText" minor="0">Mount</mountTxt>
+    <notMountedNSTxt type="msgAsText" minor="0">disconnected</notMountedNSTxt>
+    <notPresentNSTxt type="msgAsText" minor="0">not defined</notPresentNSTxt>
+    <disconnectTxt type="msgAsText" minor="0">Disconnect</disconnectTxt>
+    <connectTxt type="msgAsText" minor="0">Connect</connectTxt>
+    <connOnlineTxt type="msgAsText" minor="0">online</connOnlineTxt>
+    <connOfflineTxt type="msgAsText" minor="0">offline</connOfflineTxt>
+    <readonlyTxt type="msgAsText" minor="0">read only</readonlyTxt>
+    <thDiMuBeUnlAlrt type="alert" minor="0">The disk must be unlocked before it can be formatted.</thDiMuBeUnlAlrt>
+    <foWiErShCnfrm type="alert" minor="0">Formating will erase all camera controlled storage data connected to this share.&#10;Are you sure you want to clear the disk?</foWiErShCnfrm>
+    <clearProgressTxt type="msgAsText" minor="0">Clearing share. Please wait...</clearProgressTxt>
+    <clearFaAlert type="msgAsText" minor="0">Clear failed:</clearFaAlert>
+    <formatProgressTxt type="msgAsText" minor="0">Format disk. Please wait...</formatProgressTxt>
+    <formatFaAlert type="msgAsText" minor="0">Format failed:</formatFaAlert>
+    <sDWithVFatRepairAlert type="alert" minor="0">This SD card has a vFAT file system. Repair is not supported for this file system.&#10;&#10;See online help for more information.</sDWithVFatRepairAlert>
+    <thDiMuBeUnlRepairAlrt type="alert" minor="0">The disk must be unlocked before it can be repaired.</thDiMuBeUnlRepairAlrt>
+    <thDiMuBeUnmRepairAlrt type="alert" minor="0">The disk must be unmounted before it can be repaired.</thDiMuBeUnmRepairAlrt>
+    <repairCnfrm type="alert" minor="0">Repairing the disk might erase data on the disk.&#10;Are you sure you want to repair the disk?</repairCnfrm>
+    <repairProgressTxt type="msgAsText" minor="0">Repairing. Please wait...</repairProgressTxt>
+    <repairFaAlert type="alert" minor="0">Repair failed:</repairFaAlert>
+    <thDiMuBeUnlCheckAlrt type="alert" minor="0">The disk must be unlocked before it can be checked.</thDiMuBeUnlCheckAlrt>
+    <thDiMuBeUnmCheckAlrt type="alert" minor="0">The disk must be unmounted before it can be checked.</thDiMuBeUnmCheckAlrt>
+    <checkProgressTxt type="msgAsText" minor="0">Checking the disk. Please wait...</checkProgressTxt>
+    <checkFaAlert type="alert" minor="0">Check disk failed:</checkFaAlert>
+    <disconnectProgressTxt type="msgAsText" minor="0">Disconnecting. Please wait...</disconnectProgressTxt>
+    <disconnectFaAlert type="alert" minor="0">Disconnect failed:</disconnectFaAlert>
+    <unmountProgressTxt type="msgAsText" minor="0">Unmounting. Please wait...</unmountProgressTxt>
+    <unmountFaAlert type="alert" minor="0">Unmount failed:</unmountFaAlert>
+    <connectProgressTxt type="msgAsText" minor="0">Connecting. Please wait...</connectProgressTxt>
+    <connectFaAlert type="alert" minor="0">Connect failed:</connectFaAlert>
+    <mountProgressTxt type="msgAsText" minor="0">Mounting. Please wait...</mountProgressTxt>
+    <mountFaAlert type="alert" minor="0">Mount failed:</mountFaAlert>
+    <errorCouldNotMountDiskAlrt type="alert" minor="0">Could not mount disk.</errorCouldNotMountDiskAlrt>
+    <errorCouldNotUnmountDiskAlrt type="alert" minor="0">Could not unmount disk.</errorCouldNotUnmountDiskAlrt>
+    <errorNoSuchHostname type="alert" minor="0">No such hostname.</errorNoSuchHostname>
+    <errorWhileMountingNSAlrt type="alert" minor="0">Error while mounting network share.</errorWhileMountingNSAlrt>
+    <errorInternalErrorWhileMountingNSAlrt type="alert" minor="0">Internal error while mounting network share.</errorInternalErrorWhileMountingNSAlrt>
+    <errorTooManyTestsStartedAlrt type="alert" minor="0">Too many tests started, wait for some to finish.</errorTooManyTestsStartedAlrt>
+    <errorProblemWritingToShareAlrt type="alert" minor="0">Problem writing to share.</errorProblemWritingToShareAlrt>
+    <errorProblemReadingDataWrittenToShareAlrt type="alert" minor="0">Problem reading data written to share.</errorProblemReadingDataWrittenToShareAlrt>
+    <errorProblemConnectingToShareAlrt type="alert" minor="0">Problem connecting to share.</errorProblemConnectingToShareAlrt>
+    <errorInvalidPortAlrt type="alert" minor="0">Invalid port parameter.</errorInvalidPortAlrt>
+    <errorGeneralAlrt type="alert" minor="0">An error occurred while processing the request.</errorGeneralAlrt>
+    <autfrmFsTxt type="msgAsText" minor="0">Autoformat filesystem differs from disk filesystem</autfrmFsTxt>
+    <jobUnknown type="alert" minor="0">unknown error</jobUnknown>
+    <checkDiskError type="alert" minor="0">Check disk completed, errors found:</checkDiskError>
+    <checkDiskError2 type="alert" minor="0">You can try to correct the disk by doing a repair&#10;or format the disk.</checkDiskError2>
+    <checkDiskOK type="alert" minor="0">Check disk completed:</checkDiskOK>
+    <statusOKTxt type="alert" minor="0">OK.</statusOKTxt>
+    <unrecFiSystTxt type="alert" minor="0">This SD card has an unrecognized file system.</unrecFiSystTxt>
+    <errorDiskContainsErrors type="alert" minor="0">The SD card contains errors</errorDiskContainsErrors>
+    <formatFailedTxt type="alert" minor="0">Error while formating SD card</formatFailedTxt>
+    <tryMountAlrt type="alert" minor="0">. Will try to mount the card again</tryMountAlrt>
+    <autFrmAndLockCfrm type="alert" minor="0">Your card is locked and/or in read only mode&#10;This will probably cause autoformatting to fail.&#10;&#10;Are you sure you want to continue?</autFrmAndLockCfrm>
+    <autfrmNote1Cfrm type="alert" minor="0">Autoformat has been choosen.&#10;Note that any card not using</autfrmNote1Cfrm>
+    <autfrmNote2Cfrm type="alert" minor="0">will be formatted.&#10;&#10;Are you sure you want to continue?</autfrmNote2Cfrm>
+    <specVal1Alrt type="alert" minor="0">Specify a value between 100 and</specVal1Alrt>
+    <specVal2Alrt type="alert" minor="0">Specify a value between 1 and 999.</specVal2Alrt>
+    <reallyRemoveAlrt type="alert" minor="0">This will remove the Network Share permanently.&#10;Are you sure you want to continue?</reallyRemoveAlrt>
+    <missReqParamAlert type="alert" minor="0">Missing required parameter</missReqParamAlert>
+    <illegalHostAlert type="alert" minor="0">Illegal host name</illegalHostAlert>
+    <comaPassAlert type="alert" minor="0">',' character can't be used in Network Share's password field</comaPassAlert>
+    <progressTxt type="msgAsText" minor="0">Testing connection. Please wait...</progressTxt>
+    <testOKTxt type="alert" minor="0">Test OK!</testOKTxt>
+    <testFailedTxt type="alert" minor="0">Test failed:</testFailedTxt>
+    <testBtnStatTxt type="msg" minor="0">Test connection</testBtnStatTxt>
+    <mountBtnStatTxt type="msg" minor="0">Mount or unmount drive</mountBtnStatTxt>
+    <checkBtnStatTxt type="msg" minor="0">Check file system</checkBtnStatTxt>
+    <repairBtnStatTxt type="msg" minor="0">Repair file system</repairBtnStatTxt>
+    <clearBtnStatTxt type="msg" minor="0">Clear the share</clearBtnStatTxt>
+    <formatBtnStatTxt type="msg" minor="0">Format drive</formatBtnStatTxt>
+    <okBtnStatTxt type="msg" minor="0">Save the disk management settings</okBtnStatTxt>
+    <cancelBtnStatTxt type="msg" minor="0">Revert to last saved settings and close window</cancelBtnStatTxt>
+    <headerTxt type="text" minor="0">Storage Management</headerTxt>
+    <hlpTxt type="image" minor="0" imageid="hlpPic">Click here for help on this page</hlpTxt>
+    <nsHostTxt type="text" minor="0">Host:</nsHostTxt>
+    <nsShareTxt type="text" minor="0">Share:</nsShareTxt>
+    <nsReqCredentialsTxt type="text" minor="0">The share requires login</nsReqCredentialsTxt>
+    <nsUserNameTxt type="text" minor="0">User name:</nsUserNameTxt>
+    <nsPasswordTxt type="text" minor="0">Password:</nsPasswordTxt>
+    <filesystemTxt type="text" minor="0">File system:</filesystemTxt>
+    <statusTxt type="text" minor="0">Status:</statusTxt>
+    <toolsTxt type="text" minor="0">Storage Tools</toolsTxt>
+    <removeBtn type="button" minor="0" buttonid="storageManRemoveBtn">Remove</removeBtn>
+    <formatTxt type="button" minor="0" buttonid="storageManFormatBtn">Format...</formatTxt>
+    <checkTxt type="button" minor="0" buttonid="storageManCheckBtn">Check disk</checkTxt>
+    <repairTxt type="button" minor="0" buttonid="storageManRepairBtn">Repair</repairTxt>
+    <clearTxt type="button" minor="0" buttonid="storageManClearBtn">Clear</clearTxt>
+    <testTxt type="button" minor="0" buttonid="storageManTestBtn">Test</testTxt>
+    <genSetTxt type="text" minor="0">General Settings</genSetTxt>
+    <maxNumRecTxt type="text" minor="0">Maximum number of recordings:</maxNumRecTxt>
+    <reRoOlThTxt type="text" minor="0">Remove recordings older than:</reRoOlThTxt>
+    <dayTxt type="msgAsText" minor="0">days</dayTxt>
+    <weekTxt type="msgAsText" minor="0">weeks</weekTxt>
+    <lockTxt type="text" minor="0">Lock (write protection)</lockTxt>
+    <autoFrmToTxt type="text" minor="0">Autoformat to:</autoFrmToTxt>
+    <okBtn type="button" minor="0" buttonid="storageMan_saveBtn">Ok</okBtn>
+    <cancelBtn type="button" minor="0" buttonid="storageMan_resetBtn">Cancel</cancelBtn>
+  </diskInfo>
+  
+  <format_filesystem>
+    <pageTitle type="title" minor="0">System Options/Storage/Disk Management/SD Card/Format</pageTitle>
+    <formatTxt type="text" minor="0">Format</formatTxt>
+    <waFoErAllRecText type="text" minor="0">Warning! Formating will erase all data on the disk. All recordings will be lost.</waFoErAllRecText>
+    <fsTxt type="text" minor="0">File system:</fsTxt>
+    <vfatTxt type="msgAsText" minor="0">vfat (default)</vfatTxt>
+    <ext4Txt type="msgAsText" minor="0">ext4 (recommended)</ext4Txt>
+    <okBtn type="button" minor="0" buttonid="format_okBtn">OK</okBtn>
+    <cancelBtn type="button" minor="0" buttonid="format_cancelBtn">Cancel</cancelBtn>
+  </format_filesystem>
+  
+  <storageList>
+    <pageTitle type="title" minor="0">System Options/Storage/Storage Overview</pageTitle>
+    <sdCardTxt type="msgAsText" minor="0">SD Card</sdCardTxt>
+    <sdCard2Txt type="msgAsText" minor="0">SD Card 2</sdCard2Txt>
+    <nSTxt type="msgAsText" minor="0">Network Share</nSTxt>
+    <notPresentNSTxt type="msgAsText" minor="0">not defined</notPresentNSTxt>
+    <mountedTxt type="msgAsText" minor="0">ready</mountedTxt>
+    <readonlyTxt type="msgAsText" minor="0">read only</readonlyTxt>
+    <notMountedNSTxt type="msgAsText" minor="0">online/offline</notMountedNSTxt>
+    <notMountedSDTxt type="msgAsText" minor="0">unmounted</notMountedSDTxt>
+    <notPresentSDTxt type="msgAsText" minor="0">no card</notPresentSDTxt>
+    <failTxt type="msgAsText" minor="0">failed</failTxt>
+    <tBTxt type="msgAsText" minor="0">TB</tBTxt>
+    <gBTxt type="msgAsText" minor="0">GB</gBTxt>
+    <mBTxt type="msgAsText" minor="0">MB</mBTxt>
+    <kBTxt type="msgAsText" minor="0">kB</kBTxt>
+    <title type="text" minor="0">Storage Overview</title>
+    <hlpTxt type="image" minor="0" imageid="hlpPic">Click here for help on this page</hlpTxt>
+    <subTitle type="text" minor="0">Camera Controlled Storage</subTitle>
+    <typeTxt type="text" minor="0">Type</typeTxt>
+    <statusTxt type="text" minor="0">Status</statusTxt>
+    <usedTxt type="text" minor="0">Total size</usedTxt>
+    <nameTxt type="text" minor="0">Used space</nameTxt>
+  </storageList>
+</language_xml>

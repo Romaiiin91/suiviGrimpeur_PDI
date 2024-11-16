@@ -1,0 +1,1648 @@
+<!--#set var="helpURL" val="javascript:launch('/help/recordingList_h.shtml')" -->
+<!--#set var="WizardFormAction" val="noAction" -->
+
+<!--#set var="activeMenu" val="recordings" -->
+<!--#set var="activePage" val="recordingList" -->
+
+<!--#include virtual="/sm/sm.srv?action=get&group=Properties.LocalStorage.LocalStorage,Properties.LocalStorage.ContinuousRecording,Storage" -->
+
+<!--#if expr="_$maxnumberofresults = _" -->
+  <!--#set var="maxnumberofresults" val="20" -->
+<!--#endif -->
+
+<!--#if expr="_$startatresultnumber = _" -->
+  <!--#set var="startatresultnumber" val="0" -->
+<!--#endif -->
+
+<!--#if expr="_$recordingid = _" -->
+  <!--#if expr="_$beforetime = _" -->
+    <!--#if expr="_$aftertime = _" -->
+      <!--#set var="recordingid" val="all" -->
+    <!--#endif -->
+  <!--#endif -->
+<!--#endif -->
+
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<style type="text/css">
+
+select.list {
+
+  color: #000;
+  font-family: Courier New;
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.inputFixedWidth {
+
+  width: 120px;
+}
+
+
+</style>
+
+<script src="/incl/select_input_class.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->" language="javascript" type="text/javascript"></script>
+
+<!--#include virtual="/incl/wait.shtml" -->
+
+<!--#if expr="$root_Properties_LocalStorage_LocalStorage = yes" -->
+  <!--#include virtual="/operator/JS_recTimeZone.shtml" -->
+<!--#endif -->
+
+<script language="javascript" type="text/javascript">
+<!--
+
+<!--#include virtual="/incl/functions.shtml" -->
+
+  var langObjRecList = new Language("recordingList", "recList");
+  var ajaxRequest = AxisConnectionFactory.createAjaxConnection();
+  var ajaxRequestWithReadyState = AxisConnectionFactory.createAjaxConnection();
+
+  var listXml;
+  var recordingsCnt = 0;
+  var recordingsTotalCnt = 0;
+  var startAtResultNumber =  parseInt( "<!--#echo var="startatresultnumber" option="encoding:javascript" -->", 10 );
+  var doLoadPageLinks = false;
+
+  var reloadPath;
+
+  var delayWaitTimer;
+  var showWait = false;
+
+  var showWaitMsg_msg = "";
+
+
+  var _list_obj;
+  var recordingArray = new Array();
+  
+  function showWaitMsg()
+  {
+    if( showWait )
+    {
+      wait_start( showWaitMsg_msg );
+    }
+  }
+
+  function onInit()
+  {
+    langObjRecList.init();
+    <!--#if expr="$root_Properties_LocalStorage_LocalStorage = yes" -->
+      setDateFields();
+      writeEvents();
+      writeDisks();
+    <!--#endif -->
+    reloadPath = getListPath();
+    getList( reloadPath, true );
+    
+    createSelect();
+  }
+
+  function createSelect()
+  {
+    var headers = [ langObjRecList.getText("statimTxt"), 
+                    langObjRecList.getText("durTxt"), 
+                    langObjRecList.getText("eventTxt") ];
+    var widths = ["180px", "110px", "150px"];
+
+    var list_container = document.getElementById("listContainer");
+    _list_obj = new select_input_class(list_container, headers);
+    _list_obj.setColumnWidths(widths);
+    _list_obj.multiselect = true;
+    _list_obj.ondblclick = play;
+    _list_obj.drawTable();
+  }
+
+  <!--#if expr="$root_Properties_LocalStorage_LocalStorage = yes" -->
+
+    var productDateStr = "<!--#include virtual="/axis-cgi/admin/date.cgi?action=getdate" -->";
+    var productDateTimeStr = (productDateStr + " " + "<!--#include virtual="/axis-cgi/admin/date.cgi?action=gettime" -->").replace(/:[^:]+$/, "");
+
+    function validateInputDate( inputEl )
+    {
+      var retVal = true;
+      var searchValue = inputEl.value.trim();
+      var invalidDate = langObjRecList.getText("invalidDateAlert");
+      //Note that this does not check if the day exists in the month it only checks so there is not more than 31 days
+      //                      year            month            day                      hour            minutes  seconds
+      var basicDateRegEx = /^(((19|20)\d{2})(-(0[1-9]|1[0-2])(-(0[1-9]|[1-2]\d|3[0-1])( ([0-1]\d|2[0-3])(:[0-5]\d(:[0-5]\d|$)|$)|$)|$)|$)|$)/;
+      if( !basicDateRegEx.test( searchValue ) )
+      {
+        alert(invalidDate);
+        retVal = false;
+        inputEl.focus();
+        inputEl.select();
+      }
+      else
+      {
+        //check day of month
+        if( searchValue.length > 7 )
+        {
+          var month = searchValue.substring( 5, 7 );
+          var day = searchValue.substring( 8, 10 );
+
+          var maxDay = "31";
+          if( month == "02" )
+          {
+            year = Number( searchValue.substring(0,4) );
+            if( ( year%4 == 0 && year%100 != 0 ) || year%400 == 0  )
+            {
+              maxDay = "29";
+            }
+            else
+            {
+              maxDay = "28";
+            }
+          }
+          else if( month == "04" || month == "06" || month == "09" || month == "11")
+          {
+            maxDay = "30";
+          }
+
+          if( maxDay < day )
+          {
+            alert(invalidDate);
+            retVal = false;
+            inputEl.focus();
+            inputEl.select();
+          }
+        }
+      }
+
+      return retVal;
+    }
+
+    function productTimeToObject() {
+
+      var tmpSVDate,
+          tmpSVTime,
+          tmpDate;
+
+      tmpSVDate = ("<!--#include virtual="/axis-cgi/admin/date.cgi?action=getdate" -->").split('-');
+      tmpSVTime = ("<!--#include virtual="/axis-cgi/admin/date.cgi?action=gettime" -->").split(':');
+      tmpDate = new Date();
+      tmpDate.setFullYear(tmpSVDate[0], parseInt(tmpSVDate[1], 10) - 1, tmpSVDate[2]);
+      tmpDate.setHours(tmpSVTime[0], tmpSVTime[1], tmpSVTime[2])
+
+      return tmpDate;
+    }
+
+    function showEnableDateInput( selectEl, inputId )
+    {
+      var inputEl = document.getElementById( inputId );
+      var selectedValue = selectEl.options[ selectEl.selectedIndex ].value;
+
+      if( selectedValue == "date" )
+      {
+        inputEl.disabled = false;
+      }
+      else
+      {
+        inputEl.disabled = true;
+
+        if( selectedValue == "now" )
+        {
+          inputEl.value = productDateTimeStr;
+        }
+        else if( selectedValue == "first" )
+        {
+          inputEl.value = "";
+        }
+        else if( selectedValue == "today" )
+        {
+          inputEl.value = productDateStr;
+        }
+        else if( selectedValue == "1" || selectedValue == "7" || selectedValue == "30" )
+        {
+          var tmpDate = productTimeToObject();
+          tmpDate.setDate( tmpDate.getDate() - Number( selectedValue ) );
+          var tmpArray = new Array();
+          tmpArray[tmpArray.length] = tmpDate.getFullYear();
+
+          var tmpMonth = (tmpDate.getMonth() )+1;
+          tmpArray[tmpArray.length] = ( tmpMonth < 10 )?"0"+tmpMonth:tmpMonth;
+
+          var tmpDate = tmpDate.getDate();
+          tmpArray[tmpArray.length] = ( tmpDate < 10 )?"0"+tmpDate:tmpDate;
+
+          inputEl.value = tmpArray.join("-");
+        }
+      }
+    }
+
+    function setDateFields()
+    {
+      var selectStartEl = document.getElementById( "selectSearchStart" );
+      var inputStartEl = document.getElementById( "searchStart" );
+
+      var selectEndEl = document.getElementById( "selectSearchEnd" );
+      var inputEndEl = document.getElementById( "searchEnd" );
+      <!--#if expr="_$recordingid != _" -->
+        inputEndEl.value = productDateTimeStr;
+      <!--#else -->
+        <!--#if expr="_$beforetime != _" -->
+          var beforeTime = addRemoveOffset( "<!--#echo var="beforetime" option="encoding:javascript" -->", "add" );
+          inputEndEl.value = removeSecondsFromTimeStr( beforeTime );
+          setSelect( "date", selectEndEl );
+          inputEndEl.disabled = false;
+        <!--#else -->
+          inputEndEl.value = productDateTimeStr;
+        <!--#endif -->
+        <!--#if expr="_$aftertime != _" -->
+          var afterTime = addRemoveOffset( "<!--#echo var="aftertime" option="encoding:javascript" -->", "add" );
+          inputStartEl.value = removeSecondsFromTimeStr( afterTime );
+          setDateSelect( inputStartEl.value, selectStartEl, inputStartEl );
+        <!--#endif -->
+      <!--#endif -->
+    }
+
+    function daysBetween(date1, date2) {
+      var date1N,
+          date2N,
+          one_day,
+          date1_ms,
+          date2_ms,
+          difference_ms;
+
+      date1 = date1.replace(/\-/g,'/');
+      date2 = date2.replace(/\-/g,'/');
+
+      date1N = new Date(removeTimeFromDate(date1));
+      date2N = new Date(date2);
+      one_day = 1000*60*60*24;
+
+      date1_ms = date1N.getTime();
+      date2_ms = date2N.getTime();
+
+      difference_ms = date2_ms - date1_ms;
+
+      return Math.round(difference_ms/one_day);
+    }
+
+    function setDateSelect( dateStr, selectEl, inputEl )
+    {
+      var selectedValue = "";
+
+      var diffInDays = daysBetween(dateStr,productDateStr);
+
+      if (diffInDays === 0) {
+        selectedValue = 'today';
+      } else if (diffInDays === 1) {
+        selectedValue = '1';
+      } else if (diffInDays === 7) {
+        selectedValue = '7';
+      } else if (diffInDays === 30) {
+        selectedValue = '30';
+      } else {
+        selectedValue = findSelectedValue( dateStr );
+        if( selectedValue == "date" )
+        {
+          inputEl.disabled = false;
+        }
+      }
+      setSelect( selectedValue, selectEl );
+    }
+
+    function findSelectedValue( dateStr )
+    {
+      var daysSelectValues = new Array( "1", "7", "30" );
+      var len = daysSelectValues.length;
+
+      var newSelectValue = "date";
+      var num, tmpDate, tmpArray, productDate;
+
+      productDate = productTimeToObject();
+
+      for( var i = 0; i < len && newSelectValue == "date"; i++ )
+      {
+        num = daysSelectValues[ i ];
+
+        tmpDate = new Date( productDate.getTime() );
+        tmpDate.setDate( tmpDate.getDate() -  Number( num ) );
+        tmpArray = new Array();
+        tmpArray[tmpArray.length] = tmpDate.getFullYear();
+
+        tmpMonth = (tmpDate.getMonth() )+1;
+        tmpArray[tmpArray.length] = ( tmpMonth < 10 )?"0"+tmpMonth:tmpMonth;
+
+        tmpDate = tmpDate.getDate();
+        tmpArray[tmpArray.length] = ( tmpDate < 10 )?"0"+tmpDate:tmpDate;
+
+        if( dateStr == tmpArray.join("-") )
+        {
+          newSelectValue = num;
+        }
+      }
+      return newSelectValue;
+    }
+
+    function setSelect( value, selectEl )
+    {
+      var options = selectEl.options;
+      var len = options.length;
+      var op;
+
+      for( var i = 0; i < len; i++ )
+      {
+        op = selectEl.options[i];
+        op.selected = ( op.value == value )?true:false;
+      }
+    }
+
+    function removeSecondsFromTimeStr(str)
+    {
+      if(str.indexOf("T") != -1)
+      {
+        str = str.substring(0, str.length-4); //Remove unwanted chars (seconds and "z")
+        var strArrDate = ((str.split("T"))[0]).split("-");
+        var strArrTime = ((str.split("T"))[1]).split(":");
+      }
+      else
+      {
+        str = str.substring(0, str.length-3); //Remove unwanted chars (seconds)
+        var strArrDate = ((str.split(" "))[0]).split("-");
+        var strArrTime = ((str.split(" "))[1]).split(":");
+      }
+
+      str = strArrDate.join("-");
+      if( strArrTime.length > 0 )
+      {
+        str += " "+strArrTime.join(":");
+      }
+
+      return str;
+    }
+
+    function removeTimeFromDate(str) {
+      var strArrDate;
+
+      if(str.indexOf("T") != -1) {
+        str = str.substring(0, str.length-4); //Remove unwanted chars (seconds and "z")
+        strArrDate = ((str.split("T"))[0]).split("/");
+      } else {
+        str = str.substring(0, str.length-3); //Remove unwanted chars (seconds)
+        strArrDate = ((str.split(" "))[0]).split("/");
+      }
+      str = strArrDate.join("/");
+
+      return str;
+    }
+
+    function writeEvents()
+    {
+      var updateSelect =  document.getElementById("eventid");
+
+      var now = new Date();
+      var timestamp = now.getTime();
+
+      var eventListXml = AxisConnectionFactory.getResponseXmlWith(["GET", "/axis-cgi/record/list.cgi?listentity=eventid&timestamp=" + timestamp, false], "", ajaxRequest);
+
+      if( eventListXml )
+      {
+        var len = 0;
+        var eventEls = eventListXml.selectNodes("/root/eventids/eventid");
+        if( eventEls )
+        {
+          len = eventEls.length;
+        }
+        var el, nodeVal;
+        for( var i = 0; i < len; i++ )
+        {
+          el = eventEls[i];
+          if( el )
+          {
+            if( el.childNodes.length > 0 )
+            {
+              nodeVal = el.childNodes[0].nodeValue;
+              addSelectOption( updateSelect, nodeVal, nodeVal, (("<!--#echo var="eventid" option="encoding:javascript" -->" == nodeVal )?true:false ) );
+            }
+          }
+        }
+      }
+    }
+
+    function writeDisks()
+    {
+      var disks = getStorageDisks(document.storageDisks);
+      var i;
+
+      var updateSelect = document.getElementById( "diskid" );
+
+      if( !updateSelect )
+      {
+        return;
+      }
+
+      var len = disks.length;
+
+      for( var i = 0; i < len; i++ )
+      {
+        addSelectOption( updateSelect, disks[i].value, disks[i].name, (("<!--#echo var="diskid" option="encoding:javascript" -->" == disks[i].value )?true:false) );
+      }
+
+      if( len == 1 )
+      {
+        var spanEl = document.getElementById( "diskidSpan" );
+        if( spanEl )
+        {
+          spanEl.innerHTML = disks[0].name;
+          updateSelect.style.display = "none";
+          spanEl.style.display = "inline";
+        }
+      }
+    }
+
+    function getStorageDisks(storageForm)
+    {
+      var disks = new Array();
+      var obj;
+      var storageStr, nameEls, tmpDisk;
+
+      var len = storageForm.elements.length;
+      for(var i = 0; i < len; i++ )
+      {
+        tmpDisk = storageForm.elements[i];
+        if (tmpDisk.name && tmpDisk.name.indexOf("_DiskID") != -1 )
+        {
+          obj = new Object();
+          obj.value = tmpDisk.value;
+
+          //get the name
+          storageStr = (tmpDisk.name).replace("_DiskID", "");
+          nameEls = document.getElementsByName( storageStr + "_FriendlyName" );
+          if( nameEls && nameEls.length > 0 && nameEls[0].value != "")
+          {
+            obj.name = nameEls[0].value;
+          }
+          else
+          {
+            if( obj.value == "SD_DISK" )
+            {
+              obj.name = langObjRecList.getText("sdCardTxt");
+            }
+            else if( obj.value == "NetworkShare" )
+            {
+              obj.name = langObjRecList.getText("networkShareTxt");
+            }
+            else
+            {
+              obj.name = obj.value;
+            }
+          }
+          disks = disks.concat( obj );
+        }
+      }
+
+      return disks;
+    }
+
+    function validateFilterForm()
+    {
+      var retVal = true;
+
+      var selectStartEl = document.getElementById( "selectSearchStart" );
+      var inputStartEl = document.getElementById( "searchStart" );
+      var searchStartEl = document.getElementById( "aftertime" );
+
+      var selectEndEl = document.getElementById( "selectSearchEnd" );
+      var inputEndEl = document.getElementById( "searchEnd" );
+      var searchEndEl = document.getElementById( "beforetime" );
+
+      if( !validateDateAddFilter( selectStartEl, inputStartEl, searchStartEl, "-01-01T00:00:00Z" ) )
+      {
+        retVal = false;
+      }
+      else if( !validateDateAddFilter( selectEndEl, inputEndEl, searchEndEl, "-12-31T23:59:59Z" ) )
+      {
+        retVal = false;
+      }
+      else if( searchEndEl.value != "" && searchStartEl.value != "" && ( searchEndEl.value < searchStartEl.value ) )
+      {
+        alert( langObjRecList.getText("recSearchDatesAlert") );
+        retVal = false;
+        inputStartEl.focus();
+        inputStartEl.select();
+      }
+      else
+      {
+        selectStartEl.disabled = true;
+        inputStartEl.disabled = true;
+
+        selectEndEl.disabled = true;
+        inputEndEl.disabled = true;
+
+        if( searchEndEl.value == "" )
+        {
+          searchEndEl.disabled = true;
+        }
+
+        if( searchStartEl.value == "" )
+        {
+          searchStartEl.disabled = true;
+        }
+
+        if( searchEndEl.value == "" && searchStartEl.value == "" )
+        {
+          document.getElementById( "recordingid" ).disabled = false;
+        }
+
+        document.getElementById( "searchBtn").disabled = true;
+      }
+      return retVal;
+    }
+
+    function validateDateAddFilter( selectEl, inputEl, searchEl, filStr )
+    {
+      var retVal = true;
+      var tmpValue, year, month;
+
+      var searchValue = inputEl.value.trim();
+      var selectedValue = selectEl.options[ selectEl.selectedIndex ].value;
+
+      if( selectedValue == "date" )
+      {
+        retVal = validateInputDate( inputEl );
+      }
+      else if( selectedValue == "now" )
+      {
+        searchValue = "";
+      }
+
+      if( retVal )
+      {
+        if( searchValue != "" )
+        {
+          var len = ( searchValue.length )-4;
+          //month is added but day is missing 
+          if( len == 3 && filStr.indexOf("-12") > -1 )
+          {
+            month = searchValue.substring(5);
+            if( month == "02" )
+            {
+              year = searchValue.substring(0,4);
+              if( ( year%4 == 0 && year%100 != 0 ) || year%400 == 0  )
+              {
+                filStr = filStr.replace("31", "29");
+              }
+              else
+              {
+                filStr = filStr.replace("31", "28");
+              }
+            }
+            else if( month == "04" || month == "06" || month == "09" || month == "11")
+            {
+              filStr = filStr.replace("31", "30");
+            }
+          }
+          searchValue += filStr.substring( len );
+          searchValue = searchValue.replace(" ", "T");
+
+          searchValue = addRemoveOffset( searchValue, "remove" );
+        }
+        searchEl.value = searchValue;
+      }
+
+      return retVal;
+    }
+
+  <!--#endif -->
+
+  function addSelectOption( selectEl, value, text, selected )
+  {
+    var op = document.createElement("OPTION");
+    op.value = value;
+    op.text = text;
+    op.selected = selected;
+    selectEl.options.add( op );
+  }
+
+  function getListPath( nbr )
+  {
+    var refreshUrlArr = new Array();
+
+    refreshUrlArr[ 0 ] = "/axis-cgi/record/list.cgi?maxnumberofresults=<!--#echo var="maxnumberofresults" option="encoding:javascript" -->";
+
+    if( !isNaN( parseInt( nbr, 10 ) ) )
+    {
+      startAtResultNumber = parseInt( nbr, 10 );
+    }
+
+    refreshUrlArr[ 1 ] = 'startatresultnumber='+startAtResultNumber;
+
+    <!--#if expr="$root_Properties_LocalStorage_LocalStorage = yes" -->
+      <!--#if expr="_$recordingid != _" -->
+        refreshUrlArr[ refreshUrlArr.length ] = 'recordingid=<!--#echo var="recordingid" option="encoding:javascript" -->';
+      <!--#else -->
+          <!--#if expr="_$beforetime != _" -->
+            refreshUrlArr[ refreshUrlArr.length ] = 'beforetime=<!--#echo var="beforetime" option="encoding:javascript" -->';
+          <!--#endif -->
+          <!--#if expr="_$aftertime != _" -->
+            refreshUrlArr[ refreshUrlArr.length ] = 'aftertime=<!--#echo var="aftertime" option="encoding:javascript" -->';
+          <!--#endif -->
+      <!--#endif -->
+
+      <!--#if expr="_$eventid != _" -->
+        refreshUrlArr[ refreshUrlArr.length ] = 'eventid=<!--#echo var="eventid" option="encoding:javascript" -->';
+      <!--#endif -->
+
+      <!--#if expr="_$diskid != _" -->
+        refreshUrlArr[ refreshUrlArr.length ] = 'diskid=<!--#echo var="diskid" option="encoding:javascript" -->';
+      <!--#endif -->
+
+      <!--#if expr="_$sortorder != _" -->
+        refreshUrlArr[ refreshUrlArr.length ] = 'sortorder=<!--#echo var="sortorder" option="encoding:javascript" -->';
+      <!--#endif -->
+    <!--#else -->
+      refreshUrlArr[ 2 ] = 'recordingid=all';
+    <!--#endif -->
+
+    return refreshUrlArr.join("&");
+  }
+
+  function getList( listlink, changeNumber )
+  {
+    if( !showWait )
+    {
+      doLoadPageLinks = changeNumber;
+      if( changeNumber )
+      {
+        reloadPath = listlink;
+      }
+      wait_disableInput();
+      showWait = true;
+      showWaitMsg_msg = langObjRecList.getText("loadingTxt");
+      delayWaitTimer = window.setTimeout( 'showWaitMsg()', 1000 );
+
+      var now = new Date();
+      var timestamp = now.getTime();
+      listlink += "&timestamp=" + timestamp;
+
+      var tmpArr = listlink
+
+      AxisConnectionFactory.sendAsync(["GET", listlink], "", recieveList, ajaxRequestWithReadyState);
+    }
+  }
+
+  function recieveList()
+  {
+    if( ajaxRequestWithReadyState.getReadyState() == 4 )
+    {
+      recordingsTotalCnt = 0;
+      recordingsCnt = 0;
+      listXml = null;
+
+      if( ajaxRequestWithReadyState.getStatus() == 200 )
+      {
+        listXml = ajaxRequestWithReadyState.getResponseXml();
+      }
+
+      loadList();
+      if( doLoadPageLinks )
+      {
+        setSubTitleText();
+        loadPageLinks();
+      }
+      showWait = false;
+      wait_enableInput();
+      wait_stop();
+
+      if( delayWaitTimer )
+      {
+        window.clearTimeout( delayWaitTimer );
+      }
+    }
+  }
+
+  function loadList()
+  {
+    var selectEl = _list_obj; 
+    var len = 0;
+    var recordings;
+
+    _list_obj.clear();
+
+    if( listXml )
+    {
+      var recordingsNode = listXml.selectSingleNode("/root/recordings");
+      if( recordingsNode )
+      {
+        recordingsCnt = recordingsNode.getAttribute( "numberofrecordings" );
+        recordingsTotalCnt = recordingsNode.getAttribute( "totalnumberofrecordings" );
+
+        recordings = listXml.selectNodes("/root/recordings/recording");
+        if( recordings )
+        {
+          len = recordings.length;
+        }
+      }
+    }
+
+    if( len == 0 )
+    {
+    }
+    else
+    {
+      var recNode;
+      var recordingid, starttimelocal, starttime, stoptime, recordingstatus, eventid;
+      var optionText;
+      for( var i = 0; i < len; i++ )
+      {
+        recNode = recordings[i];
+
+        recordingid = recNode.getAttribute("recordingid");
+        recordingstatus = recNode.getAttribute("recordingstatus");
+        starttimelocal = recNode.getAttribute("starttimelocal");
+        starttime = recNode.getAttribute("starttime");
+        stoptime = recNode.getAttribute("stoptime");
+        eventid = recNode.getAttribute("eventid");
+        
+        if(eventid == "continuous")
+          eventid = langObjRecList.getText("continTxt");
+
+        dateAndTimeStr = formatTimeString( starttimelocal ,"local", true );
+        dateAndTimeArr = dateAndTimeStr.split(" ");
+
+
+        var rowArr = [ dateAndTimeArr[0] + '\u00a0\u00a0' + dateAndTimeArr[1],
+                       calcLength( starttime, stoptime, recordingstatus ),
+                       eventid ];
+        _list_obj.addRow(rowArr, recordingid, "");
+        recordingArray[ recordingid  ];
+      }
+    }
+    _list_obj.drawTable();
+  }
+
+  function formatTimeString(theTime,zoneType)
+  {
+    if (zoneType == "utc")
+      theTime = theTime.slice(0,-1);
+    else
+      theTime = theTime.slice(0,-6);
+    theTime = theTime.replace(/T/, " ");
+    
+    if( theTime.indexOf(".") != -1)
+     theTime = theTime.substring( 0, theTime.lastIndexOf(".") );
+    else
+      theTime = theTime.substring( 0, theTime.length );
+    return theTime;
+  }
+
+  function calcLength(start,stop,status,lang)
+  {
+    var reclength;
+    if( status == "unknown" || ( status == "inactive" && stop == "" ) )
+    {
+      reclength = lang?txtUnknown:"unknown";
+    }
+    else if( status == "recording" || ( status == "active" && stop == "" ) )
+    {
+      reclength = lang?langObjRecList.getText("ongTxt"):"ongoing";
+    }
+    else if( stop == "" )
+    {
+      reclength = lang?txtUnknown:"unknown";
+    }
+    else {
+      var startYear = parseInt(start.substring(0,4),10);
+      var startMonth = parseInt(start.substring(5,7),10)-1;
+      var startObj = new Date(Date.UTC( startYear, startMonth, parseInt(start.substring(8,10),10), parseInt(start.substring(11,13),10), parseInt(start.substring(14,16),10), parseInt(start.substring(17,19),10))); // yy,mm,dd,hh,mm,ss
+      var start_ms = Date.parse(startObj.toString());
+
+      var stopYear = parseInt(stop.substring(0,4),10);
+      var stopMonth = parseInt(stop.substring(5,7),10)-1;
+      var stopObj  = new Date(Date.UTC(stopYear, stopMonth, parseInt(stop.substring(8,10),10), parseInt(stop.substring(11,13),10), parseInt(stop.substring(14,16),10), parseInt(stop.substring(17,19),10)));
+      var stop_ms  = Date.parse(stopObj.toString());
+
+      var diff_sec = (stop_ms - start_ms)/1000; // Time difference in seconds
+      var lengthH = parseInt(diff_sec/3600,10)
+      var lengthM = parseInt(diff_sec/60,10) - lengthH*60
+      var lengthS = diff_sec - lengthM*60 - lengthH*3600
+      lengthH = lengthH + ""; lengthM = lengthM + ""; lengthS = lengthS + "";
+      if (lengthH.length == 1) lengthH = "0" + lengthH
+      if (lengthM.length == 1) lengthM = "0" + lengthM
+      if (lengthS.length == 1) lengthS = "0" + lengthS
+      reclength = lengthH + ":" + lengthM + ":" + lengthS
+    }
+    return reclength;
+  }
+
+  var startTimeLocal = "";
+  var stopTimeLocal  = "";
+  var startTimeUTC   = "";
+  var stopTimeUTC    = "";
+
+  function getSelectedIndexArr( el, limit ) 
+  {
+    var opts = el.options;
+
+    var len = opts.length;
+    var arr = new Array();
+
+    for( var i = 0; i < len; i++ )
+    {
+      if( opts[i].selected && opts[i].value != "_none_" )
+      {
+        arr[ arr.length ] = i;
+        if( limit )
+        {
+          if( arr.length > limit )
+          {
+            break;
+          }
+        }
+      }
+    }
+    return arr;
+  }
+
+  function play()
+  {
+    if (!listXml)
+    {
+      // listXml is not loaded yet. 
+      return;
+    }
+    <!--#if expr="$root_Properties_LocalStorage_LocalStorage = yes" -->
+      var limitPlay = 35;
+    <!--#else -->
+      var limitPlay = 1;
+    <!--#endif -->
+    var indexArr = [].concat(_list_obj.selectedIndex);
+    if( indexArr.length === 1 && indexArr[0] === -1 )
+    {
+      indexArr = [];
+    }
+    var indexLen = indexArr.length;
+
+    if( _list_obj.selectedIndex == -1 )
+    {
+      alert( langObjRecList.getText("plSeReAlrt") );
+    }
+    <!--#if expr="$root_Properties_LocalStorage_LocalStorage = yes" -->
+    else if( indexLen > limitPlay )
+    {
+      alert( langObjRecList.getText("limitPlayAlrt") );
+    }
+    <!--#endif -->
+    else
+    {
+      var errorArr = new Array();
+
+      var urlArr = new Array();
+      var url;
+      var recNode, videoNode, video_mimetype, recordingid, imagepath, resolution, img_width, img_height, startTimeLocal, stopTimeLocal;
+      var popWin_width = 400;
+      var popWin_height = 300;
+
+      var recordings = listXml.selectNodes("/root/recordings/recording");
+      <!--#if expr="$root_Properties_LocalStorage_LocalStorage = yes" -->
+        var first = true;
+
+        for( var i = 0; i < indexLen; i++ )
+        {
+          recNode = recordings[indexArr[i]];
+      <!--#else -->
+          recNode = recordings[indexArr[0]];
+      <!--#endif -->
+
+        recordingid = recNode.getAttribute("recordingid");
+        videoNode = recNode.selectSingleNode("video");
+
+        if( !videoNode )
+        {
+          errorArr[ errorArr.length ] = recordingid;
+          <!--#if expr="$root_Properties_LocalStorage_LocalStorage = yes" -->
+            continue;
+          <!--#endif -->
+        }
+
+        video_mimetype = videoNode.getAttribute("mimetype");
+
+        if ((video_mimetype == "video/MP4V-ES") || ( video_mimetype == "video/mpeg")) {
+          imagepath = "/axis-media/media.amp?recordingid=" + recordingid + "&videocodec=mpeg4"
+        } else if ((video_mimetype == "video/H264") || ( video_mimetype == "video/x-h264")) {
+          imagepath = "/axis-media/media.amp?recordingid=" + recordingid + "&videocodec=h264"
+        } else {
+          imagepath = "/axis-cgi/record/play.cgi?recordingid=" + recordingid + "&videocodec=jpeg"
+        }
+        resolution = videoNode.getAttribute("resolution");
+
+        if( !resolution )
+        {
+          var w = videoNode.getAttribute("width");
+          var h = videoNode.getAttribute("height");
+          if( w && h )
+          {
+            resolution = w+"x"+h;
+          }
+        }
+
+        img_width = parseInt(resolution.substring(0, resolution.indexOf('x')), 10);
+        img_height = parseInt(resolution.slice((resolution.indexOf('x') + 1)), 10);
+
+        <!--#if expr="$root_Properties_LocalStorage_LocalStorage = yes" -->
+          if( first )
+          {
+            first = false;
+        <!--#endif -->
+          if (img_width >= 350 && popWin_width < img_width + 50 )
+          {
+            popWin_width = img_width + 50;
+          }
+          if( popWin_height < img_height + 300 )
+          {
+            popWin_height = img_height + 300;
+          }
+
+          var audio = "no";
+          var audioNode = recNode.selectSingleNode("audio");
+
+          if( audioNode )
+          {
+            audio = "yes";
+            audio += "&samplerate="+audioNode.getAttribute("samplerate");
+            audio += "&bitrate="+audioNode.getAttribute("bitrate");
+          }
+
+          startTimeLocal = formatTimeString(recNode.getAttribute("starttimelocal"));
+          stopTimeLocal = formatTimeString(recNode.getAttribute("stoptimelocal"));
+
+          var fileDuration = calcLength(recNode.getAttribute("starttime"),recNode.getAttribute("stoptime"),recNode.getAttribute("recordingstatus"), false);
+
+          if (fileDuration === '00:00:00') {
+            alert(langObjRecList.getText("reLenNullAlrt"));
+            return;
+          }
+
+          url = 'playWindow.shtml?imagepath=' +escape(imagepath)+ '&length=' + fileDuration +  '&img_width=' + img_width + '&img_height=' + img_height + "&startTimeLocal=" + startTimeLocal + "&stopTimeLocal=" + stopTimeLocal + "&audio=" + audio;
+
+      <!--#if expr="$root_Properties_LocalStorage_LocalStorage = yes" -->
+          }
+
+          urlArr[ urlArr.length ] = "id"+i+"=" + recordingid;
+
+        }
+      <!--#endif -->
+
+      var now = new Date();
+      var timestamp = now.getTime();
+
+      if( errorArr.length > 0 )
+      {
+        if( urlArr.length > 0 )
+        {
+          if( confirm( langObjRecList.getText("errorPlayMulitple") ) )
+          {
+            openPopUp( url+"&"+urlArr.join('&')+'&timestamp=' + timestamp, 'play_recording', popWin_width, popWin_height );
+          }
+        }
+        else 
+        {
+          alert( langObjRecList.getText("errorPlay") );
+        }
+      }
+      else
+      {
+        openPopUp( url+"&"+urlArr.join('&')+'&timestamp=' + timestamp, 'play_recording', popWin_width, popWin_height );
+      }
+    }
+  }
+
+  function openProperties()
+  {
+    var limitProperties = 1;
+    var indexArr = [].concat(_list_obj.selectedIndex);
+    if( indexArr.length === 1 && indexArr[0] === -1 )
+    {
+      indexArr = [];
+    }
+    if ( indexArr.length == limitProperties )
+    {
+      var recordings = listXml.selectNodes("/root/recordings/recording");
+      var recNode = recordings[indexArr[0]];
+      var videoNode = recNode.selectSingleNode("video");
+
+      var framerate = txtUnknown;
+      if( videoNode )
+      {
+        framerate = videoNode.getAttribute("framerate");
+        framerate = parseFloat((parseInt(framerate.substring(0, framerate.indexOf(":")), 10)) / parseInt(framerate.slice(framerate.indexOf(":")+1), 10))
+      }
+
+      var startTime = recNode.getAttribute("starttime");
+      var stopTime = recNode.getAttribute("stoptime");
+      var status = recNode.getAttribute("recordingstatus");
+      var startTimeLocal = formatTimeString(recNode.getAttribute("starttimelocal"),"local");
+      var stopTimeLocal = formatTimeString(recNode.getAttribute("stoptimelocal"),"local");
+      var startTimeUTC = formatTimeString(startTime,"utc");
+      var stopTimeUTC = formatTimeString(stopTime,"utc");
+
+      var audio = ( recNode.selectSingleNode("audio") )?"yes":"no";
+
+      var resolution = ( videoNode )?videoNode.getAttribute("resolution"):txtUnknown;
+
+      if( !resolution && videoNode )
+      {
+        var w = videoNode.getAttribute("width");
+        var h = videoNode.getAttribute("height");
+        if( w && h )
+        {
+          resolution = w+"x"+h;
+        }
+      }
+
+      var source = ( videoNode )?videoNode.getAttribute("source"):"";
+      if( !source )
+      {
+        source = "";
+      }
+
+      openPopUp('recordingProperties.shtml?recordingid=' + recNode.getAttribute("recordingid") +
+                '&diskid=' + recNode.getAttribute("diskid") +
+                '&startTimeLocal=' + startTimeLocal +
+                '&startTime=' + startTimeUTC +
+                '&stopTimeLocal=' + stopTimeLocal +
+                '&stopTime=' + stopTimeUTC +
+                '&length=' + calcLength(startTime,stopTime,status,false) +
+                '&recordingtype=' + recNode.getAttribute("recordingtype") +
+                '&eventid=' + escape(recNode.getAttribute("eventid")) +
+                '&recordingstatus=' + status +
+                '&audio='+audio +
+                '&type=' + (( videoNode )?videoNode.getAttribute("mimetype"):txtUnknown) +
+                '&source=' + source +
+                '&framerate=' + framerate +
+                '&resolution=' +resolution, 'view_full_recording_info', 430, 410);
+    }
+    else if ( indexArr.length > limitProperties )
+    {
+      alert( langObjRecList.getText("plSeReOneAlrt") )
+    }
+    else
+    {
+      alert( langObjRecList.getText("plSeReAAlrt") )
+    }
+  }
+
+  <!--#if expr="$root_Properties_LocalStorage_LocalStorage = yes" -->
+    function downloadRec()
+    {
+      var limitDownload = 30;
+      var indexArr = [].concat(_list_obj.selectedIndex);
+      if( indexArr.length === 1 && indexArr[0] === -1 )
+      {
+        indexArr = [];
+      }
+      var indexLen = indexArr.length;
+
+      if( _list_obj.selectedIndex == -1 )
+      {
+        alert( langObjRecList.getText("plSeReAAlrt") );
+      }
+      else if( indexLen > limitDownload )
+      {
+        alert( langObjRecList.getText("limitDownloadAlrt") );
+      }
+      else
+      {
+        var downloadArray = new Array();
+
+        var recordings = listXml.selectNodes("/root/recordings/recording");
+        var recNode;
+        for( var i = 0; i < indexLen; i++ )
+        {
+          recNode = recordings[indexArr[i]];
+          downloadArray[ downloadArray.length ] = recNode.getAttribute("recordingid");
+        }
+
+        var now = new Date();
+        var timestamp = now.getTime();
+
+        document.location.href = "/axis-cgi/record/download.cgi?recordingid=" + downloadArray.join(',') + "&timestamp=" + timestamp;
+      }
+    }
+  <!--#endif -->
+
+  function removeRec()
+  {
+    <!--#if expr="$root_Properties_LocalStorage_LocalStorage != yes" -->
+      <!--#if expr="$root_Storage_S0_Locked = yes" -->
+        alert( langObjRecList.getText("thDiIsLoclAlrt") );
+        return;
+      <!--#endif -->
+    <!--#endif -->
+
+    <!--#if expr="$root_Properties_LocalStorage_LocalStorage = yes" -->
+      var limitRemove = 50;
+    <!--#else -->
+      var limitRemove = 1;
+    <!--#endif -->
+    var indexArr = [].concat(_list_obj.selectedIndex);
+    if( indexArr.length === 1 && indexArr[0] === -1 )
+    {
+      indexArr = [];
+    }
+    var indexLen = indexArr.length;
+
+    if( _list_obj.selectedIndex == -1 )
+    {
+      alert( langObjRecList.getText("plSeReAAlrt") );
+    }
+    <!--#if expr="$root_Properties_LocalStorage_LocalStorage = yes" -->
+    else if( indexLen >limitRemove )
+    {
+      alert( langObjRecList.getText("limitRemoveAlrt") );
+    }
+    <!--#endif -->
+    else
+    {
+      if( isRecording(indexArr) )
+      {
+        if(indexLen == 1)
+          alert( langObjRecList.getText("selOngOneAlrt") );
+        else
+          alert( langObjRecList.getText("selOngMultiAlrt") );
+        return;
+      }
+    
+      var remArray = new Array();
+      var storageArray = new Array();
+      var errorMsg = "";
+
+      var recordings = listXml.selectNodes("/root/recordings/recording");
+      var recNode;
+      <!--#if expr="$root_Properties_LocalStorage_LocalStorage = yes" -->
+        for( var i = 0; i < indexLen && errorMsg == ""; i++ )
+        {
+          recNode = recordings[indexArr[i]];
+      <!--#else -->
+          recNode = recordings[indexArr[0]];
+      <!--#endif -->
+        
+          remArray[ remArray.length ] = recNode.getAttribute("recordingid");
+
+      <!--#if expr="$root_Properties_LocalStorage_LocalStorage = yes" -->
+          storageArray[ recNode.getAttribute("diskid") ] = recNode.getAttribute("diskid");
+        }
+
+        var storageElements = document.storageDisks.elements;
+        var storageStr, nameEls, lockedEls, name, tmpDisk;
+        var len = storageElements.length;
+        for( var i = 0; i < len; i++ )
+        {
+          tmpDisk = storageElements[i];
+          if ( tmpDisk.name && tmpDisk.name.indexOf("_DiskID") != -1 )
+          {
+            var diskId = tmpDisk.value;
+            if( storageArray[ diskId ] != null )
+            {
+              storageStr = tmpDisk.name.replace("_DiskID", "");
+
+              nameEls = document.getElementsByName( storageStr+"_FriendlyName" );
+              lockedEls = document.getElementsByName( storageStr+"_Locked" );
+              if( lockedEls && lockedEls.length > 0 )
+              {
+                if( lockedEls[0].value == "yes" )
+                {
+                  if( nameEls && nameEls.length > 0 && nameEls[0].value != "" )
+                  {
+                    name = nameEls[0].value;
+                  }
+                  else
+                  {
+                    if( diskId == "SD_DISK" )
+                    {
+                      name =  langObjRecList.getText("sdCardTxt");
+                    }
+                    else if( diskId == "NetworkShare" )
+                    {
+                      name = langObjRecList.getText("networkShareTxt");
+                    }
+                    else
+                    {
+                      name =  diskId;
+                    }
+                  }
+                  errorMsg = langObjRecList.getText("diIsLoclAlrt1")+name;
+                  errorMsg += langObjRecList.getText("diIsLoclAlrt2");
+                  break;
+                }
+              }
+            }
+          }
+        }
+      <!--#endif -->
+
+      if( errorMsg != "" )
+      {
+        alert( errorMsg );
+      }
+      else if( remArray.length > 0 && confirm(<!--#if expr="$root_Properties_LocalStorage_LocalStorage = yes" -->langObjRecList.getText("remMultipleRecConfirm")<!--#else -->langObjRecList.getText("remRecConfirm")<!--#endif -->) )
+      {
+        var now = new Date();
+        var timestamp = now.getTime();
+
+        wait_disableInput();
+        showWait = true;
+        showWaitMsg_msg = langObjRecList.getText("removeWaitTxt");
+        delayWaitTimer = window.setTimeout( 'showWaitMsg()', 1000 );
+
+        AxisConnectionFactory.sendAsync(["GET", "/axis-cgi/record/remove.cgi?recordingid=" + remArray.join(',')+"&timestamp=" + timestamp], "", finishRemove, ajaxRequestWithReadyState);
+      }
+    }
+  }
+
+  function finishRemove()
+  {
+    if( ajaxRequestWithReadyState.getReadyState() == 4 )
+    {
+      var removedCnt = 0;
+      var result = "OK";
+      var description = "\n"+langObjRecList.getText("unknownError");
+
+      if( ajaxRequestWithReadyState.getStatus() == 200 )
+      {
+        <!--#if expr="$root_Properties_LocalStorage_LocalStorage = yes" -->
+          var resultXml = ajaxRequestWithReadyState.getResponseXml();
+
+          if( resultXml )
+          {
+            var resultNodes = resultXml.selectNodes("/root/remove");
+            if( resultNodes )
+            {
+              var len = resultNodes.length;
+              var resultNode, currentResult;
+              for( var i = 0; i < len; i++ )
+              {
+                resultNode = resultNodes[i];
+                currentResult = String( resultNode.getAttribute("result") ).toUpperCase();
+                if( currentResult == "ERROR")
+                {
+                  description = "\n"+resultNode.getAttribute("errormsg");
+                  result = "ERROR";
+                }
+                else
+                {
+                  removedCnt++;
+                }
+              }
+            }
+            else
+            {
+              result = "ERROR";
+            }
+          }
+          else
+          {
+            result = "ERROR";
+          }
+        <!--#else -->
+          removedCnt = 1;
+        <!--#endif -->
+      }
+      else
+      {
+        result = "ERROR";
+      }
+
+      showWait = false;
+      wait_enableInput();
+      wait_stop();
+
+      if( delayWaitTimer )
+      {
+        window.clearTimeout( delayWaitTimer );
+      }
+
+      if( result == "ERROR")
+      {
+        <!--#if expr="$root_Properties_LocalStorage_LocalStorage = yes" -->
+          alert( langObjRecList.getText("removeFailed") + description );
+        <!--#else -->
+          alert( langObjRecList.getText("removeRecFailed") + description );
+        <!--#endif -->
+      }
+
+      var maxPerPage = parseInt(document.getElementById("maxnumberofresults").value);
+      var tot = parseInt(recordingsTotalCnt) - parseInt(removedCnt);
+      
+      var maxPerPageTimes = Math.floor(tot/maxPerPage);
+      
+      if( tot%maxPerPage == 0)
+        maxPerPageTimes = maxPerPageTimes-1;
+      var newStart = (maxPerPageTimes * maxPerPage);
+
+      var oldPageNumber = Math.floor(startAtResultNumber/maxPerPage);
+      
+      if(oldPageNumber < maxPerPageTimes)
+        newStart = startAtResultNumber;
+      
+      if( newStart !=  startAtResultNumber)
+      {
+        newStart = ( newStart >= 0 )?newStart:0;
+        getList( getListPath( newStart ), true );
+
+      }
+      else
+      {
+        getList( getListPath(), true );
+      }
+    }
+  }
+  
+  function isRecording(recArr)
+  {
+    var recordings = listXml.selectNodes("/root/recordings/recording");
+  
+    for(var i=0; i < recArr.length; i++)
+    {
+      if( recordings[recArr[i]].getAttribute("recordingstatus") == "recording" )
+        return true;
+    }
+    
+    return false;
+  }
+
+  function setSubTitleText()
+  {
+    var totTxt = langObjRecList.getText("recTxt");
+    if( recordingsCnt > 0 )
+    {
+      var botNbr = 1 + startAtResultNumber;
+      var toTxt  = langObjRecList.getText("toTxt");
+      var ofTxt  = langObjRecList.getText("ofTxt");
+      var recsPerPage = <!--#echo var="maxnumberofresults" option="encoding:javascript" -->;
+
+      if ( startAtResultNumber + recsPerPage < recordingsCnt )
+      {
+        var topNbr = startAtResultNumber + recsPerPage;
+      }
+      else
+      {
+        var topNbr = recordingsCnt;
+      }
+
+      totTxt += "&nbsp;" + botNbr + "&nbsp;" + toTxt + "&nbsp;" + topNbr + "&nbsp;" + ofTxt + "&nbsp;" + recordingsCnt;
+    }
+    document.getElementById("RecTxt").innerHTML = totTxt;
+  }
+  
+  function loadPageLinks()
+  {
+    var htmlArr = new Array();
+  
+    if ( recordingsCnt > 0 )
+    {
+      var link = "";
+      var maxPages = 10;
+      var recsPerPage = <!--#echo var="maxnumberofresults" option="encoding:javascript" -->;
+
+      if (recordingsCnt > recsPerPage) {
+        var nbrOfPages = Math.ceil(recordingsCnt/recsPerPage);
+        var showPages = Math.min (nbrOfPages, 10);
+        var startPageNbr = Math.ceil( startAtResultNumber/recsPerPage)+1;
+        var startAt = (nbrOfPages <= 10) ? 1 : (nbrOfPages < (startPageNbr + 5)) ? nbrOfPages - 9 : Math.max(startPageNbr - 5, 1);
+
+        var imageStyle = " style=\"vertical-align:bottom;cursor:pointer;\"";
+        var i = 10;
+  
+        if( startPageNbr != 1 )
+        {
+          link = "getList( getListPath( 0 ), true )";
+          htmlArr[ htmlArr.length ] = "<img src=\"/pics/arrowFirst.gif\" onclick=\"" + link + "\" alt=\"\""+imageStyle+" \/>&nbsp;&nbsp;";
+  
+          link = "getList( getListPath( " + ( startPageNbr - 2 )*recsPerPage + " ), true )";
+          htmlArr[ htmlArr.length ] = "<img src=\"/pics/arrowPrev.gif\" onclick=\"" + link + "\" alt=\"\""+imageStyle+" \/>&nbsp;&nbsp;";
+  
+          if( startAt > 100 )
+          {
+            for(i=100;i <= startPageNbr; i+=100) {
+              link = "getList( getListPath( " + (i-1)*recsPerPage + " ), true )";
+              htmlArr[ htmlArr.length ] = "<a href=\"javascript:void(0)\" onclick=\"" + link + "\">" + i + "</a> .. ";
+            }
+            i-=90;
+          }
+      
+          if( startAt%100 > 10 )
+          {
+            for(;i < startAt; i+=10) {
+              link = "getList( getListPath( " + (i-1)*recsPerPage + " ), true )";
+              htmlArr[ htmlArr.length ] = "<a href=\"javascript:void(0)\" onclick=\"" + link + "\">" + i + "</a> . ";
+            }
+            i-=10;
+          }
+        }
+  
+        i = startAt;
+  
+        for(var cnt = 0;i <= nbrOfPages && cnt < showPages; i++, cnt++ ) {
+          link = "getList( getListPath( " + (i-1)*recsPerPage + " ), true )";
+          if (i == startPageNbr) {
+            htmlArr[ htmlArr.length ] = "<b>" + i + "</b> ";
+          } else {
+            htmlArr[ htmlArr.length ] = "<a href=\"javascript:void(0)\" onclick=\"" + link + "\">" + i + "</a> ";
+          }
+        }
+  
+        var first = true;
+        if( i%10 !=0 )
+        {
+          i=(Math.ceil(i/10)*10);
+          first = false;
+        }
+  
+        for(;i <= nbrOfPages && i%100 != 0; i+=10 ) {
+          link = "getList( getListPath( " + (i-1)*recsPerPage + " ), true )";
+          htmlArr[ htmlArr.length ] = (first?"":".")+" <a href=\"javascript:void(0)\" onclick=\"" + link + "\">" + i + "</a> ";
+          first = false;
+        }
+  
+        for(;i <= nbrOfPages; i+=100) {
+          link = "getList( getListPath( " + (i-1)*recsPerPage + " ), true )";
+          htmlArr[ htmlArr.length ] = (first?"":"..")+" <a href=\"javascript:void(0)\" onclick=\"" + link + "\">" + i + "</a> ";
+          first = false;
+        }
+  
+        if( (startPageNbr + 1) <= nbrOfPages )
+        {
+          link = "getList( getListPath( " + startPageNbr*recsPerPage + " ), true )";
+          htmlArr[ htmlArr.length ] = "<img src=\"/pics/arrowNext.gif\" onclick=\"" + link + "\" alt=\"\""+imageStyle+" \/>&nbsp;&nbsp;";
+  
+          link = "getList( getListPath( " + ( nbrOfPages - 1 )*recsPerPage + " ), true )";
+          htmlArr[ htmlArr.length ] = "<img src=\"/pics/arrowLast.gif\" onclick=\"" + link + "\" alt=\"\""+imageStyle+" \/>&nbsp;&nbsp;";
+        }
+      }
+    }
+    document.getElementById("pageLinks").innerHTML = ( htmlArr.length > 0 )?htmlArr.join(""):"&nbsp;";
+  }
+  
+  var DownloadBtnStatTxt;
+  var PlayBtnStatTxt;
+  var PropBtnStatTxt;
+  var RemoBtnStatTxt;
+  var FilterBtnStatTxt;
+  var txtUnknown;
+  function globalLanguageVars()
+  {
+  <!--#if expr="$root_Properties_LocalStorage_LocalStorage = yes" -->
+    var DownloadBtnStatTxt = langObjRecList.getText("downloadBtnStatTxt");
+  <!--#endif -->
+  
+    PlayBtnStatTxt = langObjRecList.getText("playBtnStatTxt");
+    PropBtnStatTxt = langObjRecList.getText("propBtnStatTxt");
+    RemoBtnStatTxt = langObjRecList.getText("remoBtnStatTxt");
+    FilterBtnStatTxt = langObjRecList.getText("filterBtnStatTxt");
+    txtUnknown = langObjRecList.getText("unkTxt");
+    
+    var fromArr = new Array();
+    fromArr[0] = {val: "first", text: langObjRecList.getText("recSearchFirst")};
+    fromArr[1] = {val: "today", text: langObjRecList.getText("recSearchToday")};
+    fromArr[2] = {val: "1", text: langObjRecList.getText("recSearchYesterday")};
+    fromArr[3] = {val: "7", text: langObjRecList.getText("recSearch7days")};
+    fromArr[4] = {val: "30", text: langObjRecList.getText("recSearch30days")};
+    fromArr[5] = {val: "date", text: langObjRecList.getText("recSearchDate")};
+    langObjRecList.addOptionsToList(document.getElementById("selectSearchStart"), fromArr);
+    
+    var toArr = new Array();
+    toArr[0] = {val: "now", text: langObjRecList.getText("recSearchNow")};
+    toArr[1] = {val: "date", text: langObjRecList.getText("recSearchDate")};
+    langObjRecList.addOptionsToList(document.getElementById("selectSearchEnd"), toArr);
+    
+    var anyArr = new Array();
+    anyArr[0] = {val: "", text: langObjRecList.getText("recSearchAny")};
+    langObjRecList.addOptionsToList(document.getElementById("eventid"), anyArr);
+    langObjRecList.addOptionsToList(document.getElementById("diskid"), anyArr);
+    
+    var sortArr = new Array();
+    sortArr[0] = {val: "ascending", text: langObjRecList.getText("recSearchAscending"), selected: <!--#if expr="$sortorder = ascending" -->true<!--#else -->false<!--#endif -->};
+    sortArr[1] = {val: "descending", text: langObjRecList.getText("recSearchDescending"), selected: <!--#if expr="$sortorder != ascending" -->true<!--#else -->false<!--#endif -->};
+    langObjRecList.addOptionsToList(document.getElementById("sortorder"), sortArr);
+  }
+
+// -->
+</script>
+</head>
+<body <!--#include virtual="/incl/bodytag.shtml" --> onload="javascript:onInit()">
+  <!--#include virtual="/incl/top_incl2.shtml" -->
+
+  <!--#if expr="$root_Properties_LocalStorage_LocalStorage = yes" -->
+    <form name="storageDisks">
+      <!--#include virtual="/sm/sm.srv?action=get_htmlform&getgroup=Storage&format=hiddenhtmlform" -->
+    </form>
+    <form name="filterForm" id="filterForm" onsubmit="return validateFilterForm()" action="/operator/recList.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->" method="post">
+      <input type="hidden" name="startatresultnumber" id="startatresultnumber" value="0" />
+      <input type="hidden" name="type" id="type" value="xml" />
+      <input type="hidden" name="recordingid" id="recordingid" value="all" disabled="disabled" />
+  <!--#endif -->
+      <table border="0" cellpadding="3" cellspacing="0" width="100%" valign="top" class="alternateRows">
+        <tr class="topTitle">
+          <td colspan="3" align="left" style="white-space:nowrap;"><span id="reLiTxt"></span></td>
+          <td><div align="right"><a href="<!--#echo var="helpURL" option="encoding:url" -->"><img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="hlpPic"></a></div></td>
+        </tr>
+      <!--#if expr="$root_Properties_LocalStorage_LocalStorage = yes" -->
+        <tr class="subTitle">
+          <td align="left" colspan="4"><span id="recFilterTxt"></span></td>
+        </tr>
+        <tr>
+          <td colspan="4" style="white-space:nowrap;"><span id="recSearchTimeTxt"></span></td>
+        </tr>
+        <tr class="reuseLast">
+          <td >&nbsp;</td>
+          <td style="white-space:nowrap;"><span id="recSearchFromTxt"></span></td>
+          <td style="white-space:nowrap;">
+            <select name="selectSearchStart" id="selectSearchStart" onchange="javascript:showEnableDateInput( this, 'searchStart' )" class="inputFixedWidth">
+            </select>
+          </td>
+          <td style="white-space:nowrap;">
+            <input type="text" value="" name="searchStart" id="searchStart" disabled="disabled" class="inputFixedWidth" maxlength="16" />&nbsp;<span id="recSearchFormatDateTxt1"></span>
+            <input type="hidden" name="aftertime" id="aftertime" value="" />
+          </td>
+        </tr>
+        <tr class="reuseLast">
+          <td>&nbsp;</td>
+          <td style="white-space:nowrap;"><span id="recSearchToTxt"></span></td>
+          <td style="white-space:nowrap;">
+            <select name="selectSearchEnd" id="selectSearchEnd" onchange="javascript:showEnableDateInput( this, 'searchEnd' )" class="inputFixedWidth">
+            </select>
+          </td>
+          <td style="white-space:nowrap;">
+            <input type="text" value="" name="searchEnd" id="searchEnd" disabled="disabled" class="inputFixedWidth"  maxlength="16" />&nbsp;<span id="recSearchFormatDateTxt2"></span>
+            <input type="hidden" name="beforetime" id="beforetime" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" style="white-space:nowrap;"><span id="recSearchEventTxt"></span></td>
+          <td colspan="2">
+            <select name="eventid" id="eventid" class="inputFixedWidth">
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" style="white-space:nowrap;"><span id="recSearchTriggTxt"></span></td>
+          <td colspan="2">
+            <select name="diskid" id="diskid" class="inputFixedWidth">
+            </select><span id="diskidSpan" style="display:none;"></span>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2"><span id="recSearchSortTxt"></span></td>
+          <td colspan="2">
+            <select id="sortorder" name="sortorder">
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2"><span id="recSearchResultsTxt1"></span></td>
+          <td colspan="2">
+            <span id="recSearchResultsTxt2"></span>&nbsp;<select id="maxnumberofresults" name="maxnumberofresults">
+              <option value="10"<!--#if expr="$maxnumberofresults = 10" --> selected="selected"<!--#endif -->>10</option>
+              <option value="20"<!--#if expr="$maxnumberofresults = 20" --> selected="selected"<!--#endif -->>20</option>
+              <option value="30"<!--#if expr="$maxnumberofresults = 30" --> selected="selected"<!--#endif -->>30</option>
+              <option value="50"<!--#if expr="$maxnumberofresults = 50" --> selected="selected"<!--#endif -->>50</option>
+              <option value="100"<!--#if expr="$maxnumberofresults = 100" --> selected="selected"<!--#endif -->>100</option>
+            </select>&nbsp;<span id="recSearchResultsTxt3"></span>
+          </td>
+        </tr>
+        <tr class="reuseLast">
+          <td colspan="4" align="right" style="padding-right:15px;">
+            <input type="submit" name="searchBtn" id="searchBtn" value="" class="btnNormal" onMouseOver="return showStatus(FilterBtnStatTxt)" onMouseOut="return showStatus('')" />
+          </td>
+        </tr>
+      </table>
+      <input type="hidden" name="dummy" id="dummy" value="" />
+    </form>
+  <!--#else -->
+    </table>
+  <!--#endif -->
+  <table border="0" cellpadding="3" cellspacing="0" width="100%" valign="top">
+    <tr class="subTitle">
+      <td align="left"><span id="RecTxt"></span></td></tr>
+    <tr>
+      <td>
+        <div id="listContainer" class="selectList"></div>
+      </td>
+    </tr>
+    <tr>
+      <td align="left" class="button">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td class="button"><input type="button" value="" width="75" class="btnNormal" onclick="play()" onMouseOver="return showStatus(PlayBtnStatTxt)" onMouseOut="return showStatus('')" id="reLi_PlayBtn"></td>
+            <td class="button">&nbsp;</td>
+            <td class="button"><input type="button" value="" width="110" class="btnLonger" onclick="openProperties()" onMouseOver="return showStatus(PropBtnStatTxt)" onMouseOut="return showStatus('')" id="reLi_PropBtn"></td>
+            <td class="button">&nbsp;</td>
+            <td class="button">&nbsp;</td>
+            <!--#if expr="$root_Properties_LocalStorage_LocalStorage = yes" -->
+              <td class="button"><input type="button" value="" width="75" class="btnNormal" onclick="downloadRec()" onMouseOver="return showStatus(DownloadBtnStatTxt)" onMouseOut="return showStatus('')" id="reLi_DownloadBtn"></td>
+              <td class="button">&nbsp;</td>
+            <!--#endif -->
+            <td class="button"><input type="button" value="" width="75" class="btnNormal" onclick="removeRec()" onMouseOver="return showStatus(RemoBtnStatTxt)" onMouseOut="return showStatus('')" id="reLi_RemoBtn"></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td align="right" id="pageLinks">&nbsp;</td>
+    </tr>
+  </table>
+
+<!--#include virtual="/incl/bottom_incl.shtml" -->

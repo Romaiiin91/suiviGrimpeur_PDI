@@ -1,0 +1,175 @@
+
+
+<!--#set var="id" val="set_overlay" -->
+
+<!--#if expr="$action = scripts" -->
+  var langObjEvTyDynOvl = new Language("event_types", "action_dynamic_overlay");
+  langObjEvTyDynOvl.init(false, true);
+
+  var actionName = langObjEvTyDynOvl.getText("adoOvlTextTxt");
+  var hideAction = false;
+  var isPTZAction = true;
+
+  addToActionMaps( "com.axis.action.unlimited.set_overlay", "<!--#echo var="id" option="encoding:javascript" -->", actionName, hideAction, isPTZAction );
+  hideAction = true;
+  addToActionMaps( "com.axis.action.fixed.set_overlay", "<!--#echo var="id" option="encoding:javascript" -->", actionName, hideAction, isPTZAction );
+
+  <!--#if expr="$map_only != yes" -->
+    function init_<!--#echo var="id" option="encoding:javascript" -->( actionTypeId, configParamArr )
+    {
+      if (!configParamArr)
+        return;
+
+      if (configParamArr["text"])
+      {
+        document.getElementById("overlayText" + actionTypeId).value = configParamArr["text"];
+      }
+      if (configParamArr["duration"])
+      {
+        if (parseInt(configParamArr["duration"], 10) == 0)
+        {
+          document.getElementById("event_active" + actionTypeId).checked=true;
+        }
+        else
+        {
+          document.getElementById("event_active_duration" + actionTypeId).checked=true;
+          var o = document.getElementById("timer" + actionTypeId);
+          o.disabled = false;
+          o.value = parseInt(configParamArr["duration"], 10);
+        }
+      }
+      if (configParamArr["channels"])
+      {
+        var channels = configParamArr["channels"].split(",");
+
+        for (var i = 0; i < channels.length; i++)
+        {
+          document.getElementById("camno" + channels[i] + actionTypeId).checked = true;
+        }
+      }
+    }
+
+    function toggleDynOverlayDuration( el, id )
+    {
+      var isDisabled = true;
+      if( ( el.id == "event_active_duration"+id && el.checked ) || (el.id == "event_active"+id && !el.checked) )
+        isDisabled = false;
+
+      document.getElementById( "timer"+id ).disabled = isDisabled;
+    }
+
+    function validate_<!--#echo var="id" option="encoding:javascript" -->( actionTypeId, isCondition )
+    {
+
+      var overlayText = document.getElementById("overlayText"+actionTypeId);
+
+      if(overlayText.value == "")
+      {
+        showErrorMsg( langObjEvTyDynOvl.getText("adoSpecOvlTextAlrt"), overlayText );
+        return false;
+      }
+
+      var oTimer = document.getElementById("timer" + actionTypeId);
+      if (document.getElementById("event_active_duration" + actionTypeId).checked)
+      {
+        var val = oTimer.value;
+        if (val.length == 0 || isNaN(val) || parseInt(val, 10) <= 0)
+        {
+          showErrorMsg(langObjEvTyDynOvl.getText("adoSpecDurValAlrt"), oTimer);
+          return false;
+        }
+      }
+      else if (!isCondition)
+      {
+        showErrorMsg(langObjEvTyDynOvl.getText("adoNoDurationAlrtTxt"), oTimer);
+        return false;
+      }
+
+      return true;
+    }
+
+    function is_action_while_active<!--#echo var="id" option="encoding:javascript" -->()
+    {
+      return document.getElementById("event_active<!--#echo var="id" option="encoding:javascript" -->").checked;
+    }
+
+    function setup_save_<!--#echo var="id" option="encoding:javascript" -->( actionTypeId )
+    {
+      var returnObj = new Object();
+      var channels = new Array();
+      var text;
+      var duration;
+      var paramArray = new Array();
+
+      text = document.getElementById("overlayText" + actionTypeId).value;
+
+      for ( var i = 1; i <= 1; i++ )
+      {
+        var no = document.getElementById("camno" + i + actionTypeId);
+
+        if (no && no.checked)
+        {
+          channels.push(i);
+        }
+      }
+
+      if (document.getElementById("event_active_duration" + actionTypeId).checked)
+      {
+        returnObj.TemplateToken = "com.axis.action.fixed.set_overlay";
+        duration = document.getElementById("timer" + actionTypeId).value;
+        paramArray[ paramArray.length ] = new Parameter( "duration", duration);
+      }
+      else
+      {
+        returnObj.TemplateToken = "com.axis.action.unlimited.set_overlay";
+      }
+      returnObj.Name = actionTemplateMap[returnObj.TemplateToken].name;
+
+      paramArray[ paramArray.length ] = new Parameter( "text", text );
+      paramArray[ paramArray.length ] = new Parameter( "channels", channels.join( "," ) );
+
+      returnObj.Parameters = paramArray;
+
+      return returnObj;
+    }
+
+  <!--#endif -->
+<!--#elif expr="$action = render" -->
+  
+  <!--#if expr="_$prefix != _" -->
+    <!--#set var="id" val="$prefix$_set_overlay" -->
+  <!--#endif -->
+
+<div id="div_<!--#echo var="id" option="encoding:javascript" -->" class="actionContainer">
+    <input type="checkbox" id="camno1<!--#echo var="id" option="encoding:javascript" -->" name="camnbr<!--#echo var="id" option="encoding:javascript" -->" value="1" style="display:none;" checked="true" />
+  <div class="row">
+    <label for="overlayText<!--#echo var="id" option="encoding:javascript" -->"><span id="adoText<!--#echo var="id" option="encoding:javascript" -->Output"></span></label>
+    <input type="text" id="overlayText<!--#echo var="id" option="encoding:javascript" -->" size="20" maxlength="80" name="Text<!--#echo var="id" option="encoding:javascript" -->" />
+  </div>
+  <div class="row">
+    <label><span id="adoDuration<!--#echo var="id" option="encoding:javascript" -->Output"></span></label>
+    <div class="btnGroup">
+      <input type="radio" class="radio" id="event_active<!--#echo var="id" option="encoding:javascript" -->" name="active<!--#echo var="id" option="encoding:javascript" -->" value="0" checked onclick="javascript:toggleDynOverlayDuration( this, '<!--#echo var="id" option="encoding:javascript" -->' );" />
+      <label for="event_active<!--#echo var="id" option="encoding:javascript" -->" class="radio"><span id="adoShowTextWhile<!--#echo var="id" option="encoding:javascript" -->Output"></span></label>
+      <br />
+      <input type="radio" class="radio" id="event_active_duration<!--#echo var="id" option="encoding:javascript" -->" name="active<!--#echo var="id" option="encoding:javascript" -->" value="1" onclick="javascript:toggleDynOverlayDuration( this, '<!--#echo var="id" option="encoding:javascript" -->' );" />
+      <label for="event_active_duration<!--#echo var="id" option="encoding:javascript" -->" class="radio"><span id="adoShowTextFor<!--#echo var="id" option="encoding:javascript" -->Output"></span></label><input type="text" id="timer<!--#echo var="id" option="encoding:javascript" -->" size="3" maxlength="3" name="Text<!--#echo var="id" option="encoding:javascript" -->" value="1" disabled="disabled" /> <label for="event_active_duration<!--#echo var="id" option="encoding:javascript" -->" class="radio"><span id="adoSecs<!--#echo var="id" option="encoding:javascript" -->Output"></span></label>
+      <br />
+    </div>
+    <br />
+  </div>
+</div>
+<script language="javascript" type="text/javascript">
+<!--
+  var langObjEvTyDynOvlRender = new Language("event_types", "action_dynamic_overlay");
+  langObjEvTyDynOvlRender.init(false, true);
+
+  document.getElementById("adoText<!--#echo var="id" option="encoding:javascript" -->Output").innerHTML = langObjEvTyDynOvlRender.getText("adoTextTxt");
+  document.getElementById("adoDuration<!--#echo var="id" option="encoding:javascript" -->Output").innerHTML = langObjEvTyDynOvlRender.getText("adoDurationTxt");
+  document.getElementById("adoShowTextWhile<!--#echo var="id" option="encoding:javascript" -->Output").innerHTML = langObjEvTyDynOvlRender.getText("adoShowTextWhileTxt");
+  document.getElementById("adoShowTextFor<!--#echo var="id" option="encoding:javascript" -->Output").innerHTML = langObjEvTyDynOvlRender.getText("adoShowTextForTxt");
+  document.getElementById("adoSecs<!--#echo var="id" option="encoding:javascript" -->Output").innerHTML = langObjEvTyDynOvlRender.getText("adoSecsTxt");
+// -->
+</script>
+
+<!--#endif -->

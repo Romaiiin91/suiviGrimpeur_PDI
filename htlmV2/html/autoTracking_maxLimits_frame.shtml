@@ -1,0 +1,914 @@
+<!--#set var="helpURL" val="javascript:launch('/help/autotracking_MaLi_h.shtml')" -->
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#set var="CustomWizFormAction" val="/sm/sm.srv" -->
+<!--#set var="selection" val="autotracking_MaLi" -->
+
+<!--#set var="activeMenu" val="dome" -->
+<!--#set var="activeMenu1" val="autotracking" -->
+<!--#set var="activePage" val="AuTrMaxLim" -->
+
+<!--#if expr="_$nbr = _" --><!--#set var="nbr" val="0" --><!--#endif -->
+<!--#if expr="$nbr = 0" --><!--#set var="camnbr" val="1" -->
+<!--#elif expr="$nbr = 1" --><!--#set var="camnbr" val="2" -->
+<!--#elif expr="$nbr = 2" --><!--#set var="camnbr" val="3" -->
+<!--#elif expr="$nbr = 3" --><!--#set var="camnbr" val="4" -->
+<!--#endif -->
+
+<!--#set var="root_Image_I$nbr$_Stream_Duration" val="0" -->
+
+<!--#include virtual="/sm/sm.srv?action=get&group=AutoTracking.A0.PanLimitEnabled,AutoTracking.A0.PanLimitStart,AutoTracking.A0.PanLimitEnd,AutoTracking.A0.TiltLimitEnabled,AutoTracking.A0.TiltMin,AutoTracking.A0.TiltMax,Image.I0.Appearance.Rotation,Image.I0.Appearance.SquarePixelEnabled,PTZ.UserCtlQueue,PTZ.Various.V$camnbr$,PTZ.Auxiliary.A$camnbr$,PTZ.Support,PTZ.ImageSource,PTZ.Limit" -->
+
+<!--#include virtual="/sm/sm.srv?action=get&group=PTZ.Various.V$camnbr$.CtlQueueing,PTZ.Auxiliary.A$camnbr$" -->
+<!--#if expr="$(root_PTZ_Various_V$camnbr$_CtlQueueing) = true" -->
+  <!--#set var="queueUsers" val="yes" -->
+<!--#endif -->
+
+<!--#if expr="_$root_PTZ_UserCtlQueue_U2_UserGroup != _" -->
+ <!--#set var="queue" val="no" -->
+<!--#elif expr="$glob_PTZCamera = yes" -->
+  <!--#set var="queue" val="no" -->
+<!--#endif -->
+
+
+  <!--#set var="resolution" val="320x180" -->
+<!--#set var="size" val="1" -->
+<!--#set var="external" val="no" -->
+<!--#set var="UseAudio" val="no" -->
+<!--#set var="UseRel" val="no" -->
+<!--#set var="useWithCam" val="no" -->
+<!--#set var="ptzgui" val="yes" -->
+<!--#set var="MovePan" val="abs" -->
+<!--#set var="MoveTilt" val="abs" -->
+<!--#set var="cgi_path" val="axis-cgi" -->
+<!--#set var="root_Layout_ShowAMCToolbar" val="no" -->
+
+<!--#set var="imagesize_opts" val="" -->
+<!--#if expr="_$resolution != _" --><!--#set var="imagesize_opts" val="$imagesize_opts$&resolution=$resolution$" --><!--#endif -->
+<!--#include virtual="/axis-cgi/view/imagesize.cgi?format=ssi&camera=$camnbr$$imagesize_opts$&rotation=$root_Image_I0_Appearance_Rotation$&squarepixel=$root_Image_I0_Appearance_SquarePixelEnabled$" -->
+<!--#if expr="_$resolution != _" --><!--#set var="resolution" val="$img_width$x$img_height$" --><!--#endif -->
+
+<!--#include virtual="/incl/top_incl.shtml" -->
+<!--#include virtual="/incl/setabsrel.shtml" -->
+<!--#set var="showPTZCrosshair" val="no" -->
+<!--#include virtual="/java/chkbox.shtml" -->
+<style type="text/css">
+
+.display   { font-family: courier new, courier, fixed; font-size: 11px; border: 1px solid black; background-color: white; color:black; }
+.dragbox   { position: absolute; background:#3366cc; filter:alpha(opacity=60); -moz-opacity:0.6; -khtml-opacity:0.6; opacity:0.6; z-index: 500; }
+.boxborder { position: absolute; background-color:transparent; filter:alpha(opacity=0); -moz-opacity:0; -khtml-opacity:0; opacity:0; z-index: 501; }
+
+</style>
+
+<script src="/incl/pos.js"></script>
+
+<script language="JavaScript">
+<!--
+var langObjAutoTrackMaxLimFrame = new Language("autoTracking", "autoTracking_maxLimits_frame");
+
+function noAction_ML(event)
+{
+  return false;
+}
+
+function onLoad()
+{
+  init();
+
+  if (browser != "IE") {
+    thedragbox = document.getElementById("zoombox");
+    thedragbox.style.visibility = 'hidden';
+
+    thedragarea = document.getElementById("stream");
+    thedragarea.onmousedown = noAction_ML;
+    thedragarea.onmouseup = noAction_ML;
+    thedragarea.onmousemove = noAction_ML;
+
+    img = thedragarea;
+
+    dragboxarea = getElementPosition_ML("stream")
+  }
+  <!--#if expr="$root_Image_I0_Appearance_Rotation != 0" -->
+    document.getElementById("tiltMinVisible").value = parseInt("<!--#echo var="root_AutoTracking_A0_TiltMin" option="encoding:javascript" -->", 10 ) * -1;
+    document.getElementById("tiltMaxVisible").value = parseInt("<!--#echo var="root_AutoTracking_A0_TiltMax" option="encoding:javascript" -->", 10 ) * -1;
+    document.getElementById("panStartVisible").value = parseInt("<!--#echo var="root_AutoTracking_A0_PanLimitStart" option="encoding:javascript" -->", 10 ) * -1;
+    document.getElementById("panEndVisible").value = parseInt("<!--#echo var="root_AutoTracking_A0_PanLimitEnd" option="encoding:javascript" -->", 10 ) * -1;
+  <!--#endif -->
+  toggleTilt();
+  togglePan();
+}
+
+function getElementPosition_ML(elemID)
+{
+  var offsetTrail = document.getElementById(elemID);
+  var offsetLeft = 0;
+  var offsetTop = 0;
+  while (offsetTrail) {
+    offsetLeft += offsetTrail.offsetLeft;
+    offsetTop += offsetTrail.offsetTop;
+    offsetTrail = offsetTrail.offsetParent;
+  }
+  if (navigator.userAgent.indexOf("Mac") != -1 && typeof document.body.leftMargin != "undefined") {
+    offsetLeft += parseInt(document.body.leftMargin, 10);
+    offsetTop += parseInt(document.body.topMargin, 10);
+  }
+  return {left:offsetLeft, top:offsetTop};
+}
+
+function placeHandler_ML(event)
+{
+  if (!event) event = window.event;
+  var mpos = getMousePosition(event);
+
+  thedragbox.onmousemove = dragHandler_ML;
+  thedragbox.onmouseup = stopDragging_ML;
+
+  thedragbox.style.width = boxdef.w;
+  thedragbox.style.height = boxdef.h;
+  thedragbox.style.left = mpos.x;
+  thedragbox.style.top = mpos.y;
+  thedragbox.style.visibility = '';
+
+  boxdef.x = mpos.x;
+  boxdef.y = mpos.y;
+  event.cancelBubble = true;
+  if (event.stopPropagation) event.stopPropagation();
+  return false; // Returning false prevents image drag'n'drop behaviour in mozilla.
+}
+
+var oldMousePosX = 0;
+var oldMousePosY = 0;
+
+function stopDragging_ML(event)
+{
+  if (!event) event = window.event;
+  thedragbox.onmousemove = noAction_ML;
+  thedragbox.onmouseup = noAction_ML;
+  thedragbox.onmousedown = moveHandler_ML;
+  thedragbox.style.cursor = 'move';
+  oldMousePosX = 0; // Reset after moveBox(mouseX, mouseY)
+  oldMousePosY = 0;
+  updateLimit();
+  event.cancelBubble = true;
+  if (event.stopPropagation) event.stopPropagation();
+  return false;
+}
+
+function moveHandler_ML(event)
+{
+  if (!event) event = window.event;
+  var mpos = getMousePosition(event);
+  moveBox_ML(mpos.x, mpos.y);
+  event.cancelBubble = true;
+  if (event.stopPropagation) event.stopPropagation();
+  return false; // Returning false prevents event bubbling
+}
+
+
+function moveBox_ML(mouseX, mouseY)
+{
+  if (oldMousePosX != 0) {
+    var boxwidth = parseInt(thedragbox.style.width.slice(0, -2), 10)
+    var boxheight = parseInt(thedragbox.style.height.slice(0, -2), 10)
+    var dx = (mouseX - oldMousePosX);
+    var dy = (mouseY - oldMousePosY);
+    if ((boxdef.x + dx >= dragboxarea.left) && ((boxdef.x + boxwidth + dx) <= (dragboxarea.left + thedragarea.width))) {
+      boxdef.x += mouseX - oldMousePosX;
+      thedragbox.style.left = boxdef.x;
+    } else if (boxdef.x + dx < dragboxarea.left) {
+      thedragbox.style.left = dragboxarea.left;
+      boxdef.x = dragboxarea.left;
+    } else if ((boxdef.x + boxwidth + dx) > (dragboxarea.left + thedragarea.width)) {
+      boxdef.x = dragboxarea.left + thedragarea.width - boxwidth;
+      thedragbox.style.left = boxdef.x;
+    }
+    if ((boxdef.y + dy >= dragboxarea.top) && ((boxdef.y + boxheight + dy) <= (dragboxarea.top + thedragarea.height))) {
+      boxdef.y += mouseY - oldMousePosY;
+      thedragbox.style.top = boxdef.y;
+    } else if (boxdef.y + dy < dragboxarea.top) {
+      thedragbox.style.top = dragboxarea.top;
+      boxdef.y = dragboxarea.top;
+    } else if ((boxdef.y + boxheight + dy) > (dragboxarea.top + thedragarea.height)) {
+      boxdef.y = dragboxarea.top + thedragarea.height - boxheight;
+      thedragbox.style.top = boxdef.y;
+    }
+  }
+  oldMousePosX = mouseX
+  oldMousePosY = mouseY
+  thedragbox.onmousemove = moveHandler_ML;
+  thedragbox.onmouseup = stopDragging_ML;
+}
+
+function dragHandler_ML(event)
+{
+  if (!event) event = window.event;
+  var mpos = getMousePosition(event);
+  resizeBox_ML(mpos.x, mpos.y);
+  event.cancelBubble = true;
+  if (event.stopPropagation) event.stopPropagation();
+  return false; // Returning false prevents event bubbling
+}
+
+function resizeBox_ML(mouseX, mouseY)
+{
+  var nX;
+  var nY;
+  var nW;
+  var nH;
+  var xdir;
+  if (mouseX < boxdef.x) {
+    xdir = 'w';
+    nX = mouseX;
+    nW = boxdef.x - mouseX;
+    if (nW < boxdef.w) {
+      nW = boxdef.w;
+      nX = boxdef.x - boxdef.w;
+    }
+  } else {
+    xdir = 'e';
+    nX = boxdef.x;
+    nW = mouseX - boxdef.x;
+    if (nW < boxdef.w) {
+      nW = boxdef.w;
+    }
+  }
+  if (mouseY < boxdef.y) {
+    ydir = 'n';
+    nY = mouseY;
+    nH = boxdef.y - mouseY;
+    if (nH < boxdef.h) {
+      nH = boxdef.h;
+      nY = boxdef.y - boxdef.h;
+    }
+  } else {
+    ydir = 's';
+    nY = boxdef.y;
+    nH = mouseY - boxdef.y;
+    if (nH < boxdef.h) {
+      nH = boxdef.h;
+    }
+  }
+  thedragbox.style.cursor = ydir + xdir + "-resize";
+  thedragbox.style.left = nX;
+  thedragbox.style.top = nY;
+  thedragbox.style.width = nW;
+  thedragbox.style.height = nH;
+}
+
+-->
+</script>
+<script language="JavaScript" src="/incl/activeX.js"></script>
+<script language="JavaScript">
+<!--
+
+<!--#include virtual="/incl/statusPtz.shtml" --> 
+
+function resetValues()
+{
+  document.location.reload(true);
+}
+function saveData()
+{
+  var maxPan = parseInt("<!--#if expr="_$root_PTZ_Limit_L$camnbr$_MaxPan != _" --><!--#echo var="root_PTZ_Limit_L$camnbr$_MaxPan" option="encoding:javascript" --><!--#else -->180<!--#endif -->", 10);
+  var minPan = parseInt("<!--#if expr="_$root_PTZ_Limit_L$camnbr$_MinPan != _" --><!--#echo var="root_PTZ_Limit_L$camnbr$_MinPan" option="encoding:javascript" --><!--#else -->-180<!--#endif -->", 10);
+  var maxTilt = parseInt("<!--#if expr="_$root_PTZ_Limit_L$camnbr$_MaxTilt != _" --><!--#echo var="root_PTZ_Limit_L$camnbr$_MaxTilt" option="encoding:javascript" --><!--#else -->180<!--#endif -->", 10);
+  var minTilt = parseInt("<!--#if expr="_$root_PTZ_Limit_L$camnbr$_MinTilt != _" --><!--#echo var="root_PTZ_Limit_L$camnbr$_MinTilt" option="encoding:javascript" --><!--#else -->-180<!--#endif -->", 10);
+
+  if (isTiltEnabled())
+  {
+    if (!isValidNumber("tiltMinVisible"))
+      return;
+    if (!isValidNumber("tiltMaxVisible"))
+      return;
+    var visibleMin = document.getElementById("tiltMinVisible").value;
+    var visibleMax = document.getElementById("tiltMaxVisible").value;
+    <!--#if expr="$root_Image_I0_Appearance_Rotation = 0" -->
+      if (!checkLimits("tiltMinVisible", minTilt, visibleMax))
+        return;
+      if (!checkLimits("tiltMaxVisible", visibleMin, maxTilt))
+        return;
+      document.getElementById("tiltMin").value = visibleMin;
+      document.getElementById("tiltMax").value = visibleMax;
+    <!--#else -->
+      if (!checkLimits("tiltMinVisible", visibleMax, minTilt * -1))
+        return;
+      if (!checkLimits("tiltMaxVisible", maxTilt * -1, visibleMin))
+        return;
+      document.getElementById("tiltMin").value = visibleMin * -1;
+      document.getElementById("tiltMax").value = visibleMax * -1;
+    <!--#endif -->
+  }
+  if (isPanEnabled())
+  {
+    if (!isValidNumber("panStartVisible"))
+      return;
+    if (!isValidNumber("panEndVisible"))
+      return;
+    var visibleStart = document.getElementById("panStartVisible").value;
+    var visibleEnd = document.getElementById("panEndVisible").value;
+    <!--#if expr="$root_Image_I0_Appearance_Rotation = 0" -->
+      if (!checkLimits("panStartVisible", minPan, visibleEnd))
+        return;
+      if (!checkLimits("panEndVisible",visibleStart , maxPan))
+        return;
+      document.getElementById("panStart").value = visibleStart;
+      document.getElementById("panEnd").value = visibleEnd;
+    <!--#else -->
+      if (!checkLimits("panStartVisible", visibleEnd,minPan * -1))
+        return;
+      if (!checkLimits("panEndVisible", maxPan * -1, visibleStart ))
+        return;
+      document.getElementById("panStart").value = visibleStart * -1;
+      document.getElementById("panEnd").value = visibleEnd * -1;
+    <!--#endif -->
+  }
+  SubmitForm();
+}
+
+function isValidNumber( id )
+{
+  o = document.getElementById(id);
+  if (isNaN(o.value))
+  {
+    alert( langObjAutoTrackMaxLimFrame.getText("invalValAlrt") );
+    o.focus();
+    o.select();
+    return false;
+  }
+  return true;
+}
+
+function checkLimits(id , min, max) 
+{
+  o = document.getElementById(id);
+  var intObjVal = parseFloat(o.value);
+  var intMin = parseFloat(min);
+  var intMax = parseFloat(max);
+
+  if (intObjVal < intMin || intObjVal > intMax) 
+  {
+    alert( langObjAutoTrackMaxLimFrame.getText("invalLimAlrt") );
+    o.focus();
+    o.select();
+    return false;
+  }
+  return true;
+}
+
+var currentLimit = null;
+function gotoTiltMin()
+{
+  if (!isTiltEnabled())
+  {
+    alert( langObjAutoTrackMaxLimFrame.getText("tiltLimDisAlrt") );
+    return;
+  }
+
+  if (!isValidNumber("tiltMinVisible"))
+    return;
+
+  var oTiltMin = document.getElementById("tiltMinVisible");
+  var tiltMin = parseFloat(oTiltMin.value);
+
+  gotoPTZ(null, tiltMin);
+  currentLimit = "tiltMin";
+  <!--#if expr="$root_Image_I0_Appearance_Rotation = 0" -->
+    setTimeout("drawLineTilt(" + tiltMin + ");", 1000);
+  <!--#else -->
+    setTimeout("drawLineTilt(" + tiltMin * -1 + ");", 1000);
+  <!--#endif -->
+}
+function gotoTiltMax()
+{
+  if (!isTiltEnabled())
+  {
+    alert( langObjAutoTrackMaxLimFrame.getText("tiltLimDisAlrt") );
+    return;
+  }
+
+  if (!isValidNumber("tiltMaxVisible"))
+    return;
+
+  var oTiltMax = document.getElementById("tiltMaxVisible");
+  var tiltMax = parseFloat(oTiltMax.value);
+
+  gotoPTZ(null, tiltMax);
+  currentLimit = "tiltMax";
+  <!--#if expr="$root_Image_I0_Appearance_Rotation = 0" -->
+    setTimeout("drawLineTilt(" + tiltMax + ");", 1000);
+  <!--#else -->
+    setTimeout("drawLineTilt(" + tiltMax * -1 + ");", 1000);
+  <!--#endif -->
+}
+function gotoPanLimitStart()
+{
+  if (!isPanEnabled())
+  {
+    alert( langObjAutoTrackMaxLimFrame.getText("panLimDisAlrt") );
+    return;
+  }
+
+  if (!isValidNumber("panStartVisible"))
+    return;
+
+  var oPanLimitStart = document.getElementById("panStartVisible");
+  var PanLimitStart = parseFloat(oPanLimitStart.value);
+
+  gotoPTZ(PanLimitStart,null);
+  currentLimit = "panStart";
+  <!--#if expr="$root_Image_I0_Appearance_Rotation = 0" -->
+    setTimeout("drawLinePan(" + PanLimitStart + ");", 1000);
+  <!--#else -->
+    setTimeout("drawLinePan(" + PanLimitStart * -1 + ");", 1000);
+  <!--#endif -->
+}
+function gotoPanLimitEnd()
+{
+  if (!isPanEnabled())
+  {
+    alert( langObjAutoTrackMaxLimFrame.getText("panLimDisAlrt") );
+    return;
+  }
+
+  if (!isValidNumber("panEndVisible"))
+    return;
+
+  var oPanLimitEnd = document.getElementById("panEndVisible");
+  var PanLimitEnd = parseFloat(oPanLimitEnd.value);
+
+  gotoPTZ(PanLimitEnd, null);
+  currentLimit = "panEnd";
+  <!--#if expr="$root_Image_I0_Appearance_Rotation = 0" -->
+    setTimeout("drawLinePan(" + PanLimitEnd + ");", 1000);
+  <!--#else -->
+    setTimeout("drawLinePan(" + PanLimitEnd * -1 + ");", 1000);
+  <!--#endif -->
+}
+
+function gotoPTZ(pan, tilt)
+{
+  var url = "/axis-cgi/com/ptz.cgi?camera=<!--#echo var="camnbr" option="encoding:url" -->&imagewidth=<!--#echo var="img_width" option="encoding:url" -->&imageheight=<!--#echo var="img_height" option="encoding:url" -->";
+  if (pan != null)
+    url += "&pan=" + pan;
+  if (tilt != null)
+    url += "&tilt=" + tilt;
+  var answer = sendAction(url);
+}
+
+var prevPTZ = null;
+var ptzRequest = AxisConnectionFactory.createAjaxConnection();
+ptzRequest.setOverrideMimeType( 'text/plain' );
+function updatePTZ()
+{
+  var now = new Date();
+  AxisConnectionFactory.sendAsync(["GET", "/axis-cgi/com/ptz.cgi?camera=<!--#echo var="camnbr" option="encoding:url" -->&imagewidth=<!--#echo var="img_width" option="encoding:url" -->&imageheight=<!--#echo var="img_height" option="encoding:url" -->&query=position&Date=" + now.getTime()], null, updatePTZ_onreadystatechange, ptzRequest);
+  delete now;
+}
+
+function updatePTZ_onreadystatechange()
+{
+  if (ptzRequest.getReadyState() == 4) {
+    var responseText = ptzRequest.getResponseText();
+    if (ptzRequest.getStatus() == 200 && prevPTZ != responseText) {
+      prevPTZ = responseText;
+      drawLine();
+    } else {
+      setTimeout(updatePTZ, 1000);
+    }
+  }
+}
+
+var request = AxisConnectionFactory.createAjaxConnection();
+request.setOverrideMimeType( 'text/plain' );
+function sendAction(action)
+{
+  var responseText = AxisConnectionFactory.getResponseTextWith(["GET", action, false], null, request);
+  return responseText;
+}
+
+var currentPan = null;
+var currentTilt = null;
+
+function drawLinePan(pan)
+{
+  currentPan = pan;
+  currentTilt = null;
+  drawLine();
+}
+function drawLineTilt(tilt)
+{
+  currentPan = null;
+  currentTilt = tilt;
+  drawLine();
+}
+
+function drawLine()
+{
+  var img_width = <!--#echo var="img_width" option="encoding:javascript" -->;
+  var img_height = <!--#echo var="img_height" option="encoding:javascript" -->;
+  var now = new Date();
+
+  if (currentPan != null) {
+    var currentPan_tmp = currentPan;
+    var coords = sendAction("/axis-cgi/view/ptzcoordcalc.cgi?action=getpantilt&responseformat=plain&imageresolution=" + img_width + "x" + img_height + "&imagerotation=<!--#echo var="root_Image_I0_Appearance_Rotation" option="encoding:url" -->&generate_header=yes&coordinates=1," + (img_height/2) + ":" + (img_width) + "," + (img_height/2) + "&timestamp=" + now.getTime() , "GET").split(":");
+    delete now;
+    var PanLimitStart = parseFloat(coords[0].split(",")[0]);
+    var PanLimitEnd = parseFloat(coords[1].split(",")[0]);
+
+    <!--#if expr="$root_Image_I0_Appearance_Rotation = 0" -->
+      if (PanLimitEnd < PanLimitStart) {
+        if (currentPan_tmp < PanLimitEnd)
+          currentPan_tmp += 360;
+        PanLimitEnd += 360;
+      }
+      PanLimitEnd -= PanLimitStart;
+      currentPan_tmp -= PanLimitStart;
+    <!--#else -->
+      if (PanLimitEnd > PanLimitStart) {
+        if (currentPan_tmp > PanLimitEnd)
+          currentPan_tmp -= 360;
+        PanLimitEnd -= 360;
+      }
+      PanLimitEnd -= PanLimitStart;
+      PanLimitEnd = -PanLimitEnd;
+      currentPan_tmp -= PanLimitStart;
+      currentPan_tmp = -currentPan_tmp;
+    <!--#endif -->
+    PanLimitStart = 0;
+
+    var mask_w = 20;
+    var mask_h = img_height;
+    var mask_x = parseInt(img_width / PanLimitEnd * currentPan_tmp - mask_w/2, 10);
+    var mask_y = 0;
+  } else {
+    var currentTilt_tmp = currentTilt;
+    var result = sendAction("/axis-cgi/view/ptzcoordcalc.cgi?action=getpantilt&responseformat=plain&imageresolution=" + img_width + "x" + img_height + "&imagerotation=<!--#echo var="root_Image_I0_Appearance_Rotation" option="encoding:url" -->&generate_header=yes&coordinates=" + (img_width/2) + ",1:" + (img_width/2) + "," + (img_height) + "&timestamp=" + now.getTime() , "GET");
+    var coords = result.split(":");
+    delete now;
+    var tiltMin = parseFloat(coords[1].split(",")[1]);
+    var tiltMax = parseFloat(coords[0].split(",")[1]);
+
+    <!--#if expr="$root_Image_I0_Appearance_Rotation = 0" -->
+      tiltMax -= tiltMin;
+      currentTilt_tmp -= tiltMin;
+    <!--#else -->
+      tiltMax -= tiltMin;
+      tiltMax = -tiltMax;
+      currentTilt_tmp -= tiltMin;
+      currentTilt_tmp = -currentTilt_tmp;
+    <!--#endif -->
+    tiltMin = 0;
+
+    var mask_h = 20;
+    var mask_w = img_width;
+    var mask_x = 0;
+    var mask_y = parseInt(img_height / tiltMax * (tiltMax - currentTilt_tmp) - mask_h/2, 10);
+  }
+
+  if (browser == "IE") {
+    var flags = 0
+    flags |= 2 // movable
+    flags |= 4 // fill
+    var x = parseInt(mask_x*9999/<!--#echo var="img_width" option="encoding:javascript" -->, 10)
+    var y = parseInt(mask_y*9999/<!--#echo var="img_height" option="encoding:javascript" -->, 10)
+    var w = parseInt(mask_w*9999/<!--#echo var="img_width" option="encoding:javascript" -->, 10)
+    var h = parseInt(mask_h*9999/<!--#echo var="img_height" option="encoding:javascript" -->, 10)
+    document.Player.SetUserWindow( 0, "", x, y, w, h, 0xCC6633, 50, flags)
+    document.WizardForm['x_0'].value = x
+    document.WizardForm['y_0'].value = y
+    document.WizardForm['w_0'].value = w
+    document.WizardForm['h_0'].value = h
+  } else {
+    imagepos = getPos(thedragarea)
+
+    if (mask_x < 0) {
+      mask_w += mask_x;
+      mask_x = 0;
+    }
+    if (mask_x + mask_w > <!--#echo var="img_width" option="encoding:javascript" -->)
+      mask_w = <!--#echo var="img_width" option="encoding:javascript" --> - mask_x;
+    if (mask_y < 0) {
+      mask_h += mask_y;
+      mask_y = 0;
+    }
+    if (mask_y + mask_h > <!--#echo var="img_height" option="encoding:javascript" -->)
+      mask_h = <!--#echo var="img_height" option="encoding:javascript" --> - mask_y;
+    if (mask_w > 0 && mask_h > 0) {
+      thedragbox.style.left =  imagepos.x + parseInt(mask_x, 10)
+      thedragbox.style.top =  imagepos.y + parseInt(mask_y, 10)
+      thedragbox.style.width = parseInt(mask_w, 10);
+      thedragbox.style.height = parseInt(mask_h, 10);
+      thedragbox.style.visibility = '';
+      boxdef.x = parseInt(thedragbox.style.left.slice(0, -2), 10)
+      boxdef.y = parseInt(thedragbox.style.top.slice(0, -2), 10)
+      thedragbox.onmousedown = moveHandler_ML;
+      thedragbox.style.cursor = 'move';
+      thedragbox.style.visibility = '';
+    } else {
+      thedragbox.style.visibility = 'hidden';
+    }
+  }
+  setTimeout(updatePTZ, 1000);
+}
+
+function updateLimit()
+{
+  if (currentLimit.length > 0) {
+    if (browser == "IE") {
+      var x = parseInt(document.getElementById('x_0').value*<!--#echo var="img_width" option="encoding:javascript" -->/9999, 10)
+      var y = parseInt(document.getElementById('y_0').value*<!--#echo var="img_height" option="encoding:javascript" -->/9999, 10)
+      var w = parseInt(document.getElementById('w_0').value*<!--#echo var="img_width" option="encoding:javascript" -->/9999, 10)
+      var h = parseInt(document.getElementById('h_0').value*<!--#echo var="img_height" option="encoding:javascript" -->/9999, 10)
+    } else {
+      var y = parseInt(thedragbox.style.top.slice(0, -2), 10) - dragboxarea.top
+      var x = parseInt(thedragbox.style.left.slice(0, -2), 10) - dragboxarea.left
+      var w = parseInt(thedragbox.style.width.slice(0, -2), 10)
+      var h = parseInt(thedragbox.style.height.slice(0, -2), 10)
+      if (x < 0) x = 0;
+      if (y < 0) y = 0;
+    }
+
+    var now = new Date();
+    var coords = sendAction("/axis-cgi/view/ptzcoordcalc.cgi?action=getpantilt&responseformat=plain&imageresolution=<!--#echo var="img_width" option="encoding:url" -->x<!--#echo var="img_height" option="encoding:url" -->&imagerotation=<!--#echo var="root_Image_I0_Appearance_Rotation" option="encoding:url" -->&generate_header=yes&coordinates=" + parseInt(x + w/2, 10) + "," + parseInt(<!--#echo var="img_height" option="encoding:url" -->/2, 10) + ":" + parseInt(<!--#echo var="img_width" option="encoding:url" -->/2, 10) + "," + parseInt(y + h/2, 10) + "&timestamp=" + now.getTime() , "GET").split(":")
+
+    var pan = parseFloat(coords[0].split(",")[0]);
+    var tilt = parseFloat(coords[1].split(",")[1]);
+
+    if (currentLimit == "tiltMin" || currentLimit == "tiltMax") {
+      currentTilt = tilt;
+      document.getElementById( currentLimit ).value = tilt;
+      <!--#if expr="$root_Image_I0_Appearance_Rotation = 0" -->
+        document.getElementById( currentLimit+"Visible" ).value = tilt;
+      <!--#else -->
+        document.getElementById( currentLimit+"Visible" ).value = tilt * -1;
+      <!--#endif -->
+    } else if (currentLimit == "panStart" || currentLimit == "panEnd") {
+      currentPan = pan;
+      document.getElementById( currentLimit ).value = pan;
+      <!--#if expr="$root_Image_I0_Appearance_Rotation = 0" -->
+        document.getElementById( currentLimit+"Visible" ).value = pan;
+      <!--#else -->
+        document.getElementById( currentLimit+"Visible" ).value = pan * -1;
+      <!--#endif -->
+    }
+  }
+}
+
+function enableQueue(form)
+{
+  form.submit();
+  window.setTimeout("window.location.reload(true)", 1000);
+}
+
+function isTiltEnabled()
+{
+  return document.getElementById("idTiltEnabled").checked;
+}
+
+function isPanEnabled()
+{
+  return document.getElementById("idPanEnabled").checked;
+}
+
+function toggleTilt()
+{
+  var isEnabled = isTiltEnabled();
+  document.getElementById("tiltMinVisible").disabled = !isEnabled;
+  document.getElementById("tiltMaxVisible").disabled = !isEnabled;
+}
+
+function togglePan()
+{
+  var isEnabled = isPanEnabled();
+  document.getElementById("panStartVisible").disabled = !isEnabled;
+  document.getElementById("panEndVisible").disabled = !isEnabled;
+}
+
+if ((navigator.appName == "Microsoft Internet Explorer") && (navigator.platform != "MacPPC") && (navigator.platform != "Mac68k")) {
+  var browser = "IE"
+} else {
+  var browser = "Netscape"
+}
+
+var thedragbox;
+var thedragarea;
+var img;
+var boxdef = new Box(0,0,0,0);
+
+var SaveBtnStatTxt;
+var ResBtnStatTxt;
+function globalLanguageVars()
+{
+  SaveBtnStatTxt = langObjAutoTrackMaxLimFrame.getText("saveBtnStatTxt");
+  ResBtnStatTxt = langObjAutoTrackMaxLimFrame.getText("resBtnStatTxt");
+}
+//-->
+</script>
+<!--#include virtual="/incl/ptz_incl.shtml" -->
+<!--#include virtual="/incl/ptzctrlpanel_incl2.shtml" -->
+</head>
+
+<body <!--#include virtual="/incl/bodytag.shtml" --> onload="langObjAutoTrackMaxLimFrame.init();onLoad();">
+
+<!--#include virtual="/incl/top_incl2.shtml" -->
+
+<form name="WizardForm" action="<!--#echo var="CustomWizFormAction" option="encoding:url" -->" method="POST" onSubmit="return false;">
+<table border="0" cellpadding="3" cellspacing="0" width="100%" valign="top">
+  <tr>
+    <td class="topTitle" align="left" colspan="3" nowrap><span id="maxLimTitleTxt"></span></td>
+    <td class="topTitle"><div align="right"><a href="<!--#echo var="helpURL" option="encoding:url" -->"><img height="27" width="27" src="/pics/help.gif" border="0" id="hlpPic"></a></div></td>
+  </tr>
+
+  <tr>
+    <td colspan="4" noWrap class="subTitle"><span id="maxLimTxt"></span></td>
+  </tr>
+  <tr>
+    <td colspan="4" class="oddItem">
+      <!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.AutoTracking.A0.TiltLimitEnabled&pre_format=&middle_format=%26nbsp%3B&end_format=&input_format=onclick%3D%22javascript%3AtoggleTilt%28%29%22%20id%3D%22idTiltEnabled%22" -->
+      <input type="hidden" name="root_AutoTracking_A0_TiltMin" id="tiltMin" value="<!--#echo var="root_AutoTracking_A0_TiltMin" option="encoding:html" -->" />
+      <input type="hidden" name="root_AutoTracking_A0_TiltMax" id="tiltMax" value="<!--#echo var="root_AutoTracking_A0_TiltMax" option="encoding:html" -->" />
+    </td>
+  </tr>
+  <tr>
+    <td class="oddItem">
+      <a href="javascript:<!--#if expr="$root_Image_I0_Appearance_Rotation = 0" -->gotoTiltMin();<!--#else -->gotoTiltMax();<!--#endif -->"><span id="lowerTiltAngTxt"></span></a>
+    </td>
+    <td class="oddItem">
+      <!--#if expr="$root_Image_I0_Appearance_Rotation = 0" -->
+        <input type="text" name="tiltMinVisible" id="tiltMinVisible" value="<!--#echo var="root_AutoTracking_A0_TiltMin" option="encoding:html" -->" disabled="disabled" maxlength="6" style="width:90px;" />
+      <!--#else -->
+        <input type="text" name="tiltMaxVisible" id="tiltMaxVisible" value="<!--#echo var="root_AutoTracking_A0_TiltMax" option="encoding:html" -->" disabled="disabled" maxlength="6" style="width:90px;" />
+      <!--#endif -->
+    </td>
+    <td class="oddItem">
+      <a href="javascript:<!--#if expr="$root_Image_I0_Appearance_Rotation = 0" -->gotoTiltMax();<!--#else -->gotoTiltMin();<!--#endif -->"><span id="upperTiltAngTxt"></span></a>
+    </td>
+    <td class="oddItem">
+      <!--#if expr="$root_Image_I0_Appearance_Rotation = 0" -->
+        <input type="text" name="tiltMaxVisible" id="tiltMaxVisible" value="<!--#echo var="root_AutoTracking_A0_TiltMax" option="encoding:html" -->" disabled="disabled" maxlength="6" style="width:90px;" />
+      <!--#else -->
+        <input type="text" name="tiltMinVisible" id="tiltMinVisible" value="<!--#echo var="root_AutoTracking_A0_TiltMin" option="encoding:html" -->" disabled="disabled" maxlength="6" style="width:90px;" />
+      <!--#endif -->
+    </td>
+  </tr>
+  <tr>
+    <td class="evenItem" colspan="4">
+      <!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.AutoTracking.A0.PanLimitEnabled&pre_format=&middle_format=%26nbsp%3B&end_format=&input_format=onclick%3D%22javascript%3AtogglePan%28%29%22%20id%3D%22idPanEnabled%22" -->
+      
+      <input type="hidden" name="root_AutoTracking_A0_PanLimitStart" id="panStart" value="<!--#echo var="root_AutoTracking_A0_PanLimitStart" option="encoding:html" -->" style="width:90px;" />
+      <input type="hidden" name="root_AutoTracking_A0_PanLimitEnd" id="panEnd" value="<!--#echo var="root_AutoTracking_A0_PanLimitEnd" option="encoding:html" -->" style="width:90px;" />
+    </td>
+  </tr>
+  <tr>
+    <td class="evenItem">
+      <a href="javascript:<!--#if expr="$root_Image_I0_Appearance_Rotation = 0" -->gotoPanLimitStart();<!--#else -->gotoPanLimitEnd();<!--#endif -->"><span id="panLimStartTxt"></span></a>
+    </td>
+    <td class="evenItem">
+      <!--#if expr="$root_Image_I0_Appearance_Rotation = 0" -->
+        <input type="text" name="panStartVisible" id="panStartVisible" value="<!--#echo var="root_AutoTracking_A0_PanLimitStart" option="encoding:html" -->" disabled="disabled" maxlength="6" style="width:90px;" />
+      <!--#else -->
+        <input type="text" name="panEndVisible" id="panEndVisible" value="<!--#echo var="root_AutoTracking_A0_PanLimitEnd" option="encoding:html" -->" disabled="disabled" maxlength="6" style="width:90px;" />
+      <!--#endif -->
+    </td>
+    <td class="evenItem">
+      <a href="javascript:<!--#if expr="$root_Image_I0_Appearance_Rotation = 0" -->gotoPanLimitEnd();<!--#else -->gotoPanLimitStart();<!--#endif -->"><span id="panLimEndTxt"></span></a>
+    </td>
+    <td class="evenItem">
+      <!--#if expr="$root_Image_I0_Appearance_Rotation = 0" -->
+        <input type="text" name="panEndVisible" id="panEndVisible" value="<!--#echo var="root_AutoTracking_A0_PanLimitEnd" option="encoding:html" -->" disabled="disabled" maxlength="6" style="width:90px;" />
+      <!--#else -->
+        <input type="text" name="panStartVisible" id="panStartVisible" value="<!--#echo var="root_AutoTracking_A0_PanLimitStart" option="encoding:html" -->" disabled="disabled" maxlength="6" style="width:90px;" />
+      <!--#endif -->
+    </td>
+  </tr>
+
+  <tr>
+    <td class="oddItem" colspan="4" align="center">
+      <i><span id="noteTxt"></span></i>
+    </td>
+  </tr>
+
+  <tr>
+    <td class="oddItem" colspan="4" align="center">
+      <table border="0" cellpadding="0" cellspacing="0" valign="top">
+        <tr>
+          <td class="oddItem" align="right">
+            <div id="filterinstallocation"></div>
+            <img id="crosshair" src="/pics/crosshair.png" width="16" height="16" style="position:absolute;visibility:hidden;left:0;top:0" border="0" />
+            <script language="JavaScript" type="text/javascript"><!--
+              var File = "/axis-cgi/mjpg/video.cgi?";
+              File += "camera=<!--#echo var="camnbr" option="encoding:url" -->";
+              File += "&rotation=<!--#echo var="root_Image_I0_Appearance_Rotation" option="encoding:url" -->";
+              File += "&resolution=<!--#echo var="resolution" option="encoding:url" -->";
+
+              var stopFile = File;
+              <!--#set var="root_Image_I$nbr$_Stream_Duration" val="0" -->
+              <!--#include virtual="/incl/video.shtml" -->
+              video(File);
+
+              stopStartStream(File);
+
+              if (browser == "IE") {
+                document.write('<input type="hidden" id="x_0" name="x_0" value="">')
+                document.write('<input type="hidden" id="y_0" name="y_0" value="">')
+                document.write('<input type="hidden" id="w_0" name="w_0" value="">')
+                document.write('<input type="hidden" id="h_0" name="h_0" value="">')
+              } else {
+                document.write('<div id="zoombox" class="dragbox"></div>')
+              }
+              // --></script>
+          </td>
+          <td class="oddItem" align="left">
+            <!--#include virtual="/incl/tiltbar.shtml" -->
+          </td>
+        </tr>
+        <tr>
+          <td class="oddItem" colspan="2" align="center">
+
+            <!--#include virtual="/incl/bars.shtml" -->
+
+            <script language="JavaScript" for="Player" event="OnUserWindowChanged(theID, theXPos, theYPos, theWidth, theHeight, theState, isForced)">
+            <!--
+              {
+                document.getElementById('x_0').value = theXPos;
+                document.getElementById('y_0').value = theYPos;
+                document.getElementById('w_0').value = theWidth;
+                document.getElementById('h_0').value = theHeight;
+                updateLimit();
+              }
+            //-->
+            </script>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td class="topTitle" align="center" colspan="4">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td class="button"><input type="button" class="btnNormal" width="75" onClick="JavaScript:saveData()" onMouseOver="return showStatus(SaveBtnStatTxt)" onMouseOut="return showStatus('')" id="AuTr_MaLi_SaveBtn"></td>
+          <td class="button">&nbsp;</td>
+          <td class="button"><input type="button" width="75" onClick="JavaScript:resetValues()" class="btnNormal" onMouseOver="return showStatus(ResBtnStatTxt)" onMouseOut="return showStatus('')" id="AuTr_MaLi_resetBtn"><input type="hidden" name="return_page" value="/operator/autoTracking_maxLimits_frame.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->"><input type="hidden" name="action" value="modify"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+</form>
+
+
+      <!--#if expr="$queue != no" -->
+        <form action="/sm/sm.srv" method="POST">
+          <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <td class="subTitle" colspan="5" align="left" class="evenItem"><span id="ptzQueSetTxt"></span></td>
+            </tr>
+            <tr>
+            <!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.PTZ.Various.V$camnbr$.CtlQueueing&pre_format=<td>&middle_format=:%26nbsp;</td><td>&end_format=</font></td></tr>" -->
+            <!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.PTZ.Various.V$camnbr$.CtlQueueLimit&pre_format=<td>&middle_format=:%26nbsp;</td><td>&end_format=</font></td></tr>" -->
+            <tr>
+              <td align="left" colspan="5" class="evenItem">
+                <input type="hidden" name="action" value="modify">
+                <input type="button" class="btnNormal" value="Apply" onclick="enableQueue(this.form)">
+                <input type="hidden" name="camera" value="<!--#echo var="camnbr" option="encoding:url" -->">
+              </td>
+            </tr>
+          </table>
+        </form>
+      <!--#endif -->
+
+
+
+
+<!--#if expr="$queueUsers = yes" -->
+      <table border="0" cellpadding="3" cellspacing="0" width="100%">
+        <tr>
+          <td class="subTitle" colspan="5" align="left"><span id="ptzQueUsersTxt"></span></td>
+        </tr>
+        <tr>
+          <td nowrap class="oddItem"><span id="statQueTxt"></span></td>
+          <td class="oddItem"><input type="text" name="ptzqstatus" value="" size="65" disabled></td>
+          <td nowrap class="oddItem" align="right"><span id="posQueTxt"></span></td>
+          <td class="oddItem"><input type="text" name="ptzqpos" value="" size="12" disabled></td>
+          <td class="oddItem">&nbsp;</td>
+        </tr>
+        <tr>
+          <td nowrap class="oddItem" nowrap><span id="tiReTxt"></span></td>
+          <td class="oddItem" nowrap><input type="text" name="ptzqtleft" value="" size="10" disabled>&nbsp;<span id="secsTxt"></span></td>
+          <td class="oddItem" colspan="2" align="right">
+            <input type="hidden" name="ptzqcontrol"  value="request">
+            <input type="hidden" name="ptzqcamera" value="<!--#echo var="camnbr" option="encoding:url" -->">
+            <input type="hidden" name="ptzqtagresponse" value="yes">
+            <input type="button" name="ptzqlabel" class="btnLarge" value="Request control" onClick="JavaScript:ctlReq(this.form)">
+            <input type="hidden" name="ptzqcontrol" value="query">
+            <input type="hidden" name="ptzqtagresponse" value="yes">
+            <input type="hidden" name="ptzqcamera" value="<!--#echo var="camnbr" option="encoding:url" -->">
+          </td>
+        </tr>
+        <script language="JavaScript">ctlStart();</script>
+        <tr>
+          <td colspan="5" align="center" class="oddItem">&nbsp;</td>
+        </tr>
+      </table>
+<!--#endif -->
+<!--#include virtual="/incl/bottom_incl.shtml" -->

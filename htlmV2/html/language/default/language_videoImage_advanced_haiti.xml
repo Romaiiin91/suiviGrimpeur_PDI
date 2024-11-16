@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+  <advanced>
+    <pageTitle type="title" minor="0">Video &#x26; Audio/Camera Settings</pageTitle>
+    <centTxt type="msgAsText" minor="1">Center</centTxt>
+    <spotTxt type="msgAsText" minor="1">Spot</spotTxt>
+    <uppTxt type="msgAsText" minor="1">Upper</uppTxt>
+    <lowerTxt type="msgAsText" minor="1">Lower</lowerTxt>
+    <leftTxt type="msgAsText" minor="1">Left</leftTxt>
+    <rightTxt type="msgAsText" minor="1">Right</rightTxt>
+    <custTxt type="msgAsText" minor="1">Custom</custTxt>
+    <inValAlrt type="alert" minor="0">Invalid value.</inValAlrt>
+    <shutTimAlrt type="alert" minor="0">Max shutter time must be longer than or equal to min shutter time.</shutTimAlrt>
+    <gainAlrt type="alert" minor="0">Max gain must be higher than or equal to min gain.</gainAlrt>
+    <holdCurNotAllowed type="alert" minor="0">Exposure control is not allowed to be 'Hold current' when automatic iris adjustment is enabled.</holdCurNotAllowed>
+    <reconfigDPTZ type="msgAsText" minor="0">Reconfiguring, please wait...</reconfigDPTZ>
+    <alertDisableDPTZ type="alert" minor="0">Are you sure you want to disable the view area functionality?</alertDisableDPTZ>
+    <irisErr type="msgAsText" minor="0">Unable to get iris type</irisErr>
+    <irisStateConfigErr type="msgAsText" minor="0">Error in iris configuration</irisStateConfigErr>
+    <irisStateManual type="msgAsText" minor="0">(Manual iris)</irisStateManual>
+    <irisStateUnknown type="msgAsText" minor="0">Unknown state</irisStateUnknown>
+    <irisStateErr type="msgAsText" minor="0">Unable to get iris state</irisStateErr>
+    <openImgWinTxt type="msg" minor="0">Open an image window</openImgWinTxt>
+    <saveAdvBtnStatTxt type="msg" minor="0">Save advanced settings</saveAdvBtnStatTxt>
+    <resBtnStatTxt type="msg" minor="0">Revert to last saved settings</resBtnStatTxt>
+    <camSetTxt type="text" minor="0">Camera Settings</camSetTxt>
+    <hlpTxt type="image" minor="0" imageid="hlpPic">Click here for help on this page</hlpTxt>
+    <capModeTitle type="text" minor="0">Capture mode</capModeTitle>
+    <capModeTxt type="text" minor="0">Capture mode:</capModeTxt>
+    <capModeWarning type="text" minor="0">Warning!</capModeWarning>
+    <capModeInfoTxt1 type="text" minor="1">When changing Capture mode all settings concerning</capModeInfoTxt1>
+    <capModeInfoTxt2 type="text" minor="0">the image will be removed/reset. Among them are:</capModeInfoTxt2>
+    <capModeExpWin type="text" minor="1">Exposure zones/Exposure windows</capModeExpWin>
+    <capModeGuardTour type="text" minor="0">Guard tours</capModeGuardTour>
+    <capModeImOv type="text" minor="0">Image overlays</capModeImOv>
+    <capModeMotDetWin type="text" minor="0">Motion detection windows</capModeMotDetWin>
+    <capModePresetPos type="text" minor="0">Preset positions</capModePresetPos>
+    <capModePrivMask type="text" minor="0">Privacy masks</capModePrivMask>
+    <capModeStreamProf type="text" minor="0">Stream profiles</capModeStreamProf>
+    <capModeViewArea type="text" minor="0">View area</capModeViewArea>
+    <capModeViewAreas type="text" minor="0">View areas</capModeViewAreas>
+    <capModeInfoTxt3 type="text" minor="0">It is also recommended that the Action Rules settings are adjusted</capModeInfoTxt3>
+    <capModeInfoTxt4 type="text" minor="0">to match the selected Capture Mode.</capModeInfoTxt4>
+    <capModeContinue type="text" minor="0">Continue anyway?</capModeContinue>
+    <dPTZTxt type="text" minor="0">View Area</dPTZTxt>
+    <dPTZsTxt type="text" minor="0">View Areas</dPTZsTxt>
+    <enDPTZTxt type="text" minor="0">Enable View Area</enDPTZTxt>
+    <enDPTZsTxt type="text" minor="0">Enable View Areas</enDPTZsTxt>
+    <imApTxt type="text" minor="0">Image Appearance</imApTxt>
+    <colLevTxt1 type="text" minor="0">Color level:</colLevTxt1>
+    <colSTxt type="text" minor="0">Color setting:</colSTxt>
+    <briTxt type="text" minor="0">Brightness:</briTxt>
+    <sharpTxt type="text" minor="0">Sharpness:</sharpTxt>
+    <niVi1Txt type="text" minor="0">IR cut filter:</niVi1Txt>
+    <daNiShLeTxt type="text" minor="0">Day/Night shift level:</daNiShLeTxt>
+    <irIllTxt type="text" minor="0">IR Illumination</irIllTxt>
+    <enIrIllTxt type="text" minor="0">Enable IR illumination</enIrIllTxt>
+    <syncIrIllTxt type="text" minor="0">Synchronize IR illumination with day/night</syncIrIllTxt>
+    <confIrIllTxt type="text" minor="0">Configure IR illumination:</confIrIllTxt>
+    <edit1Btn type="button" minor="0" buttonid="adv_IrIllBtn">Edit...</edit1Btn>
+    <contrTxt type="text" minor="0">Contrast:</contrTxt>
+    <witBal1Txt type="text" minor="0">White Balance</witBal1Txt>
+    <witBal2Txt type="text" minor="0">White balance:</witBal2Txt>
+    <wdr1Txt type="text" minor="0">Wide Dynamic Range</wdr1Txt>
+    <enDyCoTxt type="text" minor="0">Enable Dynamic Contrast</enDyCoTxt>
+    <lowTxt type="text" minor="0">Low</lowTxt>
+    <highTxt type="text" minor="0">High</highTxt>
+    <wdr2Txt type="text" minor="0">Wide Dynamic Range</wdr2Txt>
+    <wdr3Txt type="text" minor="0">Wide dynamic range:</wdr3Txt>
+    <exSeTxt type="text" minor="0">Exposure Settings</exSeTxt>
+    <expValTxt type="text" minor="0">Exposure value:</expValTxt>
+    <hlcSensTxt type="text" minor="2">Enable Highlight compensation:</hlcSensTxt>
+    <enBacCheckBoxTxt type="text" minor="0">Enable Backlight compensation</enBacCheckBoxTxt>
+    <auGaCtlTxt type="text" minor="0">Automatic gain control:</auGaCtlTxt>
+    <expCtl1Txt type="text" minor="0">Exposure control:</expCtl1Txt>
+    <shuSpTxt type="text" minor="0">Shutter speed:</shuSpTxt>
+    <expCtl2Txt type="text" minor="0">Exposure control:</expCtl2Txt>
+    <autoPHTxt type="msgAsText" minor="0">Automatic</autoPHTxt>
+    <outdoor_autoPHTxt type="msgAsText" minor="0">Automatic Outdoor</outdoor_autoPHTxt>
+    <holdPHTxt type="msgAsText" minor="0">Hold current</holdPHTxt>
+    <fixed_outdoorPHTxt type="msgAsText" minor="0">Fixed Outdoor</fixed_outdoorPHTxt>
+    <fixed_outdoor1PHTxt type="msgAsText" minor="0">Fixed Outdoor 1</fixed_outdoor1PHTxt>
+    <fixed_outdoor2PHTxt type="msgAsText" minor="0">Fixed Outdoor 2</fixed_outdoor2PHTxt>
+    <fixed_indoorPHTxt type="msgAsText" minor="0">Fixed Indoor</fixed_indoorPHTxt>
+    <fixed_fluor1PHTxt type="msgAsText" minor="0">Fixed Fluorescent 1</fixed_fluor1PHTxt>
+    <fixed_fluor2PHTxt type="msgAsText" minor="0">Fixed Fluorescent 2</fixed_fluor2PHTxt>
+    <sodiumPHTxt type="msgAsText" minor="0">Street light - Sodium</sodiumPHTxt>
+    <mercuryPHTxt type="msgAsText" minor="0">Street light - Mercury</mercuryPHTxt>
+    <defaultPHTxt type="msgAsText" minor="0">Default</defaultPHTxt>
+    <motionPHTxt type="msgAsText" minor="0">Motion</motionPHTxt>
+    <lownoisePHTxt type="msgAsText" minor="0">Low noise</lownoisePHTxt>
+    <defaultPHTxt2 type="msgAsText" minor="0">Automatic</defaultPHTxt2>
+    <motionPHTxt2 type="msgAsText" minor="0">Low motion blur</motionPHTxt2>
+    <offPHTxt type="msgAsText" minor="0">Off</offPHTxt>
+    <wdr1PHTxt type="msgAsText" minor="0">WDR 1</wdr1PHTxt>
+    <wdr2PHTxt type="msgAsText" minor="0">WDR 2</wdr2PHTxt>
+    <wdr3PHTxt type="msgAsText" minor="0">WDR 3</wdr3PHTxt>
+    <fullPHTxt type="msgAsText" minor="0">Full</fullPHTxt>
+    <centerPHTxt type="msgAsText" minor="0">Center</centerPHTxt>
+    <onPHTxt type="msgAsText" minor="0">On</onPHTxt>
+    <highPHTxt type="msgAsText" minor="0">High frequency</highPHTxt>
+    <lowPHTxt type="msgAsText" minor="0">Low frequency</lowPHTxt>
+    <allTxt type="msgAsText" minor="0">All</allTxt>
+    <presetsTxt type="msgAsText" minor="0">Presets</presetsTxt>
+    <automaticTxt type="msgAsText" minor="0">Automatic</automaticTxt>
+    <manTxt type="msgAsText" minor="0">Manual</manTxt>
+    <flFr50Txt type="msgAsText" minor="0">Flicker-free 50 Hz</flFr50Txt>
+    <flFr60Txt type="msgAsText" minor="0">Flicker-free 60 Hz</flFr60Txt>
+    <flRd50Txt type="msgAsText" minor="0">Flicker-reduced 50 Hz</flRd50Txt>
+    <flRd60Txt type="msgAsText" minor="0">Flicker-reduced 60 Hz</flRd60Txt>
+    <holdTxt type="msgAsText" minor="0">Hold current</holdTxt>
+    <maExTxt type="text" minor="0">Max exposure time:</maExTxt>
+    <expTimeTxt type="text" minor="0">Exposure time:</expTimeTxt>
+    <usSlowTxt type="text" minor="0">Allow slow shutter</usSlowTxt>
+    <irisTxt type="text" minor="0">Iris:</irisTxt>
+    <gain1Txt type="text" minor="0">Gain:</gain1Txt>
+    <enBacTxt type="text" minor="0">Enable Backlight compensation:</enBacTxt>
+    <maGaTxt type="text" minor="0">Max gain:</maGaTxt>
+    <exWinTxt type="text" minor="0">Exposure zones:</exWinTxt>
+    <autoTxt type="text" minor="0">Auto</autoTxt>
+    <defiTxt type="text" minor="0">Defined</defiTxt>
+    <edit2Btn type="button" minor="0" buttonid="adv_EditBtn">Edit...</edit2Btn>
+    <niVi2Txt type="text" minor="0">IR cut filter:</niVi2Txt>
+    <seIrLaBtn type="text" minor="0">Set IR Lamp:</seIrLaBtn>
+    <iRLOnBtn type="button" minor="0" buttonid="onBtn">On</iRLOnBtn>
+    <iRLOffBtn type="button" minor="0" buttonid="offBtn">Off</iRLOffBtn>
+    <expPriTxt type="text" minor="0">Exposure priority:</expPriTxt>
+    <shutTxt type="text" minor="0">Shutter:</shutTxt>
+    <expMinTxt type="text" minor="0">Min:</expMinTxt>
+    <s1Txt type="text" minor="0">s</s1Txt>
+    <expMaxTxt type="text" minor="0">Max:</expMaxTxt>
+    <s2Txt type="text" minor="0">s</s2Txt>
+    <gain2Txt type="text" minor="0">Gain:</gain2Txt>
+    <minGainTxt type="text" minor="0">Min:</minGainTxt>
+    <dB1Txt type="text" minor="0">dB</dB1Txt>
+    <maxGainTxt type="text" minor="0">Max:</maxGainTxt>
+    <dB2Txt type="text" minor="0">dB</dB2Txt>
+    <imaSetTxt type="text" minor="0">Image Settings</imaSetTxt>
+    <auFoTxt type="text" minor="0">Autofocus enabled:</auFoTxt>
+    <seTxt type="text" minor="0">Sensitivity:</seTxt>
+    <noiseReductionSettingTxt type="text" minor="0">Noise reduction:</noiseReductionSettingTxt>
+    <stabilTxt type="text" minor="0">Stabilizer:</stabilTxt>
+    <imgFreTxt type="text" minor="0">Image freeze on PTZ:</imgFreTxt>
+    <irisConfigTxt type="text" minor="0">Iris configuration:</irisConfigTxt>
+    <irisUpdatingTxt type="text" minor="0">Updating...</irisUpdatingTxt>
+    <edit3Btn type="button" minor="0" buttonid="editBtn">Edit...</edit3Btn>
+    <enAuIrAdTxt type="text" minor="0">Enable automatic iris adjustment</enAuIrAdTxt>
+    <irisAdjTxt type="text" minor="0">Iris adjustment:</irisAdjTxt>
+    <daNiTxt type="text" minor="0">Day/Night</daNiTxt>
+    <adv_DaNiShPriTxt type="text" minor="0">Day/Night shift priority:</adv_DaNiShPriTxt>
+    <niVi3Txt type="text" minor="0">IR cut filter:</niVi3Txt>
+    <enFoAdTxt type="text" minor="0">Enable focus adjustment for IR illumination</enFoAdTxt>
+    <viewTxt type="text" minor="0">View Image Settings</viewTxt>
+    <viewImgTxt type="text" minor="0">View image &#x3C;b&#x3E;after&#x3C;/b&#x3E; saving.</viewImgTxt>
+    <viewBtn type="button" minor="0" buttonid="adv_ViewBtn">View...</viewBtn>
+    <saveBtn type="button" minor="0" buttonid="adv_SaveBtn">Save</saveBtn>
+    <resetBtn type="button" minor="0" buttonid="adv_ResetBtn">Reset</resetBtn>
+    <defogSettingTxt type="text" minor="0">Auto defog:</defogSettingTxt>
+    <defogOff type="text" minor="0">Off</defogOff>
+    <defogHigh type="text" minor="0">High</defogHigh>
+    <defogMedium type="text" minor="0">Medium</defogMedium>
+    <defogLow type="text" minor="0">Low</defogLow>
+    <autoDNIrCutTxt type="text" minor="0">Auto</autoDNIrCutTxt>
+    <yesDNIrCutTxt type="text" minor="0">On</yesDNIrCutTxt>
+    <noDNIrCutTxt type="text" minor="0">Off</noDNIrCutTxt>
+
+  </advanced>
+	
+	<exposure_windows>
+    <pageTitle type="title" minor="0">Exposure zones/Exposure Windows</pageTitle>
+    <maxExpWindowsTxt type="alert" minor="0">Max number of custom exposure windows reached.</maxExpWindowsTxt>
+    <newTxt type="msgAsText" minor="0">New</newTxt>
+    <remInclExpWinAlrt type="alert" minor="0">The window cannot be removed.&#10;Custom setting requires at least one include window.</remInclExpWinAlrt>
+    <delSelWinConfirm type="alert" minor="0">Do you really want to delete the selected exposure window?</delSelWinConfirm>
+    <selExpWinAlrt type="alert" minor="0">Select an exposure window first.</selExpWinAlrt>
+    <noWinSelAlrt type="alert" minor="0">No window selected</noWinSelAlrt>
+    <expWinTitleTxt type="text" minor="0">Exposure Windows</expWinTitleTxt>
+    <helpTxt type="image" minor="0" imageid="hlpPic">Click here for help on this page</helpTxt>
+    <expWinTxt type="text" minor="0">Exposure Windows</expWinTxt>
+    <selWinSetTxt type="text" minor="0">Select window setting:</selWinSetTxt>
+    <adInBtn type="button" minor="0" buttonid="addInBtn">Add include</adInBtn>
+    <adExBtn type="button" minor="0" buttonid="addExBtn">Add exclude</adExBtn>
+    <remBtn type="button" minor="0" buttonid="removeBtn">Remove</remBtn>
+    <rotNotTxt type="text" minor="0">&#x3C;b&#x3E;Note:&#x3C;/b&#x3E; The image is shown unrotated</rotNotTxt>
+    <anUnTxt type="text" minor="0">and unmirrored</anUnTxt>
+    <rotNot2Txt type="text" minor="0">here. The exposure window coordinates will be correctly translated to the rotated</rotNot2Txt>
+    <mirTxt type="text" minor="0">/mirrored</mirTxt>
+    <rotNot3Txt type="text" minor="0">image.</rotNot3Txt>
+    <mirNotTxt type="text" minor="0">&#x3C;b&#x3E;Note:&#x3C;/b&#x3E; The image is shown unmirrored here. The exposure window coordinates will be correctly translated to the mirrored image.</mirNotTxt>
+    <saSeWiBtn type="button" minor="0" buttonid="saveWinBtn">Save selected window</saSeWiBtn>
+    <okBtn type="button" minor="0" buttonid="saveBtn">OK</okBtn>
+    <cancBtn type="button" minor="0" buttonid="undoBtn">Cancel</cancBtn>
+  </exposure_windows>
+	
+  <iris_config>
+    <pageTitle type="title" minor="0">Iris Configuration</pageTitle>
+    <uploadAlrt type="alert" minor="0">No file selected for upload.</uploadAlrt>
+    <listErr type="alert" minor="0">There was an error retreiving list of different irises.</listErr>
+    <currErr type="alert" minor="0">There was an error retreiving current iris.</currErr>
+    <notInListTxt type="msgAsText" minor="0">Not in list</notInListTxt>
+    <notValidIrisTxt type="alert" minor="0">Please select a valid iris</notValidIrisTxt>
+    <saveErrTxt type="alert" minor="0">Failed to set the selected iris.</saveErrTxt>
+    <tabIrisTxt type="msgAsText" minor="0">Iris</tabIrisTxt>
+    <tabUploadTxt type="msgAsText" minor="0">Upload</tabUploadTxt>
+    <uploadError1Alrt type="alert" minor="0">Upload failed&#10;&#10;File failed to upload. This means the file never was stored to the filesystem. Usually due to the file is too large or the disk is full.</uploadError1Alrt>
+    <uploadError2Alrt type="alert" minor="0">Verification failed&#10;&#10;The verification of the file failed, either the file is not an iris configuration file or it is corrupt.</uploadError2Alrt>
+    <uploadError3Alrt type="alert" minor="0">File not compatible&#10;&#10;The package is not compatible with product. Check logs for more information.</uploadError3Alrt>
+    <uploadError1000Alrt type="alert" minor="0">Error&#10;&#10;Unidentified error, check logs for more information.</uploadError1000Alrt>
+    <irisConfTxt type="text" minor="0">Iris Configuration</irisConfTxt>
+    <hlpTxt type="image" minor="0" imageid="hlpPic">Click here for help on this page</hlpTxt>
+    <irisSelTxt type="text" minor="0">Iris Selection</irisSelTxt>
+    <selectMsgTxt type="text" minor="0">Select which iris is installed.</selectMsgTxt>
+    <okBtn type="button" minor="0" buttonid="adv_iris_okBtn">OK</okBtn>
+    <cancelBtn type="button" minor="0" buttonid="adv_iris_cancelBtn">Cancel</cancelBtn>
+    <uploadIrsConfTxt type="text" minor="0">Upload Iris Configuration</uploadIrsConfTxt>
+    <uploadMsgTxt type="text" minor="0">Upload a new iris configuration file.</uploadMsgTxt>
+    <uploadBtn type="button" minor="0" buttonid="adv_iris_uploadBtn">Upload</uploadBtn>
+  </iris_config>
+
+  <ir_light_settings>
+    <pageTitle type="title" minor="0">IR Illumination</pageTitle>
+    <irIllTitleTxt type="text" minor="0">IR Illumination</irIllTitleTxt>
+    <oldBrowAlrt type="alert" minor="0">Your browser is too old to show all page content.&#10;You may still make settings, but without any visual aid.</oldBrowAlrt>
+    <optsetErr500Txt type="msgAsText" minor="0">The server encountered an internal error and could not complete the request</optsetErr500Txt>
+    <optsetErr503GenTxt type="msgAsText" minor="0">Cannot perform the request because of camera temperature. The temperature is being adjusted. Please try again later.</optsetErr503GenTxt>
+    <optsetErr503MonTxt type="msgAsText" minor="0">The maximum number of clients are already connected</optsetErr503MonTxt>
+    <optsetErrUnknTxt type="msgAsText" minor="0">There was an error on a request.</optsetErrUnknTxt>
+    <optsetErrUnknRespAlrt type="alert" minor="0">Error response:</optsetErrUnknRespAlrt>
+    <helpTxt type="image" minor="0" imageid="irLight_help">Click here for help on this page</helpTxt>
+    <illAreaTxt type="msgAsText" minor="0">Illuminated Area</illAreaTxt>
+    <irIllAreaTxt type="text" minor="0">IR Illuminated Area</irIllAreaTxt>
+    <currSettApproxTxt type="text" minor="0">Illustration of the approximate area that the IR illumination will illuminate with the current settings.</currSettApproxTxt>
+    <irIllSetTxt type="text" minor="0">IR Illumination Settings</irIllSetTxt>
+    <angOfIllTxt type="text" minor="0">Angle of illumination:</angOfIllTxt>
+    <manuTxt type="text" minor="0">Manual</manuTxt>
+    <autoTxt type="text" minor="0">Auto (follow zoom)</autoTxt>
+    <teleTxt type="text" minor="0">T</teleTxt>
+    <wideTxt type="text" minor="0">W</wideTxt>
+    <okBtn type="button" minor="0" buttonid="irLight_OkBtn">OK</okBtn>
+    <closeBtn type="button" minor="0" buttonid="irLight_CloseBtn">Close</closeBtn>
+  </ir_light_settings>
+</language_xml>

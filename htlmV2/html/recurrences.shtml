@@ -1,0 +1,38 @@
+<!--#set var="helpURL" val="javascript:launch('/help/recurrences_h.shtml')" -->
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#set var="activeMenu" val="event" -->
+<!--#set var="activePage" val="recurrences" -->
+<!--#include virtual="/incl/page_header.shtml" -->
+
+  <script language="javascript" type="text/javascript" src="/incl/list_functions.js"></script>
+  <script src="/incl/soapclient.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->" language="javascript" type="text/javascript"></script>
+  <script src="/incl/select_input_class.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->" language="javascript" type="text/javascript"></script>
+  
+  <script type="text/javascript" language="javascript">
+  <!--
+    var langObjRecur = new Language("config_recurrences", "recurrences");
+    addLoadEvent( function() { langObjRecur.init(); } );
+  -->
+  </script>
+  
+  <!--#set var="scheduleType" val="Pulse" -->
+  <!--#include virtual="/incl/schedules.shtml" -->
+</head>
+<body>
+  <!--#include virtual="/incl/page_top.shtml" -->
+  <h2><span id="recurrencesTxt"></span></h2>
+  
+  <a href="<!--#echo var="helpURL" option="encoding:url" -->" id="helpLink"><img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="hlpPic" /></a>
+
+  <h3><span id="liTxt"></span></h3>
+  <div class="normal_text">
+    <div id="idListContainer" class="selectList" style="width: 360px"></div>
+    <div class="listButtons">
+      <input type="button" value="" class="btnNormal" onclick="javascript:setupItem('add')" onmouseover="return showStatus(AddBtnStatTxt)" onmouseout="return showStatus('')" id="addBtn" />
+      <input type="button" value="" class="btnNormal" onclick="javascript:setupItem('modify');" onmouseover="return showStatus(ModBtnStatTxt)" onmouseout="return showStatus('')" id="modifyBtn" />
+      <input type="button" value="" class="btnNormal" onclick="javascript:removeItem()" onmouseover="return showStatus(RemBtnStatTxt)" onmouseout="return showStatus('')" id="removeBtn" />
+    </div>
+  </div>
+<!--#include virtual="/incl/page_footer.shtml" -->
+
+

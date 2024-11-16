@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+	<troubleshoot_h>
+		<pageTitle type="title" minor="0">Help/Troubleshooting</pageTitle>
+		<titleTxt type="msgAsText" minor="0">Troubleshooting</titleTxt>
+		<help1Txt type="text" minor="0">To solve a problem with the Axis product, follow the steps below:</help1Txt>
+		<subTitle1Txt type="text" minor="0">Upgrading the Firmware</subTitle1Txt>
+		<help2Txt1 type="text" minor="0">If you suspect a problem is being caused by incorrect configuration or some other minor problem, consult the troubleshooting guide below.</help2Txt1>
+		<help2Txt2 type="text" minor="0">It is always a good idea to check if there is an updated version of the product's firmware available. Not only do these updates include the latest improvements to the firmware, they sometimes also include new features.</help2Txt2>
+		<help2Txt3 type="text" minor="0">New firmware releases can be obtained from the &#x3C;a href='http://www.axis.com/techsup' target='_blank'&#x3E;Axis Support web&#x3C;/a&#x3E;.</help2Txt3>
+		<help2Txt4 type="text" minor="0">Detailed instructions on how to perform the upgrade process are provided with each new release. See also the &#x3C;a href='maintenance_h.shtml'&#x3E;Help on Maintenance&#x3C;/a&#x3E; for more information.</help2Txt4>
+		<subTitle2Txt1 type="text" minor="0">General Troubleshooting</subTitle2Txt1>
+		<subTitle2Txt2 type="text" minor="0">Troubleshooting</subTitle2Txt2>
+		<help3Txt type="text" minor="0">The following list covers some of the problems that may be encountered and suggests how to remedy them:</help3Txt>
+		<subTitle4Txt type="text" minor="0">Symptom</subTitle4Txt>
+		<subTitle5Txt type="text" minor="0">Possible Causes / Corrective Actions</subTitle5Txt>
+		<help4Txt type="text" minor="0">The product cannot be accessed by some clients.</help4Txt>
+		<help5Txt type="text" minor="0">If using a proxy server, try disabling the proxy setting in your browser.</help5Txt>
+		<help6Txt type="text" minor="0">Other networking problems. Check all cabling and connectors.</help6Txt>
+		<help7Txt type="text" minor="0">The product works locally, but not externally.</help7Txt>
+		<help8Txt type="text" minor="0">Check if there are firewall settings that need to be adjusted.</help8Txt>
+		<help9Txt1 type="text" minor="0">Check if there are router settings that need to be configured.</help9Txt1>
+		<help9Txt2 type="text" minor="0">Poor or intermittent network connection.</help9Txt2>
+		<help9Txt3 type="text" minor="0">If using a network switch, check that the port on that device uses the same setting for the network connection type (speed/duplex) as set in the</help9Txt3>
+		<help9Txt4 type="text" minor="0">advanced TCP/IP settings</help9Txt4>
+		<help9Txt5 type="text" minor="0">.</help9Txt5>
+		<help9Txt6 type="text" minor="0">The Auto-Negotiate setting is recommended.</help9Txt6>
+		<help10Txt type="text" minor="0">The product cannot be accessed via a host name.</help10Txt>
+		<help11Txt type="text" minor="0">Check that the host name and DNS server settings are correct. See the</help11Txt>
+		<help12Txt1 type="text" minor="0">basic</help12Txt1>
+		<help12Txt2 type="text" minor="0">and</help12Txt2>
+		<help12Txt3 type="text" minor="0">advanced</help12Txt3>
+		<help12Txt4 type="text" minor="0">TCP/IP settings.</help12Txt4>
+		<helphttpsloginTxt type="text" minor="0">Not possible to log in.</helphttpsloginTxt>
+		<helphttpslogin_answerTxt type="text" minor="0">When HTTPS is enabled, ensure that the correct protocol (HTTP or HTTPS) is used when attempting to log in. You may need to manually type in http or https in the browser's address bar.</helphttpslogin_answerTxt>
+		<help8021XTxt type="text" minor="0">Certificate error when using 802.1X</help8021XTxt>
+		<help8021X_answerTxt type="text" minor="0">For authentication to work properly it's important to synchronize the time in the product with an</help8021X_answerTxt>
+		<ntp_server_txt type="text" minor="0">NTP server</ntp_server_txt>
+		<help13Txt type="text" minor="0">The Network indicator flashes red at short intervals.</help13Txt>
+		<help14Txt type="text" minor="0">This may be due to a hardware failure. Please contact your Axis dealer.</help14Txt>
+		<help15Txt type="text" minor="0">The overlay image does not display.</help15Txt>
+		<help16Txt type="text" minor="0">The overlay may have been positioned incorrectly. See the help on</help16Txt>
+		<help17Txt1 type="text" minor="0">overlay image settings</help17Txt1>
+		<help17Txt2 type="text" minor="0">.</help17Txt2>
+		<helpQTTxt type="text" minor="0">No image when using QuickTime.</helpQTTxt>
+		<helpQTresTxt1 type="text" minor="0">QuickTime uses DirectX to play video by default. If DirectX is not installed on the computer no image will be seen.</helpQTresTxt1>
+		<helpQTresTxt2 type="text" minor="0">Install DirectX or in QuickTime, go to &#x3C;b&#x3E;Edit &#x3E; Preferences &#x3E; QuickTime Preferences&#x3C;/b&#x3E;. Under the &#x3C;b&#x3E;Advanced&#x3C;/b&#x3E; tab select &#x3C;b&#x3E;Video &#x3E; Safe mode(GDI only)&#x3C;/b&#x3E;.</helpQTresTxt2>
+		<help18Txt1 type="text" minor="0">No image using Refresh and/or slow updating of images.</help18Txt1>
+		<help19Txt1 type="text" minor="0">If images are very complex, try limiting the number of clients accessing the product.</help19Txt1>
+		<help18Txt2 type="text" minor="0">Images only shown in black &#x26; white.</help18Txt2>
+		<help18Txt3 type="text" minor="0">Check the color level setting.</help18Txt3>
+		<help19Txt2 type="text" minor="0">Check the setting for the&#x3C;b&#x3E; IR cut filter&#x3C;/b&#x3E;. Images are shown in color  only when this filter is enabled, i.e. when set to &#x3C;i&#x3E;yes&#x3C;/i&#x3E; or &#x3C;i&#x3E;auto&#x3C;/i&#x3E;.</help19Txt2>
+		<help20Txt type="text" minor="0">Blurred images.</help20Txt>
+		<help21Txt type="text" minor="0">Refocus the camera.</help21Txt>
+		<help22Txt type="text" minor="0">Check in the &#x3C;a href='advanced_h.shtml'&#x3E;Video &#x26; Image &#x3E; Advanced - Camera Settings&#x3C;/a&#x3E; that &#x3C;b&#x3E;DC-Iris&#x3C;/b&#x3E; is set to &#x3C;b&#x3E;Enabled&#x3C;/b&#x3E;.</help22Txt>
+		<help23Txt type="text" minor="0">Poor image quality.</help23Txt>
+		<help24Txt1 type="text" minor="0">Check all image and video settings. Check that there is sufficient lighting at the monitored location.</help24Txt1>
+		<help24Txt2 type="text" minor="0">Referring to the product documentation, check the settings on the connected camera.</help24Txt2>
+		<help24Txt3 type="text" minor="0">If available, try connecting the camera to another video server, and/or connecting a different camera.</help24Txt3>
+		<help25Txt type="text" minor="0">Increased lighting can often improve image quality. Check that there is sufficient lighting at the monitored location. Check all image and lighting settings.</help25Txt>
+		<help26Txt type="text" minor="0">Rolling dark bands or flickering in image.</help26Txt>
+		<help27Txt type="text" minor="0">Try adjusting the Flicker-free exposure setting under advanced image settings. &#x3C;b&#x3E;Note:&#x3C;/b&#x3E; The 'Hold Current'/Manual setting may cause unwanted effects.</help27Txt>
+		<help28Txt type="text" minor="0">Image too dark or too light.</help28Txt>
+		<help29Txt1 type="text" minor="0">Check that the termination dip switch for the video source is set to the correct position.</help29Txt1>
+		<help29Txt2 type="text" minor="0">See also the help on</help29Txt2>
+		<help30Txt1 type="text" minor="0">Video Source Settings</help30Txt1>
+		<help30Txt2 type="text" minor="0">.</help30Txt2>
+		<help31Txt type="text" minor="0">Black borders around the video image.</help31Txt>
+		<help32Txt type="text" minor="0">Adjust the X and/or Y offset, in the</help32Txt>
+		<help33Txt1 type="text" minor="0">Video Source Settings</help33Txt1>
+		<help33Txt2 type="text" minor="0">.</help33Txt2>
+		<help34Txt type="text" minor="0">No image from the connected camera or no image from the Video Output.</help34Txt>
+		<help35Txt type="text" minor="0">Check that correct input type has been selected in the</help35Txt>
+		<help36Txt1 type="text" minor="0">Video Source Settings</help36Txt1>
+		<help36Txt2 type="text" minor="0">.</help36Txt2>
+		<help37Txt type="text" minor="0">The test image does not display as expected.</help37Txt>
+		<help38Txt type="text" minor="0">Not all settings have an effect on the test image. For more information, see the help on</help38Txt>
+		<help39Txt1 type="text" minor="0">Image Settings</help39Txt1>
+		<help39Txt2 type="text" minor="0">.</help39Txt2>
+		<help40Txt type="text" minor="0">The image frame rate in Live View is not as high as expected.</help40Txt>
+		<help41Txt type="text" minor="0">Using multiple event types that use video streams (e.g. upload events</help41Txt>
+		<help42Txt type="text" minor="0">, motion detection</help42Txt>
+		<help43Txt1 type="text" minor="0">) will cause a drop in the frame rate seen in Live View.</help43Txt1>
+		<help43Txt2 type="text" minor="0">If using a high resolution and viewing the video stream on an older client machine, the frame rate is likely to be less than expected.</help43Txt2>
+		<help44Txt type="text" minor="0">Problems uploading own files.</help44Txt>
+		<help45Txt type="text" minor="0">There is only limited space available for the upload of your own files. Try deleting one or more existing files, to free up space.</help45Txt>
+		<help46Txt type="text" minor="0">Missing images in uploads.</help46Txt>
+		<help47Txt type="text" minor="0">This can occur when trying to use a larger image buffer than is actually available. Try lowering the frame rate or the upload period.</help47Txt>
+		<subTitle6Txt type="text" minor="0">MPEG-4 Troubleshooting</subTitle6Txt>
+		<help48Txt type="text" minor="0">Problems that may be encountered when using MPEG-4 as the video format.</help48Txt>
+		<subTitle7Txt1 type="text" minor="0">Symptom</subTitle7Txt1>
+		<subTitle8Txt1 type="text" minor="0">Possible Causes / Corrective Actions</subTitle8Txt1>
+		<help49Txt type="text" minor="0">MPEG-4 not displayed in the client.</help49Txt>
+		<help51Txt type="text" minor="0">Check that the correct network interface is selected in the AMC control panel applet (network tab).</help51Txt>
+		<help53Txt type="text" minor="0">In the AMC control applet, select the MPEG-4 tab and click the button &#x3C;b&#x3E;Set to default MPEG-4 decoder&#x3C;/b&#x3E;.</help53Txt>
+		<help54Txt type="text" minor="0">Multicast MPEG-4 not displayed in the client.</help54Txt>
+		<help55Txt type="text" minor="0">Check with your network administrator that the multicast addresses used by the product are valid for your network.</help55Txt>
+		<help52Txt type="text" minor="0">Check that the relevant MPEG-4 connection methods are enabled in the AMC control panel applet (network tab).</help52Txt>
+		<help56Txt type="text" minor="0">Check with your network administrator to see if there is a firewall preventing viewing.</help56Txt>
+		<help57Txt type="text" minor="0">Multicast MPG-4 only accessible by local clients.</help57Txt>
+		<help58Txt type="text" minor="0">Check if your router supports multicasting, or if the router settings between the client and the server need to be configured. The &#x3C;a href='rtp_h.shtml'&#x3E;TTL (Time To Live)&#x3C;/a&#x3E; value may need to be increased.</help58Txt>
+		<help59Txt type="text" minor="0">Poor rendering of MPEG-4 images.</help59Txt>
+		<help60Txt type="text" minor="0">Color depth set incorrectly on clients. Set to 16-bit or 32-bit color.</help60Txt>
+		<help61Txt type="text" minor="0">If text overlays are blurred, or if there are other rendering problems, you may need to enable Advanced Video Rendering. This is done on the MPEG-4 tab in the AMC control panel applet.</help61Txt>
+		<help62Txt type="text" minor="0">Ensure that your graphics card is using the latest device driver. The latest drivers can usually be downloaded from the manufacturer's web site.</help62Txt>
+		<help63Txt type="text" minor="0">Color saturation is different in MPEG-4 and Motion JPEG.</help63Txt>
+		<help64Txt type="text" minor="0">Modify the settings for your graphics adapter. Please see the adapter's documentation for more information.</help64Txt>
+		<subTitle10Txt type="text" minor="0">Audio Troubleshooting</subTitle10Txt>
+		<help109Txt type="text" minor="0">Problems that may be encountered when using the audio functionality.</help109Txt>
+		<subTitle7Txt2 type="text" minor="0">Symptom</subTitle7Txt2>
+		<subTitle8Txt2 type="text" minor="0">Possible Causes / Corrective Actions</subTitle8Txt2>
+		<help110Txt type="text" minor="0">Poor audio quality.</help110Txt>
+		<help111Txt type="text" minor="0">Too many &#x3C;a href='users_h.shtml'&#x3E;users/clients&#x3C;/a&#x3E; connected to the product may affect the sound quality adversely. Try limiting the number of clients allowed to connect.</help111Txt>
+		<help112Txt type="text" minor="0">Unsynchronized audio and video.</help112Txt>
+		<help113Txt type="text" minor="0">It is recommended that the &#x3C;a href='date_h.shtml'&#x3E;time setting&#x3C;/a&#x3E; in the product and client are synchronized with an NTP Server.</help113Txt>
+		<help114Txt type="text" minor="0">Distorted audio.</help114Txt>
+		<help115Txt1 type="text" minor="0">Check that the correct &#x3C;a href='audio_settings_h.shtml'&#x3E;Audio Input source&#x3C;/a&#x3E; is selected.</help115Txt1>
+		<help115Txt2 type="text" minor="0">Select &#x3C;b&#x3E;Microphone&#x3C;/b&#x3E; for the internal microphone or for a connected external microphone. Select &#x3C;b&#x3E;Line&#x3C;/b&#x3E; for a connected line in source.</help115Txt2>
+		<help116Txt type="text" minor="0">Stuttering audio.</help116Txt>
+		<help117Txt type="text" minor="0">Audio break-up (stuttering audio) can be reduced using the Buffer slider control in AMC settings. A higher level will reduce audio break-up, but may introduce a noticeable lag in audio transmission.</help117Txt>
+		<help65Txt type="text" minor="0">If you cannot find the help you require, please see the User's Manual, or visit the &#x3C;a href='http://www.axis.com/techsup' target='_blank'&#x3E;Axis Support web&#x3C;/a&#x3E;.</help65Txt>
+		<subTitle9Txt type="text" minor="0">The LED Indicators</subTitle9Txt>
+		<help66Txt type="text" minor="0">The LED indicators on the product indicate the following:</help66Txt>
+		<help80Txt type="text" minor="0">&#x3C;b&#x3E;LED&#x3C;/b&#x3E;</help80Txt>
+		<help81Txt type="text" minor="0">&#x3C;b&#x3E;Color&#x3C;/b&#x3E;</help81Txt>
+		<help82Txt type="text" minor="0">&#x3C;b&#x3E;Indicates&#x3C;/b&#x3E;</help82Txt>
+		<helpMicTxt type="text" minor="0">Mic level</helpMicTxt>
+		<helpMic_colTxt type="text" minor="0">Green</helpMic_colTxt>
+		<helpmicindTxt type="text" minor="0">Microphone level signal between -20 dB and -3 dB</helpmicindTxt>
+		<helpMicAmberTxt type="text" minor="0">Amber</helpMicAmberTxt>
+		<helpMicAmberIndTxt type="text" minor="0">Microphone level signal between -3 dB and -1 dB.</helpMicAmberIndTxt>
+		<helpMicRedTxt type="text" minor="0">Red</helpMicRedTxt>
+		<helpMicRedIndTxt type="text" minor="0">Microphone level signal above -1 dB.</helpMicRedIndTxt>
+		<help88Txt1 type="text" minor="0">Network</help88Txt1>
+		<help91Txt1 type="text" minor="0">Green</help91Txt1>
+		<help92Txt1 type="text" minor="0">Flashes for activity on a 100 Mbps network.</help92Txt1>
+		<help89Txt1 type="text" minor="0">Amber</help89Txt1>
+		<help90Txt1 type="text" minor="0">Flashes for activity on a 10 Mbps network.</help90Txt1>
+		<helpUnlitTxt type="text" minor="0">unlit</helpUnlitTxt>
+		<helpUntlit2Txt type="text" minor="0">No network connection.</helpUntlit2Txt>
+		<help97Txt1 type="text" minor="0">Status</help97Txt1>
+		<help98Txt1 type="text" minor="0">Green</help98Txt1>
+		<helpstatgrenTxt type="text" minor="0">Steady green for normal operation.</helpstatgrenTxt>
+		<help86Txt1 type="text" minor="0">Amber</help86Txt1>
+		<helpAmber87Txt type="text" minor="0">Steady during startup, during reset to factory default or when restoring settings. Flashes while waiting to record.</helpAmber87Txt>
+		<help93Txt1 type="text" minor="0">Red</help93Txt1>
+		<helpstat94Txt type="text" minor="0">Flashes while recording audio clips. Slow flash for failed upgrade.</helpstat94Txt>
+		<help83Txt3 type="text" minor="0">Power</help83Txt3>
+		<help84Txt1 type="text" minor="0">Green</help84Txt1>
+		<help85Txt1 type="text" minor="0">Normal operation</help85Txt1>
+		<help86Txt2 type="text" minor="0">Amber</help86Txt2>
+		<help87Txt1 type="text" minor="0">Flashes green/amber during upgrade.</help87Txt1>
+		<helpMpowerTxt type="text" minor="0">Mic power</helpMpowerTxt>
+		<help84Txt2 type="text" minor="0">Green</help84Txt2>
+		<helpMicp85Txt type="text" minor="0">48 V DC phantom power on.</helpMicp85Txt>
+		<helpunlit87Txt type="text" minor="0">Unlit</helpunlit87Txt>
+		<help87Txt2 type="text" minor="0">48 V DC phantom power off.</help87Txt2>
+		<helpVideoTxt type="text" minor="0">Video</helpVideoTxt>
+		<helpVideoGTxt type="text" minor="0">Green</helpVideoGTxt>
+		<helpVideoGdescTxt type="text" minor="0">Encoder/Camera is connected.</helpVideoGdescTxt>
+		<helpVideoATxt type="text" minor="0">Amber</helpVideoATxt>
+		<helpVideoAdescTxt type="text" minor="0">Steady when connecting to encoder/camera.</helpVideoAdescTxt>
+		<helpvideoRTxt type="text" minor="0">Red</helpvideoRTxt>
+		<helpVideoRdescTxt type="text" minor="0">No encoder/camera is connected.</helpVideoRdescTxt>
+		<help88Txt2 type="text" minor="0">Network</help88Txt2>
+		<helpNetworkGTxt type="text" minor="0">Green</helpNetworkGTxt>
+		<helpNetworkGdescTxt type="text" minor="0">Steady for connection to a 100 Mbit/s network. Flashes for network activity.</helpNetworkGdescTxt>
+		<helpNetworkATxt type="text" minor="0">Amber</helpNetworkATxt>
+		<helpNetworkAdescTxt type="text" minor="0">Steady for connection to a 10 Mbit/s network. Flashes for network activity.</helpNetworkAdescTxt>
+		<helpNetworkUTxt type="text" minor="0">Unlit</helpNetworkUTxt>
+		<helpNetworkUdescTxt type="text" minor="0">No network connection.</helpNetworkUdescTxt>
+		<help97Txt2 type="text" minor="0">Status</help97Txt2>
+		<help98Txt2 type="text" minor="0">Green</help98Txt2>
+		<helpStatusGdescTxt type="text" minor="0">Steady for normal operation.</helpStatusGdescTxt>
+		<help100Txt1 type="text" minor="0">Amber</help100Txt1>
+		<helpStatusAdescTxt type="text" minor="0">Steady during startup,reset to factory default or at firmware upgrade.</helpStatusAdescTxt>
+		<help102Txt1 type="text" minor="0">Red</help102Txt1>
+		<helpStatusRdescTxt type="text" minor="0">Slow flash for failed upgrade.</helpStatusRdescTxt>
+		<help83Txt1 type="text" minor="0">Power</help83Txt1>
+		<help84Txt3 type="text" minor="0">Green</help84Txt3>
+		<help85Txt2 type="text" minor="0">Normal operation</help85Txt2>
+		<help86Txt3 type="text" minor="0">Amber</help86Txt3>
+		<help87Txt3 type="text" minor="0">Flashes green/amber during firmware upgrade.</help87Txt3>
+		<help83Txt2 type="text" minor="0">Power</help83Txt2>
+		<help84Txt4 type="text" minor="0">Green</help84Txt4>
+		<help85Txt3 type="text" minor="0">Normal operation</help85Txt3>
+		<help86Txt4 type="text" minor="0">Amber</help86Txt4>
+		<help87Txt4 type="text" minor="0">Flashes green/amber during upgrade.</help87Txt4>
+		<help88Txt3 type="text" minor="0">Network</help88Txt3>
+		<help89Txt2 type="text" minor="0">Amber</help89Txt2>
+		<help90Txt2 type="text" minor="0">Flashes for activity on a 10 Mbps network.</help90Txt2>
+		<help91Txt2 type="text" minor="0">Green</help91Txt2>
+		<help92Txt2 type="text" minor="0">Flashes for activity on a 100 Mbps network.</help92Txt2>
+		<help93Txt2 type="text" minor="0">Red</help93Txt2>
+		<help94Txt type="text" minor="0">Flashes rapid red for hardware error, together with the Status indicator.</help94Txt>
+		<help95Txt type="text" minor="0">None</help95Txt>
+		<help96Txt type="text" minor="0">No connection</help96Txt>
+		<help97Txt3 type="text" minor="0">Status</help97Txt3>
+		<help98Txt3 type="text" minor="0">Green</help98Txt3>
+		<help99Txt1 type="text" minor="0">Normal operation.</help99Txt1>
+		<help99Txt2 type="text" minor="0">&#x3C;b&#x3E;Note:&#x3C;/b&#x3E; - the Status LED can also be configured to be unlit during normal operation, or to flash only when the camera is accessed. See also the &#x3C;a href='leds_h.shtml'&#x3E; LED Settings&#x3C;/a&#x3E; for more information.</help99Txt2>
+		<help100Txt2 type="text" minor="0">Amber</help100Txt2>
+		<help101Txt type="text" minor="0">During reset to factory default or at firmware upgrade.</help101Txt>
+		<help102Txt2 type="text" minor="0">Red</help102Txt2>
+		<help103Txt type="text" minor="0">Flashes rapid red for a hardware error, together with the Network indicator.</help103Txt>
+	</troubleshoot_h>
+
+	<logs_h>
+		<pageTitle type="title" minor="0">Help/Logs &#x26; Reports</pageTitle>
+		<titleTxt type="msgAsText" minor="0">Logs &#x26; Reports</titleTxt>
+		<help1Txt type="text" minor="0">This page provides more information about different types of logs that are found in this Axis product. The log files may be used for system analysis, troubleshooting purposes or whenever it is needed to contact Axis support.</help1Txt>
+		<noteLogTxt type="text" minor="0">&#x3C;b&#x3E;Note:&#x3C;/b&#x3E; Depending on your network connection, the log pages may take a while to load.</noteLogTxt>
+		<subTitle1Txt type="text" minor="0">Logs</subTitle1Txt>
+		<systemLogTxt type="text" minor="0">&#x3C;b&#x3E;System Log&#x3C;/b&#x3E;</systemLogTxt>
+		<systemLogTxt1 type="text" minor="0">Provides information about system events such as product startup information, warnings and critical messages.</systemLogTxt1>
+		<accessLogTxt type="text" minor="0">&#x3C;b&#x3E;Access Log&#x3C;/b&#x3E;</accessLogTxt>
+		<accessLogTxt1 type="text" minor="0">Lists all failed attempts to access the product, for example when a wrong login password is used. Note that, all authorized accesses to the product are listed in the &#x3C;b&#x3E;Connection List&#x3C;/b&#x3E; report.</accessLogTxt1>
+		<subTitle2Txt type="text" minor="0">Reports</subTitle2Txt>		
+		<viewServreportTxt type="text" minor="0">&#x3C;b&#x3E;View Server Report&#x3C;/b&#x3E;</viewServreportTxt>
+		<viewServreportTxt1 type="text" minor="0">Provides information about the product status in a popup window. The report includes information such as system information, user access, network configuration and parameters list.</viewServreportTxt1>
+		<downloadServreportTxt type="text" minor="0">&#x3C;b&#x3E;Download Server Report&#x3C;/b&#x3E;</downloadServreportTxt>
+		<downloadServreportTxt1 type="text" minor="0">Click to download server report. The report includes information listed in the View Server Report section. To get a snapshot of the Live View, check the &#x3C;b&#x3E;Include snapshot from Live View&#x3C;/b&#x3E; radio button.</downloadServreportTxt1>
+		<paramlistTxt type="text" minor="0">&#x3C;b&#x3E;Parameter List&#x3C;/b&#x3E;</paramlistTxt>
+		<paramlistTxt1 type="text" minor="0">Lists the product's parameters and their current settings. This may prove useful when troubleshooting or when contacting Axis Support.</paramlistTxt1>
+		<connlistTxt type="text" minor="0">&#x3C;b&#x3E;Connection List&#x3C;/b&#x3E;</connlistTxt>
+		<connlistTxt1 type="text" minor="0">Lists all clients that are currently accessing media streams. The report displays extra information such as date and time when the client accessed the stream, IP address that accessed the media stream and protocol used.</connlistTxt1>
+		<crashreportTxt type="text" minor="0">&#x3C;b&#x3E;Crash Report&#x3C;/b&#x3E;</crashreportTxt>
+		<crashreportTxt1 type="text" minor="0">Generates an archive file with detailed information about the server's status. Crash report contains information that is in the server report as well as detailed debug information. This report may contain sensitive information such as network trace, the report may take several minutes to generate.</crashreportTxt1>
+		<readprivacystatementTxt type="text" minor="0">For more information, please read Axis &#x3C;a href='http://www.axis.com/techsup/cam_servers/tech_notes/server_report.htm'&#x3E;Privacy statement&#x3C;/a&#x3E;.</readprivacystatementTxt>
+		<axisPrivacyStatementURL type="msg" minor="0">http://www.axis.com/r/?keyword=server_report_privacy_policy</axisPrivacyStatementURL>
+		<axisPrivacyStatementURLTxt type="text" minor="0">Privacy statement.</axisPrivacyStatementURLTxt>
+	</logs_h>
+
+</language_xml>

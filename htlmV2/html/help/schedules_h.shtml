@@ -1,0 +1,32 @@
+<!--#set var="backButton" val="yes" -->
+<!--#set var="forwardButton" val="yes" -->
+<!--#include virtual="/incl/popup_header.shtml" -->
+
+<script language="JavaScript">
+<!--
+var langObjSSH = new Language("schedules_h", "schedules_h");
+
+function globalLanguageVars()
+{
+	document.getElementById("titleId").innerHTML = langObjSSH.getText("titleTxt");
+}
+// -->
+</script>
+
+</head>
+<body onload="langObjSSH.init()">
+<!--#include virtual="/incl/help_top.shtml" -->
+<div class="row">
+	<span id="intro_Txt"></span>
+</div>
+<h2>
+  <span id="listSubTitle"></span>
+</h2>
+<div class="row">
+	<span id="list_txt1"></span><br/><br/>
+	<span id="list_txt2"></span>
+</div>
+<div class="row">
+	<span id="link_txt"></span>
+</div>
+<!--#include virtual="/incl/help_footer.shtml" -->

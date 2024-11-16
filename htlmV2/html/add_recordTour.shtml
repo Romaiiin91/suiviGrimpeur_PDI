@@ -1,0 +1,686 @@
+<!--#set var="helpURL" val="javascript:launch('/help/add_recordedTour_h.shtml')" -->
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#include virtual="/incl/top_incl_popup.shtml" -->
+
+
+<!--#include virtual="/incl/nbr_to_camnbr.shtml" -->
+
+<!--#include virtual="/sm/sm.srv?action=get&group=RecordedTour,PTZ.Support.S$camnbr$,PTZ.Various.V$camnbr$,PTZ.Limit.L$camnbr$" -->
+
+<!--#include virtual="/java/integer.shtml" -->
+<!--#include virtual="/java/chkbox.shtml" -->
+
+<script type="text/javascript" src="/incl/pos.js"></script>
+<script type="text/javascript" src="/incl/activeX.js"></script>
+<script type="text/javascript" src="/incl/guardtour_class.js"></script>
+
+<script language="JavaScript">
+<!--
+
+var langObjAddRecordTour = new Language("ptz", "add_recordTour");
+
+if ((navigator.appName == "Microsoft Internet Explorer") &&
+    (navigator.platform != "MacPPC") &&
+    (navigator.platform != "Mac68k")) {
+  var browser = "IE"
+} else {
+  var browser = "Netscape"
+}
+
+<!--#include virtual="/incl/paramArray.shtml" -->
+<!--#include virtual="/incl/functions.shtml" -->
+
+var is_saved = false;
+var recordedtourid_to_modify = "<!--#echo var="GuardNo" option="encoding:javascript" -->";
+var recordedtourid = -1;
+var name_saved = "RecordedTourName";
+var delay_saved = 0;
+
+
+var guardTourObject = new guardtour_list("<!--#echo var="camnbr" option="encoding:javascript" -->", guardTourObject_loaded);
+
+function onLoad()
+{
+  langObjAddRecordTour.init();
+  guardTourObject.load("yes", "yes");
+}
+
+function guardTourObject_loaded()
+{
+  if (recordedtourid_to_modify.length > 1)
+  {
+    recordedtourid = recordedtourid_to_modify.substr(1);
+    modify_recorded_tour(recordedtourid);
+  }
+  <!--#if expr="$doAction != update" -->
+    set_record_button("stopped");
+    set_play_button("disable");
+  <!--#else -->
+    set_record_button("disabled");
+    set_play_button("play");
+  <!--#endif -->
+  set_stop_button("inactive");
+
+  var oName = document.getElementById("recordTourName");
+  oName.value = name_saved;
+  oName.disabled = false;
+
+  var oDelay = document.getElementById("delayBetweenRuns");
+  oDelay.value = delay_saved;
+  oDelay.disabled = false;
+
+  init();
+}
+
+function modify_recorded_tour(id)
+{
+  var guardtour = guardTourObject.get_guardtour("R", id);
+  if (guardtour)
+  {
+    name_saved = guardtour.name;
+    delay_saved = Math.round(guardtour.delay / 60);
+  }
+}
+
+var request = AxisConnectionFactory.createAjaxConnection();
+request.setOverrideMimeType( 'text/plain' );
+request.setOverrideMimeType( 'text/xml' );
+
+function sendAction(action, method, quiet)
+{
+  var success = false;
+  var error = false;
+  var now = new Date();
+
+  action += (action.indexOf("?") > 0 ? "&" : "?") + "timestamp=" + now.getTime();
+
+  AxisConnectionFactory.sendSync([method, action], null, request);
+
+  if (request.getStatus() == 200)
+  {
+    var xml = request.getResponseXml();
+    if (xml)
+    {
+      success = xml.getElementsByTagName('Success');
+      var oRecording = xml.getElementsByTagName('RecordingId');
+      if (success && success.length > 0 && oRecording && oRecording.length > 0 && oRecording[0].text)
+      {
+        recordedtourid = oRecording[0].text
+      }
+
+      var oError = xml.getElementsByTagName('ErrorDescription');
+      if (oError && oError.length > 0 && oError[0].text)
+      {
+        error = oError[0].text;
+      }
+    }
+  }
+  else
+  {
+    error = request.getStatusText();
+  }
+  if (error && !quiet)
+  {
+    alert(error);
+  }
+  return success;
+}
+
+function is_valid_parameters()
+{
+  var oName = document.getElementById("recordTourName");
+  var name = oName.value;
+  var regexp_name = /[^a-z0-9\.\_\-]/gi;
+
+  var tmpGuardTour = guardTourObject.get_guardtour_by_name(name);
+  if (tmpGuardTour != false && (tmpGuardTour.id != recordedtourid || tmpGuardTour.itemType != "R"))
+  {
+    alert( langObjAddRecordTour.getText("notUniqNameAlert") );
+    oName.focus();
+    oName.select();
+    return false;
+  }
+  if (name.length <= 0)
+  {
+    alert( langObjAddRecordTour.getText("missingNameAlrt") );
+    oName.focus();
+    oName.select();
+    return false;
+  }
+  if (name.length > 31)
+  {
+    alert( langObjAddRecordTour.getText("nameTooLongAlrt") );
+    oDelay.focus();
+    oDelay.select();
+    return false;
+  }
+  regexp_name.compile(regexp_name);
+  if (regexp_name.test(name))
+  {
+    alert( langObjAddRecordTour.getText("invalidNameAlrt") );
+    oName.focus();
+    oName.select();
+    return false;
+  }
+
+  var oDelay = document.getElementById("delayBetweenRuns");
+  var delay_txt = oDelay.value;
+  var regexp_delay = /0-9/g;
+  var delay_value = parseInt(delay_txt, 10);
+
+  if (delay_txt.length <= 0)
+  {
+    alert( langObjAddRecordTour.getText("missingDelayAlrt") );
+    oDelay.focus();
+    oDelay.select();
+    return false;
+  }
+  regexp_delay.compile(regexp_delay)
+  if (regexp_name.test(delay_txt) || delay_value < 0 || delay_value > 166)
+  {
+    alert( langObjAddRecordTour.getText("invalidDelayAlrt") );
+    oDelay.focus();
+    oDelay.select();
+    return false;
+  }
+
+  return true;
+}
+
+var flash_record_button_interval = false;
+var flash_record_button_state_on = false;
+function flash_record_button()
+{
+  flash_record_button_state_on = !flash_record_button_state_on;
+  set_record_button( flash_record_button_state_on ? "recording1" : "recording2" );
+}
+
+function set_stop_button(status)
+{
+  var buttonsContainer = document.getElementById("idStopButtonContainer");
+  if (status == "active")
+  {
+    buttonsContainer.innerHTML = document.getElementById("idStopButtonActiveContainer").innerHTML;
+  }
+  else if (status == "inactive")
+  {
+    buttonsContainer.innerHTML = document.getElementById("idStopButtonInactiveContainer").innerHTML;
+  }
+}
+
+function set_record_button(status)
+{
+  var buttonsContainer = document.getElementById("idRecordButtonContainer");
+  if (status == "recording1")
+  {
+    buttonsContainer.innerHTML = document.getElementById("idRecordButtonActiveContainer1").innerHTML;
+  }
+  else if (status == "recording2")
+  {
+    buttonsContainer.innerHTML = document.getElementById("idRecordButtonActiveContainer2").innerHTML;
+  }
+  else if (status == "stopped")
+  {
+    buttonsContainer.innerHTML = document.getElementById("idRecordButtonInactiveContainer").innerHTML;
+  }
+  else if (status == "disabled")
+  {
+    buttonsContainer.innerHTML = document.getElementById("idRecordButtonDisabledContainer").innerHTML;
+  }
+}
+
+function disable_buttons(disable)
+{
+  document.getElementById("saveButton").disabled = disable;
+  document.getElementById("cancelButton").disabled = disable;
+}
+
+var is_recording = false;
+function start_recording()
+{
+  if (is_playing)
+  {
+    return;
+  }
+
+  if (is_recording)
+  {
+    stop_recording();
+  }
+  else
+  {
+    if (recordedtourid >= 0)
+    {
+      if (confirm( langObjAddRecordTour.getText("recTourRemovedAlrt") ))
+      {
+        sendAction("/axis-cgi/recordedtour/remove.cgi?recordedtourid=" + recordedtourid + "&schemaversion=1", "GET", true);
+      }
+      else
+      {
+        return;
+      }
+    }
+    
+    disable_buttons(true);
+    set_play_button("disable");
+    set_stop_button("active");
+    is_recording = true;
+    flash_record_button_interval = window.setInterval(flash_record_button, 600);
+    flash_record_button();
+    check_status_interval = window.setInterval(check_status, 2000);
+    sendAction("/axis-cgi/recordedtour/record.cgi?nicename=" + name_saved + "&camera=<!--#echo var="camnbr" option="encoding:javascript" -->&schemaversion=1", "GET");
+  }
+}
+
+var check_status_request = AxisConnectionFactory.createAjaxConnection();
+check_status_request.setOverrideMimeType( 'text/xml' );
+
+var check_status_interval = false;
+function check_status()
+{
+  var success = false;
+  var error = false;
+  var now = new Date();
+  var action = "/axis-cgi/recordedtour/list.cgi?recordedtourid=" + recordedtourid + "&schemaversion=1&timestamp=" + now.getTime();
+
+  AxisConnectionFactory.sendAsync(["GET", action], null, check_status_onreadystatechange, check_status_request);
+}
+
+function check_status_onreadystatechange()
+{
+  if (check_status_request.getReadyState() == 4)
+  {
+    if (check_status_request.getStatus() == 200)
+    {
+      var xml = check_status_request.getResponseXml();
+      if (xml)
+      {
+        var status = false;
+        var status = xml.getElementsByTagName('Status');
+        if (status && status.length > 0 && status[0].text == "stopped")
+        {
+          if (is_recording)
+          {
+            is_recording = false;
+            disable_buttons(false);
+            window.clearInterval(flash_record_button_interval);
+            set_record_button("stopped");
+          }
+          if (is_playing)
+          {
+            is_playing = false;
+            is_paused = false;
+          }
+          set_play_button("play");
+          set_stop_button("inactive");
+          window.clearInterval(check_status_interval);
+        }
+      }
+    }
+    else if(check_status_request.getStatusText())
+    {
+      alert(check_status_request.getStatusText());
+    }
+  }
+}
+
+var is_playing = false;
+var is_paused = false;
+
+function set_play_button(status)
+{
+  var buttonsContainer = document.getElementById("idPlayButtonContainer");
+  if (status == "play")
+  {
+    buttonsContainer.innerHTML = document.getElementById("idPlayButtonOnContainer").innerHTML;
+  }
+  else if (status == "pause")
+  {
+    buttonsContainer.innerHTML = document.getElementById("idPlayButtonOffContainer").innerHTML;
+  }
+  else if (status == "disable")
+  {
+    buttonsContainer.innerHTML = document.getElementById("idPlayButtonDisabledContainer").innerHTML;
+  }
+}
+
+function start_playing()
+{
+  if (is_recording || recordedtourid < 0)
+  {
+    return;
+  }
+
+  if (is_playing)
+  {
+    if (is_paused)
+    {
+      is_paused = false;
+      set_play_button("pause");
+      sendAction("/axis-cgi/recordedtour/resume.cgi?recordedtourid=" + recordedtourid + "&schemaversion=1", "GET");
+    }
+    else
+    {
+      is_paused = true;
+      set_play_button("play");
+      sendAction("/axis-cgi/recordedtour/pause.cgi?recordedtourid=" + recordedtourid + "&schemaversion=1", "GET");
+    }
+  }
+  else
+  {
+    set_play_button("pause");
+    set_stop_button("active");
+    <!--#if expr="$doAction != update" -->
+      set_record_button("disabled");
+    <!--#endif -->
+    is_playing = true;
+    is_paused = false;
+    check_status_interval = window.setInterval(check_status, 2000);
+    var loopdelay = parseInt(document.getElementById("delayBetweenRuns").value, 10);
+    if (isNaN(loopdelay) || loopdelay < 0)
+    {
+      loopdelay = 0;
+    }
+    loopdelay *= 60;
+    sendAction("/axis-cgi/recordedtour/play.cgi?recordedtourid=" + recordedtourid + "&loop=1&loopdelay=" + loopdelay + "&schemaversion=1", "GET");
+  }
+}
+
+function stop_play_record()
+{
+  if (recordedtourid < 0)
+  {
+    return;
+  }
+
+  if (is_recording)
+  {
+    stop_recording();
+  }
+  else if (is_playing)
+  {
+    stop_playing();
+  }
+}
+
+function stop_recording()
+{
+  is_recording = false;
+  disable_buttons(false);
+  window.clearInterval(flash_record_button_interval);
+  if (check_status_interval)
+  {
+    window.clearInterval(check_status_interval);
+  }
+  set_record_button("stopped");
+  set_stop_button("inactive");
+  set_play_button("play");
+  sendAction("/axis-cgi/recordedtour/stoprecording.cgi?recordedtourid=" + recordedtourid + "&schemaversion=1", "GET", true);
+}
+
+function stop_playing()
+{
+  is_playing = false;
+  is_paused = false;
+  if (check_status_interval)
+  {
+    window.clearInterval(check_status_interval);
+  }
+  <!--#if expr="$doAction != update" -->
+    set_record_button("stopped");
+  <!--#endif -->
+  set_play_button("play");
+  set_stop_button("inactive");
+  sendAction("/axis-cgi/recordedtour/stopplayback.cgi?recordedtourid=" + recordedtourid + "&schemaversion=1", "GET", true);
+}
+
+function saveData()
+{
+  if (recordedtourid < 0)
+  {
+    alert( langObjAddRecordTour.getText("noRecTourAlrt") );
+    return;
+  }
+
+  if (!is_valid_parameters())
+  {
+    return;
+  }
+
+  var name = document.getElementById("recordTourName").value;
+  var delay = document.getElementById("delayBetweenRuns").value;
+ <!--#if expr="$doAction = update" -->
+  if (name != name_saved || delay != delay_saved) {
+ <!--#endif -->
+    sendAction("/axis-cgi/recordedtour/modify.cgi?recordedtourid=" + recordedtourid + "&nicename=" + name + "&defaultloopdelay=" + Math.round(delay*60) + "&schemaversion=1", "GET");
+ <!--#if expr="$doAction = update" -->
+  }
+ <!--#endif -->
+  is_saved = true;
+  window.close();
+}
+
+function closeWin()
+{
+  window.close();
+}
+
+function onWindowClose()
+{
+  var reloadPage = false;
+  <!--#if expr="$doAction != update" -->
+    if (!is_saved && recordedtourid >= 0)
+    {
+      reloadPage |= true;
+      sendAction("/axis-cgi/recordedtour/remove.cgi?recordedtourid=" + recordedtourid + "&schemaversion=1", "GET", true);
+    }
+  <!--#endif -->
+
+  reloadPage |= is_saved;
+
+  if (window.opener && reloadPage)
+  {
+    window.opener.location.reload(true);
+  }
+}
+
+function onbeforeunload()
+{
+  if (is_recording)
+  {
+    return langObjAddRecordTour.getText("ongRecAlrt");
+  }
+
+  var name = document.getElementById("recordTourName").value;
+  var delay = document.getElementById("delayBetweenRuns").value;
+  if (!is_saved && (name != name_saved || delay != delay_saved))
+  {
+    return langObjAddRecordTour.getText("changNotSavAlrt");
+  }
+}
+
+document.onbeforeunload = onbeforeunload;
+-->
+</script>
+</head>
+
+
+<body topmargin="0" leftmargin="0" marginwidth="0" marginheight="0" onLoad="onLoad();" onunload="onWindowClose()">
+
+<form name="WizardForm">
+
+  <div class="cornerBox">
+    <div class="content">
+
+  <table border="0" cellpadding="3" cellspacing="0" width="552" class="alternateRows">
+    <tr>
+      <td align="left" nowrap colspan="2" class="topTitle"><span id="recTourSetTxt"></span></td>
+      <td align="right">
+        <a href="<!--#echo var="helpURL" option="encoding:url" -->"><img height="27" width="27" src="/pics/help.gif" border="0" id="hlpPic"></a>
+      </td>
+    </tr>
+    <tr class="subTitle">
+      <td colspan="3">
+        <span id="genSetTxt"></span>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <span id="nameTxt"></span>
+      </td>
+      <td colspan="2">
+        <input type="text" id="recordTourName" maxlength="31" size="20" value="" disabled />
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <span id="pauseBetRunTxt"></span>
+      </td>
+      <td colspan="2">
+        <input type="text" id="delayBetweenRuns" maxlength="3" size="5" value="" disabled />&nbsp;<span id="minTxt"></span>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3" height="300" align="center">
+        <table border="0" cellpadding="3" cellspacing="0">
+          <tr>
+            <td>
+              <!--#set var="relative" val="yes" -->
+              <!--#if expr="$doAction != update" -->
+                <!--#set var="showPTZBars" val="yes" -->
+                <!--#set var="root_PTZ_Various_V$camnbr$_ZoomEnabled" val="true" -->
+              <!--#else -->
+                <!--#set var="showPTZBars" val="no" -->
+                <!--#set var="root_PTZ_Various_V$camnbr$_ZoomEnabled" val="false" -->
+              <!--#endif -->
+              <!--#set var="showPTZCrosshair" val="yes" -->
+              <!--#set var="crosshair" val="yes" -->
+              <!--#set var="hideFocusComletely" val="yes" -->
+              <!--#set var="hideIrisComletely" val="yes" -->
+
+              <!--#set var="ZoomFunc" val="abs" -->
+              <!--#set var="imagePath" val="/axis-cgi/mjpg/video.cgi" -->
+
+              <!--#set var="root_Layout_ViewerOther" val="spush" -->
+              <!--#set var="root_PTZ_Various_V$camnbr$_PanEnabled" val="false" -->
+              <!--#set var="root_PTZ_Various_V$camnbr$_TiltEnabled" val="false" -->
+              <!--#set var="root_PTZ_Various_V$camnbr$_FocusEnabled" val="false" -->
+              <!--#set var="root_PTZ_Various_V$camnbr$_IrisEnabled" val="false" -->
+              
+              <!--#set var="size" val="1" -->
+              <!--#set var="external" val="no" -->
+              <!--#set var="UseAudio" val="no" -->
+              <!--#set var="UseRel" val="yes" -->
+              <!--#set var="useWithCam" val="yes" -->
+              <!--#set var="ptzgui" val="yes" -->
+
+              <div id="zoombox" class="dragbox"></div>
+              <img id="crosshair" src="/pics/crosshair.png" width="16" height="16" style="position:absolute;visibility:hidden;left:0;top:0" border="0">
+              <div id="filterinstallocation"></div>
+              <script language="JavaScript">
+              <!--
+                  var img_width = 480;
+                  var img_height = 270;
+
+                  var target_w = img_width;
+                  var target_h = img_height;
+                  var max_parhand_resolution = '<!--#exec cmd="res_finder --max_parhand_resolution" -->';
+                  var max_w = parseInt(max_parhand_resolution.split("x")[0], 10);
+                  var max_h = parseInt(max_parhand_resolution.split("x")[1], 10);
+
+                    var max_zoom_resolutions_str = "<!--#exec cmd="res_finder --resolutions" -->";
+                    var max_zoom_resolutions = max_zoom_resolutions_str.split(",");
+                  if (target_w > max_w || target_h > max_h) {
+                    img_width = max_w;
+                    img_height = max_h;
+                  } else {
+                    img_width = parseInt(max_zoom_resolutions[0].split("x")[0], 10);
+                    img_height = parseInt(max_zoom_resolutions[0].split("x")[1], 10);
+                    for (var i = 1; i < max_zoom_resolutions.length; i++) {
+                      var tmp_w = parseInt(max_zoom_resolutions[i].split("x")[0], 10);
+                      var tmp_h = parseInt(max_zoom_resolutions[i].split("x")[1], 10);
+                      if ( tmp_w <= max_w ) {
+                        img_width = tmp_w;
+                        img_height = tmp_h;
+                        if ( tmp_w <= target_w )
+                          break;
+                      }
+                    }
+                  }
+
+                var File = "<!--#echo var="imagePath" option="encoding:none" -->";
+                File += "?camera=<!--#echo var="camnbr" option="encoding:url" -->";
+                File += "&resolution=" + img_width + "x" + img_height;
+
+                <!--#include virtual="/incl/video.shtml" -->
+
+                video(File);
+              //-->
+              </script>
+            </td>
+          </tr>
+          <tr class="button">
+            <td align="left">
+              <div id="idRecordButtonContainer" style="width:32px; height: 30px; clear: none; float: left;"></div>
+              <div id="idPlayButtonContainer" style="width:32px; height: 30px; clear: none; float: left;"></div>
+              <div id="idStopButtonContainer" style="width:32px; height: 30px; clear: none; float: left;"></div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <!--#if expr="$doAction != update" -->
+    <tr>
+      <td colspan="3" align="center">
+        <div id="toolTip" style="visibility: hidden"></div>
+        <table name="bars_table" align="center" border="0" cellspacing="1" cellpadding="0">
+          <!--#include virtual="/incl/zoombar.shtml" -->
+        </table>
+      </td>
+    </tr>
+    <!--#endif -->
+
+    <tr class="button">
+      <td align="center" colspan="3" class="button">
+        <input type="button" id="saveButton" class="btnNormal" onclick="javascript: saveData();"/>
+        &nbsp;
+        <input type="button" id="cancelButton" class="btnNormal" onclick="javascript: closeWin();" />
+      </td>
+    </tr>
+  </table>
+    </div>
+    <div class="footerLeft"><div class="footerRight"></div></div>
+  </div>
+
+  <div id="idRecordButtonDisabledContainer" style="display: none;">
+    <img src="/pics/rec_disabled_27x27px.gif" width="27" height="27" id="recDisPic" border="0" />
+  </div>
+  <div id="idRecordButtonInactiveContainer" style="display: none;">
+    <a id="idRecordButtonInactive" href="javascript:void(0);" onclick="javascript: start_recording();"><img src="/pics/rec_inactive_27x27px.gif" width="27" height="27" id="recTourPic" border="0" onmouseover="javascript:btnShiftCls( this, true )" onmouseout="javascript:btnShiftCls( this, false )" /></a>
+  </div>
+  <div id="idRecordButtonActiveContainer1" style="display: none;">
+    <a id="idRecordButtonActive1" href="javascript:void(0);" onclick="javascript: start_recording();"><img src="/pics/rec_active_27x27px.gif"  width="27" height="27" id="stopRecTour1Pic" border="0" onmouseover="javascript:btnShiftCls( this, true )" onmouseout="javascript:btnShiftCls( this, false )" /></a>
+  </div>
+  <div id="idRecordButtonActiveContainer2" style="display: none;">
+    <a id="idRecordButtonActive2" href="javascript:void(0);" onclick="javascript: start_recording();"><img src="/pics/rec_inactive_27x27px.gif"  width="27" height="27" id="stopRecTour2Pic" border="0" onmouseover="javascript:btnShiftCls( this, true )" onmouseout="javascript:btnShiftCls( this, false )" /></a>
+  </div>
+  <div id="idPlayButtonOnContainer" style="display: none;">
+    <a id="idPlayButtonOn" href="javascript:void(0);" onclick="javascript: start_playing();"><img src="/pics/play_blue_button_27x27px.gif" width="27" height="27" id="playRecTourPic" border="0" onmouseover="javascript:btnShiftCls( this, true )" onmouseout="javascript:btnShiftCls( this, false )" /></a>
+  </div>
+  <div id="idPlayButtonOffContainer" style="display: none;">
+    <a id="idPlayButtonOff" href="javascript:void(0);" onclick="javascript: start_playing();"><img src="/pics/pause_blue_button_27x27px.gif"  width="27" height="27" id="pauseRecTourPic" border="0" onmouseover="javascript:btnShiftCls( this, true )" onmouseout="javascript:btnShiftCls( this, false )" /></a>
+  </div>
+  <div id="idPlayButtonDisabledContainer" style="display: none;">
+    <img src="/pics/play_grey_button_27x27px.gif" id="idPlayButtonDisabled" width="27" height="27" border="0" />
+  </div>
+  <div id="idStopButtonActiveContainer" style="display: none;">
+    <a id="idStopButtonActive" href="javascript:void(0);" onclick="javascript: stop_play_record();"><img src="/pics/stop_blue_button_27x27px.gif" width="27" height="27" id="stopRecTourPic" border="0" onmouseover="javascript:btnShiftCls( this, true )" onmouseout="javascript:btnShiftCls( this, false )" /></a>
+  </div>
+  <div id="idStopButtonInactiveContainer" style="display: none;">
+    <img src="/pics/stop_grey_button_27x27px.gif" id="idStopButtonInactive" width="27" height="27" border="0" onmouseover="javascript:btnShiftCls( this, true )" onmouseout="javascript:btnShiftCls( this, false )" />
+  </div>
+</form>
+<!--#include virtual="/incl/ptz_incl.shtml" -->
+<!--#include virtual="/incl/alternate_rows.shtml" -->
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!--#set var="helpURL" val="javascript:launch('/help/transparency_h.shtml')" -->
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#set var="activeMenu" val="videoImage" -->
+<!--#set var="activePage" val="overlay" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<!--#include virtual="/java/chkbox.shtml" -->
+
+<script language="JavaScript">
+<!-- 
+var langObjOvlSetFull;
+var submitOnce = false;
+
+function onInit()
+{
+  langObjOvlSetFull = new Language("videoImage_overlay", "ovl_settings_full");
+  langObjOvlSetFull.init();
+}
+// -->
+</script>
+
+</head>
+
+<body <!--#include virtual="/incl/bodytag.shtml" --> onload="onInit();">
+
+<!--#include virtual="/incl/top_incl2.shtml" -->
+
+<table border="<!--#echo var="zero" option="encoding:html" -->" cellpadding="<!--#echo var="cellpadding3" option="encoding:html" -->" cellspacing="<!--#echo var="zero" option="encoding:html" -->" width="100%" class="<!--#echo var="bgcolor1" option="encoding:html" -->">
+  <tr>
+    <td colspan="4" valign="top" class="topTitle"><div align="left"><span id="transSetTxt"></span></div></td>
+    <td class="topTitle" align="right"><a href="<!--#echo var="helpURL" option="encoding:url" -->"><img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="hlpPic"></a></td>
+  </tr>
+</table>
+<table>
+  <tr>
+    <td class="oddItem">
+
+      <form name="paletteForm" onSubmit="if (submitOnce) return false; else return submitOnce = true;" action="/axis-cgi/operator/create_overlay.cgi" method="POST">
+        <input type="checkbox" name="usetransparent" value="true"><span id="useTransTxt"></span><br><span id="transColTxt"></span>&nbsp;<input type="text" name="colorcode">
+        <p></p>
+        <input type="checkbox" name="usescalable" value="true"><span id="sclResTxt"></span>
+        <p></p>
+        <input type="hidden" name="type" value="fullcolor">
+        <input type="hidden" name="ov_path" value="<!--#echo var="ov_path" option="encoding:html" -->">
+        <input type="submit" class="btnNormal" value="" id="saveBtn">
+      </form>
+      <br />
+    </td>
+  </tr>
+</table>
+
+<!--#include virtual="/incl/bottom_incl.shtml" -->
+

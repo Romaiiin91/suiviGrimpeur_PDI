@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+	<rtp_h>
+		<pageTitle type="title" minor="0">Help/RTP / MPEG-4 &#x26; H.264</pageTitle>
+		<titleTxt type="msgAsText" minor="0">RTP / MPEG-4 &#x26; H.264</titleTxt>
+		<alternativePageTitle1 type="msgAsText" minor="0">Help/RTP / H.264</alternativePageTitle1>
+		<alternativeTitleTxt1 type="msgAsText" minor="0">RTP / H.264</alternativeTitleTxt1>
+		<alternativePageTitle2 type="msgAsText" minor="0">Help/RTP / MPEG-4</alternativePageTitle2>
+		<alternativeTitleTxt2 type="msgAsText" minor="0">RTP / MPEG-4</alternativeTitleTxt2>
+		<alternativePageTitle3 type="msgAsText" minor="0">Help/RTP / Audio</alternativePageTitle3>
+		<alternativeTitleTxt3 type="msgAsText" minor="0">RTP / Audio</alternativeTitleTxt3>
+		<intro_audio_Txt type="text" minor="0">These RTP settings concern the IP addresses and port numbers to use for audio streams.</intro_audio_Txt>
+		<intro_start_Txt type="text" minor="0">These RTP settings concern the IP addresses and port numbers to use for video</intro_start_Txt>
+		<intro_add_audio_Txt type="text" minor="0">and audio</intro_add_audio_Txt>
+		<intro_end_Txt type="text" minor="0">streams.</intro_end_Txt>
+		<rtp_mpeg4_ports1_Txt type="text" minor="0">&#x3C;b&#x3E;Port Range&#x3C;/b&#x3E;</rtp_mpeg4_ports1_Txt>
+		<rtp_audio_ports2_Txt type="text" minor="0">The RTP Port range defines the range of ports from which the audio</rtp_audio_ports2_Txt>
+		<rtp_mpeg4_ports2_Txt type="text" minor="0">The RTP Port range defines the range of ports from which the video</rtp_mpeg4_ports2_Txt>
+		<rtp_mpeg4_ports2_add_Txt type="text" minor="0">/audio</rtp_mpeg4_ports2_add_Txt>
+		<rtp_mpeg4_end_Txt1 type="text" minor="0">ports are automatically selected. This feature is useful if the Axis product is connected to a NAT router with manually configured port mapping.</rtp_mpeg4_end_Txt1>
+		<rtp_mpeg4_end_Txt2 type="text" minor="0">Limit the range of ports permitted for RTP unicast/multicast by entering the &#x3C;b&#x3E;Start port&#x3C;/b&#x3E; and &#x3C;b&#x3E;End port&#x3C;/b&#x3E; in the provided fields.</rtp_mpeg4_end_Txt2>
+		<rtp_mpeg4_end_Txt3 type="text" minor="0">&#x3C;b&#x3E;Example&#x3C;/b&#x3E; (2 products):</rtp_mpeg4_end_Txt3>
+		<rtp_mpeg4_end_Txt4 type="text" minor="0">The &#x3C;b&#x3E;NAT router&#x3C;/b&#x3E; has been manually configured to map:</rtp_mpeg4_end_Txt4>
+		<rtp_mpeg4_end_Txt5 type="text" minor="0">ports 50000-50099 to the IP address of product 1</rtp_mpeg4_end_Txt5>
+		<rtp_mpeg4_end_Txt6 type="text" minor="0">ports 50100-50199 to the IP address of product 2</rtp_mpeg4_end_Txt6>
+		<rtp_mpeg4_end_Txt7 type="text" minor="0">Set the port range in product 1 to 50000-50099 and in product 2 to 50100-50199.</rtp_mpeg4_end_Txt7>
+		<rtp_mpeg4_ports2_note_audio_video_Txt1 type="text" minor="0">&#x3C;b&#x3E;Note:&#x3C;/b&#x3E; Audio and video streams each require one RTP session, and each RTP session requires 2 ports. This means that a total of 4 ports must be available for each connecting unicast client requesting both audio and video (e.g. 2 clients will need 8 ports). The multicast session only ever requires a total of 4 ports, however many clients connect to it.</rtp_mpeg4_ports2_note_audio_video_Txt1>
+		<rtp_mpeg4_ports2_note_audio_video_Txt2 type="text" minor="0">If audio is disabled, then each unicast session will only need 2 ports for each client, and the multicast session will need a total of 2 ports for all clients.</rtp_mpeg4_ports2_note_audio_video_Txt2>
+		<rtp_mpeg4_ports2_note_Txt1 type="text" minor="0">&#x3C;b&#x3E;Note:&#x3C;/b&#x3E; Each RTP session needs 2 ports, which means 2 ports for each unicast session, or 2 ports for the multicast session in total.</rtp_mpeg4_ports2_note_Txt1>
+		<rtp_mpeg4_ports2_note_Txt2 type="text" minor="0">&#x3C;b&#x3E;Note:&#x3C;/b&#x3E; Each RTP session needs 2 ports, which means 2 ports for each unicast session, or 2 ports for the multicast session in total.</rtp_mpeg4_ports2_note_Txt2>
+		<addresses_Multiast_Txt type="text" minor="0">&#x3C;b&#x3E;Multicast&#x3C;/b&#x3E;</addresses_Multiast_Txt>
+		<addresses_audio_Txt type="text" minor="0">&#x3C;b&#x3E;Audio Address &#x26; Audio Port&#x3C;/b&#x3E;</addresses_audio_Txt>
+		<addresses_videoaudio_Txt type="text" minor="0">&#x3C;b&#x3E;Video/Audio Addresses &#x26; Ports&#x3C;/b&#x3E;</addresses_videoaudio_Txt>
+		<addresses_no_audio_Txt type="text" minor="0">&#x3C;b&#x3E;Video Address/Video Port&#x3C;/b&#x3E;</addresses_no_audio_Txt>
+		<addresses_general_Txt type="text" minor="0">- Only IP addresses within certain ranges can be used for multicasting. The product has been pre-configured with addresses from these ranges, and does not normally need to be reconfigured. If an address does need to be changed, contact your network administrator.</addresses_general_Txt>
+		<ports_audio_Txt1 type="text" minor="0">The audio ports entered here must be even values:</ports_audio_Txt1>
+		<ports_audio_Txt2 type="text" minor="0">Set the audio port to '0' for a random port number</ports_audio_Txt2>
+		<ports_audio_Txt3 type="text" minor="0">Set the audio port to a value between 1024-65534</ports_audio_Txt3>
+		<ports_audio_Txt4 type="text" minor="0">(even values only)</ports_audio_Txt4>
+		<ports_videoaudio_Txt1 type="text" minor="0">The video/audio ports entered here must be even values:</ports_videoaudio_Txt1>
+		<ports_videoaudio_Txt2 type="text" minor="0">Set the video/audio port to '0' for a random port number</ports_videoaudio_Txt2>
+		<ports_videoaudio_Txt3 type="text" minor="0">Set the video/audio port to a value between 1024-65534</ports_videoaudio_Txt3>
+		<ports_videoaudio_Txt4 type="text" minor="0">(even values only)</ports_videoaudio_Txt4>
+		<ports_Txt type="text" minor="0">The video port entered here must be an even value. Setting the port to 0 means a random (even) port number will be used.</ports_Txt>
+		<notes_Txt1 type="text" minor="0">&#x3C;b&#x3E;Note 1:&#x3C;/b&#x3E; Multicast addresses are allocated according to these&#x3C;a href='http://www.iana.org/assignments/multicast-addresses' target='_blank'&#x3E; IANA policies&#x3C;/a&#x3E;.</notes_Txt1>
+		<notes_Txt2 type="text" minor="0">&#x3C;b&#x3E;Note 2:&#x3C;/b&#x3E; Viewers do not need to know</notes_Txt2>
+		<notes_audio_Txt type="text" minor="0">these IP addresses or port numbers</notes_audio_Txt>
+		<notes_no_audio_Txt type="text" minor="0">the multicast address or video port number</notes_no_audio_Txt>
+		<notes_end_Txt type="text" minor="0">, but only the main IP address or host name otherwise used for accessing the product.</notes_end_Txt>
+		<note3notes_Txt type="text" minor="0">&#x3C;b&#x3E;Note 3:&#x3C;/b&#x3E; Port 1026 cannot be used, since it is already being used internally.</note3notes_Txt>
+		<tTL_Txt type="text" minor="0">&#x3C;b&#x3E;Time To Live&#x3C;/b&#x3E; - This setting tells the network routers when to discard an IP data packet if it fails to be delivered. The value is measured in the number of network routers that can be passed before it arrives at its destination.</tTL_Txt>
+		<aM_video_Txt type="text" minor="0">&#x3C;b&#x3E;Always Multicast Video&#x3C;/b&#x3E; - Select this option and the desired stream profile from the drop-down list and click Save to start a multicast video stream without RTSP control.</aM_video_Txt>
+		<aM_audio_Txt type="text" minor="0">&#x3C;b&#x3E;Always Multicast Audio&#x3C;/b&#x3E; - Select this option and click Save to start a multicast audio stream without RTSP control.</aM_audio_Txt>
+		<enDisMulticast_Txt type="text" minor="0">&#x3C;b&#x3E;Note&#x3C;/b&#x3E;: If stream profile is changed while Always Multicast Video is selected, in order for changes to take effect immediately, this option should be disabled and enabled again. Otherwise the change will take effect only after camera's restart.</enDisMulticast_Txt>
+	</rtp_h>
+</language_xml>

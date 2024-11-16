@@ -1,0 +1,12 @@
+<!--#set var="pageTitle" val="PTZ Configuration" option="translate:osdmenu_pageTitle" -->
+<!--#set var="pageSubTitle" val="On-Screen Display Menu" option="translate:osdmenu_pageSubTitle" -->
+<!--#set var="WizardFormAction" val="/sm/sm.srv" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+</head>
+
+<frameset rows="*,0,0" border="0" cellpadding="0">
+   <frame src="osdmenu.shtml<!--#if expr="_$nbr != _" -->?nbr=<!--#echo var="nbr" option="encoding:url" --><!--#endif -->" name="ptz_menu_cfg" scrolling="yes" noresize="true">
+   <frame src="/operator/status.html" name="status_frame" scrolling="no" noresize="true">
+   <frame src="/view/temp.shtml" name="Temp" marginHeight="0" marginWidth="0" scrolling="no" noresize="true">
+</frameset>
+

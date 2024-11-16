@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+	<changeRootPass_h>
+		<pageTitle type="title" minor="0">Help/Change Password</pageTitle>
+		<titleTxt type="msgAsText" minor="0">Change Password</titleTxt>
+		<subTitleGenTxt type="text" minor="0">Change Administrator Password</subTitleGenTxt>
+		<help1Txt1 type="text" minor="0">Enter a password for the administrator or root user, and then re-enter it to confirm.</help1Txt1>
+		<help1Txt2 type="text" minor="0">&#x3C;b&#x3E;User name -&#x3C;/b&#x3E; Shows the administrator or root user.</help1Txt2>
+		<help1Txt3 type="text" minor="0">&#x3C;b&#x3E;Password -&#x3C;/b&#x3E; Passwords can consist of 1 to</help1Txt3>
+		<help2Txt1 type="text" minor="0">characters. All characters are valid.</help2Txt1>
+		<help2Txt2 type="text" minor="0">&#x3C;b&#x3E;Confirm Password -&#x3C;/b&#x3E; Confirm the above password here.</help2Txt2>
+		<help3Txt type="text" minor="0">&#x3C;b&#x3E;Note: &#x3C;/b&#x3E;This password will be stored in a format which may be incompatibile with older firmware. If downgrading to a prior firmware is necessary, the administrator or root user may not be able to log in to the product. To regain access a reset to factory default settings are required.</help3Txt>
+	</changeRootPass_h>
+
+
+
+
+
+	<users_h>
+		<pageTitle type="title" minor="0">Help/Users</pageTitle>
+		<titleTxt type="msgAsText" minor="0">Users</titleTxt>
+		<introAudioTxt type="text" minor="0">To prevent unauthorized use of the Axis product, the product supports multi-user password protection, where access can be restricted to defined users only.</introAudioTxt>
+		<introTxt1 type="text" minor="0">To prevent unauthorized use of the product, the product supports multi-user password protection, where access can be restricted to defined users only (maximum of</introTxt1>
+		<introTxt2 type="text" minor="0">).</introTxt2>
+		<intro_fortsTxt type="text" minor="0">An &#x3C;b&#x3E;Administrator&#x3C;/b&#x3E; has unrestricted access to the product's administration tools and can determine the registration and rights for all other users.</intro_fortsTxt>
+		<intro_authTxt1 type="text" minor="0">The product supports several methods of user authentication. These are:</intro_authTxt1>
+		<intro_authTxt2 type="text" minor="0">&#x3C;b&#x3E;HTTP Basic Authentication&#x3C;/b&#x3E; - This authenticates the user by requesting a user name and a password. The exchange of network credentials is in simple base64 coding and is not encrypted.</intro_authTxt2>
+		<intro_authTxt3 type="text" minor="0">&#x3C;b&#x3E;HTTP Digest Authentication&#x3C;/b&#x3E; - This method also requests a user name and password, but the exchange of credentials is encrypted, which makes it much more secure against eavesdropping.</intro_authTxt3>
+		<intro_authTxt4 type="text" minor="0">&#x3C;b&#x3E;Note:&#x3C;/b&#x3E; The HTTP Basic and HTTP Digest authentication methods are also used for RTSP network traffic.</intro_authTxt4>
+		<subTitle1Txt type="text" minor="0">User List</subTitle1Txt>
+		<listTxt1 type="text" minor="0">The &#x3C;b&#x3E;User list &#x3C;/b&#x3E;displays all of the users authorized to use the server. The administrator user name &#x3C;i&#x3E;root&#x3C;/i&#x3E; is permanent and cannot be deleted. This user is also the only one allowed access to the product via FTP.</listTxt1>
+		<listTxt2 type="text" minor="0">The list also indicates if a user is only configured for unencrypted passwords. Note that all new or modified users will automatically receive encrypted passwords.</listTxt2>
+		<listTxt3 type="text" minor="0">To add a new user, click the &#x3C;b&#x3E;Add&#x3C;/b&#x3E; button. To modify or delete an existing user, select the user from the list and click the relevant button. See also &#x3C;a href='users_set_h.shtml'&#x3E;Adding and modifying users&#x3C;/a&#x3E;.</listTxt3>
+		<subTitle_PwdSet_Txt type="text" minor="0">HTTP/RTSP Password Settings</subTitle_PwdSet_Txt>
+		<passwordTxt1 type="text" minor="0">&#x3C;b&#x3E;Allow password type&#x3C;/b&#x3E;: Select the type of password to allow. You may need to allow unencrypted passwords if there are viewing clients that do not support encryption, or if you recently upgraded the firmware and the existing clients do support encryption, but need to log in again and be configured to use this functionality.</passwordTxt1>
+		<passwordTxt2 type="text" minor="0">The available password options are:</passwordTxt2>
+		<passwordTxt3 type="text" minor="0">Encrypted &#x26; unencrypted (default value for new unit or unit reset to factory default settings)</passwordTxt3>
+		<passwordTxt4 type="text" minor="0">Encrypted only</passwordTxt4>
+		<passwordTxt5 type="text" minor="0">Unencrypted only (default value for upgraded unit) - the password is sent in plain text and it may be possible to eavesdrop on the network transmission. This is also the only value allowed if the user &#x3C;i&#x3E;root&#x3C;/i&#x3E; uses an unencrypted password.</passwordTxt5>
+		<subTitle_UserSet_Txt type="text" minor="0">User Settings</subTitle_UserSet_Txt>
+		<anonTxt type="text" minor="0">&#x3C;b&#x3E;Anonymous viewer login&#x3C;/b&#x3E; means that anybody on the network can access the product and its images (but not the Setup tools) from a browser, and without having to log in. To allow this, check the box for &#x3C;b&#x3E;Enable anonymous viewer login&#x3C;/b&#x3E;.</anonTxt>
+		<max_viewersTxt1 type="text" minor="0">&#x3C;b&#x3E;Maximum number of simultaneous viewers limited to:&#x3C;/b&#x3E; Limiting the number of viewers accessing the server at any one time can be useful if there are limitations on the available bandwidth. The maximum of</max_viewersTxt1>
+		<max_viewersTxt2 type="text" minor="0">viewers means that subsequent viewers will not see the video stream, but instead a blank image.</max_viewersTxt2>
+		<multicast_viewersTxt1 type="text" minor="0">Note that &#x3C;b&#x3E;all&#x3C;/b&#x3E; multicast viewers count as one user in the total limit of</multicast_viewersTxt1>
+		<multicast_viewersTxt2 type="text" minor="0">users.</multicast_viewersTxt2>
+		<ptzTxt type="text" minor="0">&#x3C;b&#x3E;Enable anonymous PTZ control login&#x3C;/b&#x3E; - This option allows anonymous users to gain control of the PTZ controls provided by the product.</ptzTxt>
+		<basic_SetupTxt type="text" minor="0">&#x3C;b&#x3E;Enable Basic Setup&#x3C;/b&#x3E; - To quickly access setup settings enable the shortcut list &#x3C;b&#x3E;Basic Setup&#x3C;/b&#x3E; in the menu. Note that most settings require Administrator access privileges.</basic_SetupTxt>
+	</users_h>
+
+
+
+
+
+	<users_set_h>
+		<pageTitle type="title" minor="0">Help/User Setup</pageTitle>
+		<titleTxt type="msgAsText" minor="0">User Setup</titleTxt>
+		<help1Txt1 type="text" minor="0">Provide the following information for each new user:</help1Txt1>
+		<help1Txt2 type="text" minor="0">&#x3C;b&#x3E;User Name -&#x3C;/b&#x3E; User names can contain from one to fourteen characters. Valid characters are: A-Z, a-z, 0-9. Note that, the first character in the user name must be A-Z or a-z.</help1Txt2>
+		<help1Txt3 type="text" minor="0">&#x3C;b&#x3E;Password -&#x3C;/b&#x3E; Passwords can consist of 1 to</help1Txt3>
+		<help1Txt4 type="text" minor="0">characters. All characters are valid.</help1Txt4>
+		<help1Txt5 type="text" minor="0">&#x3C;b&#x3E;Confirm Password -&#x3C;/b&#x3E; Confirm the above password here.</help1Txt5>
+		<help2Txt1 type="text" minor="0">&#x3C;b&#x3E;User Group -&#x3C;/b&#x3E; Click the appropriate radio button to define the access rights for the user; where the level of access can be described as follows:</help2Txt1>
+		<help2Txt2 type="text" minor="0">&#x3C;b&#x3E;Viewer&#x3C;/b&#x3E; - Allows access to the video stream only.</help2Txt2>
+		<help2Txt3 type="text" minor="0">&#x3C;b&#x3E;Operator&#x3C;/b&#x3E; - An Operator can view the video stream, create and modify event types, and also modify all the settings not included in the System options.</help2Txt3>
+		<operatorRightsNoMaskdTxt type="text" minor="0">&#x3C;b&#x3E;Operator&#x3C;/b&#x3E; - An Operator has unrestricted access to all settings &#x3C;b&#x3E;except&#x3C;/b&#x3E; those for creating and modifying PTZ presets, PTZ control settings, uploading applications and language files, and for modifying any of the settings included in the System options.</operatorRightsNoMaskdTxt>
+		<operatorRightsMaskdTxt type="text" minor="0">&#x3C;b&#x3E;Operator&#x3C;/b&#x3E; - An Operator has unrestricted access to all settings &#x3C;b&#x3E;except&#x3C;/b&#x3E; those for creating and modifying Privacy masks, PTZ presets, PTZ control settings, uploading applications and language files, and for modifying any of the settings included in the System options.</operatorRightsMaskdTxt>
+		<help2Txt4 type="text" minor="0">&#x3C;b&#x3E;Administrator&#x3C;/b&#x3E; - An Administrator has unrestricted access to the whole product and its setup Tools, and can thus determine the registration of all other users.</help2Txt4>
+		<help3Txt type="text" minor="0">&#x3C;b&#x3E;Enable PTZ control&#x3C;/b&#x3E; - Checking this option will allow this user to have access to the PTZ controls.</help3Txt>
+		<help_ciWrn type="text" minor="0">&#x3C;b&#x3E;Note:&#x3C;/b&#x3E;This user's password will be stored in a format that may be incompatible with earlier firmware releases if a downgrade is needed.</help_ciWrn>
+	</users_set_h>
+</language_xml>

@@ -1,0 +1,82 @@
+<!--#include virtual="/incl/top_incl.shtml" -->
+<!--#include virtual="/incl/activexh264_versions.shtml" -->
+<!--#set var="WizardFormAction" val="/sm/sm.srv" -->
+
+<script src="/incl/zxml.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->" language="javascript" type="text/javascript"></script>
+<script src="/incl/xmlPrototypes.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->" language="javascript" type="text/javascript"></script>
+<script src="/incl/language_incl.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->" language="javascript" type="text/javascript"></script>
+
+<SCRIPT SRC="/incl/activeX.js?id=<!--#echo var="ssi_request_id" option="encoding:javascript" -->"></SCRIPT>
+
+<script LANGUAGE="JavaScript">
+<!--
+
+
+var langObjH264Inst = new Language("h264_decoder", "install");
+
+function onInit()
+{
+  langObjH264Inst.init();
+  setTimeout(installDone, 5500);
+}
+
+function installDone()
+{
+  var installText1 = langObjH264Inst.getText("installText1");
+  var installText2 = langObjH264Inst.getText("installText2");
+  var installText3 = langObjH264Inst.getText("installText3");
+  var closeText = langObjH264Inst.getText("closeText");
+  document.getElementById("installText").innerHTML = '<div style="color:black;font-size:10px;font-weight:normal;">' + installText1 + '<br>' + installText2 + '<br>' + installText3 + '</div>';
+  document.getElementById("closeButton").innerHTML = '<input type="button" name="closeReload" value="' + closeText + '" class="btnNormal" onClick="closeAndReload()">';
+}
+
+function closeAndReload()
+{
+  opener.location.reload(true);
+  window.close();
+}
+
+//-->
+</script>
+
+</head>
+<body onLoad="onInit()">
+<script LANGUAGE="JavaScript">
+<!--
+
+<!--#if expr="$root_Brand_ProdType = Network IO Audio Module" -->
+function IPAddress(path)
+{
+  var str = path.slice(7);
+  var anArray = str.split('/');
+
+  if (anArray[0].split(":").length > 1)
+  {
+    anArray[0] = "[" + anArray[0] + "]";
+  }
+  return anArray[0];
+}
+
+ <!--#include virtual="/sm/sm.srv?action=get&group=ExternalVideo.E0" -->
+
+  var imagepath = "http://" + IPAddress("<!--#echo var="root_ExternalVideo_E0_ImagePath" option="encoding:none" -->") + "/activex/decoder/";
+<!--#else -->
+  var imagepath = "/axis-media/media.amp?videocodec=h264&camera=1";
+<!--#endif -->
+
+  drawMpeg4Dec("0", "0", imagepath, "<!--#echo var="CLSID_h264_dec" option="encoding:javascript" -->", "<!--#echo var="cab_Name_Dec" option="encoding:javascript" -->", "<!--#echo var="ver_h264_dec" option="encoding:javascript" -->");
+//-->
+</script>
+<table border="0" width="100%">
+  <tr>
+    <td width="80%">
+      <div id="installText" style="color:black;font-size:14px;font-weight:bold;"><!--#language id="installH264_pleWaTxt" text="Please wait..." --></div>
+    </td>
+    <td width="20%" align="right" valign="bottom">
+      <div id="closeButton">&nbsp;</div>
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>

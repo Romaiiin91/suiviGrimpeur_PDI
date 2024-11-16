@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+  <onvif>
+    <pageTitle type="title" minor="0">System Options/ONVIF</pageTitle>
+    <addBtnStatTxt type="msg" minor="0">Add recipient</addBtnStatTxt>
+    <modBtnStatTxt type="msg" minor="0">Modify the selected recipient</modBtnStatTxt>
+    <remBtnStatTxt type="msg" minor="0">Remove the selected recipient</remBtnStatTxt>
+    <selAlert type="alert" minor="0">Select a user first.</selAlert>
+    <userNameTxt type="msgAsText" minor="0">User Name</userNameTxt>
+    <userGroupTxt type="msgAsText" minor="0">User Group</userGroupTxt>
+    <adminTxt type="msgAsText" minor="0">Administrator</adminTxt>
+    <oprTxt type="msgAsText" minor="0">Operator</oprTxt>
+    <usrTxt type="msgAsText" minor="0">User</usrTxt>
+    <remSerConfirm type="alert" minor="0">Are you sure you want to remove the user</remSerConfirm>
+    <onvifTxt type="text" minor="0">ONVIF</onvifTxt>
+    <hlpTxt type="image" minor="0" imageid="hlpPic">Click here for help on this page</hlpTxt>
+    <versionTxt type="text" minor="0">ONVIF Version: Profile S</versionTxt>
+    <liTxt type="text" minor="0">Users List</liTxt>
+    <addBtn type="button" minor="0" buttonid="addBtn">Add...</addBtn>
+    <modifyBtn type="button" minor="0" buttonid="modifyBtn">Modify...</modifyBtn>
+    <removeBtn type="button" minor="0" buttonid="removeBtn">Remove</removeBtn>
+  </onvif>
+	
+	<onvif_user_setup>
+	  <pageTitle type="title" minor="0">System Options/ONVIF User Setup</pageTitle>
+		<usNaAlert type="alert" minor="0">A user name must contain at least one character.</usNaAlert>
+		<alwdChAlert type="alert" minor="0">Only A-Z, a-z and 0-9 are allowed in the user name.</alwdChAlert>
+		<pswMustConAlert type="alert" minor="0">The password must contain at least one character.</pswMustConAlert>
+		<pwdConfAlert type="alert" minor="0">The 'Password' and 'Confirm password' do not match. Please enter again.</pwdConfAlert>
+		<onvifTxt type="text" minor="0">ONVIF User Setup</onvifTxt>
+		<hlpTxt type="image" minor="0" imageid="hlpPic">Click here for help on this page</hlpTxt>
+		<userNameTxt type="text" minor="0">User name:</userNameTxt>
+		<pwdTxt type="text" minor="0">Password:</pwdTxt>
+		<conPwdTxt type="text" minor="0">Confirm password:</conPwdTxt>
+		<userGrpTxt type="text" minor="0">User group:</userGrpTxt>
+		<mediaTxt type="text" minor="0">Media user</mediaTxt>
+		<operatorTxt type="text" minor="0">Operator</operatorTxt>
+		<administratorTxt type="text" minor="0">Administrator</administratorTxt>
+		<oKBtn type="button" minor="0" buttonid="btnOK">OK</oKBtn>
+		<cancelBtn type="button" minor="0" buttonid="btnCancel">Cancel</cancelBtn>
+		<usDupAlert type="alert" minor="0">Username already exists.</usDupAlert>
+	</onvif_user_setup>
+</language_xml>

@@ -1,0 +1,149 @@
+// topic.shtml
+// Creates an array of all known topics
+
+var langObjEventsTopLi = new Language("events", "topic_list");
+langObjEventsTopLi.init(false, true);
+
+function Group(aName, aTopicArray)
+{
+ this.name = aName;
+ this.topicArray = aTopicArray;
+ this.collected = false;
+ this.el = null;
+}
+
+function GroupChild(aParent, aName, aOption1, aOption2, aValueName, aBoolean_label, aBoolean_active, aBoolean_inactive, aDisplay, aTopic)
+{
+ this.parent = aParent;
+ this.name = aName;
+ this.option1 = aOption1;
+ this.option2 = aOption2;
+ this.valueName = aValueName;
+ this.boolean_label = aBoolean_label;
+ this.boolean_active = aBoolean_active;
+ this.boolean_inactive = aBoolean_inactive;
+ this.display = aDisplay;
+ this.topic = aTopic;
+ this.collected = false;
+}
+
+function SimpleItem(itemName, value, niceName)
+{
+  this.itemName = itemName;
+  this.value = value;
+  this.niceName = niceName;
+}
+
+var image_names = new Array();
+var images_enabled = new Array();
+var ptz_enabled = new Array();
+  image_names[0] = "<!--#echo var="root_Image_I0_Name" option="encoding:javascript" -->";
+  images_enabled[0] = <!--#if expr="$root_Image_I0_Enabled = no" -->false<!--#else -->true<!--#endif -->;
+  ptz_enabled[0] = <!--#if expr="$root_PTZ_Various_V1_Locked != true" -->true<!--#else -->false<!--#endif -->;
+
+
+var global_PTZEnabled = <!--#if expr="$root_PTZ_ImageSource_I0_PTZEnabled != false" -->true<!--#else -->false<!--#endif -->;
+var global_skipPTZ = <!--#if expr="$skipPTZ = yes" -->true<!--#else -->false<!--#endif -->;
+var PTZError_available = global_PTZEnabled;
+var PTZReady_available = global_PTZEnabled;
+
+var activeLabel;
+var inactiveLabel;
+
+var checkValidEvent_error_MD_not_found;
+var checkValidEvent_error_PTZ_disabled;
+var checkValidEvent_error_Preset_not_found;
+var checkValidEvent_error_Recurrence_not_found;
+var checkValidEvent_error_Schedual_not_found;
+var checkValidEvent_error_general;
+var checkValidEvent_existingMotionWindowStr;
+
+var image_name_default; //Used when no image/channel name exist. # is replaced with number following Channel_
+var audio_name_default; //Used audio channel. # is replaced with channel number
+var txt_invalid_trigger;
+
+var txtAny;
+var simpleItemArr = new Array();
+var groupArr = new Array();
+var groupChildArr = new Array();
+
+groupArr[0] = new Group(langObjEventsTopLi.getText("tlAppTxt"), ["RuleEngine", "CameraApplicationPlatform"]);
+groupChildArr.push(new GroupChild(0, langObjEventsTopLi.getText("tlAppCrosslineTxt"), false, false, false, false, false, false, true, "RuleEngine/CrossLineDetection/linetouched"));
+groupChildArr.push(new GroupChild(0, langObjEventsTopLi.getText("tlAppCrosslineTxt"), false, false, false, false, false, false, false, "RuleEngine/CrossLineDetection/timer"));
+groupChildArr.push(new GroupChild(0, langObjEventsTopLi.getText("tlAppVidMotDetTxt"), false, false, false, false, false, false, true, "RuleEngine/VideoMotionDetection/motion"));
+groupChildArr.push(new GroupChild(0, langObjEventsTopLi.getText("tlAppVidMotDetTxt"), false, false, false, false, false, false, false, "RuleEngine/VideoMotionDetection/timer"));
+groupChildArr.push(new GroupChild(0, langObjEventsTopLi.getText("tlAppDigAutTrackTxt"), false, false, false, langObjEventsTopLi.getText("tlAppDigAutTrackBlblTxt"), langObjEventsTopLi.getText("tlYesTxt"), langObjEventsTopLi.getText("tlNoTxt"), true, "RuleEngine/DigitalAutotracking/tracking"));
+
+groupArr[1] = new Group(langObjEventsTopLi.getText("tlDetTxt"), ["AudioSource", "VideoSource", "VideoAnalytics"]);
+groupChildArr.push(new GroupChild(1, langObjEventsTopLi.getText("tlDetAudDetTxt"), langObjEventsTopLi.getText("tlDetAudDetOp1Txt"), false, false, false, false, false, true, "AudioSource/TriggerLevel"));
+groupChildArr.push(new GroupChild(1, langObjEventsTopLi.getText("tlDetDayNigTxt"), false, false, false, langObjEventsTopLi.getText("tlDetDayNigBlblTxt"), langObjEventsTopLi.getText("tlYesTxt"), langObjEventsTopLi.getText("tlNoTxt"), true, "VideoSource/DayNightVision"));
+groupChildArr.push(new GroupChild(1, langObjEventsTopLi.getText("tlDetLivStrAccTxt"), langObjEventsTopLi.getText("tlDetLivStrAccOp1Txt"), false, false, langObjEventsTopLi.getText("tlDetLivStrAccBlblTxt"), langObjEventsTopLi.getText("tlYesTxt"), langObjEventsTopLi.getText("tlNoTxt"), true, "VideoSource/LiveStreamAccessed"));
+groupChildArr.push(new GroupChild(1, langObjEventsTopLi.getText("tlDetMotDetTxt"), langObjEventsTopLi.getText("tlDetMotDetOp1Txt"), false, false, langObjEventsTopLi.getText("tlDetMotDetBlblTxt"), langObjEventsTopLi.getText("tlYesTxt"), langObjEventsTopLi.getText("tlNoTxt"), true, "VideoAnalytics/MotionDetection"));
+groupChildArr.push(new GroupChild(1, langObjEventsTopLi.getText("tlDetPIRTxt"), false, false, false, langObjEventsTopLi.getText("tlDetPIRBlbltxt"), langObjEventsTopLi.getText("tlYesTxt"), langObjEventsTopLi.getText("tlNoTxt"), true, "Device/Sensor/PIR"));
+groupChildArr.push(new GroupChild(1, langObjEventsTopLi.getText("tlDetTampTxt"), langObjEventsTopLi.getText("tlDetTampOp1Txt"), false, false, false, false, false, true, "VideoSource/Tampering"));
+
+groupArr[2] = new Group(langObjEventsTopLi.getText("tlHWTxt"), ["Connector", "Device", "VideoEncoder"]);
+// groupChildArr.push(new GroupChild(2, langObjEventsTopLi.getText("tlHWAudSigTxt"), langObjEventsTopLi.getText("tlHWAudSigOp1Txt"), false, false, langObjEventsTopLi.getText("tlHWAudSigBlblTxt"), langObjEventsTopLi.getText("tlYesTxt"), langObjEventsTopLi.getText("tlNoTxt"), true, ""));
+groupChildArr.push(new GroupChild(2, langObjEventsTopLi.getText("tlHWConnAudTxt"), false, false, false, false, false, false, false, "Connector/AudioSource"));
+groupChildArr.push(new GroupChild(2, langObjEventsTopLi.getText("tlHWFanTxt"), langObjEventsTopLi.getText("tlHWFanOp1Txt"), false, false, langObjEventsTopLi.getText("tlHasFailedTxt"), langObjEventsTopLi.getText("tlYesTxt"), langObjEventsTopLi.getText("tlNoTxt"), true, "Device/HardwareFailure/FanFailure"));
+groupChildArr.push(new GroupChild(2, langObjEventsTopLi.getText("tlHWFocAssTxt"), false, false, false, langObjEventsTopLi.getText("tlHWFocAssBlblTxt"), langObjEventsTopLi.getText("tlYesTxt"), langObjEventsTopLi.getText("tlNoTxt"), false, "Device/Sensor/FocusAssistant"));
+// groupChildArr.push(new GroupChild(2, langObjEventsTopLi.getText("tlHWHeatTxt"), false, false, false, langObjEventsTopLi.getText("tlHasFailedTxt"), langObjEventsTopLi.getText("tlYesTxt"), langObjEventsTopLi.getText("tlNoTxt"), true, ""));
+groupChildArr.push(new GroupChild(2, langObjEventsTopLi.getText("tlHWNetTxt"), langObjEventsTopLi.getText("tlHWNetOp1Txt"), false, false, langObjEventsTopLi.getText("tlHWNetBlblTxt"), langObjEventsTopLi.getText("tlYesTxt"), langObjEventsTopLi.getText("tlNoTxt"), true, "Device/Network/Lost"));
+groupChildArr.push(new GroupChild(2, langObjEventsTopLi.getText("tlHWTempTxt"), langObjEventsTopLi.getText("tlHWTempOp1Txt"), langObjEventsTopLi.getText("tlHWTempOp2Txt"), langObjEventsTopLi.getText("tlHWTempNameInsideTxt"), langObjEventsTopLi.getText("tlHWTempBlblInsideTxt"), langObjEventsTopLi.getText("tlYesTxt"), langObjEventsTopLi.getText("tlNoTxt"), true, "Device/Status/Temperature/Inside"));
+groupChildArr.push(new GroupChild(2, langObjEventsTopLi.getText("tlHWTempTxt"), langObjEventsTopLi.getText("tlHWTempOp1Txt"), langObjEventsTopLi.getText("tlHWTempOp2Txt"), langObjEventsTopLi.getText("tlHWTempNameBelowTxt"), langObjEventsTopLi.getText("tlHWTempBlblBelowTxt"), langObjEventsTopLi.getText("tlYesTxt"), langObjEventsTopLi.getText("tlNoTxt"), true, "Device/Status/Temperature/Below"));
+groupChildArr.push(new GroupChild(2, langObjEventsTopLi.getText("tlHWTempTxt"), langObjEventsTopLi.getText("tlHWTempOp1Txt"), langObjEventsTopLi.getText("tlHWTempOp2Txt"), langObjEventsTopLi.getText("tlHWTempNameAboveTxt"), langObjEventsTopLi.getText("tlHWTempBlblAboveTxt"), langObjEventsTopLi.getText("tlYesTxt"), langObjEventsTopLi.getText("tlNoTxt"), true, "Device/Status/Temperature/Above"));
+groupChildArr.push(new GroupChild(2, langObjEventsTopLi.getText("tlHWTempTxt"), langObjEventsTopLi.getText("tlHWTempOp1Txt"), langObjEventsTopLi.getText("tlHWTempOp2Txt"), langObjEventsTopLi.getText("tlHWTempNameAboveOrBelowTxt"), langObjEventsTopLi.getText("tlHWTempBlblAboveOrBelowTxt"), langObjEventsTopLi.getText("tlYesTxt"), langObjEventsTopLi.getText("tlNoTxt"), true, "Device/Status/Temperature/Above_or_below"));
+groupChildArr.push(new GroupChild(2, langObjEventsTopLi.getText("tlHWVidSigTxt"), langObjEventsTopLi.getText("tlHWVidSigOp1Txt"), false, false, langObjEventsTopLi.getText("tlHWVidSigBlblTxt"), langObjEventsTopLi.getText("tlNoTxt"), langObjEventsTopLi.getText("tlYesTxt"), true, "VideoEncoder/Connections"));
+
+groupArr[3] = new Group(langObjEventsTopLi.getText("tlIOTxt"), ["Device/IO"]);
+groupChildArr.push(new GroupChild(3, langObjEventsTopLi.getText("tlIODigInpTxt"), langObjEventsTopLi.getText("tlIODigInpOp1Txt"), false, false, langObjEventsTopLi.getText("tlIODigInpBlblTxt"), langObjEventsTopLi.getText("tlYesTxt"), langObjEventsTopLi.getText("tlNoTxt"), true, "Device/IO/Port"));
+groupChildArr.push(new GroupChild(3, langObjEventsTopLi.getText("tlIOManTrigTxt"), false, false, false, langObjEventsTopLi.getText("tlIOManTrigBlblTxt"), langObjEventsTopLi.getText("tlYesTxt"), langObjEventsTopLi.getText("tlNoTxt"), true, "Device/IO/VirtualPort"));
+groupChildArr.push(new GroupChild(3, langObjEventsTopLi.getText("tlIOVirtInpTxt"), langObjEventsTopLi.getText("tlIOVirtInpOp1Txt"), false, false, false, false, false, true, "Device/IO/VirtualInput"));
+
+groupArr[4] = new Group(langObjEventsTopLi.getText("tlPTZTxt"), ["PTZController"]);
+groupChildArr.push(new GroupChild(4, langObjEventsTopLi.getText("tlPTZActFailTxt"), false, false, false, false, false, false, false, "Device/SystemMessage/ActionFailed"));
+groupChildArr.push(new GroupChild(4, langObjEventsTopLi.getText("tlPTZAutTrackTxt"), false, false, false, langObjEventsTopLi.getText("tlPTZAutTrackBlblTxt"), langObjEventsTopLi.getText("tlYesTxt"), langObjEventsTopLi.getText("tlNoTxt"), global_PTZEnabled, "PTZController/AutoTracking"));
+groupChildArr.push(new GroupChild(4, langObjEventsTopLi.getText("tlPTZCtrlQTxt"), false, false, false, false, false, false, false, "PTZController/ControlQueue"));
+groupChildArr.push(new GroupChild(4, langObjEventsTopLi.getText("tlPTZErrorTxt"), false, false, false, false, false, false, PTZError_available, "PTZController/PTZError"));
+groupChildArr.push(new GroupChild(4, langObjEventsTopLi.getText("tlPTZMovTxt"), langObjEventsTopLi.getText("tlPTZMovSelChannTxt"), false, false, langObjEventsTopLi.getText("tlPTZMovBlblTxt"), langObjEventsTopLi.getText("tlYesTxt"), langObjEventsTopLi.getText("tlNoTxt"), global_PTZEnabled, "PTZController/Move"));
+groupChildArr.push(new GroupChild(4, langObjEventsTopLi.getText("tlPTZPreReaTxt"), langObjEventsTopLi.getText("tlPTZPreReaSelChannTxt"), false, false, langObjEventsTopLi.getText("tlPTZPreReaBlblTxt"), langObjEventsTopLi.getText("tlYesTxt"), langObjEventsTopLi.getText("tlNoTxt"), global_PTZEnabled, "PTZController/PTZPresets"));
+groupChildArr.push(new GroupChild(4, langObjEventsTopLi.getText("tlPTZReadyTxt"), langObjEventsTopLi.getText("tlPTZReadySelChannTxt"), false, false, langObjEventsTopLi.getText("tlPTZReadyBlblTxt"), langObjEventsTopLi.getText("tlYesTxt"), langObjEventsTopLi.getText("tlNoTxt"), PTZReady_available, "PTZController/PTZReady"));
+
+groupArr[5] = new Group(langObjEventsTopLi.getText("tlStoTxt"), ["Storage"]);
+groupChildArr.push(new GroupChild(5, langObjEventsTopLi.getText("tlStoDisruptionTxt"), langObjEventsTopLi.getText("tlStoSelTypeTxt"), false, false, langObjEventsTopLi.getText("tlStoDisruptionBlblTxt"), langObjEventsTopLi.getText("tlYesTxt"), langObjEventsTopLi.getText("tlNoTxt"), true, "Storage/Disruption"));
+groupChildArr.push(new GroupChild(5, langObjEventsTopLi.getText("tlStoRecTxt"), langObjEventsTopLi.getText("tlStoSelTypeTxt"), false, false, langObjEventsTopLi.getText("tlStoRecBlblTxt"), langObjEventsTopLi.getText("tlYesTxt"), langObjEventsTopLi.getText("tlNoTxt"), true, "Storage/Recording"));
+groupChildArr.push(new GroupChild(5, false, false, false, false, false, false, false, false, "Device/HardwareFailure/StorageFailure"));
+groupChildArr.push(new GroupChild(5, langObjEventsTopLi.getText("tlStoRecRemTxt"), langObjEventsTopLi.getText("tlStoSelTypeTxt"), false, false, false, false, false, false, "Recording/Delete/DeletedRecording"));
+groupChildArr.push(new GroupChild(5, langObjEventsTopLi.getText("tlStoBlockRemTxt"), langObjEventsTopLi.getText("tlStoSelTypeTxt"), false, false, false, false, false, false, "Recording/Delete/DeletedRecordingBlock"));
+
+groupArr[6] = new Group(langObjEventsTopLi.getText("tlSysTxt"), ["Device/Status"]);
+groupChildArr.push(new GroupChild(6, langObjEventsTopLi.getText("tlSysDevBootTxt"), false, false, false, langObjEventsTopLi.getText("tlSysDevBootBlblTxt"), langObjEventsTopLi.getText("tlYesTxt"), langObjEventsTopLi.getText("tlNoTxt"), true, "Device/Status/Boot"));
+groupChildArr.push(new GroupChild(6, langObjEventsTopLi.getText("tlSysSysInitTxt"), false, false, false, langObjEventsTopLi.getText("tlSysSysInitBlblTxt"), langObjEventsTopLi.getText("tlYesTxt"), langObjEventsTopLi.getText("tlNoTxt"), true, "Device/Status/SystemInitializing"));
+groupChildArr.push(new GroupChild(6, langObjEventsTopLi.getText("tlSysSysReadyTxt"), false, false, false, langObjEventsTopLi.getText("tlSysSysReadyBlblTxt"), langObjEventsTopLi.getText("tlYesTxt"), langObjEventsTopLi.getText("tlNoTxt"), true, "Device/Status/SystemReady"));
+groupChildArr.push(new GroupChild(6, langObjEventsTopLi.getText("tlSysEvChgdTxt"), false, false, false, false, false, false, false, "Events/EventRegistrationsChanged"));
+
+groupArr[7] = new Group(langObjEventsTopLi.getText("tlTimeTxt"), ["UserAlarm"]);
+groupChildArr.push(new GroupChild(7, langObjEventsTopLi.getText("tlTimeUseSchTxt"), false, false, false, false, false, false, true, "UserAlarm/Recurring/Interval"));
+groupChildArr.push(new GroupChild(7, langObjEventsTopLi.getText("tlTimeRecTxt"), langObjEventsTopLi.getText("tlTimeRecOp1Txt"), false, false, false, false, false, true, "UserAlarm/Recurring/Pulse"));
+
+activeLabel = langObjEventsTopLi.getText("tlYesTxt");
+inactiveLabel = langObjEventsTopLi.getText("tlNoTxt");
+
+checkValidEvent_error_MD_not_found = langObjEventsTopLi.getText("tlErrEvMDTxt");
+checkValidEvent_error_PTZ_disabled = langObjEventsTopLi.getText("tlErrEvPTZTxt");
+checkValidEvent_error_Preset_not_found = langObjEventsTopLi.getText("tlErrEvPresetTxt");
+checkValidEvent_error_Recurrence_not_found = langObjEventsTopLi.getText("tlErrEvRecurrenceTxt");
+checkValidEvent_error_Schedual_not_found = langObjEventsTopLi.getText("tlErrEvScheduleTxt");
+checkValidEvent_error_general = langObjEventsTopLi.getText("tlErrEvNotFoundTxt");
+checkValidEvent_existingMotionWindowStr = '<!--#include virtual="/sm/sm.srv?action=get_htmlform&getgroupnames=root.Motion&format=htmlvalue&depth=0" -->';
+
+image_name_default = langObjEventsTopLi.getText("tlDefImgNameTxt");
+audio_name_default = langObjEventsTopLi.getText("tlDefAudNameTxt");
+txt_invalid_trigger = langObjEventsTopLi.getText("tlTriggMissTxt");
+
+txtAny = langObjEventsTopLi.getText("tlAnyTxt");
+simpleItemArr.push(new SimpleItem("disk_id", "NetworkShare", langObjEventsTopLi.getText("tlNSTxt")));
+simpleItemArr.push(new SimpleItem("disk_id", "SD_DISK", langObjEventsTopLi.getText("tlSDTxt")));
+simpleItemArr.push(new SimpleItem("port", "Any", txtAny));
+simpleItemArr.push(new SimpleItem("interface", "Any", txtAny));
+simpleItemArr.push(new SimpleItem("PresetToken", "Any", txtAny));

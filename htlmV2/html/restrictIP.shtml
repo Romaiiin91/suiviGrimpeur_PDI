@@ -1,0 +1,272 @@
+<!--#set var="helpURL" val="javascript:launch('/help/restrictIP_h.shtml')" -->
+<!--#set var="WizardFormAction" val="noAction" -->
+
+<!--#set var="activeMenu" val="system" -->
+<!--#set var="activeMenu1" val="security" -->
+<!--#set var="activePage" val="restrictIP" -->
+
+<!--#include virtual="/sm/sm.srv?action=get&group=Image.ReferrersEnabled,Image.Referrers,Network.Filter" -->
+
+<!--#include virtual="/incl/top_incl.shtml" -->
+<!--#include virtual="/java/chkbox.shtml" -->
+
+<script src="/incl/select_input_class.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->" language="javascript" type="text/javascript"></script>
+<script language="JavaScript">
+<!--
+var langObjRestIP = new Language("restrictIP", "restrictIP");
+
+<!--#include virtual="/incl/paramArray.shtml" -->
+<!--#include virtual="/incl/functions.shtml" -->
+
+function onInit()
+{
+  langObjRestIP.init();
+  initSelect();
+}
+
+var _list_obj;
+var configArray = new Array();
+
+function initSelect() 
+{
+  createSelect();
+  getIPList();
+}
+
+function createSelect()
+{
+  var headers = [ langObjRestIP.getText("ipAddrsTxt") ];
+  var colWidths = [ "300px" ];
+  var list_container = document.getElementById("idListContainer");
+  list_container.style.width = 300 + "px";
+  _list_obj = new select_input_class(list_container, headers);
+  _list_obj.setColumnWidths(colWidths);
+  _list_obj.setSortByColumn(1);
+  _list_obj.multiselect = true;
+  _list_obj.drawTable();
+}
+
+function getIPList()
+{
+  var aListForm = document.listForm;
+  var aListLength = aListForm.elements.length;
+
+  var opArr = new Array();
+  // Create the list
+  var parameter_array = new Array("AllowIP");
+  // Will set aSortArray and lookup array.
+  createParamArray(parameter_array, "AllowIP", "root_Network_Filter", document.listForm);
+  if (aListLength >= 1)
+  {
+    var rowArr;
+    for (i = 0; i < aSortArray.length; i++)
+    {
+      var aTempArray = aSortArray[i];
+      var anItem = aTempArray[1];
+      rowArr = [ anItem[lookup["AllowIP"]] ];
+      _list_obj.addRow(rowArr, i, "");
+    }
+  }
+  _list_obj.drawTable();
+}
+
+function EnableDisableFirewall()
+{
+  form = document.WizardForm;
+  if (form.Network_Filter_Enabled.checked == false) {
+    document.addressForm.root_Network_Filter_Enabled.value = "no";
+    document.addressForm.verify_script.value = "";
+  }
+
+  if (form.root_Network_Filter_Input_Policy.selectedIndex == 0) {  
+    document.addressForm.root_Network_Filter_Input_Policy.value = "allow";
+  } else {
+    document.addressForm.root_Network_Filter_Input_Policy.value = "deny";
+  }
+
+  if (form.Network_Filter_Enabled.checked == true) {
+    if (document.listForm.length == 0) {
+      alert( langObjRestIP.getText("noEnabAlrtTxt") )
+      document.addressForm.root_Network_Filter_Enabled.value = "no";
+      form.Network_Filter_Enabled.checked = false
+      return
+    } else {
+      document.addressForm.root_Network_Filter_Enabled.value = "yes";
+    }
+  }
+  document.addressForm.submit();
+}
+
+function deleteEntry()
+{
+  var form = document.WizardForm
+
+  //Identify which IPs were selected
+  var nbrSelectedIPs = 0;
+  var selectedIPs = new Array();
+
+  for(var i = 0; i < _list_obj.length; i++)
+  {
+    if(_list_obj._rows[i].isSelected) { 
+      selectedIPs.push("1"); //If an IP address was selected for removal, mark it 1, else 0
+      nbrSelectedIPs++;
+    } else {
+      selectedIPs.push("0");
+    }
+  }
+
+  if (form.Network_Filter_Enabled.checked == false) {
+    document.addressForm.verify_script.value = "";
+  }
+  if ((document.listForm.length == nbrSelectedIPs) && (document.addressForm.root_Network_Filter_Enabled.value == "yes") && (document.WizardForm.root_Network_Filter_Input_Policy.selectedIndex == 0)) {
+    alert( langObjRestIP.getText("disabAlrtTxt") )
+    return
+  }
+  
+  if ((_list_obj.selectedIndex < 0) || (aSortArray.length == 0)) {
+    alert( langObjRestIP.getText("selIPTxt") );
+    return
+  } else {
+    var aTempString = ""
+    if (confirm( langObjRestIP.getText("remIPConfirm") )) {
+      for (i = 0; i < aSortArray.length; i++) {
+        if (selectedIPs[i] == 0)
+          aTempString += aSortArray[i][0] + " "
+      }
+      document.addressForm.root_Network_Filter_Input_AcceptAddresses.value = aTempString.slice(0, -1)
+
+      if (form.root_Network_Filter_Input_Policy.options[0].selected == true) {  
+       document.addressForm.root_Network_Filter_Input_Policy.value = "allow";
+       } else {
+       document.addressForm.root_Network_Filter_Input_Policy.value = "deny";
+      }
+      document.addressForm.submit();
+    }
+  }
+}
+
+function add()
+{
+  var form = document.WizardForm
+
+  if (form.root_Network_Filter_Input_Policy.options[0].selected == true) {
+    document.addressForm.root_Network_Filter_Input_Policy.value = "allow";
+  } else {
+    document.addressForm.root_Network_Filter_Input_Policy.value = "deny";
+  }
+
+  if (_list_obj.length < 256) {
+    openPopUp('/admin/restrictIP_setup.shtml?doAction=add&newPolicy=' + document.addressForm.root_Network_Filter_Input_Policy.value + '&checked=' + document.WizardForm.Network_Filter_Enabled.checked, 'restrictIP_setup', 648, 310)
+  } else {
+    alert( langObjRestIP.getText("maxAddrAlerts") )
+
+  }
+}
+// -->
+</script>
+
+</head>
+<body <!--#include virtual="/incl/bodytag.shtml" --> onload="onInit()">
+<form name="listForm">
+<script language="JavaScript">
+<!--
+  var addresses = '<!--#echo var="root_Network_Filter_Input_AcceptAddresses" option="encoding:javascript" -->';
+  var addressArray = addresses.split(" ");
+
+  if (addresses != '') {
+    for (i = 0; i < addressArray.length; i++) {
+      document.write('<input type="hidden" name="root_Network_Filter_F' + i + '_AllowIP" value="' + addressArray[i] + '">');
+    }
+  }
+
+var AddIpAdrStatTxt;
+var RemIpAdrStatTxt;
+var ApplyStatTxt;
+function globalLanguageVars()
+{
+  var inpPolicyArr = new Array();
+  inpPolicyArr[0] = {val: "allow", text: langObjRestIP.getText("allTxt")};
+  inpPolicyArr[1] = {val: "deny", text: langObjRestIP.getText("denTxt"), selected:<!--#if expr="$root_Network_Filter_Input_Policy = deny" -->true<!--#else -->false<!--#endif -->};
+  langObjRestIP.addOptionsToList(document.getElementById("select_root_Network_Filter_Input_Policy"), inpPolicyArr);
+
+  AddIpAdrStatTxt = langObjRestIP.getText("addIpAdrStatTxt");
+  RemIpAdrStatTxt = langObjRestIP.getText("remIpAdrStatTxt");
+  ApplyStatTxt = langObjRestIP.getText("applyStatTxt");
+}
+// -->
+</script>
+</form>
+
+<form name="addressForm" action="/axis-cgi/admin/param_authenticate.cgi" method="POST" onSubmit="return false;">
+  <input type="hidden" name="root_Network_Filter_Enabled" value="<!--#echo var="root_Network_Filter_Enabled" option="encoding:html" -->">
+  <input type="hidden" name="root_Network_Filter_Input_Policy" value="<!--#echo var="root_Network_Filter_Input_Policy" option="encoding:html" -->">
+  <input type="hidden" name="root_Network_Filter_Input_AcceptAddresses" value="<!--#echo var="root_Network_Filter_Input_AcceptAddresses" option="encoding:html" -->">
+  <input type="hidden" name="action" value="update">
+  <input type="hidden" name="return_page" value="/admin/restrictIP.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->">
+  <input type="hidden" name="verify_script" value="/axis-cgi/admin/verify_firewall.cgi">
+  <input type="hidden" name="verify_failed_page" value="/admin/firewall_blocked.shtml">
+</form>
+
+<!--#include virtual="/incl/top_incl2.shtml" -->
+<form name="WizardForm" action="/axis-cgi/admin/param_authenticate.cgi" method="POST" onSubmit="SubmitForm(); return false">
+
+<table border="<!--#echo var="zero" option="encoding:html" -->" cellpadding="<!--#echo var="cellpadding3" option="encoding:html" -->" cellspacing="<!--#echo var="zero" option="encoding:html" -->" width="<!--#echo var="tableWidth3" option="encoding:html" -->">
+  <tr>
+    <td colspan="4" valign="top" class="topTitle">
+      <div align="left"><span id="ipFiltTxt"></span></div>
+    </td>
+    <td colspan="2" class="topTitle">
+      <div align="right"><a href="<!--#echo var="helpURL" option="encoding:url" -->"><img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="hlpPic"></a></div>
+    </td>
+  </tr>
+  <tr>    
+    <td class="subTitle" align="left" colspan="6">
+      <span id="genTxt"></span>
+    </td>
+  </tr>  
+  <tr>
+    <td colspan="6" nowrap class="oddItem">
+      <input type="checkbox" name="Network_Filter_Enabled" <!--#if expr="$root_Network_Filter_Enabled = yes" --> checked<!--#endif --> onClick="CheckBoxClicked(this.form, this, 'root_Network_Filter_Enabled', 'yes', 'no')"><span id="ipAdrFilTxt"></span>
+      <input type="hidden" name="root_Network_Filter_Enabled" value="<!--#echo var="root_Network_Filter_Enabled" option="encoding:html" -->">
+    </td>
+  </tr>
+  <tr>
+    <td colspan="3" class="evenItem">
+      <select name="root_Network_Filter_Input_Policy" id="select_root_Network_Filter_Input_Policy">
+      </select>&nbsp;<span id="theFolTxt"></span>
+    </td>
+    <td colspan="3" align="right" class="evenItem"><input type="button" name="active" value="" width="75" class="btnNormal" onclick="javascript:EnableDisableFirewall()" onMouseOver="return showStatus(ApplyStatTxt)" onMouseOut="return showStatus('')" id="restIP_applyBtn"></td>
+  </tr>
+  <tr>
+    <td class="oddItem" colspan="6">&nbsp;</td>
+  </tr>
+  <tr>
+    <td class="subTitle" align="left" colspan="6">
+      <span id="filtIpAdrTxt"></span>
+    </td>
+  </tr>  
+  <tr>
+    <td width="35%" nowrap colspan="6" class="oddItem">
+      <div id="idListContainer" class="selectList"></div>
+    </td>
+  </tr>
+  <tr>
+  <td align="left" nowrap colspan="3" class="button">
+    <table border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td class="button"><input type="button" value="" width="75" class="btnNormal" onClick="JavaScript:add()" onMouseOver="return showStatus(AddIpAdrStatTxt)" onMouseOut="return showStatus('')" id="restIP_addBtn"></td>
+        <td class="button">&nbsp;</td>
+        <td class="button"><input type="button" value="" width="75" class="btnNormal" onClick="javascript:deleteEntry()" onMouseOver="return showStatus(RemIpAdrStatTxt)" onMouseOut="return showStatus('')" id="restIP_removeBtn"></td>
+      </tr>
+     </table>
+    </td>
+   </tr>
+<tr>
+  <td class="oddItem" colspan="6">
+    &nbsp;<input type="hidden" name="action" value="update">
+    <input type="hidden" name="return_page" value="/admin/restrictIP.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->">
+  </td>
+</tr>
+</table>
+</form>
+<!--#include virtual="/incl/bottom_incl.shtml" -->

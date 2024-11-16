@@ -1,0 +1,29 @@
+<script LANGUAGE="JavaScript">
+<!--
+
+function IntegerCheck(value, low, high)
+{
+  if (value.length == 0)
+    return 0
+
+  if (((value.charAt(0)<'0') || (value.charAt(0)>'9')) && value.charAt(0) != '-')
+    return 0
+
+  for (var i=1; i<value.length; i++) {
+    if ((value.charAt(i)<'0') || (value.charAt(i)>'9'))
+      return 0
+  }
+  var integerValue = parseInt(value, 10)
+  if (high == "noUpperLimit") {
+    if (integerValue<low)
+      return 0
+  } else {
+    if ((integerValue<low) || (integerValue>high))
+      return 0
+  }
+
+  return 1
+}
+
+//-->
+</script>

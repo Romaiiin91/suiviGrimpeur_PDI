@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+  <action_activate_light>
+    <aalActivateLightTxt type="msgAsText" minor="0">Activate Light</aalActivateLightTxt>
+    <aalLightNumValNZAlert type="alert" minor="0">You need to specify a numeric value larger than zero.</aalLightNumValNZAlert>
+    <aalSpecLightAlert type="alert" minor="0">You need to specify a light source.</aalSpecLightAlert>
+    <aalKeepLightActiveDuringTxt type="msgAsText" minor="0">Keep active during rule</aalKeepLightActiveDuringTxt>
+    <aalKeepLightActiveForTxt type="msgAsText" minor="0">Keep active for</aalKeepLightActiveForTxt>
+    <aalSecsTxt type="msgAsText" minor="0">second(s)</aalSecsTxt>
+    <aalMinsTxt type="msgAsText" minor="0">minute(s)</aalMinsTxt>
+    <aalActivateTxt type="msgAsText" minor="0">Activate:</aalActivateTxt>
+    <aalOnTxt type="msgAsText" minor="0">On</aalOnTxt>
+    <aalFadeToTxt type="msgAsText" minor="0">Fade to</aalFadeToTxt>
+    <aalCustActStrb3Txt type="msgAsText" minor="0">Strobe 3Hz</aalCustActStrb3Txt>
+    <aalCustActStrb5Txt type="msgAsText" minor="0">Strobe 5Hz</aalCustActStrb5Txt>
+    <aalInactivateTxt type="msgAsText" minor="0">Inactivate:</aalInactivateTxt>
+    <aalFadeOffTxt type="msgAsText" minor="0">Fade to off</aalFadeOffTxt>
+    <aalOffTxt type="msgAsText" minor="0">Off</aalOffTxt>
+  </action_activate_light>
+
+  <action_day_night_mode>
+    <adnmDayNightModeTxt type="msgAsText" minor="0">Day/Night Vision Mode</adnmDayNightModeTxt>
+    <adnmAutoTxt type="msgAsText" minor="0">Auto</adnmAutoTxt>
+    <adnmDayTxt type="msgAsText" minor="0">Day</adnmDayTxt>
+    <adnmNightTxt type="msgAsText" minor="0">Night</adnmNightTxt>
+    <adnmModeActiveTxt type="msgAsText" minor="0">Mode when active:</adnmModeActiveTxt>
+    <adnmModeInActiveTxt type="msgAsText" minor="0">Mode when inactive:</adnmModeInActiveTxt>
+    <adnmNoDurationAlrtTxt type="alert" minor="0">The selected trigger does not have any duration and can't be used with 'Day/Night Vision Mode'</adnmNoDurationAlrtTxt>
+  </action_day_night_mode>
+
+  <action_dynamic_overlay>
+    <adoOvlTextTxt type="msgAsText" minor="0">Overlay Text</adoOvlTextTxt>
+    <adoNoViewAreaSelAlrt type="alert" minor="0">No view area selected</adoNoViewAreaSelAlrt>
+    <adoNoVidSrcSelAlrt type="alert" minor="0">No video source selected</adoNoVidSrcSelAlrt>
+    <adoSpecOvlTextAlrt type="alert" minor="0">You need to specify an overlay text</adoSpecOvlTextAlrt>
+    <adoSpecDurValAlrt type="alert" minor="0">You need to specify a positive value for the duration</adoSpecDurValAlrt>
+    <adoSelViewAreasTxt type="msgAsText" minor="0">Select view areas:</adoSelViewAreasTxt>
+    <adoSelVidSrcTxt type="msgAsText" minor="0">Select video source:</adoSelVidSrcTxt>
+    <adoTextTxt type="msgAsText" minor="0">Text:</adoTextTxt>
+    <adoDurationTxt type="msgAsText" minor="0">Duration:</adoDurationTxt>
+    <adoShowTextWhileTxt type="msgAsText" minor="0">Show text while the rule is active</adoShowTextWhileTxt>
+    <adoShowTextForTxt type="msgAsText" minor="0">Show text for</adoShowTextForTxt>
+    <adoSecsTxt type="msgAsText" minor="0">seconds</adoSecsTxt>
+    <adoQuadTxt type="msgAsText" minor="0">Quad Stream</adoQuadTxt>
+    <adoNoDurationAlrtTxt type="alert" minor="0">The selected trigger does not have any duration and can't be used with 'Overlay Text'</adoNoDurationAlrtTxt>
+  </action_dynamic_overlay>
+
+  <action_irlight>
+    <airIllumTxt type="msgAsText" minor="0">IR illumination</airIllumTxt>
+    <airWhileActiveRuleIrAlrtTxt type="alert" minor="0">The selected event does not have any duration, 'While the rule is active' cannot be used.</airWhileActiveRuleIrAlrtTxt>
+    <airSetModeTxt type="msgAsText" minor="0">Mode:</airSetModeTxt>
+    <airModeActiveTxt type="msgAsText" minor="0">Activate IR illumination while trigger is active</airModeActiveTxt>
+    <airModeTimeActiveTxt type="msgAsText" minor="0">Activate IR illumination</airModeTimeActiveTxt>
+    <airModeTimeInactiveTxt type="msgAsText" minor="0">Deactivate IR illumination</airModeTimeInactiveTxt>
+    <airDurationTxt type="msgAsText" minor="0">Duration:</airDurationTxt>
+  </action_irlight>
+
+  <action_led_control>
+    <alcStatusLedTxt type="msgAsText" minor="0">Status LED</alcStatusLedTxt>
+    <alcRedTxt type="msgAsText" minor="0">Red</alcRedTxt>
+    <alcGreenTxt type="msgAsText" minor="0">Green</alcGreenTxt>
+    <alcAmberTxt type="msgAsText" minor="0">Amber</alcAmberTxt>
+    <alcWhileActiveRuleAlrt type="alert" minor="0">The selected trigger does not have any duration, 'Flash while the rule is active' cannot be used.</alcWhileActiveRuleAlrt>
+    <alcIntLargZeroAlrt type="alert" minor="0">You need to specify an integer larger than zero.</alcIntLargZeroAlrt>
+    <alcDurationTxt type="msgAsText" minor="0">Duration:</alcDurationTxt>
+    <alcActiveTxt type="msgAsText" minor="0">Flash while the rule is active</alcActiveTxt>
+    <alcTimeTxt type="msgAsText" minor="0">Flash for</alcTimeTxt>
+    <alcSecondsTxt type="msgAsText" minor="0">seconds</alcSecondsTxt>
+    <alcColorTxt type="msgAsText" minor="0">LED Color:</alcColorTxt>
+  </action_led_control>
+
+  <action_notification>
+    <anNotificationTxt type="msgAsText" minor="0">Send Notification</anNotificationTxt>
+    <anAddHTTPBtnStatTxt type="msg" minor="0">Add custom parameter</anAddHTTPBtnStatTxt>
+    <anModHTTPBtnStatTxt type="msg" minor="0">Modify the selected custom parameter</anModHTTPBtnStatTxt>
+    <anRemHTTPBtnStatTxt type="msg" minor="0">Remove the selected custom parameter</anRemHTTPBtnStatTxt>
+    <anViewHTTPBtnStatTxt type="msg" minor="0">View the url with parameters</anViewHTTPBtnStatTxt>
+    <anParamSeAlert type="alert" minor="0">Select a custom parameter first.</anParamSeAlert>
+    <anHttpListNaTxt type="msgAsText" minor="0">Name</anHttpListNaTxt>
+    <anHttpListVaTxt type="msgAsText" minor="0">Value</anHttpListVaTxt>
+    <anViewURLConfirm type="alert" minor="1">Do you want to go to this URL?</anViewURLConfirm>
+    <anViewURLConfirm-1 type="alert" minor="0">The complete url:&#10;&#10;#URL#&#10;&#10;The url will be encoded.&#10;Do you want to go to this URL?</anViewURLConfirm-1>
+    <anNotifyValNZAlert type="alert" minor="0">You need to specify a numeric value larger than zero.</anNotifyValNZAlert>
+    <anNumValAlert type="alert" minor="0">You need to specify a numeric value.</anNumValAlert>
+    <anNoRecipientAlert type="alert" minor="0">No recipient is selected.</anNoRecipientAlert>
+    <anWhileActiveRuleAlrt type="alert" minor="0">The selected trigger does not have any duration, 'While the rule is active' cannot be used..</anWhileActiveRuleAlrt>
+    <anRecipientTxt type="msgAsText" minor="0">Recipient:</anRecipientTxt>
+    <anNewRecipientBtn type="msgAsText" minor="0">New Recipient</anNewRecipientBtn>
+    <anSmtpSubjectTxt type="msgAsText" minor="0">Subject</anSmtpSubjectTxt>
+    <anSmtpMessageTxt type="msgAsText" minor="0">Message</anSmtpMessageTxt>
+    <anHttpMessageParamTxt type="msgAsText" minor="0">Message parameter:</anHttpMessageParamTxt>
+    <anHttpCustomParamTxt type="msgAsText" minor="0">Custom parameter:</anHttpCustomParamTxt>
+    <anHttpAddBtn type="msgAsText" minor="0">Add...</anHttpAddBtn>
+    <anHttpModifyBtn type="msgAsText" minor="0">Modify...</anHttpModifyBtn>
+    <anHttpRemoveBtn type="msgAsText" minor="0">Remove</anHttpRemoveBtn>
+    <anHttpSeeHelpTxt type="msgAsText" minor="0">See help for more info</anHttpSeeHelpTxt>
+    <anHttpViewUrlBtn type="msgAsText" minor="0">View URL</anHttpViewUrlBtn>
+    <anTcpMessageTxt type="msgAsText" minor="0">Message</anTcpMessageTxt>
+    <anSeTcpContTxt type="msgAsText" minor="0">Send notifications continuously while rule is active</anSeTcpContTxt>
+    <anSeTcpContParamTxt type="msgAsText" minor="0">Send a notification every</anSeTcpContParamTxt>
+    <anSecTxt type="msgAsText" minor="0">second</anSecTxt>
+    <anMinTxt type="msgAsText" minor="0">minute</anMinTxt>
+    <anHourTxt type="msgAsText" minor="0">hour</anHourTxt>
+  </action_notification>
+
+  <action_output_port>
+    <aopOutputPortTxt type="msgAsText" minor="0">Output Port</aopOutputPortTxt>
+    <aopNoOutputAlert type="alert" minor="0">No port is selected.</aopNoOutputAlert>
+    <aopWhileActiveRuleAlrt type="alert" minor="0">The selected event does not have any duration, 'While the rule is active' cannot be used..</aopWhileActiveRuleAlrt>
+    <aopNotifyValNZAlert type="alert" minor="0">You need to specify a numeric value larger than zero.</aopNotifyValNZAlert>
+    <aopPortTxt type="msgAsText" minor="0">Port:</aopPortTxt>
+    <aopSetStateTxt type="msgAsText" minor="0">Set state:</aopSetStateTxt>
+    <aopStateActiveTxt type="msgAsText" minor="0">Active</aopStateActiveTxt>
+    <aopStateInactiveTxt type="msgAsText" minor="0">Inactive</aopStateInactiveTxt>
+    <aopOutputDurationTxt type="msgAsText" minor="0">Duration</aopOutputDurationTxt>
+    <aopGoToStatNoActRuleTxt type="msgAsText" minor="0">Go to opposite state when the rule is no longer active</aopGoToStatNoActRuleTxt>
+    <aopGoToStatAfterTxt type="msgAsText" minor="0">Go to opposite state after</aopGoToStatAfterTxt>
+    <aopSecsTxt type="msgAsText" minor="0">second(s)</aopSecsTxt>
+    <aopMinsTxt type="msgAsText" minor="0">minute(s)</aopMinsTxt>
+    <aopStateAnyActiveTxt type="msgAsText" minor="0">Only active is supported</aopStateAnyActiveTxt>
+  </action_output_port>
+
+  <action_play_audio>
+    <apaPlayAudioTxt type="msgAsText" minor="0">Play Audio Clip</apaPlayAudioTxt>
+    <apaNoClipAlert type="alert" minor="0">No audio clip is selected.</apaNoClipAlert>
+    <apaPlayTxt type="msgAsText" minor="0">Play:</apaPlayTxt>
+  </action_play_audio>
+
+  <action_ptz_control>
+    <apcPtzControlTxt type="msgAsText" minor="0">PTZ Control</apcPtzControlTxt>
+    <apcNoPTZControlAlert type="alert" minor="0">No PTZ Control is selected.</apcNoPTZControlAlert>
+    <apcATNoPTZPresetAlert type="alert" minor="0">No preset position is selected.</apcATNoPTZPresetAlert>
+    <apcSpec0and300Alert type="alert" minor="0">You need to specify a numeric value between 0 and 300.</apcSpec0and300Alert>
+    <apcNoPTZPresetAlert type="alert" minor="0">No preset position is selected.</apcNoPTZPresetAlert>
+    <apcWhileActiveRuleAlrt type="alert" minor="0">The selected event does not have any duration, 'Return to home position when rule is no longer active.' cannot be used..</apcWhileActiveRuleAlrt>
+    <apcRTNotWhileActiveAlrt type="alert" minor="0">When selecting a recorded tour, the setting 'Run guard tour while rule is active.' needs to be enable.</apcRTNotWhileActiveAlrt>
+    <apcWhileNonActiveRuleAlrt type="alert" minor="0">The selected event does not have any duration.</apcWhileNonActiveRuleAlrt>
+    <apcNoGuardTourAlert type="alert" minor="0">No guard tour is selected.</apcNoGuardTourAlert>
+    <apcSelViewATxt type="msgAsText" minor="0">Select view area:</apcSelViewATxt>
+    <apcSelVidSTxt type="msgAsText" minor="0">Select video source:</apcSelVidSTxt>
+    <apcQuaStrTxt type="msgAsText" minor="0">Quad Stream</apcQuaStrTxt>
+    <apcControlTxt type="msgAsText" minor="0">Control:</apcControlTxt>
+    <apcPresetPos type="msgAsText" minor="0">Preset Position</apcPresetPos>
+    <apcGuardTour type="msgAsText" minor="0">Guard Tour</apcGuardTour>
+    <apcAutoTracking type="msgAsText" minor="0">Autotracking</apcAutoTracking>
+    <apcGoToTxt type="msgAsText" minor="0">Go to:</apcGoToTxt>
+    <apcPresetHomeTxt type="msgAsText" minor="0">Return to home position when rule is no longer active.</apcPresetHomeTxt>
+    <apcPresetHomeWait1Txt type="msgAsText" minor="0">Wait at least</apcPresetHomeWait1Txt>
+    <apcPresetHomeWait2Txt type="msgAsText" minor="0">seconds before returning to home position.</apcPresetHomeWait2Txt>
+    <apcRunGuardTxt type="msgAsText" minor="0">Guard Tour:</apcRunGuardTxt>
+    <apcGuardTourRunWhileTxt type="msgAsText" minor="0">Run guard tour while rule is active.</apcGuardTourRunWhileTxt>
+    <apcGuardTourHomeTxt type="msgAsText" minor="0">Return to home position when rule is no longer active.</apcGuardTourHomeTxt>
+    <apcPresetTxt type="msgAsText" minor="0">Preset position:</apcPresetTxt>
+    <apcAutoTrackHomeTxt type="msgAsText" minor="0">Return to home position when rule is no longer active.</apcAutoTrackHomeTxt>
+    <apcAutoTrackHomeWait1Txt type="msgAsText" minor="0">Wait at least</apcAutoTrackHomeWait1Txt>
+    <apcAutoTrackHomeWait2Txt type="msgAsText" minor="0">seconds before returning to home position.</apcAutoTrackHomeWait2Txt>
+    <apcAutoTrackDurationTxt type="msgAsText" minor="0">Duration:</apcAutoTrackDurationTxt>
+    <apcAutoTrackWhileActiveTxt type="msgAsText" minor="0">Run while rule is active</apcAutoTrackWhileActiveTxt>
+    <apcAutoTrackNotWhileActiveTxt type="msgAsText" minor="0">Run until autotracking stops</apcAutoTrackNotWhileActiveTxt>
+  </action_ptz_control>
+
+  <action_record_video>
+    <arvRecVideoTxt type="msgAsText" minor="0">Record Video</arvRecVideoTxt>
+    <arvSdCardTxt type="msgAsText" minor="0">SD Card</arvSdCardTxt>
+    <arvSdCard2Txt type="msgAsText" minor="0">SD Card 2</arvSdCard2Txt>
+    <arvNSTxt type="msgAsText" minor="0">Network Share</arvNSTxt>
+    <arvRecValNZAlert type="alert" minor="0">You need to specify a numeric value larger than zero.</arvRecValNZAlert>
+    <arvConfirmMissingBufferTimeTxt type="alert" minor="0">There is no pre/post or record video while active time defined for this trigger and it will not be enabled. Do you want to save the rule anyway?</arvConfirmMissingBufferTimeTxt>
+    <arvMissingBufferTimeAlrt type="alert" minor="0">Pre/post or image upload trigger time not defined for this rule, please define them before continuing.</arvMissingBufferTimeAlrt>
+    <arvWhileActiveRuleAlrt type="alert" minor="0">The selected trigger does not have any duration, 'While the rule is active' cannot be used..</arvWhileActiveRuleAlrt>
+    <arvNoStorageAlert type="alert" minor="0">No Storage is selected.</arvNoStorageAlert>
+    <arvSelViewATxt type="msgAsText" minor="0">Select view area:</arvSelViewATxt>
+    <arvSelVidSTxt type="msgAsText" minor="0">Select video source:</arvSelVidSTxt>
+    <arvQuaStrTxt type="msgAsText" minor="0">Quad Stream</arvQuaStrTxt>
+    <arvRecStreamProfileTxt type="msgAsText" minor="0">Stream profile:</arvRecStreamProfileTxt>
+    <arvRecDurationTxt type="msgAsText" minor="0">Duration:</arvRecDurationTxt>
+    <arvRecPreEventTimeTxt type="msgAsText" minor="0">Pre-trigger time</arvRecPreEventTimeTxt>
+    <arvRecPreSecondsTxt type="msgAsText" minor="0">second(s)</arvRecPreSecondsTxt>
+    <arvRecWhileActiveTxt type="msgAsText" minor="0">While the rule is active</arvRecWhileActiveTxt>
+    <arvRecPostEventTimeTxt type="msgAsText" minor="0">Post-trigger time</arvRecPostEventTimeTxt>
+    <arvRecPostSecondsTxt type="msgAsText" minor="0">second(s)</arvRecPostSecondsTxt>
+    <arvRecStorageTxt type="msgAsText" minor="0">Storage:</arvRecStorageTxt>
+  </action_record_video>
+
+  <action_rule_setup>
+    <pageTitle type="title" minor="0">Events/Action Rule Setup</pageTitle>
+    <actionRuleSetupTxt type="text" minor="0">Action Rule Setup</actionRuleSetupTxt>
+    <hlpTxt type="image" minor="0" imageid="hlpPic">Click here for help on this page</hlpTxt>
+    <genTxt type="text" minor="0">General</genTxt>
+    <enableRuleTxt type="text" minor="0">Enable rule</enableRuleTxt>
+    <nameTxt type="text" minor="0">Name:</nameTxt>
+    <neRuleTxt type="text" minor="0">New Rule</neRuleTxt>
+    <conditionTxt type="text" minor="0">Condition</conditionTxt>
+    <triggerTxt type="text" minor="0">Trigger:</triggerTxt>
+    <schTxt type="text" minor="0">Schedule:</schTxt>
+    <newSchdlBtn type="button" minor="0" buttonid="btnSchedule">New Schedule</newSchdlBtn>
+    <schAlwaysTxt type="msgAsText" minor="0">Always (No Schedule)</schAlwaysTxt>
+    <addConditionTxt type="text" minor="0">Additional conditions</addConditionTxt>
+    <addActionBtn type="button" minor="0" buttonid="addBtn">Add...</addActionBtn>
+    <modifyBtn type="button" minor="0" buttonid="modifyBtn">Modify...</modifyBtn>
+    <removeBtn type="button" minor="0" buttonid="removeBtn">Remove</removeBtn>
+    <waitText type="text" minor="0">Wait at least</waitText>
+    <beforeReRunTxt type="text" minor="0">before re-running the rule (max 23:59:59)</beforeReRunTxt>
+    <actionTxt type="text" minor="0">Actions</actionTxt>
+    <type1Txt type="text" minor="0">Type:</type1Txt>
+    <type2Txt type="text" minor="0">Type:</type2Txt>
+    <oKBtn type="button" minor="0" buttonid="btnOK">OK</oKBtn>
+    <cancelBtn type="button" minor="0" buttonid="btnCancel">Cancel</cancelBtn>
+  </action_rule_setup>
+
+  <action_rules>
+    <pageTitle type="title" minor="0">Events/Action Rules</pageTitle>
+    <actionRulesTxt type="text" minor="0">Action Rules</actionRulesTxt>
+    <hlpTxt type="image" minor="0" imageid="hlpPic">Click here for help on this page</hlpTxt>
+    <actionRulesLiTxt type="text" minor="0">Action Rule List</actionRulesLiTxt>
+    <addActionBtn type="button" minor="0" buttonid="addBtn">Add...</addActionBtn>
+    <copyBtn type="button" minor="0" buttonid="copyBtn">Copy...</copyBtn>
+    <modifyBtn type="button" minor="0" buttonid="modifyBtn">Modify...</modifyBtn>
+    <removeBtn type="button" minor="0" buttonid="removeBtn">Remove</removeBtn>
+    <convAttTxt type="text" minor="0">Attention!</convAttTxt>
+    <convTxt1 type="text" minor="0">Events has changed from the previous firmware.</convTxt1>
+    <convTxt2 type="text" minor="0">To convert the Events configured in the prior firmware to Action Rules, click Convert.</convTxt2>
+    <convBtn type="button" minor="0" buttonid="convertBtn">Convert</convBtn>
+  </action_rules>
+
+  <action_send_images>
+    <asiSendImagesTxt type="msgAsText" minor="0">Send Images</asiSendImagesTxt>
+    <asiSendImageValNZAlert type="alert" minor="0">You need to specify a numeric value larger than zero.</asiSendImageValNZAlert>
+    <asiSendImageNumValAlert type="alert" minor="0">You need to specify an integer</asiSendImageNumValAlert>
+    <asiIllegalCharAlert type="alert" minor="0">Illegal character found.</asiIllegalCharAlert>
+    <asiIllegalCharsAlert type="alert" minor="0">Character found which is not allowed in all filesystems. Do you want to save the rule anyway?</asiIllegalCharsAlert>
+    <asiIllegalBlankNameAlert type="alert" minor="0">Only spaces in a file or folder name is not allowed in all filesystems. Do you want to save the rule anyway?</asiIllegalBlankNameAlert>
+    <asiMissingBufferTimeConfirm type="alert" minor="0">There is no pre/post or image upload trigger time defined for this rule and it will not be enabled. Do you want to save the rule anyway?</asiMissingBufferTimeConfirm>
+    <asiMissingBufferTimeAlert type="alert" minor="0">Pre/post or image upload trigger time not defined for this rule, please define them before continuing.</asiMissingBufferTimeAlert>
+    <asiImgFreqBetwAlert type="alert" minor="0">The image frequency can be set to an integer between 1 and</asiImgFreqBetwAlert>
+    <asiImgfpsTxt type="alert" minor="0">frames per second</asiImgfpsTxt>
+    <asiImgfpmTxt type="alert" minor="0">frames per minute</asiImgfpmTxt>
+    <asiImgfphTxt type="alert" minor="0">frames per hour</asiImgfphTxt>
+    <asiImgZeroDefAlert type="alert" minor="0">.&#10;If set to 0, the rule will use the default setting of the device.</asiImgZeroDefAlert>
+    <asiWhileActiveRuleAlrt type="alert" minor="0">The selected trigger does not have any duration, 'While the rule is active' cannot be used..</asiWhileActiveRuleAlrt>
+    <asiSendImgNoRecipientAlert type="alert" minor="0">No recipient is selected.</asiSendImgNoRecipientAlert>
+    <asiSendImgBaFiNaAlert type="alert" minor="0">Configured rule is not valid because base file name is empty.</asiSendImgBaFiNaAlert>
+    <asiSMTPConfirm type="msgAsText" minor="0">You have not setup an SMTP-server. You may not proceed before doing so. Pressing Ok will close this window and take you to the SMTP page - System Options/Network/SMTP (email). Cancel will let you modify your rule to not use SMTP. Go to SMTP page?</asiSMTPConfirm>
+    <asiSelViewATxt type="msgAsText" minor="0">Select view area:</asiSelViewATxt>
+    <asiSelVidSTxt type="msgAsText" minor="0">Select video source:</asiSelVidSTxt>
+    <asiQuaStrTxt type="msgAsText" minor="0">Quad Stream</asiQuaStrTxt>
+    <asiSendImageStreamProfileTxt type="msgAsText" minor="0">Stream profile:</asiSendImageStreamProfileTxt>
+    <asiJpegTxt type="msgAsText" minor="0">JPEG</asiJpegTxt>
+    <asiSendImageFrequencyTxt type="msgAsText" minor="0">Image frequency:</asiSendImageFrequencyTxt>
+    <asiFrmsTxt type="msgAsText" minor="0">frame(s) per</asiFrmsTxt>
+    <asiSecsTxt type="msgAsText" minor="0">second(s)</asiSecsTxt>
+    <asiMinsTxt type="msgAsText" minor="0">minute(s)</asiMinsTxt>
+    <asiHoursTxt type="msgAsText" minor="0">hour(s)</asiHoursTxt>
+    <asiSendVideoDurationTxt type="msgAsText" minor="0">Duration:</asiSendVideoDurationTxt>
+    <asiSendVideoPreEventTimeTxt type="msgAsText" minor="0">Pre-trigger time</asiSendVideoPreEventTimeTxt>
+    <asiSendVideoPreSecondsTxt type="msgAsText" minor="0">second(s)</asiSendVideoPreSecondsTxt>
+    <asiSendVideoWhileActiveTxt type="msgAsText" minor="0">While the rule is active</asiSendVideoWhileActiveTxt>
+    <asiSendVideoPostEventTimeTxt type="msgAsText" minor="0">Post-trigger time</asiSendVideoPostEventTimeTxt>
+    <asiSendVideoPostSecondsTxt type="msgAsText" minor="0">second(s)</asiSendVideoPostSecondsTxt>
+    <asiSendVideoPostLimitTxt type="msgAsText" minor="0">Limit:</asiSendVideoPostLimitTxt>
+    <asiSendImageMaxTxt type="msgAsText" minor="0">Send only the first</asiSendImageMaxTxt>
+    <asiSendImageMaxImagesTxt type="msgAsText" minor="0">images</asiSendImageMaxImagesTxt>
+    <asiRecipientTxt type="msgAsText" minor="0">Recipient:</asiRecipientTxt>
+    <asiNewRecipientBtn type="msgAsText" minor="0">New Recipient</asiNewRecipientBtn>
+    <asiSendImageCreFolTxt type="msgAsText" minor="0">Create folder:</asiSendImageCreFolTxt>
+    <asiSendImageBaFiNaTxt type="msgAsText" minor="0">Base file name:</asiSendImageBaFiNaTxt>
+    <asiSendImageAddDTTxt type="msgAsText" minor="0">Add date/time suffix</asiSendImageAddDTTxt>
+    <asiSendImageAddSeqNoTxt type="msgAsText" minor="0">Add sequence number suffix (no maximum value)</asiSendImageAddSeqNoTxt>
+    <asiFtpAddSeqNoU1Txt type="msgAsText" minor="0">Add sequence number suffix up to</asiFtpAddSeqNoU1Txt>
+    <asiSendImageAddSeNoATxt type="msgAsText" minor="0">and then start over</asiSendImageAddSeNoATxt>
+    <asiSendImageUseBaFiTxt type="msgAsText" minor="0">Overwrite/Use own file format.</asiSendImageUseBaFiTxt>
+    <asiSeHe1Txt type="msgAsText" minor="0">See help for more information</asiSeHe1Txt>
+    <asiSubTxt type="msgAsText" minor="0">Subject:</asiSubTxt>
+    <asiAddInfTxt type="msgAsText" minor="0">Additional information:</asiAddInfTxt>
+    <asiImgPETxt type="msgAsText" minor="0">Images per email:</asiImgPETxt>
+    <asiSmtpBaFiNaTxt type="msgAsText" minor="0">Base file name:</asiSmtpBaFiNaTxt>
+    <asiSmtpAddDTTxt type="msgAsText" minor="0">Add date/time suffix</asiSmtpAddDTTxt>
+    <asiSmtpAddSeqNoTxt type="msgAsText" minor="0">Add sequence number suffix (no maximum value)</asiSmtpAddSeqNoTxt>
+    <asiFtpAddSeqNoU2Txt type="msgAsText" minor="0">Add sequence number suffix up to</asiFtpAddSeqNoU2Txt>
+    <asiSmtpAddSeNoATxt type="msgAsText" minor="0">and then start over</asiSmtpAddSeNoATxt>
+    <asiSmtpUseBaFiTxt type="msgAsText" minor="0">Overwrite/Use own file format.</asiSmtpUseBaFiTxt>
+    <asiSeHe2Txt type="msgAsText" minor="0">See help for more information</asiSeHe2Txt>
+  </action_send_images>
+
+  <action_send_snmp_trap>
+    <astActionNameTxt type="msgAsText" minor="0">Send SNMP Trap</astActionNameTxt>
+    <astInvalidTxtLength type="alert" minor="0">Max length of Message is 80.</astInvalidTxtLength>
+    <astInvalidChars type="alert" minor="0">Only ASCII characters 0x20-0x7E are valid in action Send SNMP Trap Message.</astInvalidChars>
+    <astTrapTextTxt type="msgAsText" minor="0">Message:</astTrapTextTxt>
+  </action_send_snmp_trap>
+
+  <action_send_videoclip>
+    <asvMissingBufferTimeConfirm type="alert" minor="0">There is no pre/post or image upload trigger time defined for this rule and it will not be enabled. Do you want to save the rule anyway?</asvMissingBufferTimeConfirm>
+    <asvMissingBufferTimeAlert type="alert" minor="0">Pre/post or image upload trigger time not defined for this rule, please define them before continuing.</asvMissingBufferTimeAlert>
+    <asvIllegalCharAlert type="alert" minor="0">Illegal character found.</asvIllegalCharAlert>
+    <asvIllegalCharsAlert type="alert" minor="0">Character found which is not allowed in all filesystems. Do you want to save the rule anyway?</asvIllegalCharsAlert>
+    <asvIllegalBlankNameAlert type="alert" minor="0">Only spaces in a file or folder name is not allowed in all filesystems. Do you want to save the rule anyway?</asvIllegalBlankNameAlert>
+    <asvSendVideoClipTxt type="msgAsText" minor="0">Send Video Clip</asvSendVideoClipTxt>
+    <asvVideoClipValNZAlert type="alert" minor="0">You need to specify a numeric value larger than zero.</asvVideoClipValNZAlert>
+    <asvWhileActiveRuleAlrt type="alert" minor="0">The selected event does not have any duration, 'While the rule is active' cannot be used.</asvWhileActiveRuleAlrt>
+    <asvWhileActiveRuleSmtpAlrt type="alert" minor="0">A recipient of type SMTP can not be used with 'While the rule is active'.</asvWhileActiveRuleSmtpAlrt>
+    <asvSendImgNoRecipientAlert type="alert" minor="0">No recipient is selected.</asvSendImgNoRecipientAlert>
+    <asvSendImgBaFiNaAlert type="alert" minor="0">Configured event is not valid because base file name is empty.</asvSendImgBaFiNaAlert>
+    <asvSelViewATxt type="text" minor="0">Select view area:</asvSelViewATxt>
+    <asvSelVidSTxt type="text" minor="0">Select video source:</asvSelVidSTxt>
+    <asvQuaStrTxt type="text" minor="0">Quad Stream</asvQuaStrTxt>
+    <asvSendVideoStreamProfileTxt type="text" minor="0">Stream profile:</asvSendVideoStreamProfileTxt>
+    <asvSendVideoStreamProfileH264Txt type="msgAsText" minor="0">H.264</asvSendVideoStreamProfileH264Txt>
+    <asvSendVideoDurationTxt type="text" minor="0">Duration:</asvSendVideoDurationTxt>
+    <asvSendVideoPreEventTimeTxt type="text" minor="0">Pre-event time</asvSendVideoPreEventTimeTxt>
+    <asvSendVideoPreSecondsTxt type="text" minor="0">second(s)</asvSendVideoPreSecondsTxt>
+    <asvSendVideoWhileActiveTxt type="text" minor="0">While the rule is active</asvSendVideoWhileActiveTxt>
+    <asvSendVideoPostEventTimeTxt type="text" minor="0">Post-event time</asvSendVideoPostEventTimeTxt>
+    <asvSendVideoPostSecondsTxt type="text" minor="0">second(s)</asvSendVideoPostSecondsTxt>
+    <asvRecipientTxt type="text" minor="0">Recipient:</asvRecipientTxt>
+    <asvNewRecipientBtn type="msgAsText" minor="0">New Recipient</asvNewRecipientBtn>
+    <asvSendVideoCreFolTxt type="text" minor="0">Create folder:</asvSendVideoCreFolTxt>
+    <asvVideoSplitFileTxt type="text" minor="0">Split file size:</asvVideoSplitFileTxt>
+    <asvSendVideoBaFiNaTxt type="text" minor="0">Base file name:</asvSendVideoBaFiNaTxt>
+    <asvSendVideoAddDTTxt type="text" minor="0">Add date/time suffix</asvSendVideoAddDTTxt>
+    <asvSendVideoAddSeqNoTxt type="text" minor="0">Add sequence number suffix (no maximum value)</asvSendVideoAddSeqNoTxt>
+    <asvFtpAddSeqNoU1Txt type="text" minor="0">Add sequence number suffix up to</asvFtpAddSeqNoU1Txt>
+    <asvSendVideoAddSeNoATxt type="text" minor="0">and then start over</asvSendVideoAddSeNoATxt>
+    <asvSendVideoUseBaFiTxt type="text" minor="0">Overwrite/Use own file format.</asvSendVideoUseBaFiTxt>
+    <asvSeHe1Txt type="text" minor="0">See help for more information</asvSeHe1Txt>
+    <asvSubTxt type="text" minor="0">Subject:</asvSubTxt>
+    <asvAddInfTxt type="text" minor="0">Additional information:</asvAddInfTxt>
+    <asvVideoSmtpSplitFileTxt type="text" minor="0">Split file size:</asvVideoSmtpSplitFileTxt>
+    <asvSmtpBaFiNaTxt type="text" minor="0">Base file name:</asvSmtpBaFiNaTxt>
+    <asvSmtpAddDTTxt type="text" minor="0">Add date/time suffix</asvSmtpAddDTTxt>
+    <asvSmtpAddSeqNoTxt type="text" minor="0">Add sequence number suffix (no maximum value)</asvSmtpAddSeqNoTxt>
+    <asvFtpAddSeqNoU2Txt type="text" minor="0">Add sequence number suffix up to</asvFtpAddSeqNoU2Txt>
+    <asvSmtpAddSeNoATxt type="text" minor="0">and then start over</asvSmtpAddSeNoATxt>
+    <asvSmtpUseBaFiTxt type="text" minor="0">Overwrite/Use own file format.</asvSmtpUseBaFiTxt>
+    <asvSeHe2Txt type="text" minor="0">See help for more information</asvSeHe2Txt>
+    <asvKBTxt type="msgAsText" minor="0">KB</asvKBTxt>
+    <asvMBTxt type="msgAsText" minor="0">MB</asvMBTxt>
+  </action_send_videoclip>
+
+  <action_wdr_mode>
+    <actionname type="msgAsText" minor="0">WDR Mode</actionname>
+    <actionRuleSetupWDRMode type="text" minor="0">Mode:</actionRuleSetupWDRMode>
+    <actionRuleSetupWDROn type="text" minor="0">WDR On</actionRuleSetupWDROn>
+    <actionRuleSetupWDROff type="text" minor="0">Lightfinder Mode</actionRuleSetupWDROff>
+    <actionRuleSetupWDROffB type="text" minor="0">WDR Off</actionRuleSetupWDROffB>
+  </action_wdr_mode>
+
+  <additional_condition>
+    <pageTitle type="title" minor="0">Action Rule Setup/Condition</pageTitle>
+    <yesTxt type="msgAsText" minor="0">Yes</yesTxt>
+    <noTxt type="msgAsText" minor="0">No</noTxt>
+    <conditionSeAlert type="alert" minor="0">No condition is selected</conditionSeAlert>
+    <addCondTxt type="text" minor="0">Additional Condition</addCondTxt>
+    <hlpTxt type="image" minor="0" imageid="hlpPic">Click here for help on this page</hlpTxt>
+    <conditionTxt type="text" minor="0">Condition:</conditionTxt>
+    <oKBtn type="button" minor="0" buttonid="btnOK">OK</oKBtn>
+    <cancelBtn type="button" minor="0" buttonid="btnCancel">Cancel</cancelBtn>
+  </additional_condition>
+
+  <gatekeeperEvent>
+    <pageTitle type="title" minor="0">Gatekeeper/Action rule</pageTitle>
+    <step3Txt type="text" minor="0">Step 3: Action rule</step3Txt>
+    <instructionsTxt type="text" minor="0">Gatekeeper instructions</instructionsTxt>
+    <genTxt type="text" minor="0">General</genTxt>
+    <nameTxt type="text" minor="0">Name:</nameTxt>
+    <conditionTxt type="text" minor="0">Condition</conditionTxt>
+    <eventTxt type="text" minor="0">Event:</eventTxt>
+    <schTxt type="text" minor="0">Schedule:</schTxt>
+    <actionsTxt type="text" minor="0">Actions</actionsTxt>
+    <typeTxt type="text" minor="0">Type:</typeTxt>
+    <saveBtn type="button" minor="0" buttonid="btnOK">Save</saveBtn>
+    <resetBtn type="button" minor="0" buttonid="btnReset">Reset</resetBtn>
+    <preBtn type="button" minor="0" buttonid="preBtn">&#x3C;&#x3C; Previous</preBtn>
+  </gatekeeperEvent>
+
+  <gatekeeperSaved>
+    <pageTitle type="title" minor="0">Gatekeeper Saved</pageTitle>
+    <gKSavedTxt type="text" minor="0">Gatekeeper Saved</gKSavedTxt>
+    <pageText type="text" minor="0">The set up for Gatekeeper is now completed.&#x3C;br&#x3E;You can return to the Gatekeeper wizard at any time.&#x3C;br&#x3E;&#x3C;br&#x3E;</pageText>
+  </gatekeeperSaved>
+
+  <notification_http_param>
+    <pageTitle type="title" minor="0">Action Configuration/Custom HTTP Parameter</pageTitle>
+    <invalidParamNameAlert type="alert" minor="0">Invalid parameter name format.</invalidParamNameAlert>
+    <custHttpTxt type="text" minor="0">Custom HTTP Parameter</custHttpTxt>
+    <nameTxt type="text" minor="0">Name:</nameTxt>
+    <valueTxt type="text" minor="0">Value:</valueTxt>
+    <oKBtn type="button" minor="0" buttonid="btnOK">OK</oKBtn>
+    <cancelBtn type="button" minor="0" buttonid="btnCancel">Cancel</cancelBtn>
+  </notification_http_param>
+</language_xml>

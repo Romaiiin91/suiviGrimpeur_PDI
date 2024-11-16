@@ -1,0 +1,494 @@
+// Various functions that may be useful
+
+// Makes an ajax call to param.cgi to get correctly encoded parameter
+// names for a specified parameter or group of parameters.
+// Function takes 2 parameters:
+// param: parameter or group of parameters which we pass to an ajax call.
+// responseFunction: a function to which we pass the resulting array (response). 
+function getParamsAsUTF8(param, responseFunction) {
+  var ajaxRequest = AxisConnectionFactory.createAjaxConnection(),
+      url = "/axis-cgi/operator/param.cgi?action=list&group=",
+      now = new Date(),
+      timestamp = now.getTime();
+
+  if (param.constructor === Array) {
+    url += param.join(",");
+  } else {
+    url += param;
+  }
+
+  url += "&responsecharset=utf8&timestamp=" + timestamp;
+  
+  AxisConnectionFactory.sendAsync(["GET", url], "", function () {
+    if (ajaxRequest.getReadyState() === 4) {
+      if (ajaxRequest.getStatus() === 200) {
+        var resp,
+            idx,
+            paramName,
+            paramValue,
+            paramArray = [];
+
+        resp = ajaxRequest.getResponseText();
+        resp = resp.split(/(\r\n|\n|\r)/gm);
+        resp.splice(resp.length-1);
+
+        for (var i = 0; i < resp.length; i++) {
+            idx = resp[i].indexOf("=");
+            paramName = resp[i].substring(0, idx).replace(/\./g, "_");
+            paramValue = resp[i].slice(idx+1);
+            paramArray[paramName] = paramValue;
+        }
+      }
+      
+      responseFunction(paramArray);
+    }
+  }, ajaxRequest);
+}
+
+// Used to check a formfield for illegal characters.
+// Parameters are:
+// field: The field that should be checked, i.e. document.form.textField
+// chars: Allowed characters in field, example:
+//        "az|AZ|09|.|-"
+//        This means that the function returns true if the field only has
+//        chars from a-z or A-Z or 0-9 or . or -.
+// alertText: If an illegal character is found this text is presented in
+//            an alertbox and we bring focus to the current field. If
+//            you don't specify this the function will return without
+//            presenting any text at all.
+// Return: true if all characters are within the ranges specified, false
+//         if not.
+//
+var langObjVideo = new Language("common", "functions");
+
+function checkAllowedChars(field, chars, alertText)
+{
+    var allowed = 1;
+    var allowedArray = chars.split("|");
+    var len = allowedArray.length;
+    var string = unescape(field.value);
+
+    for (pos = 0 ; pos < string.length ; pos++) {
+      var aChar = string.charAt(pos);
+      allowed = 0;
+      for (i = 0 ; i < len ; i++) {
+        if (allowedArray[i].length == 1) {
+          if (aChar == allowedArray[i].charAt(0)) {
+            allowed = 1;
+            break;
+          }
+        } else if (allowedArray[i].length == 2) {
+          if ((aChar >= allowedArray[i].charAt(0)) && (aChar <= allowedArray[i].charAt(1))) {
+            allowed = 1;
+            break;
+          }
+        } else {
+          alert( langObjVideo.getText("errAlrt") );
+          return false;
+        }
+      }
+      if (!allowed)
+        break;
+    }
+
+    if (!allowed) {
+      if(alertText) {
+        alert(alertText);
+      }
+
+      field.focus();
+      field.select();
+      return false;
+    }
+    return true;
+}
+
+// Used to check a formfield for illegal characters.
+//
+// Parameters are:
+//
+// field:        The field that should be checked, i.e. document.form.textField
+// illegalRegex: Regular expression that describes the illegal characters
+// alertText:    If an illegal character is found this text is presented in
+//               an alertbox and we bring focus to the current field. If
+//               you don't specify this the function will return without
+//               presenting any text at all.
+//
+// Return:       false if at least one illegal char was found, true otherwise.
+//
+function hasOnlyValidChars(field, illegalRegex, alertText)
+{
+  var text = unescape(field.value);
+
+  if (text.search(illegalRegex) != -1) {
+    if(alertText) {
+      alert(alertText);
+    }
+
+    field.focus();
+    field.select();
+    return false;
+  }
+
+  return true;
+}
+
+// Helper function to test if a field is a valid ftp upload basename or filename.
+function isValidFtpUploadPath(field, alertErrorText, alertWarnText)
+{
+/****************************
+ Forbid chars:
+  FTP limitation: []\@()'"
+****************************/
+
+  if( hasOnlyValidChars(field, /[\[\]\\@\(\)\'\"]/i, alertErrorText) )
+  {
+    return warnInvalidPath( field, alertWarnText );
+  }
+  else
+  {
+    return false;
+  }
+}
+
+function isValidUploadPath(field, alertErrorText, alertWarnText, alertWarnText2 )
+{
+/****************************
+ Forbid char:
+  Win NTFS/FAT, Mac, UFS: /
+****************************/
+
+  if( hasOnlyValidChars(field, /[\/]/i, alertErrorText) )
+  {
+    return warnInvalidPath( field, alertWarnText, alertWarnText2 );
+  }
+  else
+  {
+    return false;
+  }
+}
+
+// Helper function to test if a field is a valid upload folder or filename.
+function warnInvalidPath(field, confirmText, confirmText2)
+{
+/****************************
+ Warn on chars:
+  Win NTFS/FAT: ?<>:*|"^\ and not only spaces
+  Mac: :
+  UFS: space
+  WEB: едц¶
+  Other problematic: ;'~"
+****************************/
+
+  var text = unescape(field.value);
+  var unsafeCharsRegExp = /[^a-zA-Z0-9\-_\ \.\#\%]/;
+  var onlyBlanksRegExp = /^[\ ]+$/;
+
+  if ( unsafeCharsRegExp.test(text) )
+  {
+    if(confirmText)
+    {
+      if( confirm( confirmText ) )
+      {
+        return true;
+      }
+    }
+    field.focus();
+    field.select();
+    return false;
+  }
+  else if ( confirmText2 )
+  {
+    if( onlyBlanksRegExp.test(text) )
+    {
+      if( confirmText2 )
+      {
+        if( confirm( confirmText2 ) )
+        {
+          return true;
+        }
+      }
+      field.focus();
+      field.select();
+      return false;
+    }
+  }
+  return true;
+}
+
+function setRadiobutton(theSelectElement, searchValue)
+{
+  for (var i = 0; i < theSelectElement.length; i++) {
+    if (theSelectElement[i].value == searchValue) {
+      theSelectElement[i].checked = true;
+      return;
+    }
+  }
+}
+
+function setSelectlist(theSelectElement, searchValue, createNewEntry)
+{
+  if (theSelectElement.options) {
+    var i;
+    for (i = 0; i < theSelectElement.options.length; i++) {
+      if (theSelectElement.options[i].value == searchValue) {
+        theSelectElement.options[i].selected = true;
+        return;
+      }
+    }
+    // Value not found, add an entry for it:
+    if (createNewEntry != "no") {
+      theSelectElement.options[i] = new Option(searchValue, searchValue, false, true);
+    }
+  }
+}
+
+function setCheckbox(theCheckbox, isEnabled)
+{
+  if (isEnabled == "yes") {
+    theCheckbox.checked = true;
+    theCheckbox.value = "yes";
+  } else {
+    theCheckbox.value = "no";
+    theCheckbox.checked = false;
+  }
+}
+
+
+function trimLeadingTrailing( input )
+{
+  var str = String( input.value );
+  input.value = str.trim();
+}
+
+function postRequest(url, form, maxLength, firstData)
+{
+  // requires zXml.js
+  var isReady = false;
+  var isError = false;
+  var requst = AxisConnectionFactory.createAjaxConnection();
+  requst.setOverrideMimeType( 'text/plain' );
+  var i = 0, now, url, data, errorMsg, tmpUrl;
+
+  if (!firstData)
+    var firstData = "";
+
+  while (!isReady && !isError) {
+    now = new Date();
+    data = firstData;
+
+    for (; i < form.length; i++) {
+      if (maxLength > 0 && data.length + form[i].name.length + form[i].value.length + 2 >= maxLength)
+        break;
+      data += (data.length > 0 ? "&" : "") + form[i].name + "=" + escape(form[i].value);
+    }
+
+    tmpUrl = url + (url.indexOf("?") < 0 ? "?" : "&") + "timestamp=" + now.getTime();
+
+    try {
+      AxisConnectionFactory.sendSync(["POST", url], data, requst);
+    } catch (e) {
+      errorMsg = langObjVideo.getText("postNoConnectErrTxt");
+      isError = true;
+    }
+    if (requst.getStatus() != 200) {
+      errorMsg = langObjVideo.getText("postErrTxt1")+": " + requst.status + " "+langObjVideo.getText("postErrTxt2")+" " + requst.statusText;
+      isError = true;
+    }
+    if (i >= form.length)
+      isReady = true;
+  }
+  return {success:!isError, text:errorMsg};
+}
+
+// Returns a string of length 'theMaxLength' from 'theStr'. If theStr is longer than theMaxLength,
+// the end is substituted with '...'.
+// what to use for non breaking space is possible to select when calling this function
+function getPaddedString(theStr, theMaxLength, theNBIndicator, skipTagReplacement, strNBIndicator )
+{
+  var str = "";
+  var isTag = false;
+  var ch = '';
+  var len = 0;
+  var strLen = 0;
+
+  if (!theStr) theStr = "";
+  strLen = theStr.length;
+
+  if( !strNBIndicator )
+  {
+    strNBIndicator = "&nbsp;";
+  }
+
+  if( skipTagReplacement)
+  {
+     strLen = ( theStr.replace(/<.*?>/g, "") ).length;
+  }
+  for(var i = 0; i < theStr.length; i++)
+  {
+    ch = theStr.charAt(i);
+
+    if( skipTagReplacement)
+    {
+      if (ch == '<')
+      {
+        isTag = true;
+        str += ch;
+        continue;
+      }
+      if (ch == '>')
+      {
+        isTag = false;
+        str += ch;
+        continue;
+      }
+      if (isTag)
+      {
+        str += ch;
+        continue;
+      }
+    }
+
+    if (strLen > theMaxLength)
+    {
+      if (len > theMaxLength)
+      {
+        continue;
+      }
+      else if (len > theMaxLength - 3)
+      {
+        str += ".";
+        len++;
+        continue;
+      }
+    }
+
+    if (ch == ' ')
+    {
+      if (theNBIndicator)
+        str += strNBIndicator;
+      else
+        str += " ";
+    }
+    else if (ch == '<')
+    {
+      str += "&lt;";
+    }
+    else if (ch == '>')
+    {
+      str += "&gt;";
+    }
+    else
+    {
+      str += ch;
+    }
+    len++;
+  }
+
+  for (i = len; i < (theMaxLength+1); i++)
+  {
+    if (theNBIndicator)
+    {
+      str += strNBIndicator;
+    }
+    else
+    {
+      str += " ";
+    }
+  }
+
+  return str;
+}
+
+// ********************************************************
+// Regular expression for validating most of the valid email addresses. This is not a complete test.
+// Thanks to: http://www.hm2k.com/posts/what-is-a-valid-email-address
+// ********************************************************
+function is_valid_email(str)
+{
+  var re_valid_email = /^[\w!#$%&\'*+\/=?^`{|}~.-]+@(?:[a-z\d][a-z\d-]*(?:\.[a-z\d][a-z\d-]*)?)+\.(?:[a-z][a-z\d-]+)$/i;
+  var emails = str.replace(/ /g, "").split(";");
+  for (var i = 0; i < emails.length; i++)
+  {
+    if ( !re_valid_email.test(String(emails[i]).trim()) )
+    {
+      return false;
+    }
+  }
+  return true;
+}
+
+// Source: https://gist.github.com/netpoetica/3753279
+// **************************************************
+// Function for targetting elements by class name
+// uses native getElementsByClassName() function
+// if the browser supports it otherwise
+// uses extended one
+// *************************************************
+function getElementsByClassName (className, node){
+  node = node ? node : document;
+
+  if(document.getElementsByClassName){
+    return node.getElementsByClassName(className);
+  } else{
+    var allElems = node.getElementsByTagName("*"),
+        allElemsLength = allElems.length,
+        elemList = [],	//will be converted to NodeList when populated
+        i = 0,
+        currentElem;
+
+    for(i; i < allElemsLength; i+=1){
+      currentElem = allElems[i];
+
+      if(currentElem.className.search(className) !== -1){
+        elemList.push(currentElem);
+      }
+    }
+
+    return elemList;
+  }
+};
+
+// ****** getSizeText(sizeKB) *******************
+// sizeKB = a size in Kb
+// langObj = language object to get texts from.
+// returns a size in the best possible way
+// meaning: Kb, Mb, Gb or Tb.
+// **********************************************
+function getSizeText( sizeKB, langObj )
+{
+  var sizeMB;
+  var sizeGB;
+  var sizeTB;
+
+  var tmpSize = sizeKB/1024*10;
+
+  if( tmpSize >= 1  )
+  {
+    sizeMB = Math.round( tmpSize )/10;
+    tmpSize = sizeKB/(1024*1024)*10;
+
+    if( tmpSize >= 10 ) //dont want any 0.x GB
+    {
+      sizeGB =  Math.round( tmpSize )/10;
+      tmpSize = sizeKB/(1024*1024*1024)*10;
+      if( tmpSize >= 10 ) //dont want any 0.X TB
+      {
+        sizeTB =  Math.round( tmpSize )/10;
+        return sizeTB + "&nbsp;"+langObj.getText("tBTxt");
+      }
+      else
+      {
+        return sizeGB + "&nbsp;"+langObj.getText("gBTxt");
+      }
+    }
+    else
+    {
+      return sizeMB + "&nbsp;"+langObj.getText("mBTxt");
+    }
+  }
+  else
+  {
+    return sizeKB + "&nbsp;"+langObj.getText("kBTxt");
+  }
+}

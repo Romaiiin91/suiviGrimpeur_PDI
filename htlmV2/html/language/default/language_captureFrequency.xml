@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+  <captureFrequency>
+    <pageTitle type="title" minor="0">Capture Frequency</pageTitle>
+    <reconfPlWaitTxt type="msgAsText" minor="0">Reconfiguring, please wait...</reconfPlWaitTxt>
+    <okBtnStatTxt type="msg" minor="0">Save capture frequency.</okBtnStatTxt>
+    <powLineFreqTxt type="text" minor="0">Power line frequency</powLineFreqTxt>
+    <powLineLocationTxt type="text" minor="0">What power line frequency is used at your location?</powLineLocationTxt>
+    <okBtn type="button" minor="0" buttonid="capFr_okBtn">OK</okBtn>
+    <infoTxt type="text" minor="0">Set the correct power line frequency in order to prevent image flickering. Select 50 Hz or 60 Hz and click OK to continue.</infoTxt>
+    <noteTxt type="text" minor="0">Note: Power line frequency is different in different geographic regions. In the Americas, 60 Hz is usually used; most other parts of the world use 50 Hz. Local variations may apply, always check with the local authorities.</noteTxt>
+  </captureFrequency>
+</language_xml>

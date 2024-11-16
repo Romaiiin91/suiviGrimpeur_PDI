@@ -1,0 +1,160 @@
+<!--#set var="pageTitle" val="Shortcut Command Button" option="translate:handBut_pageTitle" -->
+<!--#set var="pageSubTitle" val="Button Configuration" option="translate:handBut_pageSubTitle" -->
+<!--#set var="helpURL" val="javascript:launch('/help/handle_button_h.shtml')" -->
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#include virtual="/incl/top_incl_popup.shtml" -->
+
+<!--#include virtual="/incl/nbr_to_camnbr.shtml" -->
+<!--#set var="index" val="$camnbr" -->
+
+<!--#include virtual="/sm/sm.srv?action=get&group=PTZ.Auxiliary" -->
+
+<script language="JavaScript">
+<!--
+var langObjHandBtn = new Language("ptz", "handle_button");
+
+function onOK()
+{
+  <!--#if expr="$action != modify" -->
+    if (document.getElementById("btnLabel").value == "" && document.getElementById("btnInfo").value == "" && document.getElementById("btnUrl").value == "") {
+      alert( langObjHandBtn.getText("emptyAlert") );
+    } else {
+      var sel = document.AddForm.ButtonNbr.selectedIndex;
+      document.AddForm.dyn_index.value = document.AddForm.ButtonNbr.options[sel].value;
+      document.AddForm.ButtonNbr.disabled = true;
+      document.AddForm.submit();
+    }
+  <!--#else -->
+    document.WizardForm.submit();
+  <!--#endif -->
+}
+
+function onClose()
+{
+  window.opener.location.href = "/admin/panel_view.shtml?nbr=<!--#echo var="nbr" option="encoding:url" -->&id=<!--#echo var="ssi_request_id" option="encoding:url" -->";
+  window.close();
+}
+
+<!--#if expr="$action != modify" -->
+  function closeWhenFull()
+  {
+    if (document.AddForm.ButtonNbr.length == 0) {
+      onClose();
+    }
+  }
+<!--#endif -->
+<!--#if expr="$pageclose = 1" -->
+  onClose();
+<!--#endif -->
+
+var okBtnStatTxt;
+var closeBtnStatTxt;
+function globalLanguageVars()
+{
+  okBtnStatTxt = langObjHandBtn.getText("okBtnStatTxt");
+  closeBtnStatTxt = langObjHandBtn.getText("closeBtnStatTxt");
+}
+
+// -->
+</script>
+
+<!--#include virtual="/java/integer.shtml" -->
+<!--#include virtual="/java/chkbox.shtml" -->
+
+</head>
+
+<body class="bodyBg" topmargin="0" leftmargin="0" marginwidth="0" marginheight="0" bgcolor="white" onLoad="langObjHandBtn.init()<!--#if expr="$action != modify" -->;closeWhenFull()<!--#endif -->">
+  <div class="cornerBox">
+    <div class="content">
+
+<!--#if expr="$action = modify" -->
+<form name="WizardForm" action="/sm/sm.srv" method="POST" onSubmit="SubmitForm(); return false">
+<!--#else -->
+<form name="AddForm" action="/axis-cgi/admin/param_authenticate.cgi" method="POST">
+<!--#endif -->
+
+<table border="<!--#echo var="zero" option="encoding:html" -->" cellpadding="<!--#echo var="cellpadding3" option="encoding:html" -->" class="alternateRows" cellspacing="0" width="428">
+  <tr>
+    <td  colspan="3" nowrap class="topTitle" width="90%"><span id="shCoBuTxt"></span><!--#if expr="$action = modify" -->&nbsp;<!--#echo var="group" option="encoding:html" --><!--#endif --></td>
+    <td class="topTitle" align="right">
+      <a href="<!--#echo var="helpURL" option="encoding:url" -->"><img height="27" width="27" src="/pics/help.gif" border="0" id="hlpPic"></a>
+    </td>
+  </tr>
+  <!--#if expr="$action = modify" -->
+    <tr class="reuseLast">
+      <td nowrap width="15%"><span id="labTxt"></span></td>
+      <td nowrap colspan="2" width="75%"><!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.PTZ.Auxiliary.A$index$.Button.B$group$.Name&format=htmlvalue&input_format=size%3D10%20" --></td>
+      <td><br /></td>
+    </tr>
+    <tr>
+      <td nowrap width="15%"><span id="infTxt"></span></td>
+      <td nowrap colspan="2" width="75%"><!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.PTZ.Auxiliary.A$index$.Button.B$group$.Info&format=htmlvalue&input_format=style%3D%22width%3A340px%22" --></td>
+      <td><br /></td>
+    </tr>
+    <tr>
+      <td nowrap width="15%"><span id="urlTxt"></span></td>
+      <td nowrap colspan="2" width="75%"><!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.PTZ.Auxiliary.A$index$.Button.B$group$.URL&format=htmlvalue&input_format=style%3D%22width%3A340px%22" --></td>
+      <td>
+        <input type="hidden" name="action" value="modify">
+        <input type="hidden" name="return_page" value="/admin/handle_button.shtml?nbr=<!--#echo var="nbr" option="encoding:url" -->&pageclose=1">
+      </td>
+    </tr>
+  <!--#else -->
+    <tr class="reuseLast">
+      <td nowrap width="15%"><span id="butNuTxt"></span></td>
+      <td nowrap colspan="2" width="75%">
+        <select name="ButtonNbr">
+          <!--#if expr="_$(root_PTZ_Auxiliary_A$index$_Button_B1_Enabled) = _" --><option value="1">1 </option><!--#endif -->
+          <!--#if expr="_$(root_PTZ_Auxiliary_A$index$_Button_B2_Enabled) = _" --><option value="2">2 </option><!--#endif -->
+          <!--#if expr="_$(root_PTZ_Auxiliary_A$index$_Button_B3_Enabled) = _" --><option value="3">3 </option><!--#endif -->
+          <!--#if expr="_$(root_PTZ_Auxiliary_A$index$_Button_B4_Enabled) = _" --><option value="4">4 </option><!--#endif -->
+          <!--#if expr="_$(root_PTZ_Auxiliary_A$index$_Button_B5_Enabled) = _" --><option value="5">5 </option><!--#endif -->
+          <!--#if expr="_$(root_PTZ_Auxiliary_A$index$_Button_B6_Enabled) = _" --><option value="6">6 </option><!--#endif -->
+          <!--#if expr="_$(root_PTZ_Auxiliary_A$index$_Button_B7_Enabled) = _" --><option value="7">7 </option><!--#endif -->
+          <!--#if expr="_$(root_PTZ_Auxiliary_A$index$_Button_B8_Enabled) = _" --><option value="8">8 </option><!--#endif -->
+        </select>
+      </td>
+      <td><br /></td>
+    </tr>
+    <tr>
+      <td nowrap width="15%"><span id="labTxt"></span></td>
+      <td nowrap colspan="2" width="75%"><input name="$0.Name" id="btnLabel" type="text" size="10" maxlength="10" value=""></td>
+      <td><br /></td>
+    </tr>
+    <tr>
+      <td nowrap width="15%"><span id="infTxt"></span></td>
+      <td nowrap colspan="2" width="75%"><input name="$0.Info" id="btnInfo" type="text" maxlength="64" value="" style="width:340px"></td>
+      <td><br /></td>
+    </tr>
+    <tr>
+      <td nowrap width="15%"><span id="urlTxt"></span></td>
+      <td nowrap colspan="2" width="75%"><input name="$0.URL" id="btnUrl" type="text" maxlength="128" value="" style="width:340px"></td>
+      <td>
+        <input type="hidden" name="action" value="add">
+        <input type="hidden" name="template" value="button">
+        <input type="hidden" name="group" value="root.PTZ.Auxiliary.A<!--#echo var="index" option="encoding:html" -->.Button">
+        <input type="hidden" name="dyn_index" value="">
+        <input type="hidden" name="return_page" value="/admin/handle_button.shtml?nbr=<!--#echo var="nbr" option="encoding:url" -->&pageClose=1">
+      </td>
+    </tr>
+  <!--#endif -->
+  <tr>
+    <td align="center" colspan="4">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td><input type="button" id="okBtn" width="75" class="btnNormal" onclick="javascript:onOK()" onMouseOver="return showStatus(okBtnStatTxt)" onMouseOut="return showStatus('')"></td>
+          <td><br /></td>
+          <td><input type="button" id="closeBtn" width="75" class="btnNormal" onclick="javascript:onClose()" onMouseOver="return showStatus(closeBtnStatTxt)" onMouseOut="return showStatus('')"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+</form>
+    </div>
+    <div class="footerLeft"><div class="footerRight"></div></div>
+  </div>
+<!--#include virtual="/incl/alternate_rows.shtml" -->
+
+</body>
+</html>

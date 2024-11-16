@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+  <vmd>
+    <pageTitle type="title" minor="0">Detectors/Motion Detection</pageTitle>
+    <pageHeader_1 type="msgAsText" minor="0">Motion Detection</pageHeader_1>
+    <pageHeader_2 type="msgAsText" minor="0">Step 2: Motion Detection</pageHeader_2>
+		<prevBtnStatTxt type="msg" minor="0">Go to previous step</prevBtnStatTxt>
+		<nextBtnStatTxt type="msg" minor="0">Go to next step</nextBtnStatTxt>
+		<errAlert type="alert" minor="0">Error:</errAlert>
+		<hlpTxt type="image" minor="0" imageid="hlpPic">Click here for help on this page</hlpTxt>
+		<viewInTxt type="msgAsText" minor="0">View in:</viewInTxt>
+		<gatekeeperTxt type="text" minor="0">Gatekeeper instructions</gatekeeperTxt>
+    <prePosTxt_1 type="text" minor="0">This page provides the tools for set up in which area the movement should occur to trigger the Gatekeeper. To detect movement in an area you need to set up a motion detection include window for the gatekeeper to monitor. See Motion Detection in help for more information.&#x3C;br&#x3E;&#x3C;br&#x3E;&#x3C;strong&#x3E;Enable and Configure Include Windows&#x3C;/strong&#x3E;&#x3C;br&#x3E;Motion is detected in defined Include windows, which are placed in the video image to target specific areas. Follow these instructions to create a motion detection window. Note that the process is slightly different when using AMC than when using the Java applet as the default viewer.&#x3C;br&#x3E;&#x3C;ol&#x3E;&#x3C;li&#x3E;a) For &#x3C;strong&#x3E;AMC&#x3C;/strong&#x3E;: Check the radio button &#x3C;strong&#x3E;Configure Include Windows&#x3C;/strong&#x3E; to set the type of window. Click the &#x3C;strong&#x3E;New&#x3C;/strong&#x3E; button. A new window called &#x3C;em&#x3E;DefaultWindow&#x3C;/em&#x3E; appears over the image. Select the name in the list of windows and rename the window.b) For the &#x3C;strong&#x3E;Java applet&#x3C;/strong&#x3E;: Click the &#x3C;strong&#x3E;Add Window&#x3C;/strong&#x3E; button. Check the radio button Include to define the type of window.&#x3C;/li&#x3E;&#x3C;li&#x3E;To move the window to the area to monitor, click on the text at the top of the window and drag it to the desired location. The window can be re-sized by dragging the bottom-right corner.&#x3C;/li&#x3E;&#x3C;li&#x3E;Set the &#x3C;strong&#x3E;Object Size&#x3C;/strong&#x3E;, &#x3C;strong&#x3E;History&#x3C;/strong&#x3E;, and &#x3C;strong&#x3E;Sensitivity&#x3C;/strong&#x3E; profile sliders for the window. Click the &#x3C;strong&#x3E;Save&#x3C;/strong&#x3E; button. &#x3C;/li&#x3E;&#x3C;li&#x3E;To test the motion detection window, select it and then create some physical disturbance within the window area. Any detected motion is then indicated by colored peaks in the &#x3C;strong&#x3E;Activity&#x3C;/strong&#x3E; Indicator. An alarm is only generated if the motion exceeds the tolerance defined by the black delimiter line and the peak turns red.&#x3C;/li&#x3E;&#x3C;li&#x3E;For the Java applet: Click the &#x3C;strong&#x3E;Save&#x3C;/strong&#x3E; button to save the new window.&#x3C;/li&#x3E;&#x3C;/ol&#x3E;</prePosTxt_1>
+    <prePosTxt_2 type="text" minor="0">&#x3C;strong&#x3E;Both a preset position for home and zoomed in needs to be added before you can add a motion detection window for your gatekeeper.&#x3C;br&#x3E;&#x3C;br&#x3E;Please return to Step 1: Preset Positions.&#x3C;/strong&#x3C;</prePosTxt_2>
+    <creMDFromVATxt type="text" minor="0">Create a motion detection window from the view area</creMDFromVATxt>
+    <createBtn type="button" minor="0" buttonid="vmd_createBtn">Create</createBtn>
+    <mirNotTxt type="text" minor="0">&#x3C;b&#x3E;Note:&#x3C;/b&#x3E; The image is shown unmirrored here. The motion detection window coordinates will be correctly translated to the mirrored image.</mirNotTxt>
+    <preBtnText type="button" minor="0" buttonid="preBtn">&#x3C;&#x3C; Previous</preBtnText>
+    <nextBtnText type="button" minor="0" buttonid="nextBtn">Next &#x3E;&#x3E;</nextBtnText>
+    <moDe_ViArTxt type="text" minor="0">View area</moDe_ViArTxt>
+  </vmd>
+  
+  <motionDetection>
+    <pageTitle type="title" minor="0">Detectors/Motion Detection</pageTitle>
+    <alternativePageTitle type="msg" minor="0">Detectors/Gatekeeper</alternativePageTitle>
+  </motionDetection>
+</language_xml>
+

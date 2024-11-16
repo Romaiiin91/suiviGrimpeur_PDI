@@ -1,0 +1,43 @@
+<!--#include virtual="/sm/sm.srv?action=get&group=Properties.ImageSource,ImageSource.I0.Sensor,PTZ.Support.S1,PTZ.UserAdv.U1,Properties.ImageSource.Sensor,PTZ.Various,Properties.Image,Image" -->
+<!--#set var="backButton" val="yes" -->
+<!--#set var="forwardButton" val="yes" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<script src="/incl/zxml.js" language="javascript" type="text/javascript"></script>
+<script src="/incl/xmlPrototypes.js" language="javascript" type="text/javascript"></script>
+<script src="/incl/language_incl.js" language="javascript" type="text/javascript"></script>
+<script language="JavaScript">
+<!--
+var langObjVIAHWBWH = new Language("videoImage_advanced_haiti_h", "white_balance_window_h");
+
+function globalLanguageVars()
+{
+	document.getElementById("titleId").innerHTML = langObjVIAHWBWH.getText("titleTxt");
+}
+// -->
+</script>
+
+</head>
+<body onload="langObjVIAHWBWH.init()">
+<!--#include virtual="/incl/helpTop_incl2.shtml" -->
+<table class="alternateRows" border="0" cellpadding="3" cellspacing="0" width="440" bgcolor="white">
+<!--#include virtual="/incl/helpTop_incl3.shtml" -->
+
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="subTitle"></span>
+		</div>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="intro_Txt"></span><br></br>
+	</td>
+</tr>
+
+</table>
+<!--#include virtual="/incl/helpBottom_incl.shtml" -->
+</body>
+</html>

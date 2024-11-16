@@ -1,0 +1,63 @@
+<!--#include virtual="/sm/sm.srv?action=get&group=Network.UPnP" -->
+<!--#set var="backButton" val="yes" -->
+<!--#set var="forwardButton" val="yes" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<script language="JavaScript">
+function writeName()
+{
+  var niceName = '<!--#echo var="root_Network_UPnP_FriendlyName" option="encoding:javascript" -->'.replace(/</,"&lt;")
+  document.write(niceName);
+}
+</script>
+
+<script language="JavaScript">
+<!--
+var langObjUPNPH = new Language("upnp_h", "UPnP_h");
+
+function globalLanguageVars()
+{
+  document.getElementById("titleId").innerHTML = langObjUPNPH.getText("titleTxt");
+}
+// -->
+</script>
+
+</head>
+<body onload="langObjUPNPH.init()">
+<!--#include virtual="/incl/helpTop_incl2.shtml" -->
+<table border="0" cellpadding="3" cellspacing="0" width="440" bgcolor="white">
+<!--#include virtual="/incl/helpTop_incl3.shtml" -->
+<tr>
+	<td colspan="2" class="oddItem">
+		<span id="help1Txt"></span><br/><br/>
+	</td>
+</tr>
+<tr>
+	<td class="subTitle" colspan="2">
+		<div align="left">
+			<span id="subTitle1Txt"></span>
+		</div>
+	</td>
+</tr>
+<tr>
+	<td colspan="2" class="oddItem">
+		<span id="help4Txt1"></span>
+		<ul>
+			<li>
+				<span id="help4Txt2"></span>
+			</li>
+			<li>
+				<span id="help4Txt3"></span><br/><br/>
+				<b><script>writeName();</script></b><br/><br/>
+				<span id="help5Txt1"></span>
+			</li>
+		</ul>
+		<span id="help5Txt2"></span><br/><br/>
+		<span id="help5Txt3"></span><br/><br/>
+		<span id="help7Txt"></span><br/><br/>
+	</td>
+</tr>
+</table>
+<!--#include virtual="/incl/helpBottom_incl.shtml" -->
+</body>
+</html>

@@ -1,0 +1,39 @@
+Script pour avoir le flux video : http://192.168.1.12/axis-cgi/mjpg/video.cgi
+Script pour deplacer la camera : "http://192.168.1.12/axis-cgi/com/ptz.cgi?move=right" right peut se remplacer par right/left/up/down ou upleft/upright/downleft/downright 
+Script pour deplacer la zoom : "http://192.168.1.12/axis-cgi/com/ptz.cgi?zoom=1...9999" Valeur absolue de zoom: Zooms the device n steps to the specified absolute position. A high value means zoom in, a low value means zoom out.
+Script pour deplacer la zoom : "http://192.168.1.12/axis-cgi/com/ptz.cgi?rzoom=1...9999" Valeur relative de zoom: Zooms the device n steps to the specified absolute position. A high value means zoom in, a low value means zoom out.
+
+
+Valeur absolue du pan et tilt : http://192.168.1.12/axis-cgi/com/ptz.cgi?pan=-180.0 ... 180.0 :	Pans the device to the specified absolute coordinates.
+Valeur absolue du pan et tilt : http://192.168.1.12/axis-cgi/com/ptz.cgi?tilt=-180.0 ... 180.0 : Tilts the device to the specified absolute coordinates.
+
+Recuperer les valeurs de ptz : "http://192.168.1.12/axis-cgi/com/ptz.cgi?query=position"
+
+
+Pour avoir les infos sur un script : http://192.168.1.12/axis-cgi/nomDuScript.cgi?info ou ?info=list
+Status tracker: http://192.168.1.12/axis-cgi/param.cgi?action=list&group=root.AutoTracking.A0.running --> yes or no
+Change statut : http://192.168.1.12/axis-cgi/param.cgi?action=update&root.AutoTracking.A0.running=[yes/no]
+
+On peut limiter l'angle pan pour assurer sur une voie : 
+Pour activer la limitaion : "http://192.168.1.12/axis-cgi/param.cgi?action=update&root.AutoTracking.A0.PanLimitEnabled=yes"
+Valeur limite min : "http://192.168.1.12/axis-cgi/param.cgi?action=update&root.AutoTracking.A0.PanLimitStart=-180...180
+Valeur limite max : "http://192.168.1.12/axis-cgi/param.cgi?action=update&root.AutoTracking.A0.PanLimitEnd=-180...180
+(On doit avoir max > min tjrs)
+
+Ou on peut créer la zone que l'on veut observer et creer des zones d'exlusion par complémentarité
+--> Creer un programme qui pour une zone donnée incluse créer la zone d'exclusion et l'implémente sur la caméra
+--> L'active quand la voie est seléctionnée (param.cgi?action=update&root*ExcludeArea*Enabled=[yes/no]
+--> Se baser sur html/autoTracking_excludeAreas_frame.shtml
+--> Position : bonne chance mais postion des 4 angles du carre "x1,y1:x2,y2:x3,y3:x4,y4"
+
+
+root:root@ip pour se connecter 
+Creer collection postman
+
+wget ou curl pour des requete depuis programe c ou shell
+
+Eteindre : poweroff en telnet
+
+
+
+serveur appache et script cgi (prg en c just compilation -o *.cgi)

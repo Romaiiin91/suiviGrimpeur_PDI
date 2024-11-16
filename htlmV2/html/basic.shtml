@@ -1,0 +1,75 @@
+<!--#include virtual="/sm/sm.srv?action=get&group=Layout.EnableBasicSetup" -->
+<!--#set var="WizardFormAction" val="/sm/sm.srv" -->
+
+<!--#include virtual="/sm/sm.srv?action=get&group=Properties.ImageSource.DCIris,Network.eth0.MACAddress" -->
+
+<!--#set var="activeMenu" val="basic" -->
+<!--#set var="activePage" val="basic" -->
+
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<script LANGUAGE="JavaScript">
+<!--
+
+var langObjBasic = new Language("basic", "basic");
+
+function saveData()
+{
+  var form = document.WizardForm;
+
+  form.submit();
+}
+
+//-->
+</script>
+
+</head>
+<body <!--#include virtual="/incl/bodytag.shtml" --> onload="langObjBasic.init()">
+
+<!--#if expr="$root_Layout_EnableBasicSetup = no" -->
+
+<script LANGUAGE="JavaScript">
+<!--
+  document.location = "/operator/videostream.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->"
+//-->
+</script>
+
+<!--#else -->
+
+<!--#include virtual="/incl/top_incl2.shtml" -->
+<!--#set var="operator" val="yes" -->
+<!--#if expr="$root_Brand_ProdNbr = 205" -->
+  <!--#set var="operator" val="no" -->
+<!--#endif -->
+<!--#if expr="$root_Brand_ProdNbr >< 206" -->
+  <!--#set var="operator" val="no" -->
+<!--#endif -->
+
+<table border="0" cellpadding="3" cellspacing="0" width="100%" valign="top">
+  <tr>
+    <td class="topTitle" align="left"><span id="basSetTxt"></span></td>
+  </tr>
+  <tr>
+    <td class="oddItem">
+      <br>
+      <span id="basicTxt1_1"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" --><span id="basicTxt1_2"></span><!--#if expr="$operator = yes" --><span id="basicTxt2"></span><!--#endif --><span id="basicTxt3"></span>
+      <!--#if expr="$root_Properties_ImageSource_DCIris = yes" -->
+        <span id="basicFocus"></span>
+      <!--#endif -->
+      <span id="basicTxt4"></span>
+    </td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td>
+      <b><span id="fiVeTxt"></span></b>&nbsp;<!--#echo var="root_Properties_Firmware_Version" option="encoding:html" --><br>
+      <b><span id="macAdTxt"></span></b>&nbsp;<!--#echo var="root_Network_eth0_MACAddress" option="encoding:html" --><br><br>
+    </td>
+  </tr>
+</table>
+
+<!--#endif -->
+
+<!--#include virtual="/incl/bottom_incl.shtml" -->

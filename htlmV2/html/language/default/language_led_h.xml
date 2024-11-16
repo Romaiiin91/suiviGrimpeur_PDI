@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+	<leds_h>
+		<pageTitle type="title" minor="0">Help/LED Settings</pageTitle>
+		<titleTxt type="msgAsText" minor="0">LED Settings</titleTxt>
+		<subTitle_powerLED_Txt type="text" minor="0">Power LED</subTitle_powerLED_Txt>
+		<powerLED_Txt1a type="text" minor="0">The Power Indicator LED on the</powerLED_Txt1a>
+		<powerLED_Txt1b type="text" minor="0">can be configured to behave in different ways, according to requirements. The available options are:</powerLED_Txt1b>
+		<powerLED_Txt2 type="text" minor="0">&#x3C;b&#x3E;Normal&#x3C;/b&#x3E; - The power LED shows steady green during normal operation.</powerLED_Txt2>
+		<powerLED_Txt3a type="text" minor="0">&#x3C;b&#x3E;Off&#x3C;/b&#x3E; - The power LED is off during normal operation. This can be useful in making the</powerLED_Txt3a>
+		<powerLED_Txt3b type="text" minor="0">less noticeable.</powerLED_Txt3b>
+		<subTitle_networkLED_Txt type="text" minor="0">Network LED</subTitle_networkLED_Txt>
+		<netLED_Txt1a type="text" minor="0">The Network Indicator LED on the</netLED_Txt1a>
+		<netLED_Txt1b type="text" minor="0">can be enabled or disabled, according to requirements. The available options are:</netLED_Txt1b>
+		<netLED_Txt2 type="text" minor="0">&#x3C;b&#x3E;Enabled&#x3C;/b&#x3E; - The network LED lights up for network traffic.</netLED_Txt2>
+		<netLED_Txt3a type="text" minor="0">&#x3C;b&#x3E;Disabled&#x3C;/b&#x3E; - The network LED is off during normal operation and is not lit at all. This can be useful in making the</netLED_Txt3a>
+		<netLED_Txt3b type="text" minor="0">less noticeable.</netLED_Txt3b>
+		<netLED_Txt4 type="text" minor="0">When enabled, the network LED flashes amber for activity on a 10 Mbps network and green for activity on a 100 Mbps network. The LED shows steady red for a hardware error.</netLED_Txt4>
+		<netLEDGigabit_Txt type="text" minor="0">When enabled, the network LED flashes amber for activity on a 10 Mbps and 100 Mbps network, and flashes green for activity on a 1000 Mbps network. The LED shows steady red for a hardware error.</netLEDGigabit_Txt>
+		<subTitle_statusLED_Txt type="text" minor="0">Status LED</subTitle_statusLED_Txt>
+		<statusLED_Txt1a type="text" minor="0">The Status Indicator LED on the</statusLED_Txt1a>
+		<statusLED_Txt1b type="text" minor="0">can be configured to behave in different ways, according to requirements. The available options are:</statusLED_Txt1b>
+		<statusLED_Txt2 type="text" minor="0">&#x3C;b&#x3E;Normal&#x3C;/b&#x3E; - The status LED shows steady green during normal operation.</statusLED_Txt2>
+		<statusLED_Txt3a type="text" minor="0">&#x3C;b&#x3E;Off&#x3C;/b&#x3E; - The status LED is off during normal operation. This can be useful in making the</statusLED_Txt3a>
+		<statusLED_Txt3b type="text" minor="0">less noticeable.</statusLED_Txt3b>
+		<power_led_note type="text" minor="0">&#x3C;b&#x3E;Note:&#x3C;/b&#x3E; The Power and Network indicators on the wireless module cannot be disabled.</power_led_note>
+	</leds_h>
+</language_xml>
+

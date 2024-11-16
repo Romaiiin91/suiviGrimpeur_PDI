@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>	
+	<layout>
+	  <pageTitle type="title" minor="0">Live View Config/Layout</pageTitle>
+		<customlinknameAlrt type="alert" minor="0">Empty field for Custom Link Name!</customlinknameAlrt>
+		<customlinkScriptAlrt type="alert" minor="0">Illegal script found!</customlinkScriptAlrt>
+		<defViewConfirm type="alert" minor="0">Note! You are about to set the default viewer to Java Applet, which only supports the G711 audio codec. The audio settings do not currently use G711, which means that audio will not be available in the Java Applet on the Live View page. &#10;&#10;Continue anyway?</defViewConfirm>
+		<defViewConfirmQt type="alert" minor="0">Note! You are about to set the default viewer to QuickTime, which does not support the G726 audio codec. This means that audio will not be available in the QuickTime viewer on the Live View page. &#10;&#10;Continue anyway?</defViewConfirmQt>
+		<invTimLimAlert type="alert" minor="0">Invalid Time limit.</invTimLimAlert>
+		<invRTSPnrAlert type="alert" minor="0">Invalid RTSP port number. Enter 554 or a value between 1024 and 65535.</invRTSPnrAlert>
+		<invTimSpanAlrt type="alert" minor="0">Invalid time. Enter a value between 0 and 60.</invTimSpanAlrt>
+		<invPulseAlert type="alert" minor="0">The pulse time must be between 1 1/100 second and 60 seconds.</invPulseAlert>
+		<conBtnStatTxt type="msg" minor="0">Open custom settings window</conBtnStatTxt>
+		<saveBtnStatTxt type="msg" minor="0">Save the Live View Layout settings</saveBtnStatTxt>
+		<resBtnStatTxt type="msg" minor="0">Revert to last saved settings</resBtnStatTxt>
+		<lVLayTxt type="text" minor="0">Live View Layout</lVLayTxt>
+		<hlpTxt type="image" minor="0" imageid="hlpPic">Click here for help on this page</hlpTxt>
+		<useAxTxt type="text" minor="0">Use Axis look</useAxTxt>
+		<useCusTxt type="text" minor="0">Use custom settings</useCusTxt>
+		<confBtn type="button" minor="0" buttonid="layout_confBtn">Configure...</confBtn>
+		<deLiVieVidTxt type="text" minor="0">Default Live View Video</deLiVieVidTxt>
+		<selDefLiVieVidTxt type="text" minor="0">Select the default video source for Live View:</selDefLiVieVidTxt>
+		<quadStrTxt type="text" minor="0">Quad Stream</quadStrTxt>
+		<defStrProTxt type="text" minor="0">Stream Profile</defStrProTxt>
+		<defVidForTxt type="text" minor="0">Default Video Format</defVidForTxt>
+		<deViFoTxt type="text" minor="0">Default Video Format in Internet Explorer for Windows</deViFoTxt>
+		<useProfTxt type="text" minor="0">Stream profile:</useProfTxt>
+		<shStPoSelTxt type="text" minor="0">Show stream profile selection</shStPoSelTxt>
+		<viFoTxt type="text" minor="0">Video format:</viFoTxt>
+		<shViFoSelTxt type="text" minor="0">Show video format selection</shViFoSelTxt>
+		<mpeg4N2Txt type="text" minor="0">&#x3C;b&#x3E;Note:&#x3C;/b&#x3E;When using MPEG-4 as video format, the default viewer is AXIS Media Control (AMC) with Internet Explorer.</mpeg4N2Txt>
+		<shPalSelTxt type="text" minor="0">Show palette selection</shPalSelTxt>
+		<deViTxt type="text" minor="0">Default Viewer</deViTxt>
+		<winIETxt type="text" minor="0">Windows Internet Explorer:</winIETxt>
+		<actXSelTxt type="msgAsText" minor="0">AMC (ActiveX)</actXSelTxt>
+		<serPuSelTxt type="msgAsText" minor="0">Server push</serPuSelTxt>
+		<hdtvSelTxt type="msgAsText" minor="0">HDTV</hdtvSelTxt>
+		<qTTxt type="msgAsText" minor="0">QuickTime</qTTxt>
+		<jaApTxt type="msgAsText" minor="0">Java applet</jaApTxt>
+		<stImgTxt type="msgAsText" minor="0">Still image</stImgTxt>
+		<otBrTxt type="text" minor="0">Other Browsers:</otBrTxt>
+		<qTNote1Txt type="text" minor="0">&#x3C;b&#x3E;Note:&#x3C;/b&#x3E; QuickTime is only used with MPEG-4 and H.264. Motion JPEG will be shown with AMC in Windows Internet Explorer and with server push in other browsers.</qTNote1Txt>
+		<qTNote2Txt type="text" minor="0">&#x3C;b&#x3E;Note:&#x3C;/b&#x3E; QuickTime is only used with H.264. Motion JPEG will be shown with AMC in Windows Internet Explorer and with server push in other browsers.</qTNote2Txt>
+		<qTNote3Txt type="text" minor="0">&#x3C;b&#x3E;Note:&#x3C;/b&#x3E; QuickTime is only used with MPEG-4. Motion JPEG will be shown with AMC in Windows Internet Explorer and with server push in other browsers.</qTNote3Txt>
+		<viewSetTxt_1 type="text" minor="0">Viewer Settings</viewSetTxt_1>
+		<shViToTxt_1 type="text" minor="0">Show viewer toolbar</shViToTxt_1>
+		<enaMpeInsTxt_1 type="text" minor="0">Enable MPEG-4 decoder installation</enaMpeInsTxt_1>
+		<enaH264InsTxt_1 type="text" minor="0">Enable H.264 decoder installation</enaH264InsTxt_1>
+		<shoCroJoyModeTxt type="text" minor="0">Show crosshair in PTZ joystick mode</shoCroJoyModeTxt>
+		<defaultJoyTxt type="text" minor="0">Use PTZ joystick mode as default</defaultJoyTxt>
+		<showSVGTxt type="text" minor="0">Show IV SVG data in image stream (AMC and Java applet only)</showSVGTxt>
+		<enaAacInsTxt_1 type="text" minor="0">Enable AAC decoder installation</enaAacInsTxt_1>
+		<enaRecButTxt_1 type="text" minor="0">Enable recording button</enaRecButTxt_1>
+		<notePtzTxt type="text" minor="0">Not applicable to AMC (ActiveX).</notePtzTxt>
+		<deViFIETxt type="text" minor="0">Default Viewer for Motion JPEG in Internet Explorer for Windows</deViFIETxt>
+		<viewTxt_1 type="text" minor="0">Viewer:</viewTxt_1>
+		<actXTxt type="text" minor="0">AMC (ActiveX)</actXTxt>
+		<jaApTxt_1 type="text" minor="0">Java applet</jaApTxt_1>
+		<stImgTxt_1 type="text" minor="0">Still image</stImgTxt_1>
+		<deViOtBrTxt type="text" minor="0">Default Viewer for Motion JPEG in Other Browsers</deViOtBrTxt>
+		<viewTxt_2 type="text" minor="0">Viewer:</viewTxt_2>
+		<serPuTxt type="text" minor="0">Server push</serPuTxt>
+		<jaApTxt_2 type="text" minor="0">Java applet</jaApTxt_2>
+		<stImgTxt_2 type="text" minor="0">Still image</stImgTxt_2>
+		<viewSetTxt_2 type="text" minor="0">Viewer Settings</viewSetTxt_2>
+		<shViToTxt_2 type="text" minor="0">Show viewer toolbar</shViToTxt_2>
+		<enaMpeInsTxt_2 type="text" minor="0">Enable MPEG-4 decoder installation</enaMpeInsTxt_2>
+		<enaH264InsTxt_2 type="text" minor="0">Enable H.264 decoder installation</enaH264InsTxt_2>
+		<enaAacInsTxt_2 type="text" minor="0">Enable AAC decoder installation</enaAacInsTxt_2>
+		<shoCroTxt type="text" minor="0">Show PTZ crosshair</shoCroTxt>
+		<enaRecButTxt_2 type="text" minor="0">Enable recording button</enaRecButTxt_2>
+		<acBtnTxt type="text" minor="0">Action Buttons</acBtnTxt>
+		<shMaTrBtnTxt type="text" minor="0">Show manual trigger button</shMaTrBtnTxt>
+		<shMaTrViewAreaTxt type="text" minor="0">Show manual trigger button for</shMaTrViewAreaTxt>
+		<shMaTr1Txt type="text" minor="0">Show manual trigger button for Video</shMaTr1Txt>
+		<shMaTr11Txt type="text" minor="0">Show manual trigger button for Video 1</shMaTr11Txt>
+		<shMaTr2Txt type="text" minor="0">Show manual trigger button for Video 2</shMaTr2Txt>
+		<shMaTr3Txt type="text" minor="0">Show manual trigger button for Video 3</shMaTr3Txt>
+		<shMaTr4Txt type="text" minor="0">Show manual trigger button for Video 4</shMaTr4Txt>
+		<shMaTrQuadTxt type="text" minor="0">Show manual trigger button for Quad Stream</shMaTrQuadTxt>
+		<shSnBtn type="text" minor="0">Show snapshot button</shSnBtn>
+		<shATBtn type="text" minor="0">Show autotracking button</shATBtn>
+		<shACSect type="text" minor="0">Show audio clip section</shACSect>
+		<shIRISect type="text" minor="0">Show IR Illumination</shIRISect>
+		<shIRISect2 type="text" minor="0">Show IR Illumination  &#x3C;b&#x3E;Note:&#x3C;/b&#x3E; If the IR light has been turned on manually, it must be manually turned off in order to enable Auto mode.</shIRISect2>
+		<inReTxt type="text" minor="0">Instant Replay</inReTxt>
+		<shInReBtn type="text" minor="0">Show instant replay button</shInReBtn>
+		<tiLiTxt type="text" minor="0">Time limit:</tiLiTxt>
+		<hmsTxt type="text" minor="0">[hh:mm:ss]</hmsTxt>
+		<inReNotTxt type="text" minor="0">&#x3C;b&#x3E;Note:&#x3C;/b&#x3E; Instant Replay is currently disabled.</inReNotTxt>
+		<shFanBtn type="text" minor="0">Show fan button</shFanBtn>
+		<shFan0ActiveTxt1 type="text" minor="0">Fan 0 activate for</shFan0ActiveTxt1>
+		<shFan0ActiveTxt2 type="text" minor="0">minutes.</shFan0ActiveTxt2>
+		<shFanActiveTxt1 type="text" minor="0">Activate for</shFanActiveTxt1>
+		<shFanActiveTxt2 type="text" minor="0">minutes.</shFanActiveTxt2>
+		<shFan1ActiveTxt1 type="text" minor="0">Fan 1 activate for</shFan1ActiveTxt1>
+		<shFan1ActiveTxt2 type="text" minor="0">minutes.</shFan1ActiveTxt2>
+		<shFan2ActiveTxt1 type="text" minor="0">Fan 2 activate for</shFan2ActiveTxt1>
+		<shFan2ActiveTxt2 type="text" minor="0">minutes.</shFan2ActiveTxt2>
+		<shHeatBtn type="text" minor="0">Show heater button</shHeatBtn>
+		<shHeat0ActiveTxt1 type="text" minor="0">Heater 0 activate for</shHeat0ActiveTxt1>
+		<shHeat0ActiveTxt2 type="text" minor="0">minutes.</shHeat0ActiveTxt2>
+		<shHeatActiveTxt1 type="text" minor="0">Activate for</shHeatActiveTxt1>
+		<shHeatActiveTxt2 type="text" minor="0">minutes.</shHeatActiveTxt2>
+		<shHeat1ActiveTxt1 type="text" minor="0">Heater 1 activate for</shHeat1ActiveTxt1>
+		<shHeat1ActiveTxt2 type="text" minor="0">minutes.</shHeat1ActiveTxt2>
+		<useDefLiTxt type="text" minor="0">User Defined Links</useDefLiTxt>
+		<shCuLi1Txt type="text" minor="0">Show custom link 1</shCuLi1Txt>
+		<useAs1Txt type="text" minor="0">Use as:</useAs1Txt>
+		<cgi1Txt type="text" minor="0">cgi link</cgi1Txt>
+		<web1Txt type="text" minor="0">web link</web1Txt>
+		<name1Txt type="text" minor="0">Name:</name1Txt>
+		<uRL1Txt type="text" minor="0">URL:</uRL1Txt>
+		<shCuLi2Txt type="text" minor="0">Show custom link 2</shCuLi2Txt>
+		<useAs2Txt type="text" minor="0">Use as:</useAs2Txt>
+		<cgi2Txt type="text" minor="0">cgi link</cgi2Txt>
+		<web2Txt type="text" minor="0">web link</web2Txt>
+		<name2Txt type="text" minor="0">Name:</name2Txt>
+		<uRL2Txt type="text" minor="0">URL:</uRL2Txt>
+		<shCuLi3Txt type="text" minor="0">Show custom link 3</shCuLi3Txt>
+		<useAs3Txt type="text" minor="0">Use as:</useAs3Txt>
+		<cgi3Txt type="text" minor="0">cgi link</cgi3Txt>
+		<web3Txt type="text" minor="0">web link</web3Txt>
+		<name3Txt type="text" minor="0">Name:</name3Txt>
+		<uRL3Txt type="text" minor="0">URL:</uRL3Txt>
+		<shCuLi4Txt type="text" minor="0">Show custom link 4</shCuLi4Txt>
+		<useAs4Txt type="text" minor="0">Use as:</useAs4Txt>
+		<cgi4Txt type="text" minor="0">cgi link</cgi4Txt>
+		<web4Txt type="text" minor="0">web link</web4Txt>
+		<name4Txt type="text" minor="0">Name:</name4Txt>
+		<uRL4Txt type="text" minor="0">URL:</uRL4Txt>
+		<lightBtnTxt type="text" minor="0">Light Buttons</lightBtnTxt>
+		<plsTxt type="msgAsText" minor="0">Pulse</plsTxt>
+		<actInvTxt type="msgAsText" minor="0">Active/Inactive</actInvTxt>
+		<sliderTxt type="msgAsText" minor="0">Slider</sliderTxt>
+		<activateTxt type="txt" minor="0">Activate:</activateTxt>
+		<onTxt type="msgAsText" minor="0">On</onTxt>
+		<fadeToTxt type="msgAsText" minor="0">Fade to</fadeToTxt>
+		<custActStrb3Txt type="msgAsText" minor="0">Strobe 3Hz</custActStrb3Txt>
+		<custActStrb5Txt type="msgAsText" minor="0">Strobe 5Hz</custActStrb5Txt>
+		<inactivateTxt type="text" minor="0">Inactivate:</inactivateTxt>
+		<fadeOffTxt type="msgAsText" minor="0">Fade to off</fadeOffTxt>
+		<offTxt type="msgAsText" minor="0">Off</offTxt>
+		<ti1Txt type="text" minor="0">Time:</ti1Txt>
+		<secsTxt type="msgAsText" minor="0">seconds</secsTxt>
+		<inStatTxt type="text" minor="0">Input Ports</inStatTxt>
+		<noInputTxt type="text" minor="0">&#x3C;i&#x3E;No inputs are specified.&#x3C;/i&#x3E;</noInputTxt>
+		<outBtnTxt type="text" minor="0">Output Buttons</outBtnTxt>
+		<ti2Txt type="text" minor="0">Time:</ti2Txt>
+		<noOutputTxt type="text" minor="0">&#x3C;i&#x3E;No outputs are specified.&#x3C;/i&#x3E;</noOutputTxt>
+		<ti3Txt type="text" minor="0">Time:</ti3Txt>
+		<ti4Txt type="text" minor="0">Time:</ti4Txt>
+		<extVidSetTxt type="text" minor="0">External Video Source Setup</extVidSetTxt>
+		<extVidEnbTxt type="text" minor="0">External Video enabled:</extVidEnbTxt>
+		<extVidIPTxt type="text" minor="0">IP address:</extVidIPTxt>
+		<extVidRtspPoTxt type="text" minor="0">Rtsp Port:</extVidRtspPoTxt>
+		<extVidHttpPoTxt type="text" minor="0">Http Port:</extVidHttpPoTxt>
+		<extVidviFoTxt type="text" minor="0">Video format:</extVidviFoTxt>
+		<extVidUsrNameTxt type="text" minor="0">User name:</extVidUsrNameTxt>
+		<extVidPasswordTxt type="text" minor="0">Password:</extVidPasswordTxt>
+		<saveBtn type="button" minor="0" buttonid="layout_saveBtn">Save</saveBtn>
+		<resetBtn type="button" minor="0" buttonid="layout_resetBtn">Reset</resetBtn>
+	</layout>
+</language_xml>
+

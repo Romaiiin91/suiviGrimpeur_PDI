@@ -1,0 +1,209 @@
+<!--#include virtual="/sm/sm.srv?action=get&group=Output.NbrOfOutputs,Properties.Image.Format,ImageSource.NbrOfSources,Layout.MPEGInstallationEnabled,TemperatureControl.Fan.F0.UserControlSupport,TemperatureControl.Heater.H0.UserControlSupport,Layout.CustomLink.C0,Layout.Trigger.T0,PTZ.Support.S1,PTZ.UserAdv.U1,Layout.ShowRelCrossEnabled,Layout.DefaultJoystickMode,Audio.A0.Enabled,StreamProfile" -->
+
+
+<!--#include virtual="/sm/sm.srv?action=get&group=Properties.TemperatureSensor" -->
+
+<!--#set var="backButton" val="yes" -->
+<!--#set var="forwardButton" val="yes" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<script language="JavaScript">
+<!--
+var langObjLLH = new Language("layout_h", "layout_h");
+
+function globalLanguageVars()
+{
+	document.getElementById("titleId").innerHTML = langObjLLH.getText("titleTxt");
+}
+// -->
+</script>
+
+</head>
+<body onload="langObjLLH.init()">
+<!--#include virtual="/incl/helpTop_incl2.shtml" -->
+<table class="alternateRows" border="0" cellpadding="3" cellspacing="0" width="440" bgcolor="white">
+<!--#include virtual="/incl/helpTop_incl3.shtml" -->
+<tr>
+	<td colspan="2">
+		<span id="general1_Txt"></span><br/><br/>
+	</td>
+</tr>
+
+
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="subTitle4aTxta"></span>
+		</div>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="streamprofile_Txt"></span>
+		<span id="streamprofile_end_Txt"></span><br/><br/>
+		<ul>
+			<li>
+				<span id="mJPEGTxt"></span>
+			</li>
+			<li>
+				<span id="h264Txt"></span>
+			</li>
+			<li><span id="qualityTxt"></span></li>
+			<li><span id="balancedTxt"></span></li>
+			<li><span id="bandTxt"></span></li>
+			<li><span id="mobileTxt"></span></li>
+		</ul>
+		<span id="showTxt"></span><br/><br/>
+	</td>
+</tr>
+
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="subTitle5Txt"></span>
+		</div>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="iE_view_Txt"></span>
+		<ul>
+			<li>
+				<span id="view_IEh_Txt"></span><br/><br/>
+				<span id="iE_AMC_check_Txt"></span><br/><br/>
+			</li>
+
+			<li>
+				<span id="view_qtH_Txt"></span>
+	<br/><br/>
+
+			<li>
+				<span id="view_javaAudio_Txtb"></span><br/><br/>
+
+			<li>
+				<span id="view_still_Txt1"></span><br/><br/>
+			</li>
+		</ul>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="others_view_Txt1"></span>
+		<ul>
+			<li>
+				<span id="others_view_Txt2-1"></span><br/><br/>
+			<li>
+				<span id="view_qtH_Txt2"></span>
+<br/><br/>
+			<li>
+				<span id="view_other_java_Txtb"></span><br/><br/>
+			<li>
+				<span id="view_still_Txt2"></span>
+			</li>
+		</ul>
+	</td>
+</tr>
+
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="subTitle4bTxt"></span>
+		</div>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="show_toolbar_Txt"></span><br/><br/>
+	</td>
+</tr>
+
+
+<tr>
+	<td colspan="2">
+		<span id="h264_install_Txt"></span><br/><br/>
+	</td>
+</tr>
+
+<!--#if expr="$(root_PTZ_Support_S1_JoyStickEmulation) != false" -->
+	<!--#if expr="_$root_Layout_ShowRelCrossEnabled != _" -->
+<tr>
+	<td colspan="2">
+		<span id="relCross_Txt"></span><br/><br/>
+	</td>
+</tr>
+	<!--#endif -->
+	<!--#if expr="_$root_Layout_DefaultJoystickMode != _" -->
+<tr>
+	<td colspan="2">
+		<span id="defaultjoystick_Txt"></span><br/><br/>
+	</td>
+</tr>
+	<!--#endif -->
+<!--#endif -->
+
+<tr>
+	<td colspan="2">
+		<span id="mPEG_rec_Txt"></span><br/><br/>
+	</td>
+</tr>
+
+
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="subTitle3Txt"></span>
+		</div>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="trigger_buttons_Txt"></span><br/><br/>
+		<span id="snapshot_button_Txt"></span><br/><br/>
+
+
+		<span id="autoTrack_buttons_Txt"></span><br/><br/>
+
+
+	<!--#if expr="$root_Properties_TemperatureSensor_Fan = yes" -->
+        <!--#if expr="$root_TemperatureControl_Fan_F0_UserControlSupport != no" -->
+           <span id="heater_fan_buttons_Txta"></span><br/><br/>
+       <!--#endif -->
+	<!--#endif -->
+
+	<!--#if expr="$root_Properties_TemperatureSensor_Heater = yes" -->
+       <!--#if expr="$root_TemperatureControl_Heater_H0_UserControlSupport != no" -->
+           <span id="heater_fan_buttons_Txtb"></span><br/><br/>
+       <!--#endif -->
+	<!--#endif -->
+	</td>
+</tr>
+
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="subTitle2Txt"></span>
+		</div>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="links_Txt1"></span><br/><br/>
+		<span id="links_Txt2"></span><br/><br/>
+		<span id="links_Txt3"></span><br/><br/>
+	</td>
+</tr>
+
+
+
+
+
+</table>
+<!--#include virtual="/incl/helpBottom_incl.shtml" -->
+</body>
+</html>

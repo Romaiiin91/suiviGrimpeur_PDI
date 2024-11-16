@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+	<audioDetection_h>
+		<pageTitle type="title" minor="0">Help/Audio Detection</pageTitle>
+		<titleTxt type="msgAsText" minor="0">Audio Detection</titleTxt>
+		<levelsubTitleTxt type="text" minor="0">Audio Alarm Level</levelsubTitleTxt>
+		<audioAlarmTxt1 type="text" minor="0">&#x3C;b&#x3E;Level&#x3C;/b&#x3E; - Event types in the Axis product can be set to use this level as a trigger. Each individual event type can be configured to trigger if the sound level rises above, falls below or passes the set value.</audioAlarmTxt1>
+		<audioAlarmTxt2 type="text" minor="0">The alarm level can be set in the range 0-100, where 0 is the most sensitive and 100 the least sensitive.</audioAlarmTxt2>
+		<audioAlarmTxt3 type="text" minor="0">When setting the alarm level use the Activity indicator as a guide. For best detection, place the level so that there is green below the bar with a small amount of red above the bar.</audioAlarmTxt3>
+		<activitysubTitleTxt type="text" minor="0">Activity</activitysubTitleTxt>
+		<activityTxt type="text" minor="0">Detected audio is indicated by colored peaks in the Activity indicator. An event is triggered when detected audio rises above, falls below or passes the Audio Alarm Level specified, which is represented by the bar. For more information go to &#x3C;a href='action_rule_setup_h.shtml'&#x3E;Action Rule Setup&#x3C;/a&#x3E;.</activityTxt>
+		<audioLevelNoteTxt type="text" minor="0">&#x3C;b&#x3E;Note&#x3C;/b&#x3E;: Audio detection level must be set before creating an Action Rule that triggers on audio detection.</audioLevelNoteTxt>
+	</audioDetection_h>
+</language_xml>

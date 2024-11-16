@@ -1,0 +1,477 @@
+<!--#set var="helpURL" val="javascript:launch('/help/8021x_h.shtml')" -->
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<!--#include virtual="/sm/sm.srv?action=get&group=Network.Interface.I0.dot1x" -->
+
+<!--#set var="activeMenu" val="system" -->
+<!--#set var="activeMenu1" val="security" -->
+<!--#set var="activePage" val="8021x" -->
+
+<!--#include virtual="/java/chkbox.shtml" -->
+
+<script src="/incl/soapclient.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->" language="javascript" type="text/javascript"></script>
+
+<script language="JavaScript">
+<!--
+  <!--#include virtual="/incl/functions.shtml" -->
+  
+  //GLOBAL PARAMS
+  var langObj8021x = new Language("8021x", "x8021x");
+  var nameSpaces = new SOAPClientNS();
+  var lastFetchedCert = null;
+  var lastFetchedCaCert = null;
+  var lastFetchedStatus = null;
+  var lastFetchedIdentity = "<!--#echo var="root_Network_Interface_I0_dot1x_EAPTLS_Identity" option="encoding:javascript" -->";
+  var lastFetchedEAPOLVer = "<!--#echo var="root_Network_Interface_I0_dot1x_EAPOLVersion" option="encoding:javascript" -->";
+  nameSpaces.add("tt", "http://www.onvif.org/ver10/schema" );
+  nameSpaces.add("tds", "http://www.onvif.org/ver10/device/wsdl" );
+  nameSpaces.add("tev", "http://www.onvif.org/ver10/event/wsdl" );
+  nameSpaces.add("ter", "http://www.onvif.org/ver10/error" );
+  nameSpaces.add("wsnt", "http://docs.oasis-open.org/wsn/b-2" );
+  var wsdlUrl = "/wsdl/onvif/devicemgmt.wsdl";
+  var configObj = null;
+  var certList = null;
+  var caList = null;
+  var configToken = "EAPTLS_WIRED";
+  //END GLOBAL PARAMS
+  
+  function init()
+  {
+    getConfiguration();
+    set8021xStatus();
+  }
+  
+  function getConfiguration()
+  {
+    var params = new SOAPClientParameters();      
+    var now = new Date();
+    var timestamp = "?timestamp="+now.getTime();
+    
+    var url = "/vapix/services"+timestamp;
+    
+    var method = "tds:GetDot1XConfiguration";
+    
+    params.add("Dot1XConfigurationToken", configToken);
+    
+    SOAPClient.invoke( wsdlUrl, url, nameSpaces, method, params, true, setConfiguration );
+  }
+  
+  function setConfiguration( responseObj )
+  {
+    if( responseObj )
+    {
+      if(responseObj.name == "Error")
+      {
+        outputResponseError(responseObj);
+        return;
+      }
+      else
+      {
+        configObj = responseObj; //Saving configuration for later use
+      }
+    }
+    
+    getCertList();
+  }
+
+  function getCertList()
+  {
+    var params = new SOAPClientParameters();
+    var now = new Date();
+    var timestamp = "?timestamp="+now.getTime();
+    
+    var url = "/vapix/services"+timestamp;
+    
+    var method = "tds:GetCertificates";
+    SOAPClient.invoke( wsdlUrl, url, nameSpaces, method, params, true, setCertList );
+  }
+  
+  function setCertList( responseObj )
+  {
+    if( responseObj )
+      certList = responseObj; //Saving cert list for later use
+    getCaCertList();
+  }
+  
+  function getCaCertList()
+  { 
+    var params = new SOAPClientParameters();
+    var now = new Date();
+    var timestamp = "?timestamp="+now.getTime();
+    
+    var url = "/vapix/services"+timestamp;
+    
+    var method = "tds:GetCACertificates";
+    SOAPClient.invoke( wsdlUrl, url, nameSpaces, method, params, true, setCaCertList );
+  }
+  
+  function setCaCertList( responseObj )
+  { 
+    if( responseObj )
+      caList = responseObj; //Saving ca list for later use
+    setupConfiguration();
+  }
+  
+  function setupConfiguration()
+  {
+    var caSelectList = document.getElementById("caCertificateList");
+    var certSelectList = document.getElementById("certificateList");
+    
+    //setup ca
+    if(caList)
+    {
+      if(caList.name == "Error")
+      {
+        createEmptyList(caSelectList);
+        outputResponseError(caList);
+      }
+      else
+      {
+        var certInUse;
+        if(configObj.Dot1XConfiguration == null)
+          certInUse = "";
+        else
+        {
+          certInUse = configObj.Dot1XConfiguration.CACertificateID;
+          lastFetchedCaCert = certInUse;
+        }
+        
+        var certArr = new Array();
+      
+        if(!caList.CACertificate.length) //Meaning undefined, then its not an array (only one or no element), SOAP does that...
+          certArr.push(caList.CACertificate);
+        else
+          certArr = caList.CACertificate;
+        
+        createList(caSelectList, certArr, certInUse);
+      }
+    }
+    else
+      createEmptyList(caSelectList);
+    
+    //Setup cert
+    if(certList)
+    {
+      if(certList.name == "Error")
+      {
+        createEmptyList(certSelectList);
+        outputResponseError(certList);
+      }
+      else
+      {
+        var certInUse;
+        if(configObj.Dot1XConfiguration.EAPMethodConfiguration == null)
+          certInUse = "";
+        else if(configObj.Dot1XConfiguration.EAPMethodConfiguration.TLSConfiguration == null)
+          certInUse = "";
+        else
+        {
+          certInUse = configObj.Dot1XConfiguration.EAPMethodConfiguration.TLSConfiguration.CertificateID;
+          lastFetchedCert = certInUse;
+        }
+      
+        var certArr = new Array();
+      
+        if(!certList.NvtCertificate.length) //Meaning undefined, then its not an array (only one or no element), SOAP does that...
+          certArr.push(certList.NvtCertificate);
+        else
+          certArr = certList.NvtCertificate;
+        
+        createList(certSelectList, certArr, certInUse);
+      }
+    }
+    else
+      createEmptyList(certSelectList);
+  }
+
+  function createList(selectList, certArr, certInUse)
+  {
+    if(certArr.length != 0)
+    {
+      certArr.sort(sortById);
+    
+      op = document.createElement("OPTION");
+      op.value = "";
+      op.text = langObj8021x.getText("noneTxt");
+      if(!certInUse || certInUse == "")
+        op.selected = true;
+      selectList.options.add( op );
+    
+      for( var i=0; i < certArr.length; i++)
+      {
+        op = document.createElement("OPTION");
+        op.value = certArr[i].CertificateID;
+        op.text = certArr[i].CertificateID;
+        if(certInUse == certArr[i].CertificateID)
+          op.selected = true;
+        selectList.options.add( op );
+      }
+    }
+    else
+      createEmptyList(selectList);
+  }
+
+  function createEmptyList( list )
+  {
+    op = document.createElement("OPTION");
+    op.value = "";
+    op.text = langObj8021x.getText("noCertTxt");
+    list.options.add( op );
+  }
+  
+  function sortById(a, b)
+  {
+    var x = a.CertificateID.toLowerCase();
+    var y = b.CertificateID.toLowerCase();
+    return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+  }
+  
+  function outputResponseError( responseObj )
+  {
+    alert(responseObj.name+" "+responseObj.message+"\n"+responseObj.fileName);
+  }
+
+  function reloadPage()
+  {
+    window.location.href = "/admin/8021x.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->";
+  }
+
+  function saveData()
+  {
+    var willDisable = false;
+  
+    var form = document.SaveForm;
+
+    trimLeadingTrailing(form.root_Network_Interface_I0_dot1x_EAPTLS_Identity);
+
+    if (form.root_Network_Interface_I0_dot1x_EAPTLS_Identity.value == "") {
+      alert( langObj8021x.getText("eAIdAlert") );
+      form.root_Network_Interface_I0_dot1x_EAPTLS_Identity.focus();
+      form.root_Network_Interface_I0_dot1x_EAPTLS_Identity.select();
+      return;
+    }
+
+    if ( form.Network_Interface_I0_dot1x_Enabled.checked)
+    {
+      if( document.getElementById("certificateList").value == "" || document.getElementById("caCertificateList").value == "" )
+      {
+        if( lastFetchedStatus == "Stopped" )
+        {
+          alert( langObj8021x.getText("noCertsAlert") );
+          form.Network_Interface_I0_dot1x_Enabled.checked = false;
+          form.root_Network_Interface_I0_dot1x_Enabled.value = "no";
+          return;
+        }
+        else
+        {
+          if(confirm( langObj8021x.getText("noneAsCertDisConfirm") ) )
+          {
+            form.Network_Interface_I0_dot1x_Enabled.checked = false;
+            form.root_Network_Interface_I0_dot1x_Enabled.value = "no";
+            willDisable = true;
+          }
+          else
+            return;
+        }
+      }
+    
+      if(!willDisable)
+      {
+        if (!confirm( langObj8021x.getText("enableConfirm1")+" <!--#echo var="glob_prodType" option="encoding:javascript" --> "+langObj8021x.getText("enableConfirm2")+" <!--#echo var="glob_prodType" option="encoding:javascript" --> "+langObj8021x.getText("enableConfirm3") )) {
+	        form.Network_Interface_I0_dot1x_Enabled.checked = false;
+	        return;
+        }
+      }
+    }
+  
+    var params = new SOAPClientParameters();
+    var now = new Date();
+    var timestamp = "?timestamp="+now.getTime();
+    
+    var url = "/vapix/services"+timestamp;
+    var method = "tds:SetDot1XConfiguration";
+    
+    var tlsConfObj = new Array();
+    if(document.getElementById("certificateList").value != "")
+    {
+      var cert = new Array();
+      cert["tt:CertificateID"] = document.getElementById("certificateList").value;
+      tlsConfObj["tt:TLSConfiguration"] = cert;
+    }
+
+    var configParams = new Array();
+    configParams["tt:Dot1XConfigurationToken"] = configToken;
+    configParams["tt:Identity"] = form.root_Network_Interface_I0_dot1x_EAPTLS_Identity.value;
+    configParams["tt:EAPMethod"] = 13; //13 Means TLS
+    if(document.getElementById("caCertificateList").value != "")
+      configParams["tt:CACertificateID"] = document.getElementById("caCertificateList").value;
+    configParams["tt:EAPMethodConfiguration"] = tlsConfObj;
+    
+    params.add("Dot1XConfiguration", configParams );
+    
+    SOAPClient.invoke( wsdlUrl, url, nameSpaces, method, params, true, onFinished );
+  }
+  
+  function onFinished( responseObj )
+  {
+    if( responseObj )
+    {
+      if(responseObj.name == "Error")
+      {
+        alert("responseObj.name="+responseObj.name+"\nDescription: "+responseObj.description+"\nMessage: "+responseObj.message+"\nFile name: "+responseObj.fileName);
+        return;
+      }
+    }
+    
+    if ( document.SaveForm.Network_Interface_I0_dot1x_Enabled.checked && lastFetchedStatus != "Stopped" && hasParamsChangedSincePageFetch() )
+      AxisConnectionFactory.sendSync(["GET", "/axis-cgi/admin/param.cgi?action=update&root_Network_Interface_I0_dot1x_Enabled=no"], "");
+    
+    var form = document.SaveForm;
+    form.submit();
+  }
+  
+  function hasParamsChangedSincePageFetch()
+  {
+    var form = document.SaveForm;
+  
+    if( lastFetchedCert != document.getElementById("certificateList").value ||
+        lastFetchedCaCert != document.getElementById("caCertificateList").value ||
+        lastFetchedIdentity != form.root_Network_Interface_I0_dot1x_EAPTLS_Identity.value ||
+        lastFetchedEAPOLVer != form.root_Network_Interface_I0_dot1x_EAPOLVersion.value )
+        return true;
+    return false;
+  }
+  
+  function set8021xStatus()
+  {
+    var outputEl = document.getElementById("outputStatus");
+    var status = "";
+  
+    var now = new Date();
+    var timestamp = now.getTime();
+
+    var ajaxRequest = AxisConnectionFactory.createAjaxConnection();
+    var responseText = AxisConnectionFactory.getResponseTextWith(["GET", "/axis-cgi/admin/param.cgi?action=list&group=Network.Interface.I0.dot1x.Status&timestamp=" + timestamp, false], "", ajaxRequest);
+
+    if( ajaxRequest.getStatus() == 200 )
+    {
+      status = responseText.split("=")[1];
+      lastFetchedStatus = status.replace(/^\s\s*/, '').replace(/\s\s*$/, ''); //trim()
+      if(lastFetchedStatus === "Stopped")
+        outputEl.innerHTML = langObj8021x.getText("stoppedTxt");
+      else if(lastFetchedStatus === "Started")
+        outputEl.innerHTML = langObj8021x.getText("startedTxt");
+      else if(lastFetchedStatus === "Unauthorized")
+        outputEl.innerHTML = langObj8021x.getText("unauthorizedTxt");
+      else
+        outputEl.innerHTML = lastFetchedStatus;
+    }
+    else
+      outputEl.innerHTML = "<!--#echo var="root_Network_Interface_I0_dot1x_Status" option="encoding:javascript" -->";
+  }
+
+  var SaveBtnStatTxt;
+  var ResBtnStatTxt;
+  function globalLanguageVars()
+  {
+    SaveBtnStatTxt = langObj8021x.getText("saveBtnStatTxt");
+    ResBtnStatTxt = langObj8021x.getText("resBtnStatTxt");
+  }
+// -->
+</script>
+</head>
+<body <!--#include virtual="/incl/bodytag.shtml" --> onLoad="langObj8021x.init();init()">
+
+<!--#include virtual="/incl/top_incl2.shtml" -->
+<form name="SaveForm" action="/sm/sm.srv" method="POST" onsubmit="return false;">
+<table border="<!--#echo var="zero" option="encoding:html" -->" cellpadding="<!--#echo var="cellpadding3" option="encoding:html" -->" cellspacing="<!--#echo var="zero" option="encoding:html" -->" width="<!--#echo var="tableWidth3" option="encoding:html" -->">
+  <tr>
+    <td class="topTitle" align="left" colspan="2" nowrap><span id="useEAPTLSTxt"></span></td>
+    <td class="topTitle">
+      <div align="right">
+        <a href="<!--#echo var="helpURL" option="encoding:url" -->">
+          <img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="hlpPic">
+        </a>
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="3" class="subTitle"><span id="certTxt"></span></td>
+  </tr>
+  <tr>
+    <td colspan="3" class="oddItem">
+      <span id="ifNoCertGoTotxt"></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="evenItem" style="width:130px;">
+      <span id="caCertTxt"></span>
+    </td>
+    <td class="evenItem" align="left">
+      <select name="caCertificateList" id="caCertificateList" style="min-width:250px; width: 250px;"></select>
+    </td>
+    <td class="evenItem">
+      &nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td class="oddItem">
+      <span id="cliCertTxt"></span>
+    </td>
+    <td class="oddItem" align="left">
+      <select name="certificateList" id="certificateList" style="min-width:250px; width: 250px;"></select>
+    </td>
+    <td>
+      &nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td colspan="3" class="subTitle" align="left" nowrap>
+      <span id="settTxt"></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="oddItem">
+      <span id="eaVerTxt"></span>
+    </td>
+    <td class="oddItem" align="left">
+      <!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.Network.Interface.I0.dot1x.EAPOLVersion&format=htmlvalue" -->
+    </td>
+    <td>
+      &nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td class="oddItem">
+      <span id="eaIdTxt"></span>
+    </td>
+    <td class="oddItem" align="left">
+      <!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.Network.Interface.I0.dot1x.EAPTLS.Identity&format=htmlvalue" -->
+    </td>
+    <td>
+      &nbsp;
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="evenItem" nowrap>
+      <input type="hidden" name="root_Network_Interface_I0_dot1x_Enabled" value="<!--#echo var="root_Network_Interface_I0_dot1x_Enabled" option="encoding:html" -->" />
+      <input name="Network_Interface_I0_dot1x_Enabled" type="checkbox"<!--#if expr="$root_Network_Interface_I0_dot1x_Enabled = yes" --> checked<!--#endif --> onClick="JavaScript:CheckBoxClicked(this.form, this, 'root_Network_Interface_I0_dot1x_Enabled', 'yes', 'no')" />
+      &nbsp;<span id="en80Txt"></span>
+    </td>
+    <td class="evenItem" align="right" nowrap>
+      <span id="outputStatus"></span>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="3" align="center">
+      <input type="button" value="" class="btnNormal" onClick="saveData()" onMouseOver="return showStatus(SaveBtnStatTxt)" onMouseOut="return showStatus('')" id="dot1x_saveBtn" />
+      &nbsp;
+      <input type="button" value="" class="btnNormal" onClick="reloadPage()" onMouseOver="return showStatus(ResBtnStatTxt)" onMouseOut="return showStatus('')" id="dot1x_resetBtn" />
+      <input type="hidden" name="return_page" value="/admin/8021x.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->" />
+      <input type="hidden" name="action" value="modify" />
+    </td>
+  </tr>
+</table>
+</form>
+<!--#include virtual="/incl/bottom_incl.shtml" -->

@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+	<streampreview>
+	  <pageTitle type="title" minor="0">Video Stream/Preview</pageTitle>
+		<enNuVaAlrt type="alert" minor="0">Please enter a numerical value.</enNuVaAlrt>
+		<maxPosAlrt type="alert" minor="0">The maximum possible values with the current resolution are</maxPosAlrt>
+		<applyBtnStatTxt type="msg" minor="0">Apply size to pixel counter</applyBtnStatTxt>
+		<closeBtnStatTxt type="msg" minor="0">Close the preview window</closeBtnStatTxt>
+		<resMesAssTxt type="text" minor="0">Pixel Counter</resMesAssTxt>
+		<shoResMesTxt type="text" minor="0">Show pixel counter</shoResMesTxt>
+		<rectSizTxt type="text" minor="0">Rectangle Size:</rectSizTxt>
+		<widthTxt type="text" minor="0">Width:</widthTxt>
+		<heightTxt type="text" minor="0">Height:</heightTxt>
+		<pixTxt type="text" minor="0">pixels</pixTxt>
+		<applyTxt type="button" minor="0" buttonid="applyBtn">Apply</applyTxt>
+		<closeLbl type="button" minor="0" buttonid="closeBtn">Close</closeLbl>
+	</streampreview>
+	
+	<streamprofile>
+	  <pageTitle type="title" minor="0">Video Stream/Profile Settings</pageTitle>
+	</streamprofile>
+	
+	<streamprofileconf>
+	  <pageTitle type="title" minor="0">Video Stream/Profile Settings</pageTitle>
+		<invAlert1 type="alert" minor="0">Invalid value. Value needs to be changed before saving or previewing.</invAlert1>
+		<invAlert2 type="alert" minor="0">The specified value is too low. It will be changed to the lowest possible.</invAlert2>
+		<invAlert3 type="alert" minor="0">The specified value is too high. It will be changed to the highest possible.</invAlert3>
+		<nameAlert1 type="alert" minor="0">A name is required for the stream profile. Please enter a name, and try again.</nameAlert1>
+		<valueAlert type="alert" minor="0">A field is empty. Please enter a numerical value.</valueAlert>
+		<nameAlert2_1 type="alert" minor="0">The valid characters for profile name are:</nameAlert2_1>
+		<nameAlert2_2 type="alert" minor="0">and</nameAlert2_2>
+		<nameAlert2_3 type="alert" minor="0">Please enter another name, and try again.</nameAlert2_3>
+		<nameAlert3_1 type="alert" minor="0">The stream profile name may not include spaces.</nameAlert3_1>
+		<nameAlert3_2 type="alert" minor="0">Please enter another name, and try again.</nameAlert3_2>
+		<nameAlert4 type="alert" minor="0">The selected profile name is already in use. Please enter another name, and try again.</nameAlert4>
+		<nameAlert5 type="alert" minor="0">Invalid characters in description:</nameAlert5>
+		<comprTxt type="msg" minor="0">Compression</comprTxt>
+		<frmRatTxt type="msg" minor="0">Frame rate</frmRatTxt>
+		<govTxt type="msg" minor="0">GOV length</govTxt>
+		<maxbitTxt type="msg" minor="0">Max bit rate</maxbitTxt>
+		<targBitTxt type="msg" minor="0">Target bit rate</targBitTxt>
+		<maxsizeTxt type="msg" minor="0">Max frame size</maxsizeTxt>
+		<onlyForTxt type="msgAsText" minor="0">Only for</onlyForTxt>
+		<mpg4H264Txt type="msgAsText" minor="0">MPEG-4 &#x26; H.264</mpg4H264Txt>
+		<mpg4Txt type="msgAsText" minor="0">MPEG-4</mpg4Txt>
+		<h264Txt type="msgAsText" minor="0">H.264</h264Txt>
+		<hideTxt type="msg" minor="0">Hide</hideTxt>
+		<showTxt type="msg" minor="0">Show</showTxt>
+		<quadStrTxt type="msgAsText" minor="0">Quad Stream</quadStrTxt>
+		<imageTxt type="msgAsText" minor="0">Image</imageTxt>
+		<audioTxt type="msgAsText" minor="0">Audio</audioTxt>
+		<mjpegTxt type="msgAsText" minor="0">MJPEG</mjpegTxt>
+		<parAlert type="alert" minor="0">No stream parameters are configured. Please try again.</parAlert>
+		<okBtnStatTxt type="msg" minor="0">Save the default stream profile and close the window</okBtnStatTxt>
+		<closeBtnStatTxt type="msg" minor="0">Close the window</closeBtnStatTxt>
+		<toggleBtnStatTxt type="msg" minor="0">Toggle preview window on the right side</toggleBtnStatTxt>
+		<restoreBtnStatTxt type="msg" minor="0">Restores the default settings</restoreBtnStatTxt>
+		<strProfSetTxt type="text" minor="0">Stream Profile Settings</strProfSetTxt>
+		<hlpTxt type="image" minor="0" imageid="hlpPic">Click here for help on this page</hlpTxt>
+		<strPrTxt type="text" minor="0">Stream Profile</strPrTxt>
+		<nameTxt type="text" minor="0">Profile name:</nameTxt>
+		<vidEncTxt type="text" minor="0">Video encoding:</vidEncTxt>
+		<descTxt type="text" minor="0">Description:</descTxt>
+		<imgAppTxt type="text" minor="0">Image Appearance</imgAppTxt>
+		<resTxt type="text" minor="0">Resolution:</resTxt>
+		<apsRatTxt type="text" minor="0">Aspect ratio correction</apsRatTxt>
+		<comprColTxt type="text" minor="0">Compression:</comprColTxt>
+		<colSetTxt type="text" minor="0">Color setting:</colSetTxt>
+		<pixelsTxt type="text" minor="0">pixels</pixelsTxt>
+		<ntfsPalTxt type="text" minor="0">(NTSC/PAL)</ntfsPalTxt>
+		<colTxt type="text" minor="0">Color</colTxt>
+		<bowTxt type="text" minor="0">Black &#x26; White</bowTxt>
+		<yesPHTxt type="text" minor="0">Color</yesPHTxt>
+		<noPHTxt type="text" minor="0">Black &#x26; White</noPHTxt>
+		<mirImTxt type="text" minor="0">Mirror image:</mirImTxt>
+		<mirOn1Txt type="text" minor="0">On</mirOn1Txt>
+		<mirOff1Txt type="text" minor="0">Off</mirOff1Txt>
+		<mirOn2Txt type="msgAsText" minor="0">On</mirOn2Txt>
+		<mirOff2Txt type="msgAsText" minor="0">Off</mirOff2Txt>
+		<paletteTxt type="text" minor="0">Palette:</paletteTxt>
+		<vidStrTxt type="text" minor="0">Video Stream</vidStrTxt>
+		<rateTxt type="text" minor="0">Maximum frame rate:</rateTxt>
+		<unl1Txt type="text" minor="0">Unlimited</unl1Txt>
+		<fps1Txt type="text" minor="0">fps</fps1Txt>
+		<unl2Txt type="text" minor="0">Unlimited</unl2Txt>
+		<lim1Txt type="text" minor="0">Limited to</lim1Txt>
+		<fps2Txt type="text" minor="0">fps</fps2Txt>
+		<ovSetTxt type="text" minor="0">Overlay Settings</ovSetTxt>
+		<ovl1Txt type="text" minor="0">Text and/or image overlay</ovl1Txt>
+		<ovl2Txt type="text" minor="0">Text overlay</ovl2Txt>
+		<dat1Txt type="text" minor="0">include date</dat1Txt>
+		<tim1Txt type="text" minor="0">include time</tim1Txt>
+		<te1Txt type="text" minor="0">include text:</te1Txt>
+		<imTxt type="text" minor="0">include image</imTxt>
+		<noOvlTxt type="text" minor="0">none</noOvlTxt>
+		<dat2Txt type="text" minor="0">Include date</dat2Txt>
+		<tim2Txt type="text" minor="0">Include time</tim2Txt>
+		<te2Txt type="text" minor="0">Include text:</te2Txt>
+		<teCoTxt type="text" minor="0">Text color:</teCoTxt>
+		<txBaCoTxt type="text" minor="0">Text background color:</txBaCoTxt>
+		<place1Txt type="text" minor="0">Place text/date/time at</place1Txt>
+		<place2Txt type="text" minor="0">of image</place2Txt>
+		<img1Txt type="text" minor="0">Include image overlay (using default image and coordinates).</img1Txt>
+		<encSetTxt type="text" minor="0">Encoder Settings</encSetTxt>
+		<govLenTxt type="text" minor="0">GOV length:</govLenTxt>
+		<h264ProTxt type="text" minor="0">H.264 Profile:</h264ProTxt>
+		<basel1Txt type="text" minor="0">Baseline</basel1Txt>
+		<main1Txt type="text" minor="0">Main</main1Txt>
+		<high1Txt type="text" minor="0">High</high1Txt>
+		<basel2Txt type="msgAsText" minor="0">Baseline</basel2Txt>
+		<main2Txt type="msgAsText" minor="0">Main</main2Txt>
+		<high2Txt type="text" minor="0">High</high2Txt>
+		<bitRateCtrlTxt type="text" minor="0">Bit Rate Control</bitRateCtrlTxt>	
+		<rateCtrlTxt type="text" minor="0">Rate control:</rateCtrlTxt>
+		<cbr1Txt type="text" minor="0">Constant bit rate</cbr1Txt>
+		<kbps1Txt type="text" minor="0">kbit/s</kbps1Txt>
+		<vbr1Txt type="text" minor="0">Variable bit rate</vbr1Txt>
+		<cbr2Txt type="text" minor="2">Constant bit rate</cbr2Txt>
+		<cbr2Txt-1 type="text" minor="0">Maximum bit rate</cbr2Txt-1>
+		<vbr2Txt type="text" minor="0">Variable bit rate</vbr2Txt>
+		<targetTxt type="text" minor="0">Target bit rate:</targetTxt>
+		<kbps2Txt type="text" minor="0">kbit/s</kbps2Txt>
+		<prioTxt type="text" minor="0">Priority:</prioTxt>
+		<noTxt type="msgAsText" minor="0">None</noTxt>
+		<frTxt type="msgAsText" minor="0">Frame rate</frTxt>
+		<iQTxt type="msgAsText" minor="0">Image quality</iQTxt>
+		<frSzTxt type="text" minor="0">Frame Size Control</frSzTxt>
+		<frameTxt type="text" minor="0">Maximum frame size:</frameTxt>
+		<def1Txt type="text" minor="0">Default</def1Txt>
+		<sizeTxt type="text" minor="0">kbytes</sizeTxt>
+		<def2Txt type="text" minor="0">Default</def2Txt>
+		<lim2Txt type="text" minor="0">Limited to</lim2Txt>
+		<size100KTxt type="text" minor="0">[1..100000] kbytes</size100KTxt>
+		<enbAudTxt type="text" minor="0">Enable Audio</enbAudTxt>
+		<auStrTxt type="text" minor="0">Audio stream:</auStrTxt>
+		<on1Txt type="text" minor="0">On</on1Txt>
+		<off1Txt type="text" minor="0">Off</off1Txt>
+		<on2Txt type="msgAsText" minor="0">On</on2Txt>
+		<off2Txt type="msgAsText" minor="0">Off</off2Txt>
+		<previewTxt type="text" minor="0">Preview</previewTxt>
+		<view1Txt type="text" minor="0">View image while configuring.</view1Txt>
+		<viewAreaSrcTxt type="text" minor="0">Source:</viewAreaSrcTxt>
+		<view2Txt type="text" minor="0">View image while configuring.</view2Txt>
+		<srcTxt type="text" minor="0">Source:</srcTxt>
+		<quadTxt type="msgAsText" minor="0">Quad</quadTxt>
+		<view3Txt type="text" minor="0">View image while configuring.</view3Txt>
+		<showBtn type="button" minor="0" buttonid="previewBtn">Show</showBtn>
+		<reProTxt type="text" minor="0">Restore Profile</reProTxt>
+		<restAllValProfTxt type="text" minor="0">Restore all values for this profile to factory default settings.</restAllValProfTxt>
+		<restoreBtn type="button" minor="0" buttonid="restoreBtn">Restore</restoreBtn>
+		<okBtn type="button" minor="0" buttonid="saveBtn">OK</okBtn>
+		<cancelBtn type="button" minor="0" buttonid="cancelBtn">Cancel</cancelBtn>
+		<conditionTxt type="text" minor="0">Condition:</conditionTxt>
+        <onlyFor type="text" minor="0">Only for</onlyFor>
+        <onlyForOverview type="text" minor="0">Only for overview</onlyForOverview>
+        <notForPanorama type="text" minor="0">Not for panorama view</notForPanorama>
+		<teOvlSizTxt type="text" minor="0">Text overlay size:</teOvlSizTxt>
+		<smallPHTxt type="msgAsText" minor="0">small</smallPHTxt>
+		<mediumPHTxt type="msgAsText" minor="0">medium</mediumPHTxt>
+		<largePHTxt type="msgAsText" minor="0">large</largePHTxt>
+		<whitePHTxt type="msgAsText" minor="0">white</whitePHTxt>
+		<blackPHTxt type="msgAsText" minor="0">black</blackPHTxt>
+		<transparentPHTxt type="msgAsText" minor="0">transparent</transparentPHTxt>
+		<semitransparentPHTxt type="msgAsText" minor="0">semitransparent</semitransparentPHTxt>
+		<topPHTxt type="msgAsText" minor="0">top</topPHTxt>
+		<bottomPHTxt type="msgAsText" minor="0">bottom</bottomPHTxt>
+	</streamprofileconf>
+	
+	<streamprofilelist>
+	  <pageTitle type="title" minor="0">Video Stream/Stream Profiles</pageTitle>
+		<naTxt type="msgAsText" minor="0">Name</naTxt>
+		<deTxt type="msgAsText" minor="0">Description</deTxt>
+		<enTxt type="msgAsText" minor="0">Video enc.</enTxt>
+		<hitRoofAlert type="alert" minor="0">It is not possible to add more stream profiles.</hitRoofAlert>
+		<selAlert type="alert" minor="0">A stream profile must be selected to perform this action.</selAlert>
+		<selAlert2 type="alert" minor="0">The selected stream profile can not be removed.</selAlert2>
+		<delConfirm type="alert" minor="0">Do you really want to delete the stream profile named</delConfirm>
+		<addBtnStatTxt type="msg" minor="0">Create a new stream profile</addBtnStatTxt>
+		<cpyBtnStatTxt type="msg" minor="0">Create a copy of the selected stream profile</cpyBtnStatTxt>
+		<modBtnStatTxt type="msg" minor="0">Modify the selected stream profile</modBtnStatTxt>
+		<remBtnStatTxt type="msg" minor="0">Remove the selected stream profile</remBtnStatTxt>
+		<strProfListTxt type="text" minor="0">Stream Profile List</strProfListTxt>
+		<hlpTxt type="image" minor="0" imageid="hlpPic">Click here for help on this page</hlpTxt>
+		<listHTxt type="text" minor="0">Stream Profile List</listHTxt>
+		<addBtn type="button" minor="0" buttonid="addBtn">Add...</addBtn>
+		<copyBtn type="button" minor="0" buttonid="copyBtn">Copy...</copyBtn>
+		<modifyBtn type="button" minor="0" buttonid="modifyBtn">Modify...</modifyBtn>
+		<removeBtn type="button" minor="0" buttonid="removeBtn">Remove</removeBtn>
+	</streamprofilelist>
+	
+	<videostream>
+	  <pageTitle type="title" minor="0">Video Stream/Stream Settings</pageTitle>
+		<inValAlrt type="alert" minor="0">Invalid value.</inValAlrt>
+		<inOverlayXPosAlrt1 type="alert" minor="0">The x coordinate of the overlay image should be a positive integer which doesn't exceed the maximum possible width (</inOverlayXPosAlrt1>
+		<inOverlayXPosAlrt2 type="alert" minor="0">).</inOverlayXPosAlrt2>
+		<inOverlayYPosAlrt1 type="alert" minor="0">The y coordinate of the overlay image should be a positive integer which doesn't exceed the maximum possible height (</inOverlayYPosAlrt1>
+		<inOverlayYPosAlrt2 type="alert" minor="0">).</inOverlayYPosAlrt2>
+		<overlayExceed type="alert" minor="0">Overlay image will not fit in the default video image and might be cropped.&#10;Continue and use these settings?</overlayExceed>
+		<overlayAdjust type="alert" minor="0">Overlay image will not fit in the default video image and might be cropped.&#10;Continue and automatically adjust overlay position to correct this?</overlayAdjust>
+		<setAspectRatioAlert type="alert" minor="1">When the aspect ratio is changed, all currently open video streams will be stopped and the new aspect ratio will be saved. After changing the aspect ratio, select the required resolution from the drop-down list.&#10;Note that after changing the aspect ratio, always check that privacy masks and motion detection windows are still configured as intended.&#10;Are you sure you want to continue?</setAspectRatioAlert>
+		<frRaToHiAlrt type="alert" minor="0">The specified frame rate value is too high. It will be changed to the highest possible.</frRaToHiAlrt>
+		<audioClipConfirm type="alert" minor="0">Enabling audio will disable playback of audio clips in Live View&#10;Do you want to continue anyway?</audioClipConfirm>
+		<invGOVLengthAlert type="alert" minor="0">Invalid GOV length. Enter a value between 1 and</invGOVLengthAlert>
+		<specLimValBRAlert type="alert" minor="0">Specify a limited value for the maximum bit rate.</specLimValBRAlert>
+		<speValAlert type="alert" minor="0">Specify a numeric value for the target bit rate.</speValAlert>
+		<maxTarValConfirm type="alert" minor="0">The values specified for maximum bit rate and target bit rate will not function properly. Consult the online help for instructions.&#10;Do you wish to save your settings?</maxTarValConfirm>
+		<specLimValFSAlert type="alert" minor="0">Specify a limited value for the maximum frame size.</specLimValFSAlert>
+		<invLimValAlert type="alert" minor="0">Invalid Maximum frame size length. Enter a value between 1 and 100000.</invLimValAlert>
+		<mpg4H264Txt type="msgAsText" minor="0">MPEG-4 &#x26; H.264</mpg4H264Txt>
+		<mpg4Txt type="msgAsText" minor="0">MPEG-4</mpg4Txt>
+		<h264Txt type="msgAsText" minor="0">H.264</h264Txt>
+		<invAlert1 type="alert" minor="0">Invalid value. It will be changed to the curently saved.</invAlert1>
+		<invAlert2 type="alert" minor="0">The specified value is too low. It will be changed to the lowest possible.</invAlert2>
+		<invAlert3 type="alert" minor="0">The specified value is too high. It will be changed to the highest possible.</invAlert3>
+		<comprTxt type="msgAsText" minor="0">Compression</comprTxt>
+		<preCloseAlrt type="alert" minor="0">Closing preview window.</preCloseAlrt>
+		<saveBtnStatTxt type="msg" minor="0">Save the image settings</saveBtnStatTxt>
+		<resBtnStatTxt type="msg" minor="0">Revert to last saved settings</resBtnStatTxt>
+		<previewBtnStatTxt type="msg" minor="0">Open preview window</previewBtnStatTxt>
+		<imageTxt type="msgAsText" minor="0">Image</imageTxt>
+        <directionTxt type="msgAsText" minor="0">Direction</directionTxt>
+		<audioTxt type="msgAsText" minor="0">Audio</audioTxt>
+		<mjpgTxt type="msgAsText" minor="0">MJPEG</mjpgTxt>
+		<vidStrSetTxt type="text" minor="0">Video Stream Settings</vidStrSetTxt>
+		<hlpTxt type="image" minor="0" imageid="hlpPic">Click here for help on this page</hlpTxt>
+		<imgCaptureTxt type="text" minor="0">Image Capture</imgCaptureTxt>
+		<captureMode1Txt type="text" minor="0">Capture mode:</captureMode1Txt>
+		<deinterlaceTxt type="text" minor="0">De-interlacing</deinterlaceTxt>
+		<imgApTxt type="text" minor="0">Image Appearance</imgApTxt>
+		<captureMode2Txt type="text" minor="0">Capture mode:</captureMode2Txt>
+		<digPtz1Txt type="text" minor="0">Digital PTZ:</digPtz1Txt>
+		<digPtzDis1Txt type="text" minor="0">Disabled</digPtzDis1Txt>
+		<digPtzLckd1Txt type="text" minor="0">Locked</digPtzLckd1Txt>
+		<digPtzEnbld1Txt type="text" minor="0">Enabled</digPtzEnbld1Txt>
+		<resTxt type="text" minor="0">Resolution:</resTxt>
+		<wideEnabledTxt type="text" minor="0">Widescreen resolutions</wideEnabledTxt>
+		<apsRatTxt type="text" minor="0">Aspect ratio correction</apsRatTxt>
+		<digPtz2Txt type="text" minor="0">Digital PTZ:</digPtz2Txt>
+		<digPtzDis2Txt type="text" minor="0">Disabled</digPtzDis2Txt>
+		<digPtzLckd2Txt type="text" minor="0">Locked</digPtzLckd2Txt>
+		<digPtzEnbld2Txt type="text" minor="0">Enabled</digPtzEnbld2Txt>
+		<digPtzMaxTxt type="text" minor="0">Max:</digPtzMaxTxt>
+		<viewAreaSizeTxt type="text" minor="0">View area size:</viewAreaSizeTxt>
+		<viewAreaTxt type="text" minor="0">View Area</viewAreaTxt>
+		<compTxt type="text" minor="0">Compression:</compTxt>
+		<mirImgTxt type="text" minor="0">Mirror image</mirImgTxt>
+		<rotImgTxt type="text" minor="0">Rotate image:</rotImgTxt>
+		<zeroRotTxt type="text" minor="0">0</zeroRotTxt>
+		<ninetyRotTxt type="text" minor="0">90</ninetyRotTxt>
+		<hundrEightRotTxt type="text" minor="0">180</hundrEightRotTxt>
+		<twoHundrSevRotTxt type="text" minor="0">270</twoHundrSevRotTxt>
+		<autoRotTxt type="text" minor="0">Auto</autoRotTxt>
+		<dgrTxt type="text" minor="0">degrees</dgrTxt>
+		<pixelsTxt type="text" minor="0">pixels</pixelsTxt>
+		<ntfsPalTxt type="text" minor="0">(NTSC/PAL)</ntfsPalTxt>
+		<yesPHTxt type="text" minor="0">Color</yesPHTxt>
+		<noPHTxt type="text" minor="0">Black &#x26; White</noPHTxt>
+		<irPaletteImgTxt type="text" minor="0">Palette:</irPaletteImgTxt>
+		<colSTxt type="text" minor="0">Color setting:</colSTxt>
+		<vidStrTxt type="text" minor="0">Video Stream</vidStrTxt>
+		<maxFrPrViTxt type="text" minor="0">Maximum frame rate:</maxFrPrViTxt>
+		<unlTxt type="text" minor="0">Unlimited</unlTxt>
+		<lim1Txt type="text" minor="0">Limited to</lim1Txt>
+		<prViewTxt type="text" minor="0">fps per viewer</prViewTxt>
+		<ovrSetTxt type="text" minor="0">Overlay Settings</ovrSetTxt>
+		<incOvrITxt type="text" minor="0">Include overlay image at the coordinates:</incOvrITxt>
+		<incDaTxt type="text" minor="0">Include date</incDaTxt>
+		<incTiTxt type="text" minor="0">Include time</incTiTxt>
+		<incTeTxt type="text" minor="0">Include text:</incTeTxt>
+		<doNoAfTxt type="text" minor="0">(Does not affect Test image)</doNoAfTxt>
+		<teOvlSizTxt type="text" minor="0">Text overlay size:</teOvlSizTxt>
+		<teCoTxt type="text" minor="0">Text color:</teCoTxt>
+		<txBaCoTxt type="text" minor="0">Text background color:</txBaCoTxt>
+		<plTeDaTiTxt type="text" minor="0">Place text/date/time at</plTeDaTiTxt>
+		<ofImgTxt type="text" minor="0">of image</ofImgTxt>
+        <dirAdjTxt type="text" minor="0">Direction Adjustment</dirAdjTxt>
+        <loToThPoTxt type="text" minor="0">Lock to this position</loToThPoTxt>
+		<encSetTxt type="text" minor="0">Encoder Settings</encSetTxt>
+		<govLenTxt type="text" minor="0">GOV length:</govLenTxt>
+		<cycRefTxt type="text" minor="0">Cyclic refresh</cycRefTxt>
+		<h264ProfTxt type="text" minor="0">H.264 profile:</h264ProfTxt>
+		<bitratTxt type="text" minor="0">Bit Rate Control</bitratTxt>
+		<useTxt type="text" minor="0">Use:</useTxt>
+		<varBitTxt type="text" minor="0">Variable bit rate</varBitTxt>
+		<conBitTxt type="text" minor="2">Constant bit rate</conBitTxt>
+		<conBitTxt-1 type="text" minor="0">Maximum bit rate</conBitTxt-1>
+		<tarBitTxt type="text" minor="0">Target bit rate:</tarBitTxt>
+		<kbpsTxt type="text" minor="0">kbit/s</kbpsTxt>
+		<priTxt type="text" minor="0">Priority:</priTxt>
+		<smallPHTxt type="msgAsText" minor="0">small</smallPHTxt>
+		<mediumPHTxt type="msgAsText" minor="0">medium</mediumPHTxt>
+		<largePHTxt type="msgAsText" minor="0">large</largePHTxt>
+		<whitePHTxt type="msgAsText" minor="0">white</whitePHTxt>
+		<blackPHTxt type="msgAsText" minor="0">black</blackPHTxt>
+		<transparentPHTxt type="msgAsText" minor="0">transparent</transparentPHTxt>
+		<semitransparentPHTxt type="msgAsText" minor="0">semitransparent</semitransparentPHTxt>
+		<topPHTxt type="msgAsText" minor="0">top</topPHTxt>
+		<bottomPHTxt type="msgAsText" minor="0">bottom</bottomPHTxt>
+		<noTxt type="msgAsText" minor="0">None</noTxt>
+		<frTxt type="msgAsText" minor="0">Frame rate</frTxt>
+		<iQTxt type="msgAsText" minor="0">Image quality</iQTxt>
+		<fraSizTxt type="text" minor="0">Frame Size Control</fraSizTxt>
+		<maxFraTxt type="text" minor="0">Maximum frame size:</maxFraTxt>
+		<defTxt type="text" minor="0">Default</defTxt>
+		<lim2Txt type="text" minor="0">Limited to</lim2Txt>
+		<kBytesTxt type="text" minor="0">[1..100000] kbytes</kBytesTxt>
+		<enbAud1Txt type="text" minor="0">Enable Audio</enbAud1Txt>
+		<enbAud2Txt type="text" minor="0">Enable audio</enbAud2Txt>
+		<enbAud3Txt type="text" minor="0">Enable audio</enbAud3Txt>
+		<audPrevNot type="text" minor="0">Note that the image preview is without audio.</audPrevNot>
+		<prevTxt type="text" minor="0">Preview</prevTxt>
+		<viewImgStTxt type="text" minor="0">View image stream while configuring.</viewImgStTxt>
+		<codecTxt type="text" minor="0">Video format:</codecTxt>
+		<openLbl type="button" minor="0" buttonid="previewBtn">Open...</openLbl>
+		<saveBtn type="button" minor="0" buttonid="vidStrm_SaveBtn">Save</saveBtn>
+		<resetBtn type="button" minor="0" buttonid="vidStrm_ResetBtn">Reset</resetBtn>
+		<strDef_FrRaToHiAlrt1 type="text" minor="0">The specified frame rate value is too high. It will be changed to</strDef_FrRaToHiAlrt1>
+		<strDef_FrRaToHiAlrt2 type="text" minor="1">fps.</strDef_FrRaToHiAlrt2>
+		<mainPHTxt type="text" minor="0">Main</mainPHTxt>
+		<baselinePHTxt type="text" minor="0">Baseline</baselinePHTxt>
+	</videostream>
+	
+	<videostream_incl>
+		<notSuppTxt type="msgAsText" minor="0">not supported</notSuppTxt>
+		<g711Txt type="msgAsText" minor="0">G711 &#xb5;-law</g711Txt>
+		<g726Txt type="msgAsText" minor="0">G726</g726Txt>
+		<aacTxt type="msgAsText" minor="0">AAC</aacTxt>
+		<haDuTxt type="msgAsText" minor="0">Half duplex</haDuTxt>
+		<fuDuTxt type="msgAsText" minor="0">Full duplex</fuDuTxt>
+		<simp1CamTxt type="msgAsText" minor="0">Simplex - Network Camera speaker only</simp1CamTxt>
+		<simp2CamTxt type="msgAsText" minor="0">Simplex - Network Camera microphone only</simp2CamTxt>
+		<simp1EncTxt type="msgAsText" minor="0">Simplex - Network Video Encoder speaker only</simp1EncTxt>
+		<simp2EncTxt type="msgAsText" minor="0">Simplex - Network Video Encoder microphone only</simp2EncTxt>
+		<audInfTxt type="msgAsText" minor="0">Current Audio Settings:</audInfTxt>
+		<inValAlrt type="alert" minor="0">Illegal script found!</inValAlrt>
+	</videostream_incl>
+</language_xml>

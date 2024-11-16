@@ -1,0 +1,63 @@
+<!--#include virtual="/incl/top_incl.shtml" -->
+<!--#set var="PATH" val="/sm/sm.srv?action=get&group=System.RootPwdSet,ImageSource.NbrOfSources,Layout.DefaultVideoFormat,Layout.LiveViewVideo" -->
+
+
+<!--#set var="PATH" val="$PATH$,Properties.PTZ.PTZ" -->
+<!--#set var="PATH" val="$PATH$,Layout.DefaultStreamProfile" -->
+<!--#include virtual="$PATH$" -->
+
+<!--#if expr="$root_System_RootPwdSet = no" -->
+  <meta http-equiv="refresh" content="0; url=/">
+</head>
+<!--#else -->
+
+<script language="JavaScript">
+<!--
+  var langObjViewIndx= new Language("platoon", "viewer_index");
+  langObjViewIndx.init();
+  
+  <!--#if expr="_$size = _" -->
+    <!--#set var="size" val="1" -->
+  <!--#endif -->
+
+  <!--#if expr="_$root_Layout_LiveViewVideo = _" -->
+    <!--#set var="root_Layout_LiveViewVideo" val="1" -->
+  <!--#endif -->
+
+  <!--#set var="tmpCam" val="" -->
+
+
+
+window.onload = function(){
+  <!--#if expr="$root_Layout_DefaultVideoFormat = mpeg4" -->
+  <!--#if expr="$root_ImageSource_NbrOfSources != 1" --><!--#set var="tmpCam" val="&camera=$root_Layout_LiveViewVideo$" --><!--#endif -->
+  var imagepath = "/axis-media/media.amp?videocodec=mpeg4<!--#echo var="tmpCam" option="encoding:url" -->";
+  <!--#elif expr="$root_Layout_DefaultVideoFormat = h264" -->
+  <!--#if expr="$root_ImageSource_NbrOfSources != 1" --><!--#set var="tmpCam" val="&camera=$root_Layout_LiveViewVideo$" --><!--#endif -->
+  var imagepath = "/axis-media/media.amp?videocodec=h264<!--#echo var="tmpCam" option="encoding:url" -->";
+  <!--#else -->
+    <!--#if expr="$root_ImageSource_NbrOfSources != 1" --><!--#set var="tmpCam" val="$root_Layout_LiveViewVideo$/" --><!--#endif -->
+    var imagepath = "/mjpg/<!--#echo var="tmpCam" option="encoding:url" -->video.mjpg";
+  <!--#endif -->
+
+  var completePath = "?id=<!--#echo var="ssi_request_id" option="encoding:url" -->&imagepath=" + escape(imagepath) + "&size=<!--#echo var="size" option="encoding:url" -->";
+  <!--#if expr="_$root_Layout_DefaultStreamProfile != _" -->
+  completePath += "&streamprofile=<!--#echo var="root_Layout_DefaultStreamProfile" option="encoding:url" -->";
+  <!--#endif -->
+
+  var url = "/view/view.shtml" + completePath;
+  <!--#if expr="$root_Properties_PTZ_PTZ = yes" -->
+    url = "/view/viewer_ctl.shtml" + completePath;
+  <!--#endif -->
+  document.getElementsByName("indexMain")[0].src = url;
+}
+-->
+</script>
+</head>
+
+<frameset rows="*,0" border="0">
+  <frame name="indexMain" src="" scrolling="auto" />
+  <frame name="Temp" src="/view/temp.shtml" scrolling="no" marginheight="0" marginwidth="0" noresize="noresize" />
+</frameset>
+<!--#endif -->
+</html>

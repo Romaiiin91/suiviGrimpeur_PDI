@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+	<languages_h>
+		<pageTitle type="title" minor="0">Help/Languages</pageTitle>
+		<titleTxt type="msgAsText" minor="0">Languages</titleTxt>
+		<help1Txt1 type="text" minor="0">Multiple languages can be installed in the Axis product. All web pages including the online help will be displayed in the selected language.</help1Txt1>
+		<help1Txt2 type="text" minor="0">To switch to another language, a language file must first be selected.</help1Txt2>
+		<help1Txt3 type="text" minor="0">This is done either by uploading a new language file or, in products that are supplied with multiple languages preloaded, by checking the relevant radio button.</help1Txt3>
+		<help1Txt4 type="text" minor="0">This is done by uploading a new language file.</help1Txt4>
+		<help1Txt5 type="text" minor="0">To upload a new language file, click the &#x3C;b&#x3E;Browse&#x3C;/b&#x3E; button and locate the file. Then click the &#x3C;b&#x3E;Upload Language&#x3C;/b&#x3E; button.</help1Txt5>
+		<help1Txt6 type="text" minor="0">The new language can now be selected from the list of available languages. Click &#x3C;b&#x3E;Save&#x3C;/b&#x3E; to implement the change.</help1Txt6>
+		<help4Txt1 type="text" minor="0">&#x3C;b&#x3E;Notes:&#x3C;/b&#x3E;</help4Txt1>
+		<help4Txt2 type="text" minor="0">Resetting the product to the factory default settings (via the &#x3C;b&#x3E;Control button&#x3C;/b&#x3E; in the product casing or the &#x3C;b&#x3E;Default&#x3C;/b&#x3E; button on the Maintenance page) will erase any uploaded language file and reset the product language to</help4Txt2>
+		<twoContrButtons type="text" minor="0">Resetting the product to the factory default settings (through the &#x3C;b&#x3E;Control button (button 1)&#x3C;/b&#x3E; in the product casing or the &#x3C;b&#x3E;Default&#x3C;/b&#x3E; button on the Maintenance page) will erase any uploaded language file and reset the product language to</twoContrButtons>
+		<help4Txt3 type="text" minor="0">Clicking the &#x3C;b&#x3E;Restore&#x3C;/b&#x3E; button on the Maintenance page will not affect the language.</help4Txt3>
+		<help4Txt4 type="text" minor="0">A firmware upgrade will not affect the language being used.</help4Txt4>
+		<help4Txt5 type="text" minor="0">If you have uploaded</help4Txt5>
+		<help4Txt6 type="text" minor="1">(and not simply selected)</help4Txt6>
+		<help4Txt7 type="text" minor="1">a new  language to the product and later upgraded the firmware, it may happen that the translation no longer matches the product's web pages. In this case, please upload an updated language file.</help4Txt7>
+		<help4Txt8 type="text" minor="0">A language already installed in the product will be replaced when uploading the current or a later version of that language.</help4Txt8>
+	</languages_h>
+</language_xml>

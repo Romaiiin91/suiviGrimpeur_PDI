@@ -1,0 +1,350 @@
+<!--#set var="helpURL" val="javascript:launch('/help/recipient_setup_h.shtml')" -->
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#include virtual="/incl/popup_header.shtml" -->
+
+  <script src="/incl/list_functions.js" language="javascript" type="text/javascript"></script>
+  <script src="/incl/soapclient.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->" language="javascript" type="text/javascript"></script>
+  <link rel="stylesheet" href="/css/event_dialogs.css" type="text/css" />
+
+  <!--#include virtual="/java/ip.shtml" -->
+  <!--#include virtual="/java/integer.shtml" -->
+  <!--#include virtual="/incl/wait.shtml" -->
+
+  <script type="text/javascript" language="javascript">
+  <!--
+    var langObjServRecipSet = new Language("config_servers", "recipient_setup");
+    addLoadEvent( function(){ langObjServRecipSet.init(); } );
+
+  <!--#include virtual="/incl/functions.shtml" -->
+
+    function globalLanguageVars()
+    {
+      document.getElementById("recipientName").value = langObjServRecipSet.getText("neRecipTxt");
+      
+      var provArr = new Array();
+      provArr[0] = {val: "", text: langObjServRecipSet.getText("smtpChProvTxt")};
+      provArr[1] = {val: "aol", text: langObjServRecipSet.getText("smtpAOLTxt")};
+      provArr[2] = {val: "gmail", text: langObjServRecipSet.getText("smtpGmailTxt")};
+      provArr[3] = {val: "hotmail", text: langObjServRecipSet.getText("smtpHotmailTxt")};
+      provArr[4] = {val: "yahoo", text: langObjServRecipSet.getText("smtpYahooTxt")};
+      provArr[5] = {val: "user", text: langObjServRecipSet.getText("smtpUserDefTxt")};
+      langObjServRecipSet.addOptionsToList(document.getElementById("smtp_providers"), provArr);
+
+      var encrypArr = new Array();
+      encrypArr[0] = {val: "none", text: langObjServRecipSet.getText("smtpEncrypNoneTxt")};
+      encrypArr[1] = {val: "tls", text: langObjServRecipSet.getText("smtpEncrypTLSTxt")};
+      encrypArr[2] = {val: "ssl", text: langObjServRecipSet.getText("smtpEncrypSSLTxt")};
+      langObjServRecipSet.addOptionsToList(document.getElementById("smtp_encryption"), encrypArr);
+
+      if (typeof statusErrorArr != 'undefined') {
+        statusErrorArr.push( {text:"Couldn't resolve host", translation:langObjServRecipSet.getText("recipSetup_stat_resHost")} );
+        statusErrorArr.push( {text:"couldn't connect to host", translation:langObjServRecipSet.getText("recipSetup_stat_conHost")} );
+        statusErrorArr.push( {text:"Pop authentication failed: connect() timed out", translation:langObjServRecipSet.getText("recipSetup_popTime")} );
+        statusErrorArr.push( {text:"connect() timed out!", translation:langObjServRecipSet.getText("recipSetup_stat_conTime")} );
+        statusErrorArr.push( {text:"Access denied", translation:langObjServRecipSet.getText("recipSetup_stat_accDen")} );
+        statusErrorArr.push( {text:"Failed FTP upload", translation:langObjServRecipSet.getText("recipSetup_ftpUpl")} );
+        statusErrorArr.push( {text:"Server denied you to change to the given directory", translation:langObjServRecipSet.getText("recipSetup_denDir")} );
+        statusErrorArr.push( {text:"Timed out", translation:langObjServRecipSet.getText("recipSetup_timeOut")} );
+        statusErrorArr.push( {text:"No route to host", translation:langObjServRecipSet.getText("recipSetup_noRoute")} );
+        statusErrorArr.push( {text:"Missing username for POP authentication", translation:langObjServRecipSet.getText("recipSetup_noUsrPop")} );
+        statusErrorArr.push( {text:"Missing password for POP authentication", translation:langObjServRecipSet.getText("recipSetup_noPassPop")} );
+        statusErrorArr.push( {text:"Enter host password for user", translation:langObjServRecipSet.getText("recipSetup_noPassFtp")} );
+        statusErrorArr.push( {text:"Authentication failed", translation:langObjServRecipSet.getText("recipSetup_authFail")} );
+        statusErrorArr.push( {text:"SSL certificate problem, verify that the CA cert is OK.", translation:langObjServRecipSet.getText("recipSetup_smtpCACertError")} );
+        statusErrorArr.push( {text:"140770FC", translation:langObjServRecipSet.getText("recipSetup_smtpCACertError")} );
+      }  
+    }
+  // -->
+  </script>
+
+  <!--#include virtual="/incl/recipient_setup.shtml" -->
+</head>
+
+<body>
+  <!--#set var="pageWidth" val="400" -->
+    <form id="qosForm">
+      <!--#include virtual="/sm/sm.srv?action=get_htmlform&getgroup=root.Network.QoS&format=hiddenhtmlform" -->
+    </form>
+
+  <!--#include virtual="/incl/popup_top.shtml" -->
+  <h1><span id="recipSetTxt"></span></h1>
+  
+  <a href="<!--#echo var="helpURL" option="encoding:url" -->" id="helpLink"><img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="hlpPic" /></a>
+  <div class="normal_text alternateRows">
+    <div class="row">
+      <label for="recipientName"><span id="nameTxt"></span></label>
+      <input class="medium" type="text" id="recipientName" name="recipientName" value="" maxlength="255" />
+    </div>
+    <div class="row">
+      <label for="recipientTemplates"><span id="typeTxt"></span></label>
+      <select name="recipientTemplates" id="recipientTemplates" onchange="javascript:toggleRecipentType( this )">
+        <option value="">&nbsp;</option>
+      </select>
+    </div>
+
+    <div id="div_ftp" style="display:none;">
+      <div class="row">
+        <label for="ftp_host"><span id="ftpNetwAdrTxt"></span></label>
+        <input class="large" type="text" id="ftp_host" name="ftp_host" maxlength="255" value="" onchange="javascript:trimLeadingTrailing(this)" />
+      </div>
+      <div class="row">
+        <label for="ftp_upload_path"><span id="ftpUplPaTxt"></span></label>
+        <input class="large" type="text" id="ftp_upload_path" name="ftp_upload_path" maxlength="255" value="" onchange="javascript:trimLeadingTrailing(this)" />
+      </div>
+      <div class="row">
+        <label for="ftp_port"><span id="ftpPoNoTxt"></span></label>
+        <input class="small" type="text" id="ftp_port" name="ftp_port" maxlength="5" value="21" onchange="javascript:trimLeadingTrailing(this)" />
+      </div>
+
+      <h2><span id="ftpLogCreTxt"></span></h2>
+      <div class="row">
+        <label for="ftp_login"><span id="ftpUsrNaTxt"></span></label>
+        <input class="medium" type="text" id="ftp_login" name="ftp_login" maxlength="255" value="Guest"  />
+      </div>
+      <div class="row">
+        <label for="ftp_password"><span id="ftpPswTxt"></span></label>
+        <input class="medium" type="password" id="ftp_password" name="ftp_password" maxlength="255" value="" />
+      </div>
+
+      <h2><span id="ftpAdvSetTxt"></span></h2>
+      <div class="row">
+        <input class="checkbox" type="checkbox" id="ftp_passive_mode" name="ftp_passive_mode" value="yes" />
+        <label for="ftp_passive_mode" class="checkbox"><span id="ftpUsePaMoTxt"></span></label>
+      </div>
+      <div class="row">
+        <input class="checkbox" type="checkbox" id="ftp_temporary_mode" name="ftp_temporary_mode" value="yes" />
+        <label for="ftp_temporary_mode" class="checkbox"><span id="ftpUseTeMoTxt"></span></label>
+      </div>
+
+      <h2><span id="ftpTestTxt"></span></h2>
+      <div class="row">
+        <span id="ftpTestConTxt"></span>
+        <input type="button" value="" class="btnNormal" onclick="javascript:testConnection();" id="ftp_testBtn" />
+      </div>
+    </div><!-- FTP -->
+
+    <div id="div_http" style="display:none;">
+      <div class="row">
+        <label for="http_url"><span id="httpURLTxt"></span></label>
+        <input class="large" type="text" id="http_url" name="http_url" maxlength="255" value="http://" onchange="javascript:trimLeadingTrailing(this)" />
+      </div>
+
+      <h2><span id="httpLogCreTxt"></span></h2>
+      <div class="row">
+        <label for="http_login"><span id="httpUsrNaTxt"></span></label>
+        <input class="medium" type="text" id="http_login" name="http_login" maxlength="255" value=""  />
+      </div>
+      <div class="row">
+        <label for="http_password"><span id="httpPswTxt"></span></label>
+        <input class="medium" type="password" id="http_password" name="http_password" maxlength="255" value="" />
+      </div>
+
+      <div class="row">
+        <input class="checkbox" type="checkbox" id="http_proxySet" name="http_proxySet" value="yes" onclick="javascript:toggleProxySettings(this, 'http')" />
+        <label for="http_proxySet" class="checkbox"><span id="httpProxySetTxt"></span></label>
+      </div>
+      <div id="http_divProxySettings" style="display:none;">
+        <div class="row">
+          <label for="http_proxyHost" class="boxindent"><span id="httpProxAdrTxt"></span></label>
+          <input class="medium" type="text" id="http_proxyHost" name="http_proxyHost" maxlength="255" value="" onchange="javascript:trimLeadingTrailing(this)" />
+        </div>
+        <div class="row">
+          <label for="http_proxyPort" class="boxindent"><span id="httpProxPortTxt"></span></label>
+          <input class="small" type="text" id="http_proxyPort" name="http_proxyPort" maxlength="5" value="" onchange="javascript:trimLeadingTrailing(this)" />
+        </div>
+        <div class="row">
+          <label for="http_proxyLogin" class="boxindent"><span id="httpProxUsrNaTxt"></span></label>
+          <input class="medium" type="text" id="http_proxyLogin" name="http_proxyLogin" maxlength="255" value=""  />
+        </div>
+        <div class="row">
+          <label for="http_proxyPassword" class="boxindent"><span id="httpProxPswTxt"></span></label>
+          <input class="medium" type="password" id="http_proxyPassword" name="http_proxyPassword" maxlength="255" value="" />
+        </div>
+      </div>
+      <h2><span id="httpTestTxt"></span></h2>
+      <div class="row">
+        <span id="httpTestConTxt"></span>
+        <input type="button" value="" class="btnNormal" onclick="javascript:testConnection();" id="http_testBtn" />
+      </div>
+    </div><!-- HTTP -->
+
+    <div id="div_https" style="display:none;">
+      <div class="row">
+        <label for="https_url"><span id="httpsURLTxt"></span></label>
+        <input class="large" type="text" id="https_url" name="https_url" maxlength="255" value="https://" onchange="javascript:trimLeadingTrailing(this)" />
+      </div>
+
+      <h2><span id="httpsLogCreTxt"></span></h2>
+      <div class="row">
+        <label for="https_login"><span id="httpsUsrNaTxt"></span></label>
+        <input class="medium" type="text" id="https_login" name="https_login" maxlength="255" value=""  />
+      </div>
+      <div class="row">
+        <label for="https_password"><span id="httpsPswTxt"></span></label>
+        <input class="medium" type="password" id="https_password" name="https_password" maxlength="255" value="" />
+      </div>
+      <div class="row">
+        <input class="checkbox" type="checkbox" id="https_validate_server_cert" name="https_validate_server_cert" value="yes" checked="checked" />
+        <label for="https_validate_server_cert" class="checkbox"><span id="httpsValdtServCertTxt"></span></label>
+      </div>
+
+      <div class="row">
+        <input class="checkbox" type="checkbox" id="https_proxySet" name="https_proxySet" value="yes" onclick="javascript:toggleProxySettings(this, 'https')" />
+        <label for="https_proxySet" class="checkbox"><span id="httpsProxySetTxt"></span></label>
+      </div>
+      <div id="https_divProxySettings" style="display:none;">
+        <div class="row">
+          <label for="https_proxyHost" class="boxindent"><span id="httpsProxAdrTxt"></span></label>
+          <input class="large" type="text" id="https_proxyHost" name="https_proxyHost" maxlength="255" value="" onchange="javascript:trimLeadingTrailing(this)" />
+        </div>
+        <div class="row">
+          <label for="https_proxyPort" class="boxindent"><span id="httpsProxPortTxt"></span></label>
+          <input class="small" type="text" id="https_proxyPort" name="https_proxyPort" maxlength="5" value="" onchange="javascript:trimLeadingTrailing(this)" />
+        </div>
+        <div class="row">
+          <label for="https_proxyLogin" class="boxindent"><span id="httpsProxUsrNaTxt"></span></label>
+          <input class="medium" type="text" id="https_proxyLogin" name="https_proxyLogin" maxlength="255" value=""  />
+        </div>
+        <div class="row">
+          <label for="https_proxyPassword" class="boxindent"><span id="httpsProxUsrNaTxt"></span></label>
+          <input class="medium" type="password" id="https_proxyPassword" name="https_proxyPassword" maxlength="255" value="" />
+        </div>
+      </div>
+      <h2><span id="httpsTestTxt"></span></h2>
+      <div class="row">
+        <span id="httpsTestConTxt"></span>
+        <input type="button" value="" class="btnNormal" onclick="javascript:testConnection();" id="https_testBtn" />
+      </div>
+    </div><!-- HTTPS -->
+
+    <div id="div_smtp" style="display:none;">
+      <div class="row">
+        <label for="smtp_email_to"><span id="smtpToTxt"></span></label>
+        <input class="medium" type="text" id="smtp_email_to" name="smtp_email_to" maxlength="255" value="" onchange="javascript:trimLeadingTrailing(this)" />
+      </div>
+      <h2><span id="smtpServerSettTxt"></span></h2>
+      <div class="row">
+        <label for="smtp_providers"><span id="smtpProvTxt"></span></label>
+        <select name="smtp_providers" id="smtp_providers" onchange="setSMTPproviderValues(); smtp_email_from_update();"></select>
+      </div>
+      <div class="row">
+        <label><span id="smtpUsrAuthTxt"></span></label><br />
+        <div>
+          <div class="row">
+            <label for="smtp_login" class="boxindent"><span id="smtpUsrIdTxt"></span></label>
+            <input class="medium" type="text" id="smtp_login" name="smtp_login" maxlength="255" value="" onchange="javascript:trimLeadingTrailing(this);smtp_email_from_update();" />
+          </div>
+          <div class="row">
+            <label for="smtp_password" class="boxindent"><span id="smtpPassTxt"></span></label>
+            <input class="medium" type="password" id="smtp_password" name="smtp_password" maxlength="255" value="" />
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <input class="checkbox" type="checkbox" id="smtp_advanced" name="smtp_advanced" value="yes" onclick="javascript:toggleSMTPAdvanced(this)" />
+        <label for="smtp_advanced" class="checkbox"><span id="smtpAdvSettTxt"></span></label>
+      </div>
+      <div id="smtp_advanced_settings" style="display:none;">
+        <div class="row">
+          <label for="smtp_email_from" class="boxindent"><span id="smtpFromEmailTxt"></span></label>
+          <input class="medium" type="text" id="smtp_email_from" name="smtp_email_from" maxlength="255" value="" onchange="javascript:trimLeadingTrailing(this)" disabled="yes" />
+        </div>
+        <div class="row">
+          <label for="smtp_host" class="boxindent"><span id="smtpServTxt"></span></label>
+          <input class="medium" type="text" id="smtp_host" name="smtp_host" maxlength="255" value="" onchange="javascript:trimLeadingTrailing(this);setSMTPprovider()" />
+        </div>
+        <div class="row">
+          <label for="smtp_port" class="boxindent"><span id="smtpPortTxt"></span></label>
+          <input class="small" type="text" id="smtp_port" name="smtp_port" maxlength="5" value="" onchange="javascript:trimLeadingTrailing(this);setSMTPprovider()" />
+        </div>
+        <div class="row">
+          <label class="boxindent"><span id="smtpSelAuthTxt"></span></label>
+          <div class="boxindentClearBoth">
+            <input class="radio" type="radio" id="smtp_auth_smtp" name="smtp_auth" value="yes" checked="checked" onclick="setSMTPprovider();toggleSMTPPOP()"/>
+            <label for="smtp_auth_smtp" class="radio"><span id="smtpServSMTPTxt"></span></label>
+            <input class="radio" type="radio" id="smtp_auth_pop" name="smtp_auth" value="yes" onclick="setSMTPprovider();toggleSMTPPOP()"/>
+            <label for="smtp_auth_pop" class="radio"><span id="smtpServPOPTxt"></span></label>
+            <div class="boxindent" id="smtp_auth_pop_container">
+              <label for="smtp_pop_host"><span id="smtpPopServTxt"></span></label>
+              <input class="medium" type="text" id="smtp_pop_host" name="smtp_pop_host" maxlength="255" value="" disabled="yes" onchange="javascript:trimLeadingTrailing(this);setSMTPprovider()" />
+              <br />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label for="smtp_encryption" class="boxindent"><span id="smtpEncTxt"></span></label>
+          <select class="small" name="smtp_encryption" id="smtp_encryption" onchange="javascript:toggleEncryption( this );setSMTPprovider()"></select>
+          <div class="row boxindent">
+            <input class="checkbox boxindent" type="checkbox" id="smtp_validateServerCert" name="smtp_validateServerCert" value="yes" disabled="yes" onclick="setSMTPprovider()"/>
+            <label for="smtp_validateServerCert" class="checkbox"><span id="smtpValdtServCertTxt"></span></label>
+          </div>
+        </div>
+      </div>
+      <h2><span id="smtpTestTxt"></span></h2>
+      <div class="row">
+        <span id="smtpTestConTxt"></span>
+        <input type="button" value="" class="btnNormal" onclick="javascript:testConnection();" id="smtp_testBtn" />
+      </div>
+    </div><!-- SMTP -->
+
+    <div id="div_tcp" style="display:none;">
+
+      <div class="row">
+        <label for="tcp_host"><span id="tcpNetwAdrTxt"></span></label>
+        <input class="large" type="text" id="tcp_host" name="tcp_host" maxlength="255" value="" onchange="javascript:trimLeadingTrailing(this)" />
+      </div>
+      <div class="row">
+        <label for="tcp_port"><span id="tcpPoNoTxt"></span></label>
+        <input class="small" type="text" id="tcp_port" name="tcp_port" maxlength="5" value="" onchange="javascript:trimLeadingTrailing(this)" />
+      </div>
+      <h2><span id="tcpTestTxt"></span></h2>
+      <div class="row">
+        <span id="tcpTestCon"></span>
+        <input type="button" value="" class="btnNormal" onclick="javascript:testConnection();" id="tcp_testBtn" />
+      </div>
+      <div class="row">
+        <strong><span id="tcpNoteTxt"></span></strong>&nbsp;<span id="tcpUsedNotTxt"></span>
+      </div>
+    </div><!-- TCP -->
+
+    <div id="div_networkshare" style="display:none;">
+      <div class="row">
+        <label for="networkshare_host"><span id="nsNetwAdrTxt"></span></label>
+        <input class="large" type="text" id="networkshare_host" name="networkshare_host" maxlength="255" value="" onchange="javascript:trimLeadingTrailing(this)" />
+      </div>
+      <div class="row">
+        <label for="networkshare_share"><span id="nsShareTxt"></span></label>
+        <input class="large" type="text" id="networkshare_share" name="networkshare_share" maxlength="255" value="" onchange="javascript:trimLeadingTrailing(this)" />
+      </div>
+      <div class="row">
+        <label for="networkshare_upload_path"><span id="nsUplPaTxt"></span></label>
+        <input class="large" type="text" id="networkshare_upload_path" name="networkshare_upload_path" maxlength="255" value="" onchange="javascript:trimLeadingTrailing(this)" />
+      </div>
+
+      <h2><span id="nsLogCreTxt"></span></h2>
+      <div class="row">
+        <label for="networkshare_login"><span id="nsUsrNaTxt"></span></label>
+        <input class="medium" type="text" id="networkshare_login" name="networkshare_login" maxlength="255" value=""  />
+      </div>
+      <div class="row">
+        <label for="networkshare_password"><span id="nsPswTxt"></span></label>
+        <input class="medium" type="password" id="networkshare_password" name="networkshare_password" maxlength="255" value="" />
+      </div>
+
+      <h2><span id="nsTestTxt"></span></h2>
+      <div class="row">
+        <span id="nsTestConTxt"></spaN>
+        <input type="button" value="" class="btnNormal" onclick="javascript:testConnection();" id="networkshare_testBtn" />
+      </div>
+    </div><!-- NetworkShare -->
+
+    <div class="formButtons">
+      <!--#if expr="$doAction = view" -->
+        <input type="button" value="" class="btnNormal" onclick="javascript:window.close()" id="btnClose" />
+      <!--#else -->
+        <input type="button" value="" class="btnNormal" onclick="javascript:saveData()" id="btnOK" />
+        <input type="button" value="" class="btnNormal" onclick="javascript:window.close()" id="btnCancel" />
+      <!--#endif -->
+    </div>
+  </div>
+<!--#include virtual="/incl/popup_footer.shtml" -->

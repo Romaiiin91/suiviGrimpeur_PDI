@@ -1,0 +1,61 @@
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#include virtual="/incl/top_incl_popup.shtml" -->
+
+<script language="JavaScript">
+<!--
+var langObjGenFriName = new Language("upnp", "genFriendlyName");
+
+function onInit()
+{
+  langObjGenFriName.init();
+  animateDots();
+}
+
+function closeWindow()
+{
+  parent.window.close();
+}
+
+var i = 0;
+function animateDots()
+{
+  try {
+    document.getElementById("dots").innerHTML += ".";
+    i++;
+    if (i == 10) {
+      document.getElementById("dots").innerHTML = "";
+      i = 0;
+    }
+    if (parent.frames[1].document.getElementById("<!--#echo var="protocol" option="encoding:html" -->").value != "") {
+      parent.opener.location.reload(true);
+      closeWindow();
+    } else {
+      setTimeout(animateDots, 500);
+      parent.frames[1].location.reload(true)
+    }
+  } catch(e) { setTimeout(animateDots, 500); }
+}
+
+//-->
+</script>
+
+</head>
+<body <!--#include virtual="/incl/bodytag_popup.shtml" --> onload="onInit()">
+<form name="WizardForm" action="/sm/sm.srv" method="POST" onSubmit="SubmitForm(); return false">
+  <div class="cornerBox">
+    <div class="content">
+      <table border="<!--#echo var="zero" option="encoding:html" -->" cellpadding="<!--#echo var="cellpadding3" option="encoding:html" -->" cellspacing="0" class="oddItem" width="380" height="100">
+        <tr>
+          <td colspan="4" class="oddItem">
+            <div id="infoDiv">
+              &nbsp;<span id="genMsgTxt"></span><span id="dots"></span>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="footerLeft"><div class="footerRight"></div></div>
+  </div>
+</form>
+</body>
+</html>

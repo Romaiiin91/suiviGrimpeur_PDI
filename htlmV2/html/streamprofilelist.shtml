@@ -1,0 +1,276 @@
+<!--#set var="helpURL" val="javascript:launch('/help/streamprofilelist_h.shtml')" -->
+<!--#set var="WizardFormAction" val="/sm/sm.srv" -->
+
+<!--#set var="activeMenu" val="videoImage" -->
+<!--#set var="activePage" val="streamprofiles" -->
+
+<!--#include virtual="/sm/sm.srv?action=get&group=StreamProfile" -->
+
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<script src="/incl/select_input_class.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->" language="javascript" type="text/javascript"></script>
+
+<style type="text/css">
+option.coloured { color: #3366cc; }
+</style>
+
+<script language="JavaScript" type="text/javascript">
+<!--
+var langObjStrmProfList = new Language("videostream", "streamprofilelist");
+
+<!--#include virtual="/incl/functions.shtml" -->
+
+/********************************************
+ *
+ * Java scripts for stream profile list.
+ *
+ ********************************************/
+
+<!--#include virtual="/incl/paramArray.shtml" -->
+<!--#include virtual="/incl/videostream_incl.shtml" -->
+
+var MaxProfiles = <!--#echo var="root_StreamProfile_MaxGroups" option="encoding:javascript" -->;
+
+var _list_obj;
+
+function init()
+{
+  langObjStrmProfList.init();
+  createSelect();
+  writeList();
+}
+
+function createSelect()
+{
+  var headers = new Array();
+
+  headers[0] = langObjStrmProfList.getText("naTxt");
+  headers[1] = langObjStrmProfList.getText("deTxt");
+  headers[2] = langObjStrmProfList.getText("enTxt");
+
+  var list_container = document.getElementById("idListContainer");
+  _list_obj = new select_input_class(list_container, headers);
+  _list_obj.setColumnWidths(["150px", "300px", "150px"]);
+  _list_obj.ondblclick = modifyItem;
+  _list_obj.onRowSelect = enbRemoveBtn; 
+  _list_obj.drawTable();
+}
+
+// Returns the value of the given vapix option from the given string of options
+function getOptionStr(optionString,option)
+{
+  var res = "";
+  option += "=";
+  var start = optionString.indexOf(option);
+  if (start >= 0) {
+    start += option.length;
+     var end = optionString.indexOf("&", start);
+    if (end >= 0)
+      res = optionString.substring(start, end);
+    else
+      res = optionString.substring(start);
+  }
+  return res;
+}
+
+// The function checks if the item in the list
+// is default (cannot be removed) one;
+// if yes than adds a class
+function defaultAddClass(className) {
+  var rows = _list_obj._rows;
+
+  for (i=0;i<rows.length;i++) {
+    var o = document.getElementsByName("root_StreamProfile_S" + i + "_Default_Name");
+    if( o && o[0] && o[0].value != "") {
+      var rowsChildren = rows[i].trObject.childNodes;
+      for (j=0;j<rowsChildren.length;j++) {
+        rowsChildren[j].className += className;
+      }
+    }
+  }
+}
+
+// Uses the funcions in paramArray.shtml to create the list of stream profiles.
+// Extra handling to get the sorting according to number.
+function writeList()
+{
+  // See paramArray.shtml for instructions
+  var parameter_array = new Array("Name", "Description", "Parameters", "Default_Name");
+  createParamArray(parameter_array, "ID", "root_StreamProfile", document.listForm);
+
+  /* A lot of iterations to get the list sorted by number, and not by string. */
+  for (profileID = 0; profileID < MaxProfiles; profileID++) {
+    var anItem;
+    for (sortedNo = 0; sortedNo < aSortArray.length; sortedNo++) {
+      anItem = aSortArray[sortedNo][1];
+      thisID = anItem[lookup["ID"]];
+      if (thisID == profileID) {
+        var rowArray = [anItem[lookup["Name"]], getParam('root.StreamProfile.S' + profileID + '.Description'), getOptionStr(anItem[lookup["Parameters"]],"videocodec")];
+        _list_obj.addRow(rowArray, thisID, anItem[lookup["Name"]]);
+      }
+    }
+  }
+  _list_obj.drawTable();
+  defaultAddClass('predefined');
+}
+
+// Returns true if the profile has a group with default parameters.
+function hasDefault(theSelection)
+{
+  if( theSelection >= 0 ) {
+    var o = document.getElementsByName("root_StreamProfile_S" + theSelection + "_Default_Name");
+    if( o && o[0] && o[0].value != "") {
+      return true;
+    }
+  }
+  return false;
+}
+
+// If there is not default information, the button is disabled.
+function enbRemoveBtn()
+{
+  document.getElementsByName("RemoveBtn")[0].disabled = hasDefault(_list_obj.selectedIndex);
+}
+
+// Profile configuration popup
+function openProfileSettingsPage(action,nbr)
+{
+  var url = '/operator/streamprofile.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" --><!--#if expr="$basic = yes" -->&basic=yes<!--#endif -->&action=' + action;
+  if (nbr >= 0)
+    url += '&profilenbr=' + nbr;
+  openPopUp(url, 'ProfileSettings', 550, 700);
+}
+
+// Add
+function addItem(type)
+{
+  var maxItems = _list_obj.length;
+  if (maxItems >= MaxProfiles) {
+    alert( langObjStrmProfList.getText("hitRoofAlert") );
+    return 0
+  }
+
+  openProfileSettingsPage("add", -1);
+}
+
+// Copy
+function copyItem()
+{
+  var maxItems = _list_obj.length
+  if (maxItems >= MaxProfiles) {
+    alert( langObjStrmProfList.getText("hitRoofAlert") );
+    return 0
+  }
+
+  if (_list_obj.selectedIndex < 0) {
+    alert( langObjStrmProfList.getText("selAlert") );
+    return 0
+  }
+
+  if (aSortArray.length > 0) {
+    openProfileSettingsPage("add", _list_obj.selectedValue);
+  }
+}
+
+// Modify
+function modifyItem()
+{
+  if (_list_obj.selectedIndex < 0) {
+    alert( langObjStrmProfList.getText("selAlert") );
+    return 0
+  }
+
+  if (aSortArray.length > 0) {
+    openProfileSettingsPage("modify", _list_obj.selectedValue);
+  }
+}
+
+// Remove
+function removeItem() {
+
+  if (_list_obj.selectedIndex < 0) {
+    alert( langObjStrmProfList.getText("selAlert") );
+    return 0
+  }
+
+  if (hasDefault(_list_obj.selectedIndex)) {
+    alert( langObjStrmProfList.getText("selAlert2") );
+    return 0
+  }
+
+  if (aSortArray.length > 0) {
+    var nameValue = document.listForm['root_StreamProfile_S' + _list_obj.selectedValue + '_Name'].value;
+    if (confirm(langObjStrmProfList.getText("delConfirm")+" \""+nameValue+"\"?")) {
+      document.location.href="/axis-cgi/operator/param_authenticate.cgi?action=remove&group=root.StreamProfile.S" + _list_obj.selectedValue + "&return_page=" + escape("/operator/streamprofilelist.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" --><!--#if expr="$basic = yes" -->&basic=yes<!--#endif -->");
+    }
+  }
+}
+
+var AddBtnStatTxt;
+var CpyBtnStatTxt;
+var ModBtnStatTxt;
+var RemBtnStatTxt;
+function globalLanguageVars()
+{
+  AddBtnStatTxt = langObjStrmProfList.getText("addBtnStatTxt");
+  CpyBtnStatTxt = langObjStrmProfList.getText("cpyBtnStatTxt");
+  ModBtnStatTxt = langObjStrmProfList.getText("modBtnStatTxt");
+  RemBtnStatTxt = langObjStrmProfList.getText("remBtnStatTxt");
+}
+// -->
+</script>
+</head>
+
+<body <!--#include virtual="/incl/bodytag.shtml" --> onload="init()">
+<form name="listForm">
+<!--#include virtual="/sm/sm.srv?action=get_htmlform&getgroup=root.StreamProfile&format=hiddenhtmlform" -->
+</form>
+<!--#include virtual="/incl/top_incl2.shtml" -->
+
+<table border="0" cellpadding="3" cellspacing="0" width="100%" valign="top" class="alternateRows">
+  <tr class="topTitle">
+    <td align="left" colspan="2"><span id="strProfListTxt"></span></td>
+    <td align="right"><a href="<!--#echo var="helpURL" option="encoding:url" -->"><img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="hlpPic"></a></td>
+  </tr>
+</table>
+<br>
+
+<!-- ------------------------------------ -->
+<!--                                      -->
+<!--   Video stream profiles              -->
+<!--                                      -->
+<!-- ------------------------------------ -->
+
+<table border="0" cellpadding="3" cellspacing="0" width="100%" valign="top" class="alternateRows">
+  <tr class="subTitle">
+    <td align="left" colspan="3"><span id="listHTxt"></span></td>
+  </tr>
+  <tr>
+    <td colspan="3">
+      <span class="fixed">
+        <div id="idListContainer" class="selectList" style="width: 527px"></div>
+      </span>
+    </td>
+  </tr>
+  <tr class="reuseLast">
+    <td colspan="3" align="left" class="button">
+    <table border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td class="button"><input type="button" value="" width="75" class="btnNormal" onclick="javascript:addItem();" onMouseOver="return showStatus(AddBtnStatTxt)" onMouseOut="return showStatus('')" id="addBtn"></td>
+        <td class="button">&nbsp;</td>
+        <td class="button"><input type="button" value="" width="75" class="btnNormal" onClick="javaScript:copyItem();" onMouseOver="return showStatus(CpyBtnStatTxt)" onMouseOut="return showStatus('')" id="copyBtn"></td>
+        <td class="button">&nbsp;</td>
+        <td class="button"><input type="button" value="" width="75" class="btnNormal" onclick="javascript:modifyItem();" onMouseOver="return showStatus(ModBtnStatTxt)" onMouseOut="return showStatus('')" id="modifyBtn"></td>
+        <td class="button">&nbsp;</td>
+        <td class="button"><input name="RemoveBtn" type="button" value="" width="75" class="btnNormal" onclick="javascript:removeItem()" onMouseOver="return showStatus(RemBtnStatTxt)" onMouseOut="return showStatus('')" id="removeBtn"></td>
+      </tr>
+    </table>
+    </td>
+  </tr>
+  <tr>
+  <tr>
+    <td class="topTitle" align="left" colspan="3">&nbsp;</td>
+  </tr>
+</table>
+
+<!--#include virtual="/incl/bottom_incl.shtml" -->

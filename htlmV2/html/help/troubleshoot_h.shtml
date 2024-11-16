@@ -1,0 +1,416 @@
+<!--#include virtual="/sm/sm.srv?action=get&group=Properties.ImageSource.DCIris,Properties.Motion.Motion,Properties.Image.Format,StatusLED.Usage,Properties.HTTPS.HTTPS,ImageSource.I0.Video.Connector,ImageSource.I0.DayNight.IrCutFilter,Properties.Audio.Audio" -->
+
+
+<!--#set var="backButton" val="yes" -->
+<!--#set var="forwardButton" val="yes" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<script language="JavaScript">
+<!--
+var langObjSTH = new Language("support_h", "troubleshoot_h");
+
+function globalLanguageVars()
+{
+	document.getElementById("titleId").innerHTML = langObjSTH.getText("titleTxt");
+}
+// -->
+</script>
+
+</head>
+<body onload="langObjSTH.init()">
+<!--#include virtual="/incl/helpTop_incl2.shtml" -->
+<table border="0" cellpadding="3" cellspacing="0" width="440" bgcolor="white">
+<!--#include virtual="/incl/helpTop_incl3.shtml" -->	
+<tr>
+	<td colspan="2">
+		<span id="help1Txt"></span><br/><br/>
+	</td>
+</tr>
+
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="subTitle1Txt"></span>
+		</div>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="help2Txt1"></span><br/><br/>
+		<span id="help2Txt2"></span><br/><br/>
+		<span id="help2Txt3"></span><br/><br/>
+		<span id="help2Txt4"></span><br/><br/>
+	</td>
+</tr>
+
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+
+<!--#if expr="$root_Properties_Image_Format >< mpeg4" -->
+			<span id="subTitle2Txt1"></span>
+<!--#else -->
+			<span id="subTitle2Txt2"></span>
+<!--#endif -->
+
+		</div>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="help3Txt"></span><br/><br/>	
+		<table class="alternateRows" border="2" width="-419" cellspacing="0">
+			<tr height="29" class="subTitle">
+				<td width="111" height="29">
+					<span id="subTitle4Txt"></span>
+				</td>
+				<td height="29" colspan="2">
+					<span id="subTitle5Txt"></span>
+				</td>
+			</tr>
+			<tr>
+				<td width="111" valign="top">
+					<span id="help4Txt"></span>
+				</td>
+				<td colspan="2" valign="top">
+					<span id="help5Txt"></span><br/><br/>
+					<span id="help6Txt"></span><br/><br/>
+				</td>
+			</tr>
+			<tr>
+				<td width="111" valign="top">
+					<span id="help7Txt"></span>
+				</td>
+				<td colspan="2" valign="top">
+					<span id="help8Txt"></span><br/><br/>
+					<span id="help9Txt1"></span><br/><br/>
+				</td>
+			</tr>
+			<tr>
+				<td width="111" valign="top">
+					<span id="help9Txt2"></span><br/><br/>
+				</td>
+				<td valign="top" colspan="2">
+					<span id="help9Txt3"></span>
+					<a href="advanced_tcpip_h.shtml"><span id="help9Txt4"></span></a>
+					<span id="help9Txt5"></span><br/><br/>
+					<span id="help9Txt6"></span><br/><br/>
+				</td>
+			</tr>
+			<tr>
+				<td width="111" valign="top">
+					<span id="help10Txt"></span><br/><br/>
+				</td>
+				<td valign="top" colspan="2">
+					<span id="help11Txt"></span>
+					<a href="tcpip_h.shtml"><span id="help12Txt1"></span></a>
+					<span id="help12Txt2"></span>
+					<a href="advanced_tcpip_h.shtml"><span id="help12Txt3"></span></a>
+					<span id="help12Txt4"></span>
+				</td>
+			</tr>
+<!--#if expr="_$root_Properties_HTTPS_HTTPS = _yes" -->
+			<tr>
+				<td width="111" valign="top">
+					<span id="helphttpsloginTxt"></span><br/><br/>
+				</td>
+				<td valign="top" colspan="2">
+					<span id="helphttpslogin_answerTxt"></span><br/><br/>
+				</td>
+			</tr>
+<!--#endif -->
+
+
+<!--#if expr="$glob_PTZCamera = yes" -->
+<!--#else -->	
+			<tr>
+				<td width="111" valign="top">
+					<span id="help13Txt"></span><br/><br/>
+				</td>
+				<td valign="top" colspan="2">
+					<span id="help14Txt"></span>
+				</td>
+			</tr>
+<!--#endif -->
+
+	
+			<tr>
+				<td width="111" valign="top">
+					<span id="helpQTTxt"></span><br/><br/>
+				</td>
+				<td valign="top" colspan="2">
+					<span id="helpQTresTxt1"></span><br/><br/>
+					<span id="helpQTresTxt2"></span>
+				</td>
+			</tr>
+			<tr>
+				<td width="111" valign="top">
+					<span id="help18Txt1"></span><br/><br/>
+				</td>
+				<td valign="top" colspan="2">
+					<span id="help19Txt1"></span>
+				</td>
+			</tr>
+			<tr>
+				<td width="111" valign="top">
+					<span id="help18Txt2"></span><br/><br/>
+				</td>
+				<td valign="top" colspan="2">
+					<span id="help18Txt3"></span><br/><br/>
+
+	<!--#if expr="_$root_ImageSource_I0_DayNight_IrCutFilter != _" -->
+					<span id="help19Txt2"></span><br/><br/>
+	<!--#endif -->
+
+				</td>
+			</tr>
+			<tr>
+				<td width="111" valign="top">
+					<span id="help20Txt"></span>
+				</td>
+				<td valign="top" colspan="2">
+					<span id="help21Txt"></span>
+
+	<!--#if expr="$root_Properties_ImageSource_DCIris = yes" -->
+					<span id="help22Txt"></span>
+	<!--#endif -->
+
+					<br/><br/>
+				</td>
+			</tr>
+			<tr>
+				<td width="111" valign="top">
+					<span id="help23Txt"></span>
+				</td>
+				<td colspan="2" valign="top">
+
+	<!--#if expr="$root_Brand_ProdType = Video Server" -->
+					<span id="help24Txt1"></span><br/><br/>
+					<span id="help24Txt2"></span><br/><br/>
+					<span id="help24Txt3"></span><br/><br/>
+	<!--#else -->
+					<span id="help25Txt"></span><br/><br/>
+	<!--#endif -->
+
+				</td>
+			</tr>
+
+	<!--#if expr="$root_Brand_ProdType = Video Server" -->
+	<!--#else -->
+			<tr>
+				<td width="111" valign="top">
+					<span id="help26Txt"></span>
+				</td>
+				<td valign="top" colspan="2">
+					<span id="help27Txt"></span><br/><br/>
+				</td>
+			</tr>
+	<!--#endif -->
+
+	<!--#if expr="$root_Brand_ProdType = Video Server" -->
+			<tr>
+				<td width="111" valign="top">
+					<span id="help28Txt"></span>
+				</td>
+				<td valign="top" colspan="2">
+					<span id="help29Txt1"></span>
+
+		<!--#if expr="$root_ImageSource_I0_Video_Connector != " -->
+					<span id="help29Txt2"></span>
+				  <a href="video_settings_h.shtml"><span id="help30Txt1"></span></a><span id="help30Txt2"></span>
+		<!--#endif -->
+
+					<br/><br/>
+				</td>
+			</tr>
+			<tr>
+				<td width="111" valign="top">
+					<span id="help31Txt"></span><br/><br/>
+				</td>
+				<td valign="top" "colspan="2">
+					<span id="help32Txt"></span>
+					<a href="video_settings_h.shtml"><span id="help33Txt1"></span></a><span id="help33Txt2"></span><br/><br/>
+				</td>
+			</tr>
+	<!--#endif -->
+
+	<!--#if expr="$root_Brand_ProdNbr = 241S" -->
+			<tr>
+				<td width="111" valign="top">
+					<span id="help34Txt"></span><br/><br/>
+				</td>
+				<td valign="top" colspan="2">
+					<span id="help35Txt"></span>
+					<a href="video_settings_h.shtml"><span id="help36Txt1"></span></a><span id="help36Txt2"></span><br/><br/>
+				</td>
+			</tr>
+	<!--#endif -->
+
+
+			<tr>
+				<td width="111" valign="top">
+					<span id="help40Txt"></span>
+				</td>
+				<td valign="top" colspan="2">
+					<span id="help41Txt"></span>
+	<!--#if expr="$root_Properties_Motion_Motion = yes" -->
+					<span id="help42Txt"></span>
+	<!--#endif -->
+
+					<span id="help43Txt1"></span><br/><br/>
+					<span id="help43Txt2"></span><br/><br/>
+				</td>
+			</tr>
+
+			<tr>
+				<td width="111" valign="top">
+					<span id="help44Txt"></span>
+				</td>
+				<td valign="top" colspan="2">
+					<span id="help45Txt"></span><br/><br/>
+				</td>
+			</tr>
+
+			<tr>
+				<td width="111" valign="top">
+					<span id="help46Txt"></span>
+				</td>
+				<td valign="top" colspan="2">
+					<span id="help47Txt"></span><br/><br/>
+				</td>
+			</tr>
+
+		</table>
+		<br/><br/>
+	</td>
+</tr>
+
+
+
+<tr>
+	<td colspan="2">
+		<span id="help65Txt"></span><br/><br/>
+	</td>
+</tr>
+
+<!--#if expr="$glob_PTZCamera = yes" -->
+<!--#else -->
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="subTitle9Txt"></span>
+		</div>
+	</td>
+</tr>
+<tr>
+	<td colspan="2">
+		<a name="led"></a>
+		<span id="help66Txt"></span><br/><br/>
+		<table border="2" width="-419" cellspacing="0">
+			<tr height="19">
+				<td width="20%" height="19" valign="top">
+					<span id="help80Txt"></span>
+				</td>
+				<td width="20%" height="19" valign="top">
+					<span id="help81Txt"></span>
+				</td>
+				<td width="60%" height="19" valign="top">
+					<span id="help82Txt"></span>
+				</td>
+			</tr>
+
+			<tr height="18">
+				<td width="20%" valign="top" rowspan="2">
+					<span id="help83Txt3"></span>
+				</td>
+				<td width="20%" height="18" valign="top">
+					<span id="help84Txt4"></span>
+				</td>
+				<td width="60%" height="18" valign="top">
+					<span id="help85Txt3"></span>
+				</td>
+			</tr>
+			<tr height="18">
+				<td width="20%" height="18" valign="top">
+					<span id="help86Txt4"></span>
+				</td>
+				<td width="60%" height="18" valign="top">
+					<span id="help87Txt4"></span>
+				</td>
+			</tr>
+			<tr height="18">
+				<td width="20%" valign="top" rowspan="4">
+					<span id="help88Txt3"></span>
+				</td>
+				<td width="20%" height="18" valign="top">
+					<span id="help89Txt2"></span>
+				</td>
+				<td width="60%" height="18" valign="top">
+					<span id="help90Txt2"></span>
+				</td>
+			</tr>
+			<tr height="18">
+				<td width="20%" height="18" valign="top">
+					<span id="help91Txt2"></span>
+				</td>
+				<td width="60%" height="18" valign="top">
+					<span id="help92Txt2"></span>
+				</td>
+			</tr>
+			<tr height="18">
+				<td width="20%" height="18" valign="top">
+					<span id="help93Txt2"></span>
+				</td>
+				<td width="60%" height="18" valign="top">
+					<span id="help94Txt"></span>
+				</td>
+			</tr>
+			<tr height="18">
+				<td width="20%" height="18" valign="top">
+					<span id="help95Txt"></span>
+				</td>
+				<td width="60%" height="18" valign="top">
+					<span id="help96Txt"></span>
+				</td>
+			</tr>
+			<tr height="18">
+				<td width="20%" valign="top" rowspan="3">
+					<span id="help97Txt3"></span>
+				</td>
+				<td width="20%" height="18" valign="top">
+					<span id="help98Txt3"></span>
+				</td>
+				<td width="60%" height="18" valign="top">
+					<span id="help99Txt1"></span>
+			<!--#if expr="_$root_StatusLED_Usage != _" -->
+					<br/><br/><span id="help99Txt2"></span><br/><br/>
+			<!--#endif --> 
+				</td>
+			</tr>
+			<tr height="18">
+				<td width="20%" height="18" valign="top">
+					<span id="help100Txt2"></span>
+				</td>
+				<td width="60%" height="18" valign="top">
+					<span id="help101Txt"></span>
+				</td>
+			</tr>
+			<tr height="18">
+				<td width="20%" height="18" valign="top">
+					<span id="help102Txt"></span>
+				</td>
+				<td width="60%" height="18" valign="top">
+					<span id="help103Txt"></span>
+				</td>
+			</tr>
+		</table>
+<!--#endif -->
+		</table>
+	<!--#include virtual="/incl/helpBottom_incl.shtml" -->
+	</td>
+</tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+	<advanced_tcpip_h>
+		<pageTitle type="title" minor="0">Help/Advanced TCP/IP Settings</pageTitle>
+		<titleTxt type="msgAsText" minor="0">Advanced TCP/IP Settings</titleTxt>
+		<intro_Txt type="text" minor="0">See also the help on the &#x3C;a href='tcpip_h.shtml'&#x3E;basic TCP/IP settings&#x3C;/a&#x3E;.</intro_Txt>
+		<subTitle_DNS_Txt type="text" minor="0">DNS Configuration</subTitle_DNS_Txt>
+		<obtainDNS_Txt1a type="text" minor="0">&#x3C;b&#x3E;Obtain DNS server address via DHCP&#x3C;/b&#x3E; - Checking this radio button causes the</obtainDNS_Txt1a>
+		<obtainDNS_Txt1b type="text" minor="0">to automatically look up and use the DNS server settings as provided by DHCP. Note that this will not be available if using a static IP address. Click the &#x3C;b&#x3E;View&#x3C;/b&#x3E; button to see the current settings.</obtainDNS_Txt1b>
+		<manDNS_Txt1 type="text" minor="0">To make manual settings, check the radio button &#x3C;b&#x3E;Use the following DNS server address&#x3C;/b&#x3E; and then specify the following:</manDNS_Txt1>
+		<manDNS_Txt2a type="text" minor="0">&#x3C;b&#x3E;Domain name -&#x3C;/b&#x3E; When using a host name that is not fully qualified, enter here the domain(s) in which to search for the host name used by the</manDNS_Txt2a>
+		<manDNS_Txt2b type="text" minor="0">. Multiple domains can be separated by semicolons (;).</manDNS_Txt2b>
+		<manDNS_Txt3 type="text" minor="0">&#x3C;b&#x3E;Primary DNS server -&#x3C;/b&#x3E; Enter the IP address of the primary DNS server. This server provides the translation of host names to IP addresses on your network.</manDNS_Txt3>
+		<manDNS_Txt4 type="text" minor="0">&#x3C;b&#x3E;Secondary DNS server - &#x3C;/b&#x3E;Specify the IP address of the secondary DNS server. This will be used if the primary DNS server is unavailable.</manDNS_Txt4>
+		<manDNS_Txt5a type="text" minor="0">&#x3C;b&#x3E;Note - &#x3C;/b&#x3E;When setting up the</manDNS_Txt5a>
+		<manDNS_Txt5b type="text" minor="0">to use DHCP servers for obtaining network settings, it may also be possible for a BOOTP server to provide these settings.</manDNS_Txt5b>
+		<subTitle_NTP_Txt type="text" minor="0">NTP Configuration</subTitle_NTP_Txt>
+		<obtainNTP_Txt1a type="text" minor="0">&#x3C;b&#x3E;Obtain NTP server address via DHCP&#x3C;/b&#x3E; - Checking this radio button causes the</obtainNTP_Txt1a>
+		<obtainNTP_Txt1b type="text" minor="0">to automatically look up and use the NTP server as provided by DHCP. Click the &#x3C;b&#x3E;View&#x3C;/b&#x3E; button to see the current setting. Note that this will not be available if using a static IP address.</obtainNTP_Txt1b>
+		<nTPmanNTP_Txt type="text" minor="0">To specify the server manually, check the radio button &#x3C;b&#x3E;Use the following NTP server address&#x3C;/b&#x3E; and enter the server's IP address or host name. Note that a DNS server must be specified if using a host name.</nTPmanNTP_Txt>
+		<subTitle_Host_Txt type="text" minor="0">Host Name Configuration</subTitle_Host_Txt>
+		<hostname_Txt1a type="text" minor="0">The</hostname_Txt1a>
+		<hostname_Txt1b type="text" minor="0">can also be accessed using a host name instead of an IP address. The host name is usually the same as the assigned DNS Name. It is always the first part of a Fully Qualified Domain Name and is always one word, with no period. For example, &#x3C;b&#x3E;myserver&#x3C;/b&#x3E; is the host name in the Fully Qualified Domain Name &#x3C;b&#x3E;myserver.axis.com</hostname_Txt1b>
+		<hostname_DHCP1_Txt1a type="text" minor="0">&#x3C;b&#x3E;Obtain Host name via IPv4 DHCP &#x3C;/b&#x3E;- Checking this radio button causes the</hostname_DHCP1_Txt1a>
+		<hostname_DHCP1_Txt1b type="text" minor="0">to automatically look up and use the host name as provided by the DHCP server running on IPv4. Click the &#x3C;b&#x3E;View&#x3C;/b&#x3E; button to see the current setting. Note that this will not be available if using a static IP address.</hostname_DHCP1_Txt1b>
+		<hostname_DHCP2_Txt1a type="text" minor="0">&#x3C;b&#x3E;Obtain Host name via DHCP &#x3C;/b&#x3E;- Checking this radio button causes the</hostname_DHCP2_Txt1a>
+		<hostname_DHCP2_Txt1b type="text" minor="0">to automatically look up and use the host name as provided by the DHCP server. Click the &#x3C;b&#x3E;View&#x3C;/b&#x3E; button to see the current setting. Note that this will not be available if using a static IP address.</hostname_DHCP2_Txt1b>
+		<usehostname_Txt type="text" minor="0">&#x3C;b&#x3E;Use the host name&#x3C;/b&#x3E; - This host name will be used to identify the product in internal messages, e.g. log files. See also &#x3C;b&#x3E;Obtain host name via DHCP&#x3C;/b&#x3E; above.</usehostname_Txt>
+		<enabledynamic_Txt1a type="text" minor="0">&#x3C;b&#x3E;Enable dynamic DNS updates&#x3C;/b&#x3E; - The</enabledynamic_Txt1a>
+		<enabledynamic_Txt1b type="text" minor="0">includes support for dynamically updating local DNS servers whenever the product's IP address changes. Check this box to enable the function. The</enabledynamic_Txt1b>
+		<enabledynamic_Txt1c type="text" minor="0">supports &#x3C;b&#x3E;RFC2136:&#x3C;/b&#x3E; Dynamic Updates in the Domain Name System (DNS UPDATE)</enabledynamic_Txt1c>
+		<enabledynamic_Txt2 type="text" minor="0">&#x3C;b&#x3E;Important note!&#x3C;/b&#x3E; These settings concern the use of &#x3C;b&#x3E;&#x3C;u&#x3E;local&#x3C;/u&#x3E;&#x3C;/b&#x3E; DNS servers and should not be confused with the settings for the Axis Internet Dynamic DNS service.</enabledynamic_Txt2>
+		<enabledynamic_Txt3a type="text" minor="0">&#x3C;b&#x3E;Register DNS name&#x3C;/b&#x3E; - The name entered here will be associated with the IP address for the</enabledynamic_Txt3a>
+		<enabledynamic_Txt3b type="text" minor="0">in the DNS server. An example of a DNS name is Axisproduct.example.com</enabledynamic_Txt3b>
+		<tTL_Txt type="text" minor="0">&#x3C;b&#x3E;TTL&#x3C;/b&#x3E; &#x3C;b&#x3E;(Time To Live)&#x3C;/b&#x3E; - This value determines how long (in seconds) the reply from the DNS server should be remembered when checking that the domain name for the registered IP address is still valid. This reduces the number of times the client has to query the DNS server, which in turn reduces network usage.</tTL_Txt>
+		<subTitle_Link_IPv6_Txt type="text" minor="0">Link-Local IPv4 Address</subTitle_Link_IPv6_Txt>
+		<subTitle_Link_Txt type="text" minor="0">Link-Local Address</subTitle_Link_Txt>
+		<link_Txt1a type="text" minor="0">&#x3C;b&#x3E;Auto-Configure Link-Local Address&#x3C;/b&#x3E; - This is a built-in function that assigns the</link_Txt1a>
+		<link_Txt1b type="text" minor="0">an additional IP address, which can be used to access the unit from other hosts on the same segment of the local network. The</link_Txt1b>
+		<link_Txt1c type="text" minor="0">can have both a Link-Local IP and a static/DHCP-supplied IP address at the same time - these will not affect each other.</link_Txt1c>
+		<link_Txt2 type="text" minor="0">To see the current Link-Local settings, click the &#x3C;b&#x3E;View&#x3C;/b&#x3E; button.</link_Txt2>
+		<subTitle_HTTP_Txt type="text" minor="0">HTTP</subTitle_HTTP_Txt>
+		<httpport_Txt1a type="text" minor="0">&#x3C;b&#x3E;HTTP Port -&#x3C;/b&#x3E; Enter the HTTP port the</httpport_Txt1a>
+		<httpport_Txt1b type="text" minor="0">will use. The default setting is 80. Alternatively, any port in the range 1024-65535 may be used, but check first with your system administrator before changing the default setting.</httpport_Txt1b>
+		<subTitle_HTTPS_Txt type="text" minor="0">HTTPS</subTitle_HTTPS_Txt>
+		<httpsport_Txt1a type="text" minor="0">&#x3C;b&#x3E;HTTPS Port -&#x3C;/b&#x3E; Enter the HTTPS port the</httpsport_Txt1a>
+		<httpsport_Txt1b type="text" minor="0">will use. The default setting is 443.</httpsport_Txt1b>
+		<subTitle_NATv4_Txt type="text" minor="0">NAT traversal (port mapping) for IPv4</subTitle_NATv4_Txt>
+		<subTitle_NAT_Txt type="text" minor="0">NAT traversal (port mapping)</subTitle_NAT_Txt>
+		<nattrav_Txt1a type="text" minor="0">Use &#x3C;b&#x3E;NAT traversal&#x3C;/b&#x3E; when your</nattrav_Txt1a>
+		<nattrav_Txt1b type="text" minor="0">is located on an intranet (LAN) and you wish to make it available from the other (WAN) side of a NAT router. When this is properly configured, all HTTP traffic to an external HTTP port in the NAT router will be forwarded to the</nattrav_Txt1b>
+		<nattrav_Txt1c type="text" minor="0">.</nattrav_Txt1c>
+		<nattrav_Txt2a type="text" minor="0">Click the &#x3C;b&#x3E;Enable&#x3C;/b&#x3E; button to start NAT configuration, whereby the</nattrav_Txt2a>
+		<nattrav_Txt2b type="text" minor="0">will attempt to configure port mapping in a NAT router on your network, using UPnP&#x2122;.</nattrav_Txt2b>
+		<nattrav_man_Txt1a type="text" minor="0">&#x3C;b&#x3E;Use manually selected NAT router&#x3C;/b&#x3E; - Check this box to manually select a NAT router and enter the IP address for the router in the field provided. If a router is not manually specified, the</nattrav_man_Txt1a>
+		<nattrav_man_Txt1b type="text" minor="0">will automatically search for NAT routers on your network. If more than one router is found, the default router will be selected.</nattrav_man_Txt1b>
+		<alt_http_port_Txt type="text" minor="0">&#x3C;b&#x3E;Alternative HTTP port&#x3C;/b&#x3E; - Select this option to manually define an external HTTP port, and enter the port number in the field provided. If no port is entered, a port number will automatically be selected when NAT traversal is enabled.</alt_http_port_Txt>
+		<subTitle_FTP_Txt type="text" minor="0">FTP</subTitle_FTP_Txt>
+		<fTPport_Txt1a type="text" minor="0">&#x3C;b&#x3E;Enable FTP server&#x3C;/b&#x3E; - The FTP server running in the</fTPport_Txt1a>
+		<fTPport_Txt1b type="text" minor="0">enables the upload of e.g. new firmware, user applications, etc. Check the box to enable the FTP server.</fTPport_Txt1b>
+		<fTP_upload_Txt type="text" minor="0">Note that this option has nothing to do with the unit's ability to transfer images via FTP to other locations/servers.</fTP_upload_Txt>
+		<subTitle_RTSP_Txt type="text" minor="0">RTSP</subTitle_RTSP_Txt>
+		<rTSPportaudio_Txt1 type="text" minor="0">&#x3C;b&#x3E;Enable RTSP Server&#x3C;/b&#x3E; - The RTSP protocol allows a connecting client to start an audio stream. Check the box to enable the service.</rTSPportaudio_Txt1>
+		<rTSPportaudio_Txt2a type="text" minor="0">Enter the RTSP port number the</rTSPportaudio_Txt2a>
+		<rTSPportaudio_Txt2b type="text" minor="0">will use (ports 554, 1024 and higher). The default setting is 554.</rTSPportaudio_Txt2b>
+		<rTSPportH264_MPEG_4_Txt1 type="text" minor="0">&#x3C;b&#x3E;Enable RTSP Server&#x3C;/b&#x3E; - The RTSP protocol allows a connecting client to start an H.264 stream. Check the box to enable the service. If this service is not enabled it will not be possible to view H.264 or MPEG-4 video streams.</rTSPportH264_MPEG_4_Txt1>
+		<rTSPportH264_MPEG_4_Txt2a type="text" minor="0">Enter the RTSP port number the</rTSPportH264_MPEG_4_Txt2a>
+		<rTSPportH264_MPEG_4_Txt2b type="text" minor="0">will use (ports 554, 1024 and higher). The default setting is 554.</rTSPportH264_MPEG_4_Txt2b>
+		<rTSPportH264_Txt1 type="text" minor="0">&#x3C;b&#x3E;Enable RTSP Server&#x3C;/b&#x3E; - The RTSP protocol allows a connecting client to start an H.264 stream. Check the box to enable the service. If this service is not enabled it will not be possible to view H.264 video streams.</rTSPportH264_Txt1>
+		<rTSPportH264_Txt2a type="text" minor="0">Enter the RTSP port number the</rTSPportH264_Txt2a>
+		<rTSPportH264_Txt2b type="text" minor="0">will use (ports 554, 1024 and higher). The default setting is 554.</rTSPportH264_Txt2b>
+		<rTSPportMPEG_4_Txt1 type="text" minor="0">&#x3C;b&#x3E;Enable RTSP Server&#x3C;/b&#x3E; - The RTSP protocol allows a connecting client to start an MPEG-4 stream. Check the box to enable the service. If this service is not enabled it will not be possible to view MPEG-4 video streams.</rTSPportMPEG_4_Txt1>
+		<rTSPportMPEG_4_Txt2a type="text" minor="0">Enter the RTSP port number the</rTSPportMPEG_4_Txt2a>
+		<rTSPportMPEG_4_Txt2b type="text" minor="0">will use (ports 554, 1024 and higher). The default setting is 554.</rTSPportMPEG_4_Txt2b>
+		<subTitle_traffic_Txt type="text" minor="0">Network Traffic</subTitle_traffic_Txt>
+		<contype_Txt1a type="text" minor="0">&#x3C;b&#x3E;Connection Type&#x3C;/b&#x3E; - This can be used to change the network speed for the</contype_Txt1a>
+		<contype_Txt1b type="text" minor="0">. Normally, there is no need to use anything other than &#x3C;b&#x3E;Auto-negotiate&#x3C;/b&#x3E;, which  automatically selects the correct media type.</contype_Txt1b>
+		<contype_Txt2 type="text" minor="0">However, if using a switch or similar device on your network and the media type needs to be specified, this can be selected from the drop-down list.</contype_Txt2>
+		<maxband_Txt1a type="text" minor="0">&#x3C;b&#x3E;Maximum bandwidth&#x3C;/b&#x3E; - To minimize the impact on other services running on your network, it is possible to configure the maximum network bandwidth the</maxband_Txt1a>
+		<maxband_Txt1b type="text" minor="0">will be allowed to use.</maxband_Txt1b>
+		<maxband_Txt2a type="text" minor="0">Specify, in Mbit/s or kbit/s, the maximum bandwidth allowed, or set to &#x3C;i&#x3E;Unlimited&#x3C;/i&#x3E;. This is a useful function when connecting your</maxband_Txt2a>
+		<maxband_Txt2b type="text" minor="0">to busy or heavily loaded networks.</maxband_Txt2b>
+		<maxband_Txt3 type="text" minor="0">&#x3C;b&#x3E;Important!&#x3C;/b&#x3E;</maxband_Txt3>
+		<maxband_warnTxt type="text" minor="0">When using MPEG-4 as the video format, remember that setting a maximum bandwidth value here may create problems for individual video streams if the maximum value is less than the sum of the bit rates set for the video streams. See also the MPEG-4 settings and help available from&#x3C;br&#x3E; &#x3C;b&#x3E;Setup &#x3E; Video &#x26; Image &#x3E; Advanced&#x3C;/b&#x3E;.</maxband_warnTxt>
+		<maxband_minvalueTxt type="text" minor="0">The lowest value allowed for the maximum bandwidth is 30 kbit/s. Using a lower value will leave the bandwidth unlimited.</maxband_minvalueTxt>
+	</advanced_tcpip_h>
+
+
+
+
+
+	<tcpip_h>
+		<pageTitle type="title" minor="0">Help/Basic TCP/IP Settings</pageTitle>
+		<titleTxt type="msgAsText" minor="0">Basic TCP/IP Settings</titleTxt>
+		<intro1_Txt1a type="text" minor="0">The</intro1_Txt1a>
+		<intro1_Txt1b type="text" minor="0">provides support for IP version 4 and IP version 6. Both versions may be enabled simultaneously, and at least one version must always be enabled.</intro1_Txt1b>
+		<intro1_Txt2a type="text" minor="0">When using IPv4, the IP address for the</intro1_Txt2a>
+		<intro1_Txt2b type="text" minor="0">can be set automatically via &#x3C;b&#x3E;DHCP&#x3C;/b&#x3E;, or a static IP address can be set manually.</intro1_Txt2b>
+		<intro1_Txt3a type="text" minor="0">If IPv6 is enabled, the</intro1_Txt3a>
+		<intro1_Txt3b type="text" minor="0">will receive an IP address according to the configuration in the network router.</intro1_Txt3b>
+		<introNotify_Txt1 type="text" minor="0">There are also options for setting up notification of changes in the IP address, and for using the AXIS Internet Dynamic DNS Service.</introNotify_Txt1>
+		<introNotify_Txt2 type="text" minor="0">Note that the unit's current IP address can also be discovered by using &#x3C;a href='UPnP_h.shtml'&#x3E;UPnP&#x3C;/a&#x3E;.</introNotify_Txt2>
+		<introNotify_Txt3 type="text" minor="0">See also the help on the &#x3C;a href='advanced_h.shtml'&#x3C;advanced TCP/IP settings.&#x3C;/a&#x3E;</introNotify_Txt3>
+		<intro2_Txt1a type="text" minor="0">The IP address for the</intro2_Txt1a>
+		<intro2_Txt1b type="text" minor="0">can be set automatically via &#x3C;b&#x3E;DHCP&#x3C;/b&#x3E;, or a static IP address can be set manually.</intro2_Txt1b>
+		<introNotifyIPv6_Txt type="text" minor="0">There are also options for setting up notification of changes in the IP address, and for using the AXIS Internet Dynamic DNS Service.</introNotifyIPv6_Txt>
+		<introNote_Txt1 type="text" minor="0">&#x3C;b&#x3E;Note:&#x3C;/b&#x3E; The unit's current IP address can also be discovered by using &#x3C;a href='UPnP_h.shtml'&#x3E;UPnP&#x3C;/a&#x3E;.</introNote_Txt1>
+		<introNote_Txt2 type="text" minor="0">See also the help on the &#x3C;a href='advanced_h.shtml'&#x3E;advanced TCP/IP settings.&#x3C;/a&#x3E;</introNote_Txt2>
+		<subTitle_interface_view_current_Txt type="text" minor="0">Network Settings</subTitle_interface_view_current_Txt>
+		<select_current_Txt type="text" minor="0">To see the current network settings, click the &#x3C;b&#x3E;View&#x3C;/b&#x3E; button.</select_current_Txt>
+		<subTitle_interface_mode_Txt type="text" minor="0">Network Interface Mode</subTitle_interface_mode_Txt>
+		<select_mode_Txt1a type="text" minor="0">The network interface to the</select_mode_Txt1a>
+		<select_mode_Txt1b type="text" minor="0">can be wired or wireless. Different settings can be used for each network interface, but only one can be used at a time. Check the relevant radio button to decide how the different network interfaces will be selected.</select_mode_Txt1b>
+		<subTitle_IPaddress_both_Txt type="text" minor="0">IPv4 Address Configuration</subTitle_IPaddress_both_Txt>
+		<subTitle_IPaddress_Txt type="text" minor="0">IP Address Configuration</subTitle_IPaddress_Txt>
+		<enableIPv4_Txt type="text" minor="0">&#x3C;b&#x3E;Enable IPv4&#x3C;/b&#x3E; - Check this box to enable IPv4.</enableIPv4_Txt>
+		<obtainIP_Txt1 type="text" minor="0">&#x3C;b&#x3E;Obtain IP address via DHCP&#x3C;/b&#x3E; - Dynamic Host Configuration Protocol (DHCP) is a protocol that lets network administrators centrally manage and automate the assignment of IP addresses on a network. DHCP is enabled by default.</obtainIP_Txt1>
+		<obtainIP_Txt2 type="text" minor="0">&#x3C;b&#x3E;Notes:&#x3C;/b&#x3E;</obtainIP_Txt2>
+		<obtainIP_Txt3a type="text" minor="0">DHCP should only be enabled if using dynamic IP address notification (see below), or if your DHCP server can update a DNS server, which then allows you to access the</obtainIP_Txt3a>
+		<obtainIP_Txt3b type="text" minor="0">by name (host name). If DHCP is enabled and you cannot access the unit, you may have to reset it to the factory default settings and then perform the installation again.</obtainIP_Txt3b>
+		<obtainIP_Txt4 type="text" minor="0">Although a DHCP server is mostly used to set an IP address dynamically, it is also possible to use it to set a static, known IP address for a particular MAC address.</obtainIP_Txt4>
+		<obtainIP_Txt5a type="text" minor="0">When setting up the</obtainIP_Txt5a>
+		<obtainIP_Txt5b type="text" minor="0">to use DHCP servers for obtaining network settings, it may also be possible for a BOOTP server to provide these settings.</obtainIP_Txt5b>
+		<fixedIP_Txt1a type="text" minor="0">To use a static IP address for the</fixedIP_Txt1a>
+		<fixedIP_Txt1b type="text" minor="0">, check the radio button for &#x3C;b&#x3E;Use the following IP address&#x3C;/b&#x3E; and then make the following settings:</fixedIP_Txt1b>
+		<fixedIP_Txt2a type="text" minor="0">&#x3C;b&#x3E;IP address -&#x3C;/b&#x3E; Specify a unique IP address for your</fixedIP_Txt2a>
+		<fixedIP_Txt2b type="text" minor="0">. (To check if the IP address you intend to use is available or not, click the &#x3C;b&#x3E;Test&#x3C;/b&#x3E; button)</fixedIP_Txt2b>
+		<fixedIP_Txt3a type="text" minor="0">&#x3C;b&#x3E;Subnet mask -&#x3C;/b&#x3E; Specify the mask for the subnet the</fixedIP_Txt3a>
+		<fixedIP_Txt3b type="text" minor="0">is located on</fixedIP_Txt3b>
+		<fixedIP_Txt4 type="text" minor="0">&#x3C;b&#x3E;Default router&#x3C;/b&#x3E; - Specify the IP address of the default router (gateway) used for connecting devices attached to different networks and network segments.</fixedIP_Txt4>
+		<fixedIP_Txt5 type="text" minor="0">&#x3C;b&#x3E;Note&#x3C;/b&#x3E; - Static IP addresses can be assigned at random within isolated networks, provided that each given address is unique. To avoid conflicts, it is strongly recommended that you contact your network administrator prior to assigning a static IP address.</fixedIP_Txt5>
+		<subTitle_config_IPv6_Txt type="text" minor="0">IPv6 Address Configuration</subTitle_config_IPv6_Txt>
+		<iPv6_config_Txt type="text" minor="0">Check the box for &#x3C;b&#x3E;Enable IPv6&#x3C;/b&#x3E; to enable IPv6. Other settings for IPv6 are configured in the network router.</iPv6_config_Txt>
+		<subTitle_services_Txt type="text" minor="0">Services</subTitle_services_Txt>
+		<aRPPing_Txt1a type="text" minor="0">&#x3C;b&#x3E;Enable ARP/Ping setting of IP address&#x3C;/b&#x3E; - The IP address for the</aRPPing_Txt1a>
+		<aRPPing_Txt1b type="text" minor="0">can be set using the ARP/Ping method, which associates the unit's MAC address with an IP address. Check this box to enable ARP/Ping setting. Leave the service disabled to prevent unintentional resetting of the IP address.</aRPPing_Txt1b>
+		<aRPPing_Txt2 type="text" minor="0">&#x3C;b&#x3E;Notes:&#x3C;/b&#x3E;</aRPPing_Txt2>
+		<aRPPing_Txt3 type="text" minor="0">The ARP/Ping service is automatically disabled 2 minutes after the unit is started, or as soon as an IP address is set.</aRPPing_Txt3>
+		<aRPPing_Txt4 type="text" minor="0">Pinging the unit will still be possible when this service is disabled.</aRPPing_Txt4>
+		<notification_Txt1a type="text" minor="0">&#x3C;b&#x3E;Options for notification of IP address change&#x3C;/b&#x3E;. When the IP address for your</notification_Txt1a>
+		<notification_Txt1b type="text" minor="0">&#x3C;b&#x3E;changes, you can choose to be notified of the change. To configure notifications, click the &#x3C;b&#x3E;Settings&#x3C;/b&#x3E; button. &#x3C;a href='notification_h.shtml'&#x3E;More...&#x3C;/a&#x3E;</notification_Txt1b>
+		<internetDDNS_Txt1 type="text" minor="0">&#x3C;b&#x3E;AXIS Internet Dynamic DNS service&#x3C;/b&#x3E; - The AXIS Internet Dynamic DNS Service can provide your Axis product with its own URL (web address), which can then be used to access it over the Internet. The product can be unregistered from the service at any time.</internetDDNS_Txt1>
+		<internetDDNS_Txt2 type="text" minor="0">Click the &#x3C;b&#x3E;Settings&#x3C;/b&#x3E; button to modify the Internet Dynamic DNS settings. &#x3C;a href='internetDyn_DNS_h.shtml'&#x3E;More...&#x3C;/a&#x3E;</internetDDNS_Txt2>
+		<avhs_Txt type="text" minor="0">&#x3C;b&#x3E;Enable AVHS&#x3C;/b&#x3E; - AXIS Video Hosting System (AVHS) in conjunction with an AVHS service provides easy and secure Internet access to live and recorded video accessible from any location. For more information and help to find a local AVHS Service Provider   please go to www.axis.com. If AVHS is not to be used this option can be disabled.</avhs_Txt>
+		<avhs_oneClick_Txt type="text" minor="0">&#x3C;b&#x3E;One-click enabled&#x3C;/b&#x3E; - This option is enabled by default. When the control button is pressed the camera will connect to an AVHS service over the Internet. If the camera is registered to an AVHS service the value will change to &#x3C;b&#x3E; Always&#x3C;/b&#x3E; and the camera will stay connected to the AVHS service. If the camera is not registered within 24 hours from when the control button was pressed, the camera will disconnect from the AVHS service.</avhs_oneClick_Txt>
+		<avhs_always_Txt type="text" minor="0">&#x3C;b&#x3E;Always&#x3C;/b&#x3E; - The Axis product will constantly attempt to connect to an AVHS service over the Internet, once registered the product will stay connected to the AVHS service. This option can be used if the camera is already installed and pressing the control button is not convenient.</avhs_always_Txt>
+		<avhs_oneClick2buttons_Txt type="text" minor="0">&#x3C;b&#x3E;One-click enabled&#x3C;/b&#x3E; - This option is enabled by default. When the control button (button 1) is pressed the camera will connect to an AVHS service over the Internet. If the camera is registered to an AVHS service the value will change to &#x3C;b&#x3E; Always&#x3C;/b&#x3E; and the camera will stay connected to the AVHS service. If the camera is not registered within 24 hours from when the control button was pressed, the camera will disconnect from the AVHS service.</avhs_oneClick2buttons_Txt>
+		<avhs_always2buttons_Txt type="text" minor="0">&#x3C;b&#x3E;Always&#x3C;/b&#x3E; - The Axis product will constantly attempt to connect to an AVHS service over the Internet, once registered the product will stay connected to the AVHS service. This option can be used if the camera is already installed and pressing the control button (button 1) is not convenient.</avhs_always2buttons_Txt>
+		<avhs_proxy_Txt1 type="text" minor="0">&#x3C;b&#x3E;Proxy settings&#x3C;/b&#x3E; - If required, enter the proxy settings to connect to the HTTP server.</avhs_proxy_Txt1>
+		<avhs_proxy_Txt2 type="text" minor="0">&#x3C;b&#x3E;Proxy&#x3C;/b&#x3E; - The proxy server's address</avhs_proxy_Txt2>
+		<avhs_proxy_Txt3 type="text" minor="0">&#x3C;b&#x3E;Proxy port&#x3C;/b&#x3E; - Enter the number of the port used for access</avhs_proxy_Txt3>
+		<avhs_proxy_Txt4 type="text" minor="0">&#x3C;b&#x3E;Proxy login&#x3C;/b&#x3E; - Enter a user name for the proxy server if required</avhs_proxy_Txt4>
+		<avhs_proxy_Txt5 type="text" minor="0">&#x3C;b&#x3E;Proxy password&#x3C;/b&#x3E; - Enter a password for the proxy server if required</avhs_proxy_Txt5>
+		<avhs_proxy_Txt6 type="text" minor="0">&#x3C;b&#x3E;Proxy authentication method&#x3C;/b&#x3E; - Select one of the options below</avhs_proxy_Txt6>
+		<avhs_proxy_Txt7 type="text" minor="0">&#x3C;b&#x3E;Basic&#x3C;/b&#x3E; - The Basic proxy authentication method is the most compatible authentication scheme for HTTP. It is however less secure as it sends the user name and password unencrypted to the server.</avhs_proxy_Txt7>
+		<avhs_proxy_Txt8 type="text" minor="0">&#x3C;b&#x3E;Digest&#x3C;/b&#x3E; - The Digest proxy authentication method is more secure than Basic as it always transfers the password across the network encrypted.</avhs_proxy_Txt8>
+		<avhs_proxy_Txt9a type="text" minor="0">&#x3C;b&#x3E;Auto&#x3C;/b&#x3E; - This option enables the</avhs_proxy_Txt9a>
+		<avhs_proxy_Txt9b type="text" minor="0">to select the authentication method automatically depending on the methods supported. It prioritizes the Digest method over the Basic method.</avhs_proxy_Txt9b>
+        <tcpip_subTitle_IPaddress_both_Txt type="text" minor="0">IPv4 Address Configuration</tcpip_subTitle_IPaddress_both_Txt>
+        <tcpip_subTitle_IPaddress_Txt type="text" minor="0">IP Address Configuration</tcpip_subTitle_IPaddress_Txt>
+        <tcpip_subTitle_IPaddress_bothWlan_Txt type="text" minor="0">IPv4 Address Configuration - Wireless</tcpip_subTitle_IPaddress_bothWlan_Txt>
+        <tcpip_subTitle_IPaddressEth_Txt type="text" minor="0">IPv4 Address Configuration - Ethernet</tcpip_subTitle_IPaddressEth_Txt>
+        <tcpip_subTitle_config_IPv6_Txt type="text" minor="0">IPv6 Address Configuration</tcpip_subTitle_config_IPv6_Txt>
+        <tcpip_subTitle_IPaddressV6_bothWlan_Txt type="text" minor="0">IPv6 Address Configuration - Wireless</tcpip_subTitle_IPaddressV6_bothWlan_Txt>
+        <tcpip_subTitle_IPaddressV6Eth_Txt type="text" minor="0">IPv6 Address Configuration - Ethernet</tcpip_subTitle_IPaddressV6Eth_Txt>
+        <IPv6_config_Txt type="text" minor="0">Check the box for &#x3C;b&#x3E;Enable IPv6&#x3C;/b&#x3E; to enable IPv6. Other settings for IPv6 are configured in the network router.</IPv6_config_Txt>
+        <tcpip_subTitle_IPaddress_bothV4_Txt type="text" minor="0">IPv4 Address Configuration - Ethernet</tcpip_subTitle_IPaddress_bothV4_Txt>
+        <tcpip_subTitle_IPaddressV4_Txt type="text" minor="0">IPv4 Address Configuration - Wireless</tcpip_subTitle_IPaddressV4_Txt>
+        <tcpip_help_enableIPv4New_Txt type="text" minor="0">&#x3C;b&#x3E;Enable IPv4&#x3C;/b&#x3E; - Check this box to enable IPv4.</tcpip_help_enableIPv4New_Txt>
+        <tcpip_subTitle_IPaddressV6_both_Txt type="text" minor="0">IPv6 Address Configuration - Ethernet</tcpip_subTitle_IPaddressV6_both_Txt>
+        <tcpip_subTitle_IPaddressV6_Txt type="text" minor="0">IPv6 Address Configuration - Wireless</tcpip_subTitle_IPaddressV6_Txt>
+        <IPv6_help_Txt type="text" minor="0">Check the box for &#x3C;b&#x3E;Enable IPv6&#x3C;/b&#x3E; to enable IPv6. Other settings for IPv6 are configured in the network router.</IPv6_help_Txt>
+        <tcpip_help_InternetDDNS_Txt1 type="text" minor="0">&#x3C;b&#x3E;AXIS Internet Dynamic DNS service&#x3C;/b&#x3E; - The AXIS Internet Dynamic DNS Service can provide your Axis product with its own URL (web address), which can then be used to access it over the Internet. The product can be unregistered from the service at any time.</tcpip_help_InternetDDNS_Txt1>
+        <tcpip_help_InternetDDNS_Txt2 type="text" minor="0">Click the &#x3C;b&#x3E;Settings&#x3C;/b&#x3E; button to modify the Internet Dynamic DNS settings.</tcpip_help_InternetDDNS_Txt2>
+       	<tcpip_help_InternetDDNS_Txt3 type="text" minor="0">More...</tcpip_help_InternetDDNS_Txt3>
+		<tcpip_help_obtainIPDhcp_Txt1 type="text" minor="0">&#x3C;b&#x3E;Obtain IP address via DHCP&#x3C;/b&#x3E; - Dynamic Host Configuration Protocol (DHCP) is a protocol that lets network administrators centrally manage and automate the assignment of IP addresses on a network. DHCP is enabled by default.</tcpip_help_obtainIPDhcp_Txt1>
+		<tcpip_help_obtainIPDhcp_Txt2 type="text" minor="0">&#x3C;b&#x3E;Notes:&#x3C;/b&#x3E;</tcpip_help_obtainIPDhcp_Txt2>
+		<tcpip_help_obtainIPDhcp_Txt3 type="text" minor="0">DHCP should only be enabled if using dynamic IP address notification (see below), or if your DHCP server can update a DNS server, which then allows you to access the</tcpip_help_obtainIPDhcp_Txt3>
+		<tcpip_help_obtainIPDhcp_Txt4 type="text" minor="0">by name (host name). If DHCP is enabled and you cannot access the unit, you may have to reset it to the factory default settings and then perform the installation again.</tcpip_help_obtainIPDhcp_Txt4>
+		<tcpip_help_obtainIPDhcp_Txt5 type="text" minor="0">Although a DHCP server is mostly used to set an IP address dynamically, it is also possible to use it to set a static, known IP address for a particular MAC address.</tcpip_help_obtainIPDhcp_Txt5>
+		<tcpip_help_obtainIPDhcp_Txt6 type="text" minor="0">When setting up the</tcpip_help_obtainIPDhcp_Txt6>
+		<tcpip_help_obtainIPDhcp_Txt7 type="text" minor="0">to use DHCP servers for obtaining network settings, it may also be possible for a BOOTP server to provide these settings.</tcpip_help_obtainIPDhcp_Txt7>
+		<tcpip_help_fixedIPStatic_Txt1 type="text" minor="0">To use a static IP address for the</tcpip_help_fixedIPStatic_Txt1>
+		<tcpip_help_fixedIPStatic_Txt2 type="text" minor="0">, check the radio button for &#x3C;b&#x3E;Use the following IP address&#x3C;/b&#x3E; and then make the following settings:</tcpip_help_fixedIPStatic_Txt2>
+		<tcpip_help_fixedIPStatic_Txt3 type="text" minor="0">&#x3C;b&#x3E;IP address -&#x3C;/b&#x3E; Specify a unique IP address for your</tcpip_help_fixedIPStatic_Txt3>
+		<tcpip_help_fixedIPStatic_Txt4 type="text" minor="0">. (To check if the IP address you intend to use is available or not, click the &#x3C;b&#x3E;Test&#x3C;/b&#x3E; button)</tcpip_help_fixedIPStatic_Txt4>
+		<tcpip_help_fixedIPStatic_Txt5 type="text" minor="0">&#x3C;b&#x3E;Subnet mask -&#x3C;/b&#x3E; Specify the mask for the subnet the</tcpip_help_fixedIPStatic_Txt5>
+		<tcpip_help_fixedIPStatic_Txt6 type="text" minor="0">is located on.</tcpip_help_fixedIPStatic_Txt6>
+		<tcpip_help_fixedIPStatic_Txt7 type="text" minor="0">&#x3C;b&#x3E;Default router&#x3C;/b&#x3E; - Specify the IP address of the default router (gateway) used for connecting devices attached to different networks and network segments.</tcpip_help_fixedIPStatic_Txt7>
+		<tcpip_help_fixedIPStatic_Txt8 type="text" minor="0">&#x3C;b&#x3E;Note&#x3C;/b&#x3E; - Static IP addresses can be assigned at random within isolated networks, provided that each given address is unique. To avoid conflicts, it is strongly recommended that you contact your network administrator prior to assigning a static IP address.</tcpip_help_fixedIPStatic_Txt8>
+	</tcpip_h>
+
+
+
+
+
+	<internetDyn_DNS_h>
+		<pageTitle type="title" minor="0">Help/AXIS Internet Dynamic DNS Service</pageTitle>
+		<titleTxt type="msgAsText" minor="0">AXIS Internet Dynamic DNS Service</titleTxt>
+		<helpInfo1Txt1a type="text" minor="0">Use the &#x3C;b&#x3E;AXIS Internet Dynamic DNS service&#x3C;/b&#x3E; to assign a host name for easy access to your</helpInfo1Txt1a>
+		<helpInfo1Txt1b type="text" minor="0">.</helpInfo1Txt1b>
+		<help4aTxt1a type="text" minor="0">&#x3C;b&#x3E;Register or update current domain name registration&#x3C;/b&#x3E; - If your</help4aTxt1a>
+		<help4aTxt1b type="text" minor="0">has not previously been registered at the AXIS Internet Dynamic DNS Service, clicking the &#x3C;b&#x3E;Register&#x3C;/b&#x3E; button will start the registration process. You will then need to visit</help4aTxt1b>
+		<help4aTxt1c type="text" minor="0">to complete the process. This must be done within 60 minutes of clicking the button.</help4aTxt1c>
+		<help4aTxt2a type="text" minor="0">If the</help4aTxt2a>
+		<help4aTxt2b type="text" minor="0">is already registered at the AXIS Internet Dynamic DNS Service, clicking this button will simply update the registration information.</help4aTxt2b>
+		<help5aTxt1a type="text" minor="0">&#x3C;b&#x3E;Remove currently registered domain name&#x3C;/b&#x3E; - Click to remove the currently registered domain name for your</help5aTxt1a>
+		<help5aTxt1b type="text" minor="0">.</help5aTxt1b>
+		<conf type="text" minor="0">Configuration</conf>
+		<help1aTxt1a type="text" minor="0">&#x3C;b&#x3E;Enable automatic updates to the AXIS Internet Dynamic DNS service &#x3C;/b&#x3E;- If your</help1aTxt1a>
+		<help1aTxt1b type="text" minor="0">has been registered at the AXIS Internet Dynamic DNS Service and its IP address changes, the DNS service must be updated with this new IP address.</help1aTxt1b>
+		<help1cTxt1a type="text" minor="0">If the</help1cTxt1a>
+		<help1cTxt1b type="text" minor="0">is connected to the Internet via a NAT (network address translation) device and this device's IP address changes, the AXIS Internet Dynamic DNS Service will automatically be updated with the new IP address.</help1cTxt1b>
+		<help1eTxt type="text" minor="0">Check this box to enable automatic updates.</help1eTxt>
+		<help2aTxt type="text" minor="0">&#x3C;b&#x3E;Enable regular updates to the AXIS Internet Dynamic DNS Service &#x3C;/b&#x3E;- Check this box to enable regular updates to the AXIS Internet Dynamic DNS service. These regular updates will always occur at the set interval, with no regard to whether automatic updates have been configured or not. Both update methods may be enabled simultaneously.</help2aTxt>
+		<help2bTxt type="text" minor="0">&#x3C;b&#x3E;Interval in hours between updates &#x3C;/b&#x3E;- Set the interval at which to regularly update the AXIS Internet Dynamic DNS Service.</help2bTxt>
+		<help3aTxt1a type="text" minor="0">&#x3C;b&#x3E;Disable registration/update via the control button &#x3C;/b&#x3E;- Check this box to disable the use of the control button for performing registration/updates of the</help3aTxt1a>
+		<help3aTxt1b type="text" minor="0">'s IP address at the AXIS Internet Dynamic DNS Service.</help3aTxt1b>
+	</internetDyn_DNS_h>
+
+
+
+
+
+	<notification_h>
+		<pageTitle type="title" minor="0">Help/Notification of IP Address Change</pageTitle>
+		<titleTxt type="msgAsText" minor="0">Notification of IP Address Change</titleTxt>
+		<help1Txt1a type="text" minor="0">When the IP Address for the</help1Txt1a>
+		<help1Txt1b type="text" minor="0">changes, you can choose to be notified of the change via HTTP, FTP or SMTP. Provide the</help1Txt1b>
+		<help1Txt1c type="text" minor="0">with the means with which you want to be notified (e.g. set up an FTP server), and click the &#x3C;b&#x3E;OK&#x3C;/b&#x3E; button to implement these settings.</help1Txt1c>
+		<help1Txt2 type="text" minor="0">Note that all three options may be used simultaneously, if required.</help1Txt2>
+		<subTitle1Txt type="text" minor="0">HTTP Notification</subTitle1Txt>
+		<help4Txt1a type="text" minor="0">When this option is selected, the</help4Txt1a>
+		<help4Txt1b type="text" minor="0">sends an HTTP GET request to the specified URL. This can then easily be taken care of by a designated cgi-script, which registers the request. The format of the GET request is as follows:</help4Txt1b>
+		<help4Txt2 type="text" minor="0">http://(hostname)(:port)/(path)?Release=()&#x26;IPAddress=()&#x26;HTTPPort=() &#x26;HostName=()&#x26;MacAddress=()&#x26;TextInfo=()(Your own custom string).</help4Txt2>
+		<help4Txt3 type="text" minor="0">Check the &#x3C;b&#x3E;Enable&#x3C;/b&#x3E; box and provide the following information for HTTP notification:</help4Txt3>
+		<help5Txt1 type="text" minor="0">&#x3C;b&#x3E;URL&#x3C;/b&#x3E; - The URL to the cgi-script that will handle the information.</help5Txt1>
+		<help5Txt2 type="text" minor="0">&#x3C;b&#x3E;Custom Parameters&#x3C;/b&#x3E; - Additional parameters, such as your own text.&#x3C;b&#x3E; Note:&#x3C;/b&#x3E; This string must be URL-encoded and supplied with a leading &#x26; character (ampersand).</help5Txt2>
+		<help5Txt3 type="text" minor="0">&#x3C;b&#x3E;User Name and Password&#x3C;/b&#x3E; - If the script is password protected, then these fields must be completed.</help5Txt3>
+		<help5Txt4 type="text" minor="0">&#x3C;b&#x3E;Proxy address/Proxy Port&#x3C;/b&#x3E; - If you must pass a proxy server to connect to the host in the URL, then enter the proxy server's address and port in this field.</help5Txt4>
+		<help5Txt5 type="text" minor="0">&#x3C;b&#x3E;Proxy User Name and Password&#x3C;/b&#x3E; - If you need to supply a user name and password to your proxy server, enter them here.</help5Txt5>
+		<help6aTxt type="text" minor="0">Click the &#x3C;b&#x3E;Test&#x3C;/b&#x3E; button to test the connection to the HTTP server.</help6aTxt>
+		<subTitle2Txt type="text" minor="0">SMTP Notification (email)</subTitle2Txt>
+		<help6Txt type="text" minor="0">The SMTP option will send notification by email. Note that a mail server must be configured under the SMTP settings. Check the &#x3C;b&#x3E;Enable&#x3C;/b&#x3E; box and provide the following information for SMTP notification:</help6Txt>
+		<help7Txt1 type="text" minor="0">&#x3C;b&#x3E;Send to -&#x3C;/b&#x3E; Specify the recipient's email address here. Multiple recipients may be entered by separating them by semicolons or commas. Mailing list addresses may also be used, but check that the mailing list is present on the mail server.</help7Txt1>
+		<help7Txt2 type="text" minor="0">&#x3C;b&#x3E;Subject&#x3C;/b&#x3E; - Text entered here will be shown in the &#x3C;i&#x3E;subject&#x3C;/i&#x3E; field of the notification.</help7Txt2>
+		<help7aTxt type="text" minor="0">&#x3C;b&#x3E;Test&#x3C;/b&#x3E; - click this button to send a test email message, to check that the email address is valid and that a mail server has been correctly configured.</help7aTxt>
+		<subTitle3Txt type="text" minor="0">FTP Notification</subTitle3Txt>
+		<help8Txt type="text" minor="0">FTP notification will save a file on the specified FTP server. Check the &#x3C;b&#x3E;Enable&#x3C;/b&#x3E; box and provide the following information for FTP notification:</help8Txt>
+		<help9Txt1 type="text" minor="0">&#x3C;b&#x3E;Network address &#x3C;/b&#x3E;- Specify the IP address or host name of the target FTP server.</help9Txt1>
+		<help9Txt2 type="text" minor="0">&#x3C;b&#x3E;Upload Path&#x3C;/b&#x3E; - Enter a path name defining where the notification file will be saved on the target server. For example: &#x3C;i&#x3E;myserver/notification/&#x3C;/i&#x3E;</help9Txt2>
+		<help9Txt3 type="text" minor="0">&#x3C;b&#x3E;User Name&#x3C;/b&#x3E; &#x26; &#x3C;b&#x3E;Password&#x3C;/b&#x3E;  - Enter the user name and password for logging onto the remote FTP host where you will be saving your notification file.</help9Txt3>
+		<help9Txt4 type="text" minor="0">&#x3C;b&#x3E; Note&#x3C;/b&#x3E;: Your System or Network Administrator will normally determine the user access rights and security settings for an FTP host on your network.</help9Txt4>
+		<help9Txt5a type="text" minor="0">&#x3C;b&#x3E;Use Passive Mode&#x3C;/b&#x3E; - Under normal circumstances the</help9Txt5a>
+		<help9Txt5b type="text" minor="0">simply requests the target FTP server to open the data connection. Checking this box issues a PASV command to the FTP server and establishes a passive FTP connection; whereby the</help9Txt5b>
+		<help9Txt5c type="text" minor="0">actively initiates both the FTP control and data connections to the target server. This is normally desirable if there is a firewall between the</help9Txt5c>
+		<help9Txt5d type="text" minor="0">and the target FTP server.</help9Txt5d>
+		<help9Txt6 type="text" minor="0">&#x3C;b&#x3E;Text Type&#x3C;/b&#x3E; - When sending the notification file via FTP it is possible to send one of three different types of files:</help9Txt6>
+		<help9Txt7 type="text" minor="0">&#x3C;b&#x3E;Short&#x3C;/b&#x3E; (one line containing only the IP address)</help9Txt7>
+		<help9Txt8 type="text" minor="0">&#x3C;b&#x3E;Extended&#x3C;/b&#x3E; (a multi-line text file containing more information)</help9Txt8>
+		<help9Txt9 type="text" minor="0">&#x3C;b&#x3E;Extended HTML&#x3C;/b&#x3E;, which contains the same information as the Extended file, but with HTML tags added.</help9Txt9>
+		<test_FTP_help_Txt type="text" minor="0">Click the &#x3C;b&#x3E;Test&#x3C;/b&#x3E; button to test the connection to the FTP server.</test_FTP_help_Txt>
+		<subTitle4Txt type="text" minor="0">Notification Message</subTitle4Txt>
+		<help13Txt type="text" minor="0">Enter your own text in the field provided. This text is then used by all of the notification methods described above.</help13Txt>
+		<help14Txt type="text" minor="0">After making these settings, click &#x3C;b&#x3E;Save&#x3C;/b&#x3E;.</help14Txt>
+	</notification_h>
+
+
+
+
+
+	<proxy_h>
+		<pageTitle type="title" minor="0">Help/Proxy Settings</pageTitle>
+		<titleTxt type="msgAsText" minor="0">Proxy Settings</titleTxt>
+		<subTitle_Txt type="text" minor="0">HTTP Proxy Settings</subTitle_Txt>
+		<enable_h_Txt type="text" minor="0">&#x3C;b&#x3E;Enable&#x3C;/b&#x3E; - Check this box to enable using the HTTP proxy server.</enable_h_Txt>
+		<server_Txt type="text" minor="0">&#x3C;b&#x3E;Server&#x3C;/b&#x3E; - Enter a hostname or an IP address of the HTTP proxy to use preceeded by http://. Enclose IPv6 addresses using '[' ']'.</server_Txt>
+		<port_Txt type="text" minor="0">&#x3C;b&#x3E;Port&#x3C;/b&#x3E; - Specify the port to use. Default is 8080.</port_Txt>
+		<local_networks_Txt type="text" minor="0">&#x3C;b&#x3E;Local networks&#x3C;/b&#x3E; - Enter local network IP addresses with subnet mask. Separate multiple networks using ','</local_networks_Txt>
+		<access_Txt type="text" minor="0">Enter the &#x3C;b&#x3E;User name&#x3C;/b&#x3E; and &#x3C;b&#x3E;Password&#x3C;/b&#x3E; for the proxy server.</access_Txt>
+	</proxy_h>
+</language_xml>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="SHIFT-JIS"?>
+<language_xml>
+	<wait>
+		<processing type="msgAsText">処理を行っています...</processing>
+	</wait>
+</language_xml>

@@ -1,0 +1,112 @@
+<!--#set var="activeMenu" val="dome" -->
+<!--#set var="activePage" val="gatekeeper" -->
+
+<!--#set var="gatekeeper" val="yes" -->
+<!--#set var="skipPTZ" val="no" -->
+
+<!--#if expr="$nbr = 0" -->
+  <!--#set var="camnbr" val="1" -->
+<!--#elif expr="$nbr = 1" -->
+  <!--#set var="camnbr" val="2" -->
+<!--#elif expr="$nbr = 2" -->
+  <!--#set var="camnbr" val="3" -->
+<!--#elif expr="$nbr = 3" -->
+  <!--#set var="camnbr" val="4" -->
+<!--#else -->
+  <!--#set var="nbr" val="0" -->
+  <!--#set var="camnbr" val="1" -->
+<!--#endif -->
+
+<!--#include virtual="/sm/sm.srv?action=get&group=ImageSource,Properties.PTZ.PTZ,Brand.ProdType,Brand.ProdNbr,Properties.Motion,PTZ.Support" -->
+
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#set var="reservedName" val="Gatekeeper" -->
+
+<!--#if expr="_$gkEventNr != _" -->
+  <!--#set var="eventNr" val="$gkEventNr" -->
+<!--#endif -->
+
+<!--#include virtual="/incl/page_header.shtml" -->
+
+  <link rel="stylesheet" href="/css/gatekeeper.css" type="text/css" />
+  <link rel="stylesheet" href="/css/event_dialogs.css" type="text/css" />
+
+  <script src="/incl/list_functions.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->" language="javascript" type="text/javascript"></script>
+  <script src="/incl/soapclient.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->" language="javascript" type="text/javascript"></script>
+  <script src="/incl/event_list.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->" language="javascript" type="text/javascript"></script>
+
+  <!--#include virtual="/java/integer.shtml" -->
+  <script type="text/javascript" language="javascript">
+  <!--
+    var langObjEvTyGkEvent = new Language("event_types", "gatekeeperEvent");
+    addLoadEvent( function(){ langObjEvTyGkEvent.init(); } );
+  
+    <!--#include virtual="/incl/paramArray.shtml" -->
+    <!--#include virtual="/incl/topic_list.shtml" -->
+  // -->
+  </script>
+
+  <!--#include virtual="/incl/gatekeeperEvent.shtml" -->
+</head>
+<body>
+  <!--#include virtual="/incl/page_top.shtml" -->
+
+  <form name="motionForm" action="" method="post" onsubmit="return false;">
+    <!--#include virtual="/sm/sm.srv?action=get_htmlform&getgroup=root.Motion&format=hiddenhtmlform" -->
+  </form>
+
+  <form name="presetPosForm" method="post" onsubmit="return false;">
+    <!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.PTZ.Preset.P0.HomePosition&format=hiddenhtmlform" -->
+    <!--#include virtual="/sm/sm.srv?action=get_htmlform&getgroup=root.PTZ.Preset.P0.Position&format=hiddenhtmlform" -->
+  </form>
+
+  <h2><span id="step3Txt"></span></h2>
+  <h3><span id="instructionsTxt"></span></h3>
+  <div id="gatekeeperSetupPage" class="alternateRows">
+    <div class="normal_text" id="instructionText">
+    </div>
+    <div class="normal_text" id="presetDiv" style="display:none;">
+      <h3><span id="genTxt"></span></h3>
+
+      <div class="row">
+        <label for="ruleName"><span id="nameTxt"></span></label>
+        <input class="medium" type="text" id="ruleName" name="ruleName" maxlength="20" value="<!--#echo var="reservedName" option="encoding:html" -->" disabled="disabled" />
+        <input type="hidden" id="enableRule" name="enableRule" value="yes" />
+      </div>
+
+      <h3><span id="conditionTxt"></span></h3>
+      <div class="row">
+        <label for="groupParent"><span id="eventTxt"></span></label>
+        <div id="groupContainer" style="display: none;">
+          <select name="triggers" id="triggerParent" style="display: none;"></select>
+          <select name="groups" id="groupParent" class="large" onchange="javascript:toggleTopics(this, 0)"></select>
+        </div>
+        <div id="subGroupContainer" style="clear: none;"></div>
+        <div id="statesContainer" style="display: none;"></div>
+      </div>
+
+      <div class="row">
+        <label for="schedule"><span id="schTxt"></span></label>
+        <select name="schedule" id="schedule" class="large">
+          <option value="" class="gray">&nbsp;&nbsp;----------</option>
+        </select>
+      </div>
+      <h3><span id="actionsTxt"></span></h3>
+      <div class="row" id="divActionType">
+        <label><span id="typeTxt"></span></label>
+        <input type="hidden" name="actionType" id="actionType" value="" />
+      </div>
+      <!--#set var="action" val="render" -->
+          <!--#include virtual="/operator/action_ptz_control.shtml" -->
+      <div class="formButtons">
+        <input type="button" value="" name="gk_SaveBtn" class="btnNormal" onclick="javascript:saveData()" onmouseover="return showStatus(SaveBtnStatTxt)" onmouseout="return showStatus('')"  id="btnOK" />
+        <input type="button" value=""  onclick="resetForm()" class="btnNormal" onmouseover="return showStatus(ResBtnStatTxt)" onmouseout="return showStatus('')" id="btnReset" />
+      </div>
+    </div>
+    <div class="wizardButtons">
+      <input type="button" onclick="javascript:wizardGoToStep( 2 )" name="preBtn" id="preBtn" class="btnNormal" value="" />
+    </div>
+  </div>
+
+<!--#include virtual="/incl/page_footer.shtml" -->
+

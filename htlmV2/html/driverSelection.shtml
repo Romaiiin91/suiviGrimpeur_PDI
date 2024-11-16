@@ -1,0 +1,444 @@
+<!--#set var="helpURL" val="javascript:launch('/help/driverSelection_h.shtml')" -->
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#set var="activeMenu" val="dome" -->
+<!--#set var="activePage" val="driverSel" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+
+
+
+
+<!--#include virtual="/java/chkbox.shtml" -->
+<!--#include virtual="/sm/sm.srv?action=get&group=PTZ" -->
+
+<style type="text/css">
+option.installed { color: #3366cc; }
+</style>
+
+<script language="JavaScript">
+<!--
+var langObjPtzDrivSel = new Language("ptz", "driverSelection");
+
+var installedDriverId = "";
+var driverList = AxisConnectionFactory.createAjaxConnection();
+
+function bodyonload()
+{
+  langObjPtzDrivSel.init();
+  getDrivers();
+  <!--#if expr="$uploaderror = 1" -->
+    alert( langObjPtzDrivSel.getText("uploadErrAlrt") );
+  <!--#endif -->
+
+}
+
+function getDrivers()
+{
+  AxisConnectionFactory.sendAsync(["GET", "/axis-cgi/ptz/ptzuploader.cgi?list=yes"], null, listDrivers, driverList);
+}
+
+function listDrivers()
+{
+  var instOnChAl;
+  if (driverList.getReadyState() == 4) {
+    if (driverList.getStatus() == 200) {
+      var driverListString = driverList.getResponseText();
+      var xml = driverList.getResponseXml();
+      var drivEntResponse  = xml.documentElement.getElementsByTagName("driverentry");
+      var idResponse       = xml.documentElement.getElementsByTagName("id");
+      var driverResponse   = xml.documentElement.getElementsByTagName("driver");
+      var versionResponse  = xml.documentElement.getElementsByTagName("driverversion");
+
+      if (driverListString.length < 40) {
+        var theDrivers = langObjPtzDrivSel.getText("noDrUpTxt");
+      } else {
+        var instOnCh;
+        var driverId;
+        var theDrivers = '<select name="driverList" onChange="showRemoveButton()" id="uploadedDriversList">';
+        theDrivers += '<option value="0"> ------- </option>';
+        //Loop through all uploaded drivers (counting driver id:s)
+        for(var i=0; i<idResponse.length; i++) {
+          if (drivEntResponse[i]
+              && drivEntResponse[i].childNodes[3]
+              && drivEntResponse[i].childNodes[3].childNodes[0]
+              && drivEntResponse[i].childNodes[3].childNodes[0].firstChild)
+          {
+            instOnCh = drivEntResponse[i].childNodes[3].childNodes[0].firstChild.data;
+            instOnChAl = instOnCh;
+          }
+          driverId = idResponse[i].firstChild.nodeValue;
+          theDrivers += '<option value="'+driverId+'"';
+          if (instOnCh)
+          {
+            theDrivers += ' class="installed" selected';
+            installedDriverId = driverId;
+            instOnCh = "";
+          }
+          theDrivers += '>' + driverResponse[i].firstChild.nodeValue + ' [' + versionResponse[i].firstChild.nodeValue + ']</option>';
+        }
+        theDrivers += '</select>';
+      }
+      document.getElementById("uploadedDrivers").innerHTML = theDrivers;
+      showRemoveButton()
+
+      var uplDriList = document.getElementById("uploadedDriversList");
+      if(uplDriList)
+      {
+        //if a driver is installed, disable the select-list of drivers
+        if(instOnChAl)
+        {
+          uplDriList.disabled=true;
+          var remBtn = document.getElementById("drivSel_RemoveBtn");
+          if( remBtn )
+            remBtn.disabled=true;
+          instOnChAl="";
+          document.getElementById("noteDeactivatePtz").style.display="inline";
+        }
+        //if there are uploaded drivers but none installed, select the first one in select list
+        else if(uplDriList.length>1&&uplDriList.selectedIndex==0)
+        {
+          uplDriList.selectedIndex = 1;
+          showRemoveButton();
+        }
+      }
+    }
+  }
+}
+
+var driverSet = AxisConnectionFactory.createAjaxConnection();
+var setDriver_remove = false;
+var vidChannel;
+function setDriver(remove, channelIn)
+{
+  vidChannel = channelIn?channelIn:"1";
+  if (document.getElementsByName("UploadDriver")[0].value.length > 0
+      && !confirm( langObjPtzDrivSel.getText("drivNotUplCfrm") )) {
+    return;
+  }
+
+  var oDriverList = document.getElementById("uploadedDriversList");
+  setDriver_remove = remove;
+  if (!remove && (!oDriverList || installedDriverId == "" && oDriverList.selectedIndex == 0)) {
+    saveData();
+  } else {
+      document.getElementsByName("root_PTZ_CamPorts_Cam"+vidChannel+"Port")[0].value = "1";
+    if (remove) {
+      var driverId = "0";
+      var port = "-1";
+    } else {
+      var driverId = oDriverList.value;
+      var port = document.getElementsByName("root_PTZ_CamPorts_Cam"+vidChannel+"Port")[0].value;
+    }
+    document.getElementsByName("root_PTZ_CamPorts_Cam"+vidChannel+"Port")[0].value = port;
+    AxisConnectionFactory.sendAsync(["GET", "/axis-cgi/ptz/ptzupgrader.cgi?driverid="+driverId+"&channel="+vidChannel+"&port="+port], null, driverSetDone, driverSet);
+    wait_start( langObjPtzDrivSel.getText("plsWaitPtzUplTxt") );
+  }
+}
+
+function driverSetDone()
+{
+  if (driverSet.getReadyState() == 4) {
+    if (driverSet.getStatus() == 200)
+    {
+      setTimeout(waitForDriverReady, 200);
+    }
+    else if (driverSet.getStatus() == 400)
+    {
+      var theResponse = driverSet.getResponseText();
+      var el = document.getElementById("ptzActivatedCh"+vidChannel);
+      el.checked=false;
+      wait_stop();
+
+      if (theResponse.indexOf("validation failed") != -1)
+      {
+        alert( langObjPtzDrivSel.getText("incompDrivAlrt") );
+      }
+      else
+      {
+        alert( langObjPtzDrivSel.getText("insFailAlrt") );
+      }
+    }
+  }
+}
+
+var pollDriver = AxisConnectionFactory.createAjaxConnection();
+function waitForDriverReady()
+{
+  var now = new Date();
+  var url = "/axis-cgi/operator/param.cgi?action=list&group=root.PTZ.PTZDriverStatuses.Driver"+vidChannel+"Status,root.PTZ.Various.V"+vidChannel+".CamId,root.PTZ.Various.V"+vidChannel+".DeviceType&timestamp=" + now.getTime();
+
+  AxisConnectionFactory.sendAsync(["GET", url], null, waitForDriverReady_isReady, pollDriver);
+}
+
+function waitForDriverReady_isReady()
+{
+  if (pollDriver.getReadyState() == 4 && pollDriver.getStatus() == 200) {
+    if (setDriver_remove) {
+      saveData();
+    } else {
+      var a = pollDriver.getResponseText().split("\n");
+      if (a.length >= 3
+          && a[0].indexOf("root.PTZ.PTZDriverStatuses.Driver"+vidChannel+"Status=3") >= 0
+          && a[1].indexOf("# Error:") < 0
+          && a[2].indexOf("# Error:") < 0) {
+        saveData();
+        return;
+      }
+      setTimeout(waitForDriverReady, 1000);
+    }
+  }
+}
+
+function saveData()
+{
+  // Make sure there is no device-id clashes!
+  if (!checkForClashes())
+    return;
+
+  var form = document.WizardForm
+  form.submit();
+}
+
+function checkForClashes() {
+  <!--#include virtual="/sm/sm.srv?action=get&group=root.ImageSource" -->
+  var ids = [];
+
+    var input_0 = document.getElementsByName("root_PTZ_Various_V"+(0+1)+"_CamId")[0];
+    if (input_0 != null) {
+      ids.push({ "name"   : '<!--#echo var="root_ImageSource_I0_Name" option="encoding:javascript" -->',
+                 "id"     : input_0.value,
+                 "channel": 0 + 1
+                 });
+    }
+
+  for (var i = 0; i < ids.length; i++) {
+    for (var j = i + 1; j < ids.length; j++) {
+      if (ids[i].id == ids[j].id) {
+        var r = confirm("The device id for '" + ids[j].name +
+                        "' is the same as the device id for '" + ids[i].name +
+                        "', continue saving anyway?");
+        if (r == false) {
+          document.getElementsByName("root_PTZ_Various_V"+ids[j].channel+"_CamId")[0].focus();
+          return false;
+        }
+      }
+    }
+  }
+
+  return true;
+}
+
+var driverRemove = AxisConnectionFactory.createAjaxConnection();
+
+function removeDriver()
+{
+  if (confirm( langObjPtzDrivSel.getText("removeConfirm") )) {
+    var selectedDriverId = document.getElementById("uploadedDriversList").value;
+    AxisConnectionFactory.sendAsync(["GET", "/axis-cgi/ptz/ptzuploader.cgi?removedriverid="+selectedDriverId], null, removeDone, driverRemove);
+  }
+}
+
+function removeDone()
+{
+  if (driverRemove.getReadyState() == 4) {
+    if (driverRemove.getStatus() == 200) {
+      document.location.reload(true);
+    } else {
+      alert( langObjPtzDrivSel.getText("errorRemDrvAlrt") ); // This should not happen!
+    }
+  }
+}
+
+function showRemoveButton()
+{
+  var oU = document.getElementById("uploadedDriversList");
+  if (oU && oU.selectedIndex != 0 && oU.options[oU.selectedIndex].text.indexOf("(embedded)") == -1)
+  {
+    var removeString = "<input type=\"button\" name=\"Remove\" value=\""+langObjPtzDrivSel.getText("removeBtn")+"\" width=\"75\" class=\"btnNormal\" id=\"drivSel_RemoveBtn\" onClick=\"removeDriver()\" onMouseOver=\"return showStatus(removeBtnStatTxt)\" onMouseOut=\"return showStatus('')\">";
+    
+    document.getElementById("removeDiv").innerHTML = removeString;
+  }
+  else
+  {
+    document.getElementById("removeDiv").innerHTML = "";
+  }
+}
+
+function resetValues()
+{
+  document.WizardForm.reset();
+  getDrivers();
+}
+
+function isValidUpload()
+{
+  if (document.getElementsByName("UploadDriver")[0].value.length <= 0) {
+    alert( langObjPtzDrivSel.getText("noDrSelAlrt") );
+    return false;
+  }
+  return true;
+}
+
+function toggleDriverActive(channelNo)
+{
+  var el = document.getElementById("ptzActivatedCh"+channelNo);
+  var uplDriList = document.getElementById("uploadedDriversList");
+
+  if(el.checked)
+  {
+    if(!uplDriList)
+    {
+      alert( langObjPtzDrivSel.getText("uplDrivActvPTZAlrt") );
+      el.checked=false;
+    }
+    else if(uplDriList.selectedIndex==0)
+    {
+      alert( langObjPtzDrivSel.getText("selDrivActvPTZAlrt") );
+      el.checked=false;
+    }
+    else
+    {
+      //install driver
+      setDriver(false,channelNo);
+    }
+  }
+  else
+  {
+    //uninstall driver
+    setDriver(true,channelNo);
+  }
+}
+
+var saveBtnStatTxt;
+var resetBtnStatTxt;
+var removeBtnStatTxt;
+var uninstallBtnStatTxt;
+var uploadBtnStatTxt;
+var uploadSubmitBtnStatTxt;
+function globalLanguageVars()
+{
+  saveBtnStatTxt = langObjPtzDrivSel.getText("saveBtnStatTxt");
+  resetBtnStatTxt = langObjPtzDrivSel.getText("resetBtnStatTxt");
+  removeBtnStatTxt = langObjPtzDrivSel.getText("removeBtnStatTxt");
+  uninstallBtnStatTxt = langObjPtzDrivSel.getText("uninstallBtnStatTxt");
+  uploadBtnStatTxt = langObjPtzDrivSel.getText("selWhiDriBtnStatTxt");
+  uploadSubmitBtnStatTxt = langObjPtzDrivSel.getText("uploadBtnStatTxt");
+}
+// -->
+</script>
+<!--#include virtual="/incl/wait.shtml" -->
+
+<body <!--#include virtual="/incl/bodytag.shtml" --> onload="bodyonload();">
+
+<!--#include virtual="/incl/top_incl2.shtml" -->
+
+<form name="UploadForm" action="/axis-cgi/ptz/ptzuploader.cgi?return_page=/admin/driverSelection.shtml%3Fnbr%3D<!--#echo var="nbr" option="encoding:url" -->%26id%3D<!--#echo var="ssi_request_id" option="encoding:url" -->" enctype="multipart/form-data" method="POST" onsubmit="javascript:return isValidUpload();">
+<table border="<!--#echo var="zero" option="encoding:html" -->" cellpadding="<!--#echo var="cellpadding3" option="encoding:html" -->" cellspacing="<!--#echo var="zero" option="encoding:html" -->" width="<!--#echo var="tableWidth3" option="encoding:html" -->" class="alternateRows">
+  <tr class="topTitle">
+    <td align="left" colspan="2" noWrap><span id="ptzDrivTxt"></span></td>
+    <td>
+      <div align="right"><a href="<!--#echo var="helpURL" option="encoding:url" -->"><img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="hlpPic"></a></div>
+    </td>
+  </tr>
+
+  <tr class="subTitle">
+    <td colspan="3"><span id="uploadTxt"></span></td>
+  </tr>
+
+   <tr>
+    <td nowrap><span id="selNewDrivTxt"></span>&nbsp;</td>
+    <td><input type="file" name="UploadDriver" onMouseOver="return showStatus(uploadBtnStatTxt)" onMouseOut="return showStatus('')"></td>
+    <td align="right">
+      <input type="submit" name="Upload" value="" width="75" class="btnNormal" id="drivSel_UploadBtn" onMouseOver="return showStatus(uploadSubmitBtnStatTxt)" onMouseOut="return showStatus('')">
+    </td>
+  </tr>
+</table>
+</form>
+<form name="WizardForm" action="/sm/sm.srv">
+<table border="<!--#echo var="zero" option="encoding:html" -->" cellpadding="<!--#echo var="cellpadding3" option="encoding:html" -->" cellspacing="<!--#echo var="zero" option="encoding:html" -->" width="<!--#echo var="tableWidth3" option="encoding:html" -->" class="alternateRows">
+  <tr>
+    <td nowrap><span id="selDriTxt"></span></td>
+    <td nowrap><div id="uploadedDrivers"></div></td>
+    <td align="right"><div id="removeDiv"></div></td>
+  </tr>
+  <tr>
+    <td colspan="3">
+      <span id="noteDeactivatePtz" style="display:none;"><span id="noteChngDrivTxt"></span></span>
+    </td>
+  </tr>
+  <tr class="subTitle">
+    <td colspan="3">
+        <span id="drivMgmtTxt"></span>
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="3">
+      <input id="ptzActivatedCh1" type="checkbox" onclick="toggleDriverActive(1);" <!--#if expr="$root_PTZ_PTZDrivers_Driver1 = none" --><!--#else --> checked="checked"<!--#endif -->/>&nbsp;<span id="activPTZ1Txt"></span>
+    </td>
+  </tr>
+
+  <tr id="chSetInstDri1" style="display:none;"> <!-- Unnecessary to show -->
+    <td nowrap><span id="insDriTxt"></span></td>
+    <td nowrap>
+    <!--#if expr="$root_PTZ_PTZDrivers_Driver1 = none" -->
+       <span id="noDrInTxt"></span>
+    <!--#else -->
+      <!--#echo var="root_PTZ_PTZDrivers_Driver1" option="encoding:html" --> [<!--#echo var="root_PTZ_PTZDriverVersions_Driver1Version" option="encoding:html" -->]
+    <!--#endif -->
+    </td>
+    <td align="right">
+    <!--#if expr="$root_PTZ_PTZDrivers_Driver1 != none" -->
+      <input type="button" value="" width="75" class="btnNormal" onClick="setDriver(true)" onMouseOver="return showStatus(uninstallBtnStatTxt)" onMouseOut="return showStatus('')" id="drivSel_uninBtn">
+    <!--#endif -->
+    </td>
+  </tr>
+  <tr id="chSetDevId1">
+    <td><span id="deId1Txt"></span></td>
+    <td colspan="2">
+      <!--#if expr="$root_PTZ_Various_V1_CamId != " -->
+        <input type="text" name="root_PTZ_Various_V1_CamId" maxLength="3" size="5" value="<!--#echo var="root_PTZ_Various_V1_CamId" option="encoding:html" -->">
+      <!--#else -->
+        -
+      <!--#endif -->
+    </td>
+  </tr>
+  <tr id="chSetDevType1">
+    <td><span id="deTy1Txt"></span></td>
+    <td colspan="2">
+      <!--#if expr="_$root_PTZ_Various_V1_DeviceType != _" -->
+        <!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.PTZ.Various.V1.DeviceType&format=htmlvalue" -->
+      <!--#else -->
+        -
+      <!--#endif -->
+        <!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.PTZ.CamPorts.Cam1Port&format=hiddenhtmlform" -->
+    </td>
+  </tr>
+  <!--#if expr="$root_PTZ_PTZDrivers_Driver1 != none" -->
+    <!--#if expr="$root_PTZ_PTZDriverStatuses_Driver1Status != 3" -->
+      <tr>
+        <td colspan="3" style="border: 1px red solid;">
+         <b><span id="instErrTxt"></span></b>
+        </td>
+      </tr>
+    <!--#endif -->
+  <!--#endif -->
+  <tr>
+    <td class="topTitle" align="center" colspan="3">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td class="button"><input type="button" value="" class="btnNormal" width="75" onClick="saveData();" onMouseOver="return showStatus(saveBtnStatTxt)" onMouseOut="return showStatus('')" id="drivSel_saveBtn"></td>
+          <td class="button"><br /></td>
+          <td class="button"><input type="button" width="75" onClick="resetValues()" value="" class="btnNormal" onMouseOver="return showStatus(resetBtnStatTxt)" onMouseOut="return showStatus('')" id="drivSel_resetBtn"></td>
+        </tr>
+      </table>
+      <input type="hidden" name="return_page" value="/admin/driverSelection.shtml?nbr=<!--#echo var="nbr" option="encoding:url" -->&id=<!--#echo var="ssi_request_id" option="encoding:url" -->">
+      <input type="hidden" name="action" value="modify">
+    </td>
+  </tr>
+</table>
+
+</form>
+
+<!--#include virtual="/incl/bottom_incl.shtml" -->
+

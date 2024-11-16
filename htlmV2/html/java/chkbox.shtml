@@ -1,0 +1,30 @@
+
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+
+function CheckBoxClicked(theForm, theCheckBox, theVariable, theCheckValueEnable, theCheckValueDisable)
+{
+  if (theCheckBox.checked)
+    theForm.elements[theVariable].value = theCheckValueEnable
+  else
+    theForm.elements[theVariable].value = theCheckValueDisable
+}
+
+function checkbounds(inputValue,maxValue,minValue)
+{
+
+ if(inputValue > maxValue)
+   {
+      inputValue = maxValue  
+   } 
+ 
+ if(inputValue < minValue)
+   {
+      inputValue = minValue  
+   } 
+   return inputValue
+}
+
+
+//-->
+</SCRIPT>

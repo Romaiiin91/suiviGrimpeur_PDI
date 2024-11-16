@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+	<mechLimits_h>
+		<pageTitle type="title" minor="0">Help/Limits</pageTitle>
+		<titleTxt type="msgAsText" minor="0">Limits</titleTxt>
+		<intro_Txt type="text" minor="0">Define the limits for the mechanical movements for the Axis product by changing the values in these fields.</intro_Txt>
+		<subTitle1Txt type="text" minor="0">Mechanical Restrictions</subTitle1Txt>
+		<set_limits_Txt1 type="text" minor="0">Set the movement limits for the positions shown below. Save changes by clicking the &#x3C;b&#x3E;Save&#x3C;/b&#x3E; button and then use the &#x3C;b&#x3E;Go to&#x3C;/b&#x3E; buttons to check that the limits are correctly set.</set_limits_Txt1>
+		<set_limits_Txt2 type="text" minor="0">&#x3C;b&#x3E;Left Limit -&#x3C;/b&#x3E; Adjust the values to limit the camera's movements to the left.</set_limits_Txt2>
+		<set_limits_Txt3 type="text" minor="0">&#x3C;b&#x3E;Right Limit -&#x3C;/b&#x3E; Adjust the values to limit the camera's movements to the right.</set_limits_Txt3>
+		<set_limits_Txt4 type="text" minor="0">&#x3C;b&#x3E;Upper Limit -&#x3C;/b&#x3E; Adjust the values to limit the camera's tilt movement up.</set_limits_Txt4>
+		<set_limits_Txt5 type="text" minor="0">&#x3C;b&#x3E;Lower Limit -&#x3C;/b&#x3E; Adjust the values to limit the camera's tilt movement down.</set_limits_Txt5>
+		<set_limits_Txt6 type="text" minor="0">E-flip must be disabled to adjust lower limit values.</set_limits_Txt6>
+		<set_limits_Txt7 type="text" minor="0">&#x3C;b&#x3E;Notes:&#x3C;/b&#x3E;</set_limits_Txt7>
+		<set_limits_Txt8 type="text" minor="0">These limits will change if the image is rotated.</set_limits_Txt8>
+		<set_limits_Txt9 type="text" minor="0">Values outside the indicated ranges will not be saved.</set_limits_Txt9>
+		<limit_E_flip_Txt type="text" minor="0">&#x3C;b&#x3E;Enable E-flip&#x3C;/b&#x3E; - When the camera tilts down and continues 'backwards' the view is automatically corrected by flipping it 180 degrees - this is known as E-flip. Left limit must be set to -180 degrees and Right limit 180 degrees for E-flip to work. To turn off E-flip, uncheck this box and set a lower tilt limit.</limit_E_flip_Txt>
+		<zoom_tele_limit_Txt1 type="text" minor="0">&#x3C;b&#x3E;Zoom tele limit&#x3C;/b&#x3E; - Select a value from the drop-down list to limit the camera's maximum zoom level. Optical or digital (e.g. x2 D) values can be selected. Use the &#x3C;b&#x3E;Go to&#x3C;/b&#x3E; button to check the selected limit.</zoom_tele_limit_Txt1>
+		<zoom_tele_limit_Txt2 type="text" minor="0">&#x3C;b&#x3E;Note:&#x3C;/b&#x3E;</zoom_tele_limit_Txt2>
+		<zoom_tele_limit_Txt3 type="text" minor="0">When using a joystick, only digital zoom levels can be used to set the maximum zoom value. Setting an optical zoom limit will have no effect. Optical and digital values can both be used when in PTZ center mode.</zoom_tele_limit_Txt3>
+		<focus_near_limit_Txt type="text" minor="1">&#x3C;b&#x3E;Focus near limit   - &#x3C;/b&#x3E;The near focus limit can be set to avoid focusing on objects too close to the camera. To be able to go to all focus positions, focus near limit must be at least 1.0.</focus_near_limit_Txt>
+		<move_speed_dome_Txt1 type="text" minor="0">&#x3C;b&#x3E;Move speed - &#x3C;/b&#x3E;The value set here determines the speed for the camera's pan and tilt movements. Click &#x3C;b&#x3E;Test speed&#x3C;/b&#x3E; to check that the setting is suitable.</move_speed_dome_Txt1>
+		<move_speed_dome_Txt2 type="text" minor="0">&#x3C;b&#x3E;Note:&#x3C;/b&#x3E; Move speed does not affect joystick movements, see Max proportional speed.</move_speed_dome_Txt2>
+		<zoom_speed_Txt type="text" minor="0">&#x3C;b&#x3E;Zoom speed - &#x3C;/b&#x3E;Enter a value (1-100) in the provided field to set the speed of the camera's zoom. The default setting is maximum speed.</zoom_speed_Txt>
+		<propspeed_Txt1 type="text" minor="0">&#x3C;b&#x3E;Enable proportional speed&#x3C;/b&#x3E; - When using a joystick (or emulating one with the mouse), this setting can be used to rescale the maximum pan/tilt movement speed, i.e. the speed the camera moves at when the joystick is pushed all the way out in any direction. This is useful when the camera is zoomed in on an object and is moved - as it is not usually desirable to use the same movement speed when zoomed in as when zoomed out.</propspeed_Txt1>
+		<propspeed_Txt2 type="text" minor="0">&#x3C;b&#x3E;Example:&#x3C;/b&#x3E;</propspeed_Txt2>
+		<propspeed_Txt3 type="text" minor="0">If the image is approximately 45 degrees wide when fully zoomed out and the max proportional speed is set to 100 (100%), the maximum move speed will be about 45 degrees/second whenever the joystick is pushed all the way out.</propspeed_Txt3>
+		<propspeed_Txt4 type="text" minor="0">If the image is then zoomed in so that it is approx. 10 degrees wide, the maximum speed will then reach approx. 10 degrees/second, which will probably be too fast for easy viewing.</propspeed_Txt4>
+		<propspeed_Txt5 type="text" minor="0">If the max proportional speed is now set to 50 (50%), the maximum move speed will now only reach 50% of the maximum possible for the currently selected zoom level. So when the image is 45 degrees wide, the greatest possible speed will be about 22 degrees/second, and when the view is zoomed in to 10 degrees - the speed will be about 5 degrees/second.</propspeed_Txt5>
+		<propspeed_Txt6 type="text" minor="0">If the max proportional speed is disabled, the movement speed will reach the maximum in any zoom position, whenever the joystick is pushed all the way out in any direction (the maximum for pan and tilt respectively).</propspeed_Txt6>
+		<propspeed_Txt7 type="text" minor="0">Max proportional speed is defined as a percentage, where the value 100 equals 100% and 1000 equals 1000%.</propspeed_Txt7>
+		<mech_flip_Txt1 type="text" minor="0">&#x3C;b&#x3E;Enable Auto-flip&#x3C;/b&#x3E; - This option allows the product to simulate continuous pan movement in the same direction, i.e. the camera will pan the full 360 degrees, even though there is a mechanical stop at &#xb1;170 degrees.</mech_flip_Txt1>
+		<mech_flip_Txt2 type="text" minor="0">This is achived by reversing the camera lens and flipping it over whenever the camera reaches the mechanical stop. There will be a slight delay during the lens reversal.</mech_flip_Txt2>
+		<move_pred_Txt type="text" minor="0">&#x3C;b&#x3E;Enable movement prediction&#x3C;/b&#x3E; - When Auto-flip is enabled, using this option will make the camera attempt to predict the new position in the pan movement - after compensating for the slight delay while the camera changes direction. This is useful for e.g. tracking moving objects or persons when using the joystick or emulated joystick mode.</move_pred_Txt>
+		<save_Txt type="text" minor="0">After making these settings, click &#x3C;b&#x3E;Save&#x3C;/b&#x3E; to save the settings or click &#x3C;b&#x3E;Reset&#x3C;/b&#x3E; to return to the previously saved values.</save_Txt>
+	</mechLimits_h>
+
+
+
+
+
+	<dome_advanced_h>
+		<pageTitle type="title" minor="0">Help/Control Queue Settings</pageTitle>
+		<titleTxt type="msgAsText" minor="0">Control Queue Settings</titleTxt>
+		<intro_Txt type="text" minor="0">The PTZ Control Queue is a system for placing user requests for control of the PTZ functions in a queue. Configure the control queue settings described below.</intro_Txt>
+		<subTitle_intro_Txt type="text" minor="0">PTZ Control Queue</subTitle_intro_Txt>
+		<enable_Txt type="text" minor="0">&#x3C;b&#x3E;Enable PTZ Control Queue&#x3C;/b&#x3E; - This enables the queuing function for this video source, and displays the user's status and position in the queue on the Live View page.</enable_Txt>
+		<limit_Txt type="text" minor="0">&#x3C;b&#x3E;Limit number of users in queue to&#x3C;/b&#x3E; - This can be specified up to 100. The default value is 20.</limit_Txt>
+		<poll_Txt1 type="text" minor="0">&#x3C;b&#x3E;Control queue poll time&#x3C;/b&#x3E; - To keep the control queue more or less up-to-date, the waiting clients must regularly poll the Axis product to keep their place in the queue. If the client does not send a new poll query within the time set here (in seconds), the client will be dropped from the queue.</poll_Txt1>
+		<poll_Txt2 type="text" minor="0">Setting a higher value can lead to greater numbers of 'dead' requests in the queue, i.e. when clients leave the queue, but before this is detected. Setting too low a value, so that clients are required to send frequent poll queries, may result in the product becoming overloaded.</poll_Txt2>
+		<save_Txt type="text" minor="0">Click &#x3C;b&#x3E;Save&#x3C;/b&#x3E; to save the settings or click &#x3C;b&#x3E;Reset&#x3C;/b&#x3E; to return to the previously saved values.</save_Txt>
+	</dome_advanced_h>
+</language_xml>

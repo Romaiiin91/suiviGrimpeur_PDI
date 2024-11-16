@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+  <autoTracking>
+    <pageTitle type="title" minor="0">Autotracking/Autotracking Configuration</pageTitle>
+    <startTxt type="msgAsText" minor="0">Start</startTxt>
+    <stopTxt type="msgAsText" minor="0">Stop</stopTxt>
+    <running1Txt type="msgAsText" minor="0">Running</running1Txt>
+    <notRunning1Txt type="msgAsText" minor="0">Not running</notRunning1Txt>
+    <saveBtnStatTxt type="msg" minor="0">Save the Autotracking configuration</saveBtnStatTxt>
+    <resBtnStatTxt type="msg" minor="0">Revert to last saved settings</resBtnStatTxt>
+    <startStopBtnStatTxt type="msg" minor="0">Start/stop Autotracking.</startStopBtnStatTxt>
+    <autoTrackingTxt type="text" minor="0">Autotracking</autoTrackingTxt>
+    <hlpTxt type="image" minor="0" imageid="hlpPic">Click here for help on this page</hlpTxt>
+    <startStopTitleTxt type="text" minor="0">Start / Stop Autotracking</startStopTitleTxt>
+    <startStopTxt type="text" minor="0">Start and stop Autotracking</startStopTxt>
+    <currentStatusTxt type="text" minor="0">Current status:</currentStatusTxt>
+    <running2Txt type="text" minor="0">Running</running2Txt>
+    <notRunning2Txt type="text" minor="0">Not running</notRunning2Txt>
+    <settingsTxt type="text" minor="0">Settings</settingsTxt>
+    <enAutoZoomTxt type="text" minor="0">Enable automatic zoom</enAutoZoomTxt>
+    <triggerSensitivTxt type="text" minor="0">Movement trigger sensitivity</triggerSensitivTxt>
+    <highPHTxt type="text" minor="0">High</highPHTxt>
+    <mediumPHTxt type="text" minor="0">Medium</mediumPHTxt>
+    <lowPHTxt type="text" minor="0">Low</lowPHTxt>
+    <saveBtnTxt type="button" minor="0" buttonid="AuTr_startBtn">Save</saveBtnTxt>
+    <resetBtnTxt type="button" minor="0" buttonid="AuTr_resetBtn">Reset</resetBtnTxt>
+  </autoTracking>
+
+  <autoTracking_excludeAreas_frame>
+    <pageTitle type="title" minor="0">Autotracking/Exclude Areas</pageTitle>
+    <maxAreas1Alrt type="alert" minor="0">No more than</maxAreas1Alrt>
+    <maxAreas2Alrt type="alert" minor="0">can be added.</maxAreas2Alrt>
+    <removeAreaAlert type="alert" minor="0">Select one area in the list before pressing 'Remove'.</removeAreaAlert>
+    <editAreaAlert type="alert" minor="0">Select one area in the list before pressing 'Edit'.</editAreaAlert>
+    <toggleAreaAlert type="alert" minor="0">Select one area in the list before pressing toggle.</toggleAreaAlert>
+    <changesLostConfm type="alert" minor="0">Changes made will be lost. Ok?</changesLostConfm>
+    <nameInUseAlrt type="alert" minor="0">The selected name is already in use. Please enter another name, and try again.</nameInUseAlrt>
+    <emptyNameAlrt type="alert" minor="0">Please enter a name for the Autotracking Exclude Area.</emptyNameAlrt>
+    <saveBtnStatTxt type="msg" minor="0">Save the Autotracking Exclude Area</saveBtnStatTxt>
+    <resBtnStatTxt type="msg" minor="0">Revert to last saved settings</resBtnStatTxt>
+    <addBtnStatTxt type="msg" minor="0">Add new Exclude Area</addBtnStatTxt>
+    <remBtnStatTxt type="msg" minor="0">Remove selected Exclude Area</remBtnStatTxt>
+    <enDisBtnStatTxt type="msg" minor="0">Enable/disable selected Exclude Area</enDisBtnStatTxt>
+    <excludeAreasTitleTxt type="text" minor="0">Exclude Areas</excludeAreasTitleTxt>
+    <hlpTxt type="image" minor="0" imageid="hlpPic">Click here for help on this page</hlpTxt>
+    <excludeAreasTxt type="text" minor="0">Exclude Areas</excludeAreasTxt>
+    <nameTxt type="text" minor="0">Name</nameTxt>
+    <enabledTxt type="text" minor="0">Enabled</enabledTxt>
+    <yesTxt type="text" minor="0">yes</yesTxt>
+    <noTxt type="text" minor="0">no</noTxt>
+    <addAreaBtn type="button" minor="0" buttonid="AuTr_ExAr_AddAreaBtn">Add area</addAreaBtn>
+    <removeAreaBtn type="button" minor="0" buttonid="AuTr_ExAr_RemoveAreaBtn">Remove</removeAreaBtn>
+    <enDisBtn type="button" minor="0" buttonid="AuTr_ExAr_EnDisBtn">Enable/Disable</enDisBtn>
+    <addEditAreaTitleTxt type="text" minor="0">Add / Edit Exclude Area</addEditAreaTitleTxt>
+    <areaNameTxt type="text" minor="0">Area name:</areaNameTxt>
+    <saveBtn type="button" minor="0" buttonid="AuTr_ExAr_SaveBtn">Save</saveBtn>
+    <resetBtn type="button" minor="0" buttonid="AuTr_ExAr_resetBtn">Reset</resetBtn>
+    <queSetTxt type="text" minor="0">PTZ Control Queue - Setup</queSetTxt>
+    <applyBtn type="button" minor="0" buttonid="AuTr_ExAr_applyBtn">Apply</applyBtn>
+    <ptzQueUsersTxt type="text" minor="0">PTZ Control Queue - Users</ptzQueUsersTxt>
+    <statQuTxt type="text" minor="0">Status in queue:</statQuTxt>
+    <posQuTxt type="text" minor="0">Position in queue:</posQuTxt>
+    <tiReTxt type="text" minor="0">Time remaining:</tiReTxt>
+    <secsTxt type="text" minor="0">seconds</secsTxt>
+  </autoTracking_excludeAreas_frame>
+    
+  <autoTracking_maxLimits_frame>
+    <pageTitle type="title" minor="0">Autotracking/Limits</pageTitle>
+    <invalValAlrt type="alert" minor="0">Invalid value.</invalValAlrt>
+    <invalLimAlrt type="alert" minor="0">Invalid limit.</invalLimAlrt>
+    <tiltLimDisAlrt type="alert" minor="0">Tilt limit is disabled.</tiltLimDisAlrt>
+    <panLimDisAlrt type="alert" minor="0">Pan limit is disabled.</panLimDisAlrt>
+    <saveBtnStatTxt type="msg" minor="1">Save the Autotracking Max Limits</saveBtnStatTxt>
+    <resBtnStatTxt type="msg" minor="0">Revert to last saved settings</resBtnStatTxt>
+    <maxLimTitleTxt type="text" minor="0">Max Limits</maxLimTitleTxt>
+    <hlpTxt type="image" minor="0" imageid="hlpPic">Click here for help on this page</hlpTxt>
+    <maxLimTxt type="text" minor="0">Max Limits</maxLimTxt>
+    <lowerTiltAngTxt type="text" minor="0">Lower tilt angle</lowerTiltAngTxt>
+    <upperTiltAngTxt type="text" minor="0">Upper tilt angle</upperTiltAngTxt>
+    <panLimStartTxt type="text" minor="0">Pan limit start</panLimStartTxt>
+    <panLimEndTxt type="text" minor="0">Pan limit end</panLimEndTxt>
+    <noteTxt type="text" minor="0">Note: Preview of limit is only accurate in the center of the image.</noteTxt>
+    <saveBtn type="button" minor="0" buttonid="AuTr_MaLi_SaveBtn">Save</saveBtn>
+    <resetBtn type="button" minor="0" buttonid="AuTr_MaLi_resetBtn">Reset</resetBtn>
+    <ptzQueSetTxt type="text" minor="0">PTZ Control Queue - Setup</ptzQueSetTxt>
+    <ptzQueUsersTxt type="text" minor="0">PTZ Control Queue - Users</ptzQueUsersTxt>
+    <statQueTxt type="text" minor="0">Status in queue:</statQueTxt>
+    <posQueTxt type="text" minor="0">Position in queue:</posQueTxt>
+    <tiReTxt type="text" minor="0">Time remaining:</tiReTxt>
+    <secsTxt type="text" minor="0">seconds</secsTxt>
+    <enTiltLimTxt type="text" minor="0">Enable tilt limit</enTiltLimTxt>
+    <enPanLimTxt type="text" minor="0">Enable pan limit</enPanLimTxt>
+  </autoTracking_maxLimits_frame>
+
+  <autoTracking_excludeAreas>
+    <pageTitle type="title" minor="0">Autotracking/Exclude Areas</pageTitle>
+  </autoTracking_excludeAreas>
+
+  <autoTracking_maxLimits>
+    <pageTitle type="title" minor="0">Autotracking/Limits</pageTitle>
+  </autoTracking_maxLimits>
+</language_xml>

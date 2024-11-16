@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+	<scripting_h>
+		<pageTitle type="title" minor="0">Help/Advanced Scripting</pageTitle>
+		<titleTxt type="msgAsText" minor="0">Advanced Scripting</titleTxt>
+		<help1Txt1 type="text" minor="0">The Axis product provides an advanced function that allows users to customize and use their own scripts. This function is very powerful and improper use may render the product unusable.</help1Txt1>
+		<help1Txt2 type="text" minor="0">If the editing of a script does cause problems, the only course of action will then be to reset the product to its factory default settings.</help1Txt2>
+		<help1Txt3 type="text" minor="0">Axis strongly recommends that you &#x3C;b&#x3E;do not use&#x3C;/b&#x3E; this function unless you fully understand the consequences.</help1Txt3>
+		<help1Txt4 type="text" minor="1">For more information on scripting, please see the  &#x3C;a href='http://www.axis.com/techsup/cam_servers/dev/index.htm' target='_blank'&#x3E;Axis Developer web&#x3C;/a&#x3E;.</help1Txt4>
+	</scripting_h>
+</language_xml>

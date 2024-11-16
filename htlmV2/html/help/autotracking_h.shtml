@@ -1,0 +1,66 @@
+<!--#set var="backButton" val="yes" -->
+<!--#set var="forwardButton" val="yes" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<script language="JavaScript">
+<!--
+var langObjATATH = new Language("autoTracking_h", "autotracking_h");
+
+function globalLanguageVars()
+{
+	document.getElementById("titleId").innerHTML = langObjATATH.getText("titleTxt");
+}
+// -->
+</script>
+
+</head>
+<body onload="langObjATATH.init()">
+<!--#include virtual="/incl/helpTop_incl2.shtml" -->
+<table class="alternateRows" border="0" cellpadding="3" cellspacing="0" width="440" bgcolor="white">
+<!--#include virtual="/incl/helpTop_incl3.shtml" -->
+<tr>
+	<td colspan="2">
+		<span id="txt1"></span><br/><br/>
+		<span id="txt2"></span><br/><br/>
+		<span id="txt3"></span><br/><br/>
+		<ul>
+			<li>
+				<span id="txt4"></span>
+			</li>
+			<li>
+				<span id="txt5"></span>
+			</li>
+			<li>
+				<span id="txt6"></span><br/><br/>
+			</li>
+		</ul>
+	</td>
+</tr>
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="subTitle1"></span>
+		</div>
+	</td>
+</tr>
+<tr>
+	<td colspan="2">
+		<span id="txt7"></span><br/><br/>
+	</td>
+</tr>
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="subTitle2"></span>
+		</div>
+	</td>
+</tr>
+<tr>
+	<td colspan="2">
+		<span id="settingTxt"></span><br/><br/>
+	</td>
+</tr>
+</table>
+<!--#include virtual="/incl/helpBottom_incl.shtml" -->
+</body>
+</html>

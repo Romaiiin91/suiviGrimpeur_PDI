@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+	<date_h>
+		<pageTitle type="title" minor="0">Help/Date &#x26; Time Settings</pageTitle>
+		<titleTxt type="msgAsText" minor="0">Date &#x26; Time Settings</titleTxt>
+		<intro_Txt type="text" minor="0">Define the time and date settings for your Axis product, manually or automatically, as described below.</intro_Txt>
+		<subTitle_current_Txt type="text" minor="0">Current Server Time</subTitle_current_Txt>
+		<current_Txt type="text" minor="0">Shows the current date and time.</current_Txt>
+		<subTitle_new_Txt type="text" minor="0">New Server Time</subTitle_new_Txt>
+		<zone_Txt type="text" minor="0">&#x3C;b&#x3E;Time Zone - &#x3C;/b&#x3E;Select the time zone where your product is located.</zone_Txt>
+		<daylight_Txt type="text" minor="0">&#x3C;b&#x3E;Automatically adjust for daylight saving changes - &#x3C;/b&#x3E;Check this box to automatically update the time changes caused by daylight saving.</daylight_Txt>
+		<mode_Txt1 type="text" minor="0">&#x3C;b&#x3E;Time Mode - &#x3C;/b&#x3E;Select the method to use for setting the time:</mode_Txt1>
+		<mode_Txt2 type="text" minor="0">&#x3C;b&#x3E;Synchronize with computer time -&#x3C;/b&#x3E; Sets the time according to the clock on your computer</mode_Txt2>
+		<nTP_Txt type="text" minor="0">&#x3C;b&#x3E;Synchronize with NTP Server -&#x3C;/b&#x3E; Obtains the correct time from an NTP server every few minutes. The NTP server's IP address or host name is specified in the &#x3C;a href='advanced_tcpip_h.shtml'&#x3E;Advanced TCP/IP Settings&#x3C;/a&#x3E;</nTP_Txt>
+		<nTPSWclock_Txt type="text" minor="0">. This option should be checked if using &#x3C;a href='8021x_h.shtml'&#x3E;IEEE 802.1X&#x3C;/a&#x3E;</nTPSWclock_Txt>
+		<setMan_Txt type="text" minor="0">&#x3C;b&#x3E;Set manually -&#x3C;/b&#x3E; Using this option allows you to manually enter the time and date</setMan_Txt>
+		<nTPSWclNote_Txt type="text" minor="0">&#x3C;b&#x3E;Note:&#x3C;/b&#x3E; It is strongly recommended to use an NTP server for time synchronization. The clock in the product stops when there is no power and the NTP server will synchronize the time automatically when power is restored.</nTPSWclNote_Txt>
+		<subTitle_image_Txt type="text" minor="0">Date &#x26; Time Format Used in Images</subTitle_image_Txt>
+		<format_Txt1 type="text" minor="0">The format selected here will be used when displaying the date and time as an overlay in the video image.</format_Txt1>
+		<format_Txt2 type="text" minor="0">The abbreviations used in the predefined date formats are as follows:</format_Txt2>
+		<format_Txt3 type="text" minor="0">YYYY = year, e.g. 2003</format_Txt3>
+		<format_Txt4 type="text" minor="0">MM or Mmm = month, e.g. 12 or Dec</format_Txt4>
+		<format_Txt5 type="text" minor="0">DD or D = day, e.g. 02 or 2</format_Txt5>
+		<format_Txt6 type="text" minor="0">Www = weekday, e.g. Mon</format_Txt6>
+		<format_Txt7 type="text" minor="0">The predefined time formats available are 12h and 24h, and at the resolution 1 second or 1/100 seconds.</format_Txt7>
+		<own_Txt type="text" minor="0">It is also possible to use your own custom date and time formats in images. Check the box(es) for &#x3C;b&#x3E;Own&#x3C;/b&#x3E; and enter the date and time formats required. The valid options can be found on the help page for &#x3C;a href='filenames_h.shtml'&#x3E;File Naming &#x26; Date/Time Formats&#x3C;/a&#x3E;.</own_Txt>
+		<save_Txt type="text" minor="0">After making these settings, click &#x3C;b&#x3E;Save&#x3C;/b&#x3E;.</save_Txt>
+	</date_h>
+</language_xml>

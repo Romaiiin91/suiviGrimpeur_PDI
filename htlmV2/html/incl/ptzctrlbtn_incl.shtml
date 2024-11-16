@@ -1,0 +1,89 @@
+function outputButton(width, btnId, btnText, btnAlt, btnClick, outputEl)
+{ 
+  var div = document.createElement("div");
+  div.style.width = width+"px";
+  div.style.height = "14px";
+  div.style.lineHeight = "12px";
+
+  if(btnAlt != "")
+  {
+    div.alt = btnAlt;
+    div.title = btnAlt;
+  }
+  
+  if(btnId != "")
+    div.id = btnId;
+  
+  if(btnText != "")
+    div.innerHTML = btnText;
+  else
+    div.innerHTML = "&nbsp";
+
+  if(btnText != "" && btnClick != "")
+  {
+    div.onclick = new Function(btnClick);
+  
+    if(width == 70)
+      div.className = "normalText panelclick ptzctrlbtn_bg_short";
+    else if(width == 46)
+      div.className = "normalText panelclick ptzctrlbtn_bg_shorter";
+    else
+      div.className = "normalText panelclick ptzctrlbtn_bg";
+  }
+  else
+  {
+    if(width == 70)
+      div.className = "normalText noclick ptzctrlbtn_bg_short_dimmed";
+    else if(width == 46)
+      div.className = "normalText noclick ptzctrlbtn_bg_shorter_dimmed";
+    else
+      div.className = "normalText noclick ptzctrlbtn_bg_dimmed";
+  }
+  
+  outputEl.appendChild(div);
+}
+
+function updateButtonEnableStatus(btnId, enabled)
+{
+  var div = document.getElementById(btnId);
+
+  if (div != null)
+  {
+    if (enabled)
+    {
+      if (div.className.indexOf(" noclick") != -1 &&
+          div.className.indexOf("_dimmed") != -1)
+      {
+        if (div.style.width == "70px")
+          div.className = "normalText panelclick ptzctrlbtn_bg_short";
+        else if(div.style.width == "46px")
+          div.className = "normalText panelclick ptzctrlbtn_bg_shorter";
+        else
+          div.className = "normalText panelclick ptzctrlbtn_bg";
+      }
+    }
+    else
+    {
+      if (div.className.indexOf("noclick") == -1 &&
+          div.className.indexOf("_dimmed") == -1)
+      {
+        if(div.style.width == "70px")
+          div.className = "normalText noclick ptzctrlbtn_bg_short_dimmed";
+        else if(div.style.width == "46px")
+          div.className = "normalText noclick ptzctrlbtn_bg_shorter_dimmed";
+        else
+          div.className = "normalText noclick ptzctrlbtn_bg_dimmed";
+      }
+    }
+  }
+}
+
+function setBtnClick(btnId, btnClick)
+{
+  var div = document.getElementById(btnId);
+
+  if (div != null)
+  {
+    div.onclick = new Function(btnClick);
+  }
+}

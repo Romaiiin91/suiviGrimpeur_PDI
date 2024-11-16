@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+  <audioclip>
+    <pageTitle type="title" minor="0">Audio Clip/Audio Clip</pageTitle>
+  </audioclip>
+	
+  <audioclip_frame>
+    <pageTitle type="title" minor="0">Audio Clip/Audio Clip</pageTitle>
+    <naTxt type="msgAsText" minor="0">Name</naTxt>
+    <locTxt type="msgAsText" minor="0">Location</locTxt>
+    <hitRoofAlert type="alert" minor="0">It is not possible to add more audio clips.</hitRoofAlert>
+    <selAlert type="alert" minor="0">An audio clip must be selected to perform this action.</selAlert>
+    <playAlert type="alert" minor="0">Error when playing audio clip.</playAlert>
+    <playAlertPlaying type="alert" minor="0">An audio clip is already playing.</playAlertPlaying>
+    <selAlert2 type="alert" minor="0">The selected audio clip can not be removed.</selAlert2>
+    <delConfirm type="alert" minor="0">Do you really want to delete the audio clip named</delConfirm>
+    <delErrorAlert type="alert" minor="0">Error when removing audio clip.</delErrorAlert>
+    <invdNmeNoNameAlrt type="alert" minor="0">No name specified.</invdNmeNoNameAlrt>
+    <invdRecNoDurAlrt type="alert" minor="0">No duration specified.</invdRecNoDurAlrt>
+    <invdRecInvDurAlrt type="alert" minor="0">You need to specify a numeric value greater than zero.</invdRecInvDurAlrt>
+    <invdRecInvDur2Alrt type="alert" minor="0">You need to specify recording time no greater than 60 seconds.</invdRecInvDur2Alrt>
+    <invdRecInvDur3Alrt type="alert" minor="0">You need to specify recording time in seconds, no greater than</invdRecInvDur3Alrt>
+    <invdRecNoWaitAlrt type="alert" minor="0">No wait time specified.</invdRecNoWaitAlrt>
+    <invdRecInvWaitAlrt type="alert" minor="0">You need to specify a numeric value greater than or equal to zero.</invdRecInvWaitAlrt>
+    <invdRecInvWait2Alrt type="alert" minor="0">You need to specify waiting time no greater than 60 seconds.</invdRecInvWait2Alrt>
+    <invdRecInvWait3Alrt type="alert" minor="0">You need to specify waiting time in seconds, no greater than</invdRecInvWait3Alrt>
+    <invUplNoFileAlrt type="alert" minor="0">No file specified.</invUplNoFileAlrt>
+    <invUplNotAudAlrt type="alert" minor="0">File must be a .au or .wav file.</invUplNotAudAlrt>
+    <errModAudAlrt type="alert" minor="0">Error modifying audio clip.</errModAudAlrt>
+    <errModRecAlrt type="alert" minor="0">Error recording new audio clip.</errModRecAlrt>
+    <uplFailedAlrt type="alert" minor="0">Upload failed.</uplFailedAlrt>
+    <uplUndefAlrt type="alert" minor="0">An error occurred during upload. This could be caused by a too large file being uploaded.</uplUndefAlrt>
+    <uplUnknownAlrt type="alert" minor="0">An unknown error occurred during upload.</uplUnknownAlrt>
+    <audioTxt type="msgAsText" minor="0">Audio</audioTxt>
+    <newBtnStatTxt type="msg" minor="0">Create a new audio clip</newBtnStatTxt>
+    <cpyBtnStatTxt type="msg" minor="0">Create a copy of the selected audio clip</cpyBtnStatTxt>
+    <playBtnStatTxt type="msg" minor="0">Play the selected audio clip</playBtnStatTxt>
+    <modBtnStatTxt type="msg" minor="0">Modify the selected audio clip</modBtnStatTxt>
+    <remBtnStatTxt type="msg" minor="0">Remove the selected audio clip</remBtnStatTxt>
+    <downloadBtnStatTxt type="msg" minor="0">Download the selected audio clip</downloadBtnStatTxt>
+    <recordBtnStatTxt type="msg" minor="0">Record a new audio clip</recordBtnStatTxt>
+    <uplBtnStatTxt type="msg" minor="0">Upload an existing audio clip</uplBtnStatTxt>
+    <audClLstTitleTxt type="text" minor="0">Audio Clip List</audClLstTitleTxt>
+    <hlpTxt type="image" minor="0" imageid="hlpPic">Click here for help on this page</hlpTxt>
+    <audClLstTxt type="text" minor="0">Audio Clip List</audClLstTxt>
+    <addBtn type="button" minor="0" buttonid="addBtn">Add...</addBtn>
+    <playBtn type="button" minor="0" buttonid="playBtn">Play</playBtn>
+    <downloadBtn type="button" minor="0" buttonid="downloadBtn">Download...</downloadBtn>
+    <modifyBtn type="button" minor="0" buttonid="modifyBtn">Modify...</modifyBtn>
+    <removeBtn type="button" minor="0" buttonid="removeBtn">Remove</removeBtn>
+    <audCliOpTxt type="text" minor="0">Add Audio Clip Options</audCliOpTxt>
+    <recTxt type="text" minor="0">Record</recTxt>
+    <uplTxt type="text" minor="0">Upload</uplTxt>
+    <modAudClTxt type="text" minor="0">Modify Audio Clip</modAudClTxt>
+    <naCol1Txt type="text" minor="0">Name:</naCol1Txt>
+    <modifyClBtn type="button" minor="0" buttonid="modifyClBtn">Modify</modifyClBtn>
+    <recAudClTxt type="text" minor="0">Record New Audio Clip</recAudClTxt>
+    <naCol2Txt type="text" minor="0">Name:</naCol2Txt>
+    <audSrcTxt type="text" minor="0">Audio source:</audSrcTxt>
+    <recWaitTxt type="text" minor="0">Wait for</recWaitTxt>
+    <recBtwWaitDurTxt type="text" minor="0">seconds before recording for</recBtwWaitDurTxt>
+    <recAfterDurationTxt1 type="text" minor="0">seconds. (Max</recAfterDurationTxt1>
+    <recAfterDurationTxt2 type="text" minor="0">s)</recAfterDurationTxt2>
+    <recordBtn type="button" minor="0" buttonid="recBtn">Record</recordBtn>
+    <uplAudClTxt type="text" minor="0">Upload Audio Clip</uplAudClTxt>
+    <naCol3Txt type="text" minor="0">Name:</naCol3Txt>
+    <fileTxt type="text" minor="0">File:</fileTxt>
+    <uploadAfterFileTxt type="text" minor="0">(Max 1.5Mb)</uploadAfterFileTxt>
+    <uploadBtn type="button" minor="0" buttonid="uploadBtn">Upload</uploadBtn>
+    <dwnlAudClTxt type="text" minor="0">Download Audio Clip</dwnlAudClTxt>
+    <dwnlHlpTxt type="text" minor="0">To save the audio clip, right-click on link and choose 'Save Link As', 'Save Target As' or 'Download Linked File As'.</dwnlHlpTxt>
+    <saveAuClipTxt type="text" minor="0">Save audio clip</saveAuClipTxt>
+  </audioclip_frame>
+</language_xml>

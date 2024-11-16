@@ -1,0 +1,120 @@
+<!--#set var="backButton" val="yes" -->
+<!--#set var="forwardButton" val="yes" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<script language="javascript" type="text/javascript">
+<!--
+  <!--#include virtual="/incl/video.shtml" -->
+  
+  function init()
+  {
+    if(navigator.appName == "Microsoft Internet Explorer")
+    {
+      document.getElementById("IEDiv").style.display = "block";
+    }
+  }
+// -->
+</script>
+
+<script language="JavaScript">
+<!--
+var langObjRLPWH = new Language("recordingList_h", "playWindow_h");
+
+function globalLanguageVars()
+{
+  document.getElementById("titleId").innerHTML = langObjRLPWH.getText("titleTxt");
+  document.getElementById("hrefSupUrl").href = langObjRLPWH.getText("axisSupURL");
+  document.getElementById("hrefDevUrl").href = langObjRLPWH.getText("axisDevURL");
+}
+// -->
+</script>
+
+</head>
+<body topmargin="0" leftmargin="0" marginwidth="0" marginheight="0" bgcolor="white" onload="langObjRLPWH.init()";"window.focus();init();">
+<!--#include virtual="/incl/helpTop_incl2.shtml" -->
+<table class="alternateRows" border="0" cellpadding="3" cellspacing="0" width="440" bgcolor="white">
+<!--#include virtual="/incl/helpTop_incl3.shtml" -->
+<tr>
+	<td colspan="2">
+		<div id="IEDiv" style="display:none;">
+			<img height="27" width="27" src="../pics/camera_button_27x27px.gif">
+  		<span id="snapshot_AMC_Txt1"></span>
+			<blockquote>
+	  		<span id="snapshot_AMC_Txt2"></span>
+			</blockquote>
+			<img height="27" width="27" src="../pics/full_screen_button_27x27px.gif">
+			<span id="fullscreen_Txt"></span><br/><br/>
+			<img height="27" width="27" src="../pics/recbutton.gif">
+  		<span id="mpeg_rec_Txt1"></span>
+			<blockquote>
+	  		<span id="mpeg_rec_Txt2"></span>
+			</blockquote>
+		</div>
+
+		<img height="27" width="27" src="../pics/play_button_27x27px.gif">
+		<img height="27" width="27" src="../pics/stop_button_27x27px.gif">
+		<span id="play_stop_Txt"></span><br/><br/>
+		<span id="playfromstart_Txt"></span><br/><br/>
+		<span id="note"></span><br/><br/>
+		<img height="27" width="27" src="../pics/download.gif">
+		<span id="play_download_Txt1"></span>
+		<blockquote>
+			<span id="play_download_Txt2"></span>
+			<ul>
+				<li>
+					<span id="play_download_Txt3"></span>
+				</li>
+				<li>
+					<span id="play_download_Txt4"></span>
+				</li>
+				<li>
+					<span id="play_download_Txt5"></span>
+				</li>
+				<li>
+					<span id="play_download_Txt6"></span>
+				</li>
+				<li>
+					<span id="play_download_Txt7"></span>
+				</li>
+				<li>
+					<span id="play_download_Txt8"></span>
+				</li>
+			</ul>
+		</blockquote>
+		<span id="play_download_Txt9"></span>
+		<blockquote>
+			<span id="play_download_Txt10"></span>&nbsp;<a href="" id="hrefSupUrl" target="main"><span id="axisSupURLTxt"></span></a>
+		</blockquote>
+		<span id="play_download_Txt11"></span>
+		<ul>
+			<li>
+				<span id="play_download_Txt12"></span>
+			</li>
+			<li>
+				<span id="play_download_Txt13"></span>
+			</li>
+			<li>
+				<span id="play_download_Txt14"></span>
+			</li>
+		</ul>
+		<span id="play_download_Txt15"></span>&nbsp;<a href="" id="hrefDevUrl" target="main"><span id="axisDevURLTxt"></span></a>
+	</td>
+</tr>
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="heading"></span>
+		</div>
+	</td>
+</tr>
+<tr>
+	<td colspan="2">
+		<div align="left">
+			<span id="text1"></span>
+		</div>
+	</td>
+</tr>
+</table>
+<!--#include virtual="/incl/helpBottom_incl.shtml" -->
+</body>
+</html>

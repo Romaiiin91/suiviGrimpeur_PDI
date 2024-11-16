@@ -1,0 +1,60 @@
+<!--#set var="backButton" val="yes" -->
+<!--#set var="forwardButton" val="yes" -->
+<!--#include virtual="/incl/popup_header.shtml" -->
+
+<script language="JavaScript">
+<!--
+var langObjSSSH = new Language("schedules_h", "schedule_setup_h");
+
+function globalLanguageVars()
+{
+	document.getElementById("titleId").innerHTML = langObjSSSH.getText("titleTxt");
+}
+// -->
+</script>
+
+</head>
+<body onload="langObjSSSH.init()">
+<!--#include virtual="/incl/help_top.shtml" -->
+<div class="row">
+	<span id="intro_Txt"></span>
+</div>
+<h2>
+	<span id="dailySubtitle"></span>
+</h2>
+<div class="row">
+	<span id="daily_Txt1"></span><br/><br/>
+	<span id="daily_Txt2"></span><br/><br/>
+	<span id="daily_Txt3"></span><br/><br/>
+	<span id="daily_Txt4"></span><br/><br/>
+	<span id="daily_Txt5"></span><br/><br/>
+</div>
+<h2>
+	<span id="weekSubtitle"></span>
+</h2>
+<div class="row">
+	<span id="week_Txt1"></span><br/><br/>
+	<span id="week_Txt2"></span><br/><br/>
+	<span id="week_Txt3"></span><br/><br/>
+	<span id="week_Txt4"></span><br/><br/>
+</div>
+<h2>
+	<span id="monthSubtitle"></span>
+</h2>
+<div class="row">
+	<span id="month_Txt1"></span><br/><br/>
+	<span id="month_Txt2"></span><br/><br/>
+	<span id="month_Txt3"></span><br/><br/>
+	<span id="month_Txt4"></span><br/><br/>
+	<span id="month_Txt5"></span><br/><br/>
+</div>
+<h2>
+	<span id="yearSubtitle"></span>
+</h2>
+<div class="row">
+	<span id="yearly_Txt1"></span><br/><br/>
+	<span id="yearly_Txt2"></span><br/><br/>
+	<span id="yearly_Txt3"></span><br/><br/>
+	<span id="yearly_Txt4"></span><br/><br/>
+</div>
+<!--#include virtual="/incl/help_footer.shtml" -->

@@ -1,0 +1,30 @@
+<!--#include virtual="/incl/top_incl.shtml" -->
+<!--#include virtual="/sm/sm.srv?action=get&group=Brand.ProdNbr" -->
+
+<!--#if expr="$root_Brand_ProdNbr >< D" -->
+  <!--#set var="pageTitle" val="Dome Configuration" option="translate:meLi_pageTitleDome" -->
+  <!--#set var="pageSubTitle" val="Limits" option="translate:meLi_pageSubTitle" -->
+<!--#else -->
+  <!--#set var="pageTitle" val="PTZ Configuration" option="translate:meLi_pageTitlePtz" -->
+<!--#endif -->
+
+<script language="JavaScript">
+<!--
+TestRunning = false;
+
+function tempLoaded()
+{
+  TestRunning = false;
+}
+
+//-->
+</script>
+
+</head>
+
+<frameset rows="*,0" border=0 cellpadding="0">
+  <frame src="limits.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->" name="limits" scrolling="yes">
+  <frame src="" name="Temp" marginheight="0" marginwidth="0" scrolling="no" onload="JavaScript: tempLoaded();">
+</frameset>
+
+</html>

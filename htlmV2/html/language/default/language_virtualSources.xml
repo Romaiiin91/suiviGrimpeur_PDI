@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+  <JS_viewAreaObject>
+  </JS_viewAreaObject>
+	
+  <JS_viewAreaSize>
+  </JS_viewAreaSize>
+	
+  <viewAreas>
+    <pageTitle type="title" minor="0">View Area/View Area Configuration</pageTitle>
+    <alternativePageTitle type="msg" minor="0">View Areas/View Areas Configuration</alternativePageTitle>
+    <loPlWaAlrt type="alert" minor="0">Loading. Please wait...</loPlWaAlrt>
+    <faildDPTZAlrt type="alert" minor="0">Error! Faild to enable digital PTZ</faildDPTZAlrt>
+    <maxZoomResText type="msgAsText" minor="0">Max resolution:</maxZoomResText>
+    <applyMaxZoomConfirm1 type="alert" minor="0">With the selected max zoom rate, the maximum possible&#10;resolution will be decreased to</applyMaxZoomConfirm1>
+    <applyMaxZoomConfirm2 type="alert" minor="0">pixels.</applyMaxZoomConfirm2>
+    <arsAffAlrt type="alert" minor="0">The following view areas will be affected:</arsAffAlrt>
+    <prsAffAlrt type="alert" minor="0">The following preset positions will be affected:</prsAffAlrt>
+    <strmProfConf1Alrt type="alert" minor="0">Stream profiles configured with a resolution larger than</strmProfConf1Alrt>
+    <strmProfConf2Alrt type="alert" minor="0">need to be reconfigured.</strmProfConf2Alrt>
+    <applyMaxZoomConfirm3 type="alert" minor="0">Are you sure you want to continue?</applyMaxZoomConfirm3>
+    <nameTxt type="msgAsText" minor="0">Name</nameTxt>
+    <pTZTxt type="msgAsText" minor="0">PTZ</pTZTxt>
+    <lockedNoTxt type="msgAsText" minor="0">No</lockedNoTxt>
+    <lockedYesTxt type="msgAsText" minor="0">Yes</lockedYesTxt>
+    <maxAreas1Alrt type="alert" minor="0">No more than</maxAreas1Alrt>
+    <maxAreas2Alrt type="alert" minor="0">view areas can be added.</maxAreas2Alrt>
+    <vidStrSetTxt type="msgAsText" minor="0">Video Stream Settings</vidStrSetTxt>
+    <cliSavOrResTxt type="msgAsText" minor="0">Click Save or Reset for further editing.</cliSavOrResTxt>
+    <okBtnTxt type="msgAsText" minor="0">OK</okBtnTxt>
+    <isDirtyAlert type="alert" minor="0">Changes made will be lost.</isDirtyAlert>
+    <isDirtyConfirm type="alert" minor="0">Changes made will be lost. Ok?</isDirtyConfirm>
+    <noNameAlert type="alert" minor="0">Please enter a name on the view area.</noNameAlert>
+    <invalidNameAlert type="alert" minor="0">Invalid characters in view area name. Only alphanumerical characters, space, '-' and '_' are allowed.</invalidNameAlert>
+    <duplicateNameAlert type="alert" minor="0">Please enter a unique name for the view area.</duplicateNameAlert>
+    <defaultNameTxt type="msgAsText" minor="0">View area</defaultNameTxt>
+    <removeDefAlert type="alert" minor="0">This area can not be removed.</removeDefAlert>
+    <removeConfirm type="alert" minor="0">Are you sure that you want to remove the selected view area?</removeConfirm>
+    <removeAreaAlert type="alert" minor="0">Select one area in the list before pressing 'Remove'.</removeAreaAlert>
+    <addBtnStatTxt type="msg" minor="0">Add view area</addBtnStatTxt>
+    <remBtnStatTxt type="msg" minor="0">Remove the selected view area</remBtnStatTxt>
+    <saveBtnStatTxt type="msg" minor="0">Save the view area settings</saveBtnStatTxt>
+    <resBtnStatTxt type="msg" minor="0">Revert to last saved settings</resBtnStatTxt>
+    <viewArTitleTxt type="text" minor="0">View Area</viewArTitleTxt>
+    <viewArsTitleTxt type="text" minor="0">View Areas</viewArsTitleTxt>
+    <hlpTxt type="image" minor="0" imageid="hlpPic">Click here for help on this page</hlpTxt>
+    <maxZooTxt type="text" minor="0">Max zoom:</maxZooTxt>
+    <applyBtn type="button" minor="0" buttonid="applyBtn">Apply</applyBtn>
+    <editAddTxt type="text" minor="0">Modify/Add View Area</editAddTxt>
+    <addBtn type="button" minor="0" buttonid="viewArea_AddBtn">Add</addBtn>
+    <removeBtn type="button" minor="0" buttonid="viewArea_RemoveBtn">Remove</removeBtn>
+    <selectedTxt type="text" minor="0">Selected view area</selectedTxt>
+    <viewAreaTxt type="text" minor="0">View area</viewAreaTxt>
+    <nameColTxt type="text" minor="0">Name:</nameColTxt>
+    <aspectTxt type="text" minor="0">Aspect ratio:</aspectTxt>
+    <vidStrmResTxt type="text" minor="0">Video stream resolution:</vidStrmResTxt>
+    <viewArSizeTxt type="text" minor="0">View area size:</viewArSizeTxt>
+    <enablePTZTxt type="text" minor="0">Enable PTZ</enablePTZTxt>
+    <reToFuViBtn type="button" minor="0" buttonid="reToFullBtn">Return to full view</reToFuViBtn>
+    <saveBtn type="button" minor="0" buttonid="viewArea_SaveBtn">Save</saveBtn>
+    <resetBtn type="button" minor="0" buttonid="viewArea_ResetBtn">Reset</resetBtn>
+    <mirNotTxt type="text" minor="0">&#x3C;b&#x3E;Note:&#x3C;b&#x3E; The image is shown unmirrored here. The area coordinates will be correctly translated to the mirrored image.</mirNotTxt>
+  </viewAreas>
+</language_xml>

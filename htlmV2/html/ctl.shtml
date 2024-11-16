@@ -1,0 +1,33 @@
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+
+<!--#include virtual="/sm/sm.srv?action=get&group=ImageSource.I0.DigitalPTZ.Enabled,PTZ.ImageSource.I0.PTZEnabled" -->
+
+<!--#set var="qs" val="" -->
+<!--#if expr="$gatekeeper = yes" -->
+  <!--#set var="qs" val="&gatekeeper=yes" -->
+<!--#endif -->
+
+<script language="JavaScript">
+<!--
+  var langObjCtl = new Language("ptz", "ctl");
+  langObjCtl.init();
+
+<!--#if expr="$gatekeeper = yes" -->  
+  function globalLanguageVars()
+  {
+    document.title = langObjCtl.getText("alternativeTitle");
+  }
+<!--#endif -->
+// -->
+</script>
+
+</head>
+
+<frameset rows="*,0" border=0 cellpadding="0">
+   <frame src="ptz.shtml?nbr=<!--#echo var="nbr" option="encoding:url" -->&id=<!--#echo var="ssi_request_id" option="encoding:url" --><!--#echo var="qs" option="encoding:url" -->" name="ptz" scrolling="auto" noresize="true">
+   <frame src="status.html" name="status_frame" scrolling="no" noresize="true">
+   <frame src="" name="Temp" marginheight="0" marginwidth="0" scrolling="no" noresize="true">
+</frameset>
+
+</html>

@@ -1,0 +1,789 @@
+<script language="javascript" type="text/javascript">
+<!--
+  var langObjEventsGkEvent = new Language("events", "gatekeeperEvent");
+  langObjEventsGkEvent.init(false, true);
+
+  var reservedName = "<!--#echo var="reservedName" option="encoding:javascript" -->";
+  var global_PTZEnabled = true;
+  var global_skipPTZ = false;
+  
+  var hasPreset = false;
+  var hasMotion = false;
+  function checkPresetMotion()
+  {
+    <!--#if expr="$root_PTZ_Preset_P0_HomePosition != -1" -->
+    if (document.presetPosForm.elements.length >= 4 )
+    {
+      hasPreset = true;
+    }
+    <!--#else -->
+    hasPreset = false;
+    <!--#endif -->
+  
+    if( document.motionForm.elements.length >= 1 )
+    {
+      hasMotion = true;
+    }
+  }
+  
+  var actionNameSpaces = new SOAPClientNS();
+  actionNameSpaces.add("aa", "http://www.axis.com/vapix/ws/action1" );
+  actionNameSpaces.add("wsnt", "http://docs.oasis-open.org/wsn/b-2" );
+  actionNameSpaces.add("tns1", "http://www.onvif.org/ver10/topics" );
+  actionNameSpaces.add("tnsaxis", "http://www.axis.com/2009/event/topics" );
+  
+  var wsdlUrl = "/wsdl/vapix/ActionService.wsdl";
+  
+  function getActionRules()
+  {
+    var params = new SOAPClientParameters();
+    var now = new Date();
+    var timestamp = "?timestamp="+now.getTime();
+    
+    var url = "/vapix/services"+timestamp;
+    var method = "aa:GetActionRules";
+  
+    SOAPClient.invoke( wsdlUrl, url, actionNameSpaces, method, params, false, loadActionRuleList );
+  }
+  
+  var ruleArray;
+  var doAction = "add";
+  var updateRuleId = "";
+  function loadActionRuleList( responseObj )
+  {
+    ruleArray = new Array();
+  
+    if( responseObj )
+    {
+      var actionParent = responseObj.ActionRules;
+      if( actionParent )
+      {
+        var actionRule = actionParent.ActionRule;
+        if( actionRule )
+        {
+          if( actionRule.constructor != Array )
+          {
+            actionRule = new Array( actionRule );
+          }
+          var len = actionRule.length;
+          for( var i = 0; i < len; i++ )
+          {
+            ruleArray[ actionRule[i].RuleID ] = actionRule[i];
+            if( actionRule[i].Name == reservedName )
+            {
+              doAction = "update";
+              updateRuleId = actionRule[i].RuleID;
+            }
+          }
+        }
+      }
+    }//if response
+  }
+  
+  function getActionConfigs()
+  {
+    var params = new SOAPClientParameters();
+  
+    var now = new Date();
+    var timestamp = "?timestamp="+now.getTime();
+    
+    var url = "/vapix/services"+timestamp;
+    var method = "aa:GetActionConfigurations";
+  
+    SOAPClient.invoke( wsdlUrl, url, actionNameSpaces, method, params, false, loadSelectedActionConfig );
+  }
+  
+  var actionConfig;
+  function loadSelectedActionConfig( responseObj )
+  {
+    if( responseObj )
+    {
+      actionConfigs = new Array();
+      var actionParent = responseObj.ActionConfigurations;
+      if( actionParent )
+      {
+        var actionConfigObj = actionParent.ActionConfiguration;
+        if( actionConfigObj )
+        {
+          var primaryAction = ruleArray[ updateRuleId ].PrimaryAction;
+          if( actionConfigObj.constructor != Array )
+          {
+            actionConfigObj = new Array( actionConfigObj );
+          }
+          var len = actionConfigObj.length;
+          for( var i = 0; i < len && !actionConfig; i++ )
+          {
+            if( actionConfigObj[ i ].ConfigurationID == primaryAction )
+            {
+              actionConfig = actionConfigObj[ i ];
+            }
+          }
+        }
+      }
+    }//if response
+  }
+  
+  function getActionsTemplates()
+  {
+    var params = new SOAPClientParameters();
+  
+    var now = new Date();
+    var timestamp = "?timestamp="+now.getTime();
+    
+    var url = "/vapix/services"+timestamp;
+    var method = "aa:GetActionTemplates";
+  
+    SOAPClient.invoke( wsdlUrl, url, actionNameSpaces, method, params, true, loadActionList );
+  }
+  
+  var actionTemplateMap = new Array();
+  var renderedActions = new Array();
+  
+  function addToActionMaps( templateId, webId, webName, hide, isPTZ )
+  {
+    actionTemplateMap[templateId] = {val:webId, name:webName };
+    if( !renderedActions[webId] )
+    {
+      renderedActions[webId] = { initiated:false, hidden:hide, ptz:isPTZ };
+    }
+  }
+  
+  function loadActionList( responseObj )
+  {
+    var selectEl = document.getElementById("actionType");
+  
+    if( responseObj )
+    {
+      var actionTemplateParent = responseObj.ActionTemplates;
+      if( actionTemplateParent )
+      {
+        var actionTemplates = actionTemplateParent.ActionTemplate;
+        if( actionTemplates )
+        {
+          if( actionTemplates.constructor != Array )
+          {
+            actionTemplates = new Array( actionTemplates );
+          }
+          for( var key in actionTemplates )
+          {
+            if( doAction == "update")
+            {
+              var templateId = actionTemplates[ key ].TemplateToken;
+              if( actionTemplateMap[templateId] )
+              {
+                var webId = actionTemplateMap[templateId].val;
+      
+                if( actionConfig && actionConfig.TemplateToken == templateId )
+                {
+                  renderedActions[webId].isAction = true;
+                }
+              }
+            }
+            if( addActionTemplateOption( actionTemplates[ key ] ) )
+            {
+              break;
+            }
+          }//for
+        }//if templates
+      }//if template parent
+    }//if respons
+  }
+  
+  function addActionTemplateOption( templateObj )
+  {
+    var added = false;
+    if( templateObj )
+    {
+      var templateId = templateObj.TemplateToken;
+      //known template
+      if( actionTemplateMap[templateId] )
+      {
+        var webId = actionTemplateMap[templateId].val;
+        var webName = actionTemplateMap[templateId].name;
+  
+        if( !renderedActions[webId].hidden && !renderedActions[webId].initiated )
+        {
+          renderedActions[webId].initiated = true;
+          if( doAction == "update" && actionConfig )
+          {
+            var paramArr;
+            var params = actionConfig.Parameters.Parameter;
+            if( params )
+            {
+              paramArr = new Array();
+              if( params.constructor != Array )
+              {
+                paramArr = new Array( params );
+              }
+              var len = params.length;
+              for(var i = 0; i < len; i++ )
+              {
+                paramArr[ params[i].Name ] = params[i].Value;
+              }
+              paramArr[ "TemplateToken" ] = actionConfig.TemplateToken;
+            }
+            eval( "init_"+webId+"('"+webId+"', paramArr)" );
+  
+          }
+          else
+          {
+            eval( "init_"+webId+"('"+webId+"')" );
+          }
+  
+          var labelEl = document.createElement("LABEL");
+          labelEl.id = "actionTypeTxt";
+          labelEl.innerHTML = webName;
+          document.getElementById("divActionType").appendChild(labelEl);
+          document.getElementById("div_"+webId ).style.display = "block";
+  
+          document.getElementById("actionType").value = webId;
+          added = true;
+        }
+      }
+    }//if obj
+    return added;
+  }
+
+  var selectedActionArray = new Array();
+  function toggleActionType( el, prefix )
+  {
+    var val = el.options[ el.selectedIndex ].value;
+    var div;
+    var selectedAction = selectedActionArray[ prefix ];
+    var orgPrefix = prefix;
+    prefix = (( prefix == "none" )?"":prefix+"_");
+
+    if( selectedAction )
+    {
+      var preDiv = document.getElementById("div_"+prefix+selectedAction );
+      if( preDiv )
+      {
+        preDiv.style.display = "none";
+      }
+    }
+
+    var div = document.getElementById("div_"+prefix+val );
+    if( div )
+    {
+      document.getElementById("div_"+prefix+val ).style.display = "block";
+      selectedActionArray[ orgPrefix ] = val;
+    }
+
+  }
+
+  var conditionTopics = new Array();
+  var conditionMessages = new Array();
+
+  function onInit()
+  {
+    SaveBtnStatTxt = langObjEventsGkEvent.getText("saveBtnStatTxt");
+    ResBtnStatTxt = langObjEventsGkEvent.getText("resBtnStatTxt");
+
+    checkPresetMotion();
+    if( hasPreset && hasMotion )
+    {
+      getActionRules();
+      var preEvent = null;
+      if( doAction == "update" )
+      {
+        getActionConfigs();
+        preEvent = getSelectedCondition();
+        document.getElementById( "enableRule" ).checked = (( ruleArray[ updateRuleId ].Enabled == "true" )?true:false );
+      }
+      setActiveInactiveLabels( langObjEventsGkEvent.getText("yesTxt"), langObjEventsGkEvent.getText("noTxt") );
+      getEventList( false, preEvent, true );
+      getActionsTemplates();
+
+      if( doAction == "update" )
+      {
+        renderOtherConditions( conditionTopics, conditionMessages );
+      }
+    }
+    setTexts();
+  }
+  addLoadEvent( onInit );
+
+  function getSelectedCondition()
+  {
+    var startEventObj;
+    if( ruleArray[ updateRuleId ].Conditions )
+    {
+      var conditionArr = ruleArray[ updateRuleId ].Conditions.Condition;
+      if( conditionArr )
+      {
+        conditionTopics = new Array();
+        conditionMessages = new Array();
+  
+        if( conditionArr.constructor != Array )
+        {
+          conditionArr = new Array( conditionArr );
+        }
+        var len = conditionArr.length;
+        for( var i = 0; i < len; i++ )
+        {
+          conditionTopics[ conditionTopics.length ] = conditionArr[i].TopicExpression["#text"];
+          conditionMessages[ conditionMessages.length ] = conditionArr[i].MessageContent["#text"];
+        }
+        if( conditionTopics.length > 0 )
+        {
+          startEventObj = new Object();
+          startEventObj.topicExpression = conditionTopics[0];
+          startEventObj.messages = parseMessageStr( conditionMessages[0] );
+        }
+      }
+    }
+    return startEventObj;
+  }
+  
+  function renderOtherConditions( conditionTopicsArr, conditionMessageArr )
+  {
+    var len = conditionMessageArr.length;
+    var messageStr, messageArray, selectedTopic;
+    var selectedSchedule;
+    var checkForSchedule = true;
+  
+    for( var i = 1;  i < len; i++ )
+    {
+      messageStr = conditionMessageArr[i];
+      messageArray = parseMessageStr( messageStr );
+      selectedTopic = conditionTopicsArr[i];
+  
+      if( selectedTopic.indexOf("UserAlarm") == -1 )
+      {
+        addHiddenCondition( selectedTopic, messageStr );
+      }
+      else if( scheduleNames[ selectedTopic ] && messageArray["id"] )
+      {
+        if( checkForSchedule && ( messageArray["active"] == "1") )
+        {
+          selectedSchedule = {topic:selectedTopic, id:messageArray["id"]};
+          setSelectedScheduleOption( selectedSchedule );
+          checkForSchedule = false;
+        }
+        else
+        {
+          addHiddenCondition( selectedTopic, messageStr );
+        }
+      }
+    }
+  }
+  
+  function addHiddenCondition( conditionTopic, messageStr )
+  {
+    var elementName = elementNameFromTopic( conditionTopic );
+    var inputEl = document.createElement("INPUT");
+    inputEl.type = "hidden"
+    inputEl.id = "hiddenCondition"+elementName;
+    inputEl.name = "hiddenCondition";
+    inputEl.value = conditionTopic;
+    
+    document.getElementById("groupContainer").appendChild(inputEl);
+  
+    inputEl = document.createElement("INPUT");
+    inputEl.type = "hidden"
+    inputEl.name = "hiddenMessage"+elementName;
+    inputEl.id = "hiddenMessage"+elementName;
+    inputEl.value = messageStr;
+    
+    document.getElementById("groupContainer").appendChild(inputEl);
+  }
+  
+  function setSelectedScheduleOption( scheduleObj )
+  {
+    var selectEl = document.getElementById("schedule");
+    var len = selectEl.length;
+    var tmpArr, isSelected;
+    for( var i = 0; i < len; i++ )
+    {
+      isSelected = false;
+      tmpArr = ( selectEl.options[ i ].value ).split("#");
+      if( tmpArr.length > 1 )
+      {
+        if( tmpArr[ 0 ] == scheduleObj.topic || tmpArr[ 0 ]+"//." == scheduleObj.topic )
+        {
+          isSelected = ((tmpArr[ 1 ].indexOf( scheduleObj.id ) != -1 )?true:false);
+        }
+      }
+      selectEl.options[ i ].selected = isSelected;
+    }
+  }
+  
+  function parseMessageStr( str )
+  {
+    var messageArr = new Array();
+    var re = /boolean\(\/\/SimpleItem\[@Name="([^"]*)" and @Value="([^"]*)"\]\)/ig;
+    var theName, theValue, matchArr;
+    do
+    {
+      matchArr = re.exec(str);
+  
+      if( matchArr && matchArr.length > 2 )
+      {
+        theName = matchArr[ 1 ];
+        theValue = matchArr[ 2 ];
+        if( theName && theValue )
+        {
+          messageArr[ theName ] = theValue;
+        }
+      }
+    }
+    while( matchArr )
+  
+    return messageArr;
+  }
+  
+  function setTexts()
+  {
+    var textEl = document.getElementById("instructionText");
+  
+    if( hasPreset && hasMotion )
+    {
+      if( ruleArray.length == 10 && doAction == "add" )
+      {
+        textEl.innerHTML = "<strong>"+langObjEventsGkEvent.getText("noEventTxt")+"<\/strong>";
+      }
+      else
+      {
+        textEl.innerHTML = "<strong>"+langObjEventsGkEvent.getText("actionTxt")+"</strong>"+
+        ( ( action = "update" )? "<br \/>"+langObjEventsGkEvent.getText("actionAdvTxt")+"&nbsp;<a href=\"/operator/action_rules.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->\">"+langObjEventsGkEvent.getText("actionRulesTxt")+"<\/a><br \/>":"" )+
+        "<br \/>"+
+        langObjEventsGkEvent.getText("eventNameTxt")+"<br \/><br \/>"+
+        langObjEventsGkEvent.getText("eventTriggeredByTxt")+
+        " <a href=\"javascript:wizardGoToStep(2)\">"+langObjEventsGkEvent.getText("eventTriggeredByLinkTxt")+"<\/a> "+
+        langObjEventsGkEvent.getText("eventTriggeredByTxt2")+"<br \/><br \/>"+
+        langObjEventsGkEvent.getText("eventWhenTriggeredTxt")+"<br \/>"+
+        langObjEventsGkEvent.getText("eventScheduleTxt")+
+        " <a href=\"/operator/schedules.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->\">"+langObjEventsGkEvent.getText("eventScheduleLinkTxt")+"<\/a><br \/><br \/>"+
+        langObjEventsGkEvent.getText("eventGotoPTZTxt")+
+        " <a href=\"javascript:wizardGoToStep(1)\">"+langObjEventsGkEvent.getText("eventGotoPTZLinkTxt")+"<\/a> "+
+        langObjEventsGkEvent.getText("eventGotoPTZTxt2")+"<br \/>"+
+        langObjEventsGkEvent.getText("eventAutoTrackTxt")+
+        "<br \/>";
+        }
+      document.getElementById( "presetDiv" ).style.display = "block";
+    }
+    else if( !hasPreset && !hasMotion )
+    {
+      textEl.innerHTML = "<strong>"+langObjEventsGkEvent.getText("actionPrePosMotionTxt")+" <a href=\"javascript:wizardGoToStep(1)\">"+langObjEventsGkEvent.getText("actionPrePosMotionLinkTxt")+"<\/a>.<\/strong>";
+    }
+    else if( !hasPreset )
+    {
+      textEl.innerHTML = "<strong>"+langObjEventsGkEvent.getText("actionPrePosTxt")+" <a href=\"javascript:wizardGoToStep(1)\">"+langObjEventsGkEvent.getText("actionPrePosLinkTxt")+"<\/a>.<\/strong>";
+    }
+    else
+    {
+      textEl.innerHTML = "<strong>"+langObjEventsGkEvent.getText("actionMotionTxt")+" <a href=\"javascript:wizardGoToStep(2)\">"+langObjEventsGkEvent.getText("actionMotionLinkTxt")+"<\/a>.<\/strong>";
+    }
+  }
+  
+  var actionRuleSetup;
+  function saveData()
+  {
+    if( ( ruleArray.length == 10 && doAction == "add" ) || !( hasPreset && hasMotion )  )
+    {
+      return;
+    }
+  
+    var okBtn = document.getElementById("btnOK");
+    okBtn.disabled = true;
+    
+    if( selectedTopic.length == 2 )
+    {
+      var eN = elementNameFromTopic( selectedTopic[ 1 ] );
+      var selWin = document.getElementById("select_SI_" + eN );
+      selectedTopic[ 2 ] = selWin.options[selWin.selectedIndex].value;
+    }
+
+    var filterObj;
+    var isCondition = false;
+    filterObj = getSelectedTopicFilter();
+    isCondition = filterObj.isCondition;
+    isCondition = isCondition || ( selectedSchedule != "" );
+
+    actionRuleSetup = new Object();
+  
+    actionRuleSetup.Name = "<!--#echo var="reservedName" option="encoding:html" -->";
+    actionRuleSetup.Enabled = (document.getElementById("enableRule").value == 'yes');
+  
+    var actionTypeId = document.getElementById("actionType").value;
+    if( !eval( "validate_"+actionTypeId+"('"+actionTypeId+"', "+isCondition+")" ) )
+    {
+      okBtn.disabled = false;
+      return false;
+    }
+  
+    //Prepare soap call
+    var conditionArray = new Array();
+    conditionArray[ 0 ] = { "Condition":filterObj.topicFilter };
+  
+    var scheduleEl = document.getElementById("schedule");
+    var selectedSchedule = scheduleEl.options[ scheduleEl.selectedIndex ].value;
+    var filterCondtionObj;
+    if( selectedSchedule != "" )
+    {
+      var tmpArr = selectedSchedule.split("#");
+      filterCondtionObj = getTopicFilterObject( tmpArr[0], tmpArr[1] );
+      conditionArray[ 1 ] = { "Condition":filterCondtionObj };
+    }
+  
+    if( doAction == "update" )
+    {
+      var otherConditions = document.getElementsByName("hiddenCondition");
+      var len = otherConditions.length;
+      var conditionTopic, elementName;
+      var conditionMessages, messageStr;
+      for( var i = 0; i < len; i++ )
+      {
+        conditionTopic = otherConditions[ i ].value;
+        elementName = elementNameFromTopic( conditionTopic );
+        messageStr = "";
+        conditionMessages = document.getElementById("hiddenMessage"+elementName);
+        if( conditionMessages )
+        {
+          messageStr = conditionMessages.value;
+        }
+        filterCondtionObj = getTopicFilterObject( conditionTopic, messageStr );
+        conditionArray[ conditionArray.length ] = { "Condition":filterCondtionObj };
+      }
+      if( ruleArray[ updateRuleId ].FailoverAction )
+      {
+        actionRuleSetup.FailoverAction = ruleArray[ updateRuleId ].FailoverAction;
+      }
+      if( ruleArray[ updateRuleId ].ActivationTimeout )
+      {
+        actionRuleSetup.ActivationTimeout = ruleArray[ updateRuleId ].ActivationTimeout;
+      }
+    }
+    actionRuleSetup.Conditions = conditionArray;
+  
+    saveActionConfig( actionTypeId,  actionTypeId );
+  }
+  
+  function saveActionConfig( actionType, actionTypeId )
+  {
+    var paramObj = eval( "setup_save_"+actionType+"('"+actionTypeId+"')" );
+  
+    var soapParamObj = new SOAPClientParameters();
+    soapParamObj.add("NewActionConfiguration", paramObj);
+  
+    var now = new Date();
+    var timestamp = "?timestamp="+now.getTime();
+  
+    var url = "/vapix/services"+timestamp;
+    var method = "aa:AddActionConfiguration";
+    SOAPClient.invoke( wsdlUrl, url, actionNameSpaces, method, soapParamObj, true, onSaveActionConfig );
+  }
+  
+  function Parameter( name, value )
+  {
+    name = name.setIsAttribute( true );
+    this.Name = name;
+  
+    value = value.setIsAttribute( true );
+    this.Value = value;
+  
+    return this;
+  }
+  
+  function toggleCheckedEnable( el, enableId )
+  {
+    document.getElementById( enableId ).disabled = ( (el.checked)?false:true );
+  }
+  
+  function getImage( actionTypeId )
+  {
+    return 0;
+  }
+  
+  function setImage( imgNumber, actionTypeId )
+  {
+  }
+  
+  function onSaveActionConfig( responseObj )
+  {
+    if( responseObj )
+    {
+      if( responseObj.name == "Error" )
+      {
+        var errorMsg = ( ( responseObj.description )?responseObj.description:(responseObj.fileName)?responseObj.fileName:responseObj.message );
+        alert( errorMsg );
+        
+        document.getElementById("btnOK").disabled = false;
+      }
+      else
+      {
+        actionRuleSetup.PrimaryAction = responseObj.ConfigurationID;
+        saveRule();
+      }
+    }//if response
+    else
+    {
+      alert( langObjEventsGkEvent.getText("unknownErrorAlert") );
+      document.getElementById("btnOK").disabled = false;
+    }
+  }
+  
+  function saveRule()
+  {
+    var now = new Date();
+    var timestamp = "?timestamp="+now.getTime();
+  
+    var url = "/vapix/services"+timestamp;
+    var method = "aa:AddActionRule";
+  
+    var params = new SOAPClientParameters();
+    params.add( "NewActionRule", actionRuleSetup );
+  
+    SOAPClient.invoke( wsdlUrl, url, actionNameSpaces, method, params, true, onSaveRule );
+  }
+  
+  var removeStatus;
+  var newRuleId;
+  function onSaveRule( responseObj )
+  {
+    if( responseObj )
+    {
+      if( responseObj.name == "Error" )
+      {
+        var errorMsg = ( ( responseObj.description )?responseObj.description:(responseObj.fileName)?responseObj.fileName:responseObj.message );
+        alert( errorMsg );
+  
+        if( actionRuleSetup.PrimaryAction )
+        {
+          removeStatus = "Error";
+          removeActionConfigs( actionRuleSetup.PrimaryAction );
+        }
+        document.getElementById("btnOK").disabled = false;
+        return;
+      }
+      newRuleId = responseObj.RuleID;
+    }
+    if( doAction != "add" )
+    {
+      removeStatus = "OldRule";
+      removeRule( updateRuleId );
+    }
+    else
+    {
+      wizardGoToStep( 4 );
+    }
+  }
+  
+  function removeRule( ruleId )
+  {
+    var params = new SOAPClientParameters();
+    params.add("RuleID", ruleId );
+  
+    var now = new Date();
+    var timestamp = "?timestamp="+now.getTime();
+    
+    var url = "/vapix/services"+timestamp;
+    var method = "aa:RemoveActionRule";
+    SOAPClient.invoke( wsdlUrl, url, actionNameSpaces, method, params, true, onRemoveRule );
+  }
+  
+  function onRemoveRule( responseObj )
+  {
+    if( responseObj )
+    {
+      if( responseObj.name == "Error" )
+      {
+        var errorMsg = ( ( responseObj.description )?responseObj.description:(responseObj.fileName)?responseObj.fileName:responseObj.message );
+        alert( errorMsg );
+        //start remove the newly saved action rule and it's configs
+        if( newRuleId && removeStatus == "OldRule" )
+        {
+          removeStatus = "NewRule";
+          removeRule( newRuleId );
+        }
+        document.getElementById("btnOK").disabled = false;
+        return;
+      }
+    }//if response
+  
+    if( removeStatus == "OldRule" )
+    {
+      if( ruleArray[ updateRuleId ].PrimaryAction )
+      {
+        removeActionConfigs( ruleArray[ updateRuleId ].PrimaryAction );
+      }
+    }
+  }
+  
+  function removeActionConfigs( actionId )
+  {
+    var params = new SOAPClientParameters();
+    params.add("ConfigurationID", actionId );
+  
+    var now = new Date();
+    var timestamp = "?timestamp="+now.getTime();
+    
+    var url = "/vapix/services"+timestamp;
+    var method = "aa:RemoveActionConfiguration";
+    SOAPClient.invoke( wsdlUrl, url, actionNameSpaces, method, params, true, onRemoveActionConfigs );
+  }
+  
+  function onRemoveActionConfigs( responseObj )
+  {
+    if( responseObj )
+    {
+      if( responseObj.name == "Error" )
+      {
+        var errorMsg = ( ( responseObj.description )?responseObj.description:(responseObj.fileName)?responseObj.fileName:responseObj.message );
+        alert( errorMsg );
+        
+        document.getElementById("btnOK").disabled = false;
+        return;
+      }
+  
+    }//if response
+    if( removeStatus != "Error" )
+    {
+      wizardGoToStep( 4 );
+    }
+    document.getElementById("btnOK").disabled = false;
+  }
+  
+  function showErrorMsg( msg, focusOn )
+  {
+    alert( msg );
+    if( focusOn )
+    {
+      focusOn.focus();
+      focusOn.select();
+    }
+  }
+  
+  function resetForm()
+  {
+    setFields();
+  }
+  
+  var SaveBtnStatTxt;
+  var ResBtnStatTxt;
+  
+  function wizardGoToStep( stepNum )
+  {
+    if( stepNum == 1 )
+    {
+      document.location = "/operator/ctl.shtml?nbr=0&id=<!--#echo var="ssi_request_id" option="encoding:url" -->&gatekeeper=yes";
+    }
+    else if( stepNum == 2 )
+    {
+      document.location = "/operator/motionDetection.shtml?nbr=0&id=<!--#echo var="ssi_request_id" option="encoding:url" -->&gatekeeper=yes";
+    }
+    else if( stepNum == 4 )
+    {
+      document.location = "/operator/gatekeeperSaved.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->";
+    }
+  }
+
+  function resetForm()
+  {
+    window.location.reload(true);
+  }
+  <!--#set var="action" val="scripts" -->
+  <!--#include virtual="/operator/action_ptz_control.shtml" -->
+  <!--#include virtual="/incl/functions.shtml" -->
+//-->
+</script>

@@ -1,0 +1,95 @@
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#include virtual="/incl/top_incl_popup.shtml" -->
+<!--#include virtual="/sm/sm.srv?action=get&group=Network.UPnP.NATTraversal,System.AlternateBoaPort" -->
+
+<script language="JavaScript">
+<!--
+var langObjUpnpNATmsg = new Language("upnpnat", "handleNATmsg");
+
+function onInit()
+{
+  langObjUpnpNATmsg.init();
+}
+
+function closeWindow()
+{
+  parent.closeWindow();
+}
+//-->
+</script>
+
+</head>
+<body <!--#include virtual="/incl/bodytag_popup.shtml" --> onload="onInit()">
+<form name="WizardForm" action="/sm/sm.srv" method="POST" onSubmit="SubmitForm(); return false">
+  <input type="hidden" name="root_Network_UPnP_NATTraversal_Enabled" value="<!--#echo var="root_Network_UPnP_NATTraversal_Enabled" option="encoding:html" -->">
+  <div class="cornerBox">
+    <div class="content">
+      <table border="<!--#echo var="zero" option="encoding:html" -->" cellpadding="<!--#echo var="cellpadding3" option="encoding:html" -->" cellspacing="0" class="oddItem" width="380" height="100">
+        <tr>
+          <td colspan="4" class="oddItem">
+          <!--#if expr="$action = enable" -->
+            <!--#if expr="_$result = _" -->
+              <span id="enbTxt"></span>
+              <br><br>
+              <span id="waitTxt"></span>
+            <!--#else -->
+              <!--#if expr="$result = OK" -->
+                <span id="oKaTxt"></span>
+                <br><br>
+                <span id="oKb1Txt"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="oKb2Txt"></span>
+                <!--#if expr="$root_System_AlternateBoaPort != 80" -->
+                  <a href="http://<!--#echo var="root_Network_UPnP_NATTraversal_ExternalIPAddress" option="encoding:url" -->:<!--#echo var="root_System_AlternateBoaPort" option="encoding:html" -->" target="_blank">
+                    http://<!--#echo var="root_Network_UPnP_NATTraversal_ExternalIPAddress" option="encoding:url" -->:<!--#echo var="root_System_AlternateBoaPort" option="encoding:html" --></a>
+                <!--#else -->
+                  <a href="http://<!--#echo var="root_Network_UPnP_NATTraversal_ExternalIPAddress" option="encoding:url" -->" target="_blank">http://<!--#echo var="root_Network_UPnP_NATTraversal_ExternalIPAddress" option="encoding:url" --></a>
+                <!--#endif -->
+              <!--#else -->
+                <span id="failaTxt"></span>
+                <br><br>
+                <span id="failb1Txt"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="failb2Txt"></span>
+              <!--#endif -->
+            <!--#endif -->
+          <!--#endif -->
+
+          <!--#if expr="$action = wait" -->
+            <!--#if expr="_$result = _" -->
+              <span id="reCfgTxt"></span>
+              <br><br>
+              <span id="waitTxt"></span>
+            <!--#else -->
+              <span id="finTxt"></span>
+              <br><br>
+            <!--#endif -->
+          <!--#endif --> 
+
+          <!--#if expr="$action = disable" -->
+            <!--#if expr="_$result = _" -->
+              <span id="disTxt"></span>
+              <br><br>
+              <span id="waitTxt"></span>
+            <!--#else -->   
+              <!--#if expr="$result = OK" -->
+                <span id="oKoffTxt"></span>
+              <!--#else -->   
+                <span id="failoffTxt"></span>
+              <!--#endif -->
+            <!--#endif -->
+          <!--#endif -->
+          </td>
+        </tr>
+        <tr>
+          <td class="topTitle" align="right" colspan="3">
+            <table border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td class="button"><input type="button" value="" width="75" class="btnNormal" onclick="JavaScript:closeWindow()" id="closeBtn"></td>
+              </tr>
+             </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="footerLeft"><div class="footerRight"></div></div>
+  </div>
+</form>
+</body>
+</html>

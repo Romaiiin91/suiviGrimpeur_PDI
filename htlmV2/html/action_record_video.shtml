@@ -1,0 +1,324 @@
+
+<!--#set var="id" val="record_video" -->
+
+<!--#if expr="$action = scripts" -->
+  var langObjEvTyRecVid = new Language("event_types", "action_record_video");
+  langObjEvTyRecVid.init(false, true);
+
+  var actionName = langObjEvTyRecVid.getText("arvRecVideoTxt");
+  var hideAction = false;
+  var isPTZAction = false;
+
+  addToActionMaps( "com.axis.action.unlimited.recording.storage", "<!--#echo var="id" option="encoding:javascript" -->", actionName, hideAction, isPTZAction );
+  hideAction = true;
+  addToActionMaps( "com.axis.action.fixed.recording.unlimited.storage", "<!--#echo var="id" option="encoding:javascript" -->", actionName, hideAction, isPTZAction );
+
+  addToActionMaps( "com.axis.action.unlimited.recording.storage", "<!--#echo var="id" option="encoding:javascript" -->", actionName, hideAction, isPTZAction );
+  addToActionMaps( "com.axis.action.fixed.recording.storage", "<!--#echo var="id" option="encoding:javascript" -->", actionName, hideAction, isPTZAction );
+
+  <!--#if expr="$map_only != yes" -->
+    
+    function init_<!--#echo var="id" option="encoding:javascript" -->( actionTypeId, configParamArr )
+    {
+      var selectedProfile = "";
+      var selectedStorageId = "";
+      var camera = 1;
+
+
+      if( configParamArr )
+      {
+        var streamOptionsArr = ( configParamArr["stream_options"] ).split("&");
+        document.getElementById("stream_options"+actionTypeId ).value = configParamArr["stream_options"];
+        var len = streamOptionsArr.length;
+        var tmpArr;
+        for( var i = 0; i < len; i++ )
+        {
+          tmpArr = streamOptionsArr[ i ].split("=");
+          if( tmpArr.length > 1 )
+          {
+            if( tmpArr[0] == "streamprofile" )
+            {
+              selectedProfile = tmpArr[1];
+            }
+            else if( tmpArr[0] == "camera" )
+            {
+              if( tmpArr[0] == "streamprofile" )
+              {
+                selectedProfile = tmpArr[1];
+              }
+              else if( tmpArr[0] == "camera" )
+              {
+                camera = tmpArr[1];
+              }
+            }
+          }
+        }
+
+        setImage( camera - 1, actionTypeId );
+
+        if( configParamArr["storage_id"] )
+        {
+          selectedStorageId = configParamArr["storage_id"];
+        }
+
+        var preEvent = configParamArr["pre_duration"];
+        var durationCheckbox;
+        if( preEvent > 0 )
+        {
+          durationCheckbox = document.getElementById("preEvent"+actionTypeId );
+          durationCheckbox.checked = true;
+          document.getElementById( "preEventTime"+actionTypeId ).value = preEvent/1000;
+          toggleCheckedEnable( durationCheckbox, 'preEventTime'+actionTypeId );
+        }
+
+        document.getElementById("whileActive"+actionTypeId ).checked = ((configParamArr["TemplateToken"].indexOf("fixed") == -1)?true:false);
+
+        var postEvent = configParamArr["post_duration"];
+        if( postEvent > 0 )
+        {
+          durationCheckbox = document.getElementById("postEvent"+actionTypeId );
+          durationCheckbox.checked = true;
+          document.getElementById( "postEventTime"+actionTypeId ).value = postEvent/1000;
+          toggleCheckedEnable( durationCheckbox, 'postEventTime'+actionTypeId );
+        }
+      }
+      writeStreamProfileOptions( document.getElementById( "streamProfile"+actionTypeId ), "", selectedProfile );
+      writeStorageOptions( document.getElementById( "storage"+actionTypeId ), selectedStorageId );
+    }
+
+
+    function writeStorageOptions( selectEl, selectedStorageId )
+    {
+      clearSelect( selectEl );
+      
+      addSelectOption( selectEl, "", '\u00a0\u00a0----------', ((selectedStorageId=="")?true:false), "gray" );
+      
+      var storageStr, nameEls, el, diskId, diskName;
+      var form = document.storageForm;
+      var len = form.elements.length;
+      for(var i = 0; i < len; i++ )
+      {
+        el = form.elements[i];
+        if( el.name && el.name.indexOf("_DiskID") != -1 )
+        {
+          diskId = el.value;
+
+          //get the name
+          storageStr = (el.name).replace("_DiskID", "")+"_FriendlyName";
+          nameEls = document.getElementsByName( storageStr );
+          if( nameEls && nameEls.length > 0 && nameEls[0].value != "" )
+          {
+            diskName = nameEls[0].value;
+          }
+          else if( diskId == "SD_DISK" )
+          {
+            diskName = langObjEvTyRecVid.getText("arvSdCardTxt");
+          }
+          else if( diskId == "NetworkShare" )
+          {
+            diskName = langObjEvTyRecVid.getText("arvNSTxt");
+          }
+          else
+          {
+            diskName = diskId;
+          }
+          addSelectOption( selectEl, diskId, ( diskName ).crop(20, "..."), (( selectedStorageId == diskId )?true:false) );
+        }
+      }
+    }
+
+    function validate_<!--#echo var="id" option="encoding:javascript" -->( actionTypeId, isCondition )
+    {
+      var alertTxt_NumLargerThanZero = langObjEvTyRecVid.getText("arvRecValNZAlert");
+      var alertTxt_MissingBufferTime = langObjEvTyRecVid.getText("arvMissingBufferTimeAlrt");
+
+      if ( !isCondition && document.getElementById( "whileActive"+actionTypeId).checked )
+      {
+        alert( langObjEvTyRecVid.getText("arvWhileActiveRuleAlrt") );
+        return false;
+      }
+      
+      if (!document.getElementById("preEvent"+actionTypeId).checked &&
+          !document.getElementById("postEvent"+actionTypeId).checked &&
+          !document.getElementById("whileActive"+actionTypeId).checked)
+      {
+         alert(alertTxt_MissingBufferTime);
+         return false;
+      }
+
+      var timeEl;
+      if( document.getElementById( "preEvent"+actionTypeId).checked )
+      {
+        timeEl = document.getElementById( "preEventTime"+actionTypeId );
+        if( !isValidFloat( timeEl.value, 0, 9999 ) || timeEl.value == "0" )
+        {
+          showErrorMsg( alertTxt_NumLargerThanZero, timeEl );
+          return false;
+        }
+      }
+
+      if( document.getElementById( "postEvent"+actionTypeId).checked )
+      {
+        timeEl = document.getElementById( "postEventTime"+actionTypeId );
+        if( !isValidFloat( timeEl.value, 0, 9999 ) || timeEl.value == "0" )
+        {
+          showErrorMsg( alertTxt_NumLargerThanZero, timeEl );
+          return false;
+        }
+      }
+
+      var selectEl = document.getElementById("storage"+actionTypeId);
+      if( selectEl.options[ selectEl.selectedIndex ].value == "" )
+      {
+        alert( langObjEvTyRecVid.getText("arvNoStorageAlert") );
+        selectEl.focus();
+        return false;
+      }
+
+      return true;
+    }
+
+    function is_action_while_active<!--#echo var="id" option="encoding:javascript" -->()
+    {
+      return document.getElementById("whileActive<!--#echo var="id" option="encoding:javascript" -->" ).checked;
+    }
+
+    function setup_save_<!--#echo var="id" option="encoding:javascript" -->( actionTypeId )
+    {
+      var returnObj = new Object();
+
+      var oldStreamOptions = document.getElementById("stream_options"+actionTypeId).value.split("&");
+      var newStreamOptions = new Array();
+      var param;
+      for( var i = 0; i < oldStreamOptions.length; i++ )
+      {
+        param = oldStreamOptions[i].split("=")[0];
+        switch( param )
+        {
+          case "streamprofile":
+          case "camera":
+          case "videocodec":
+            break;
+          default:
+            newStreamOptions.push(oldStreamOptions[i]);
+        }
+      }
+
+      var selectedStreamProfile = document.getElementById("streamProfile"+actionTypeId).value;
+      if( selectedStreamProfile != "" )
+      {
+        newStreamOptions.push( "streamprofile=" + selectedStreamProfile );
+      }
+      else
+      {
+        newStreamOptions.push( "videocodec=h264" );
+      }
+
+      var imageNumber = getImage( actionTypeId );
+      var camera = imageNumber + 1;
+      newStreamOptions.push( "camera=" + camera );
+
+      var paramArray = new Array();
+      paramArray[ paramArray.length ] = new Parameter( "stream_options", newStreamOptions.join("&") );
+
+      if( document.getElementById("preEvent"+actionTypeId ).checked )
+      {
+        var preEvent = document.getElementById( "preEventTime"+actionTypeId ).value;
+        paramArray[ paramArray.length ] = new Parameter( "pre_duration", parseFloat( preEvent, 10 ) * 1000 );
+      }
+      else
+      {
+        paramArray[ paramArray.length ] = new Parameter( "pre_duration", 0 );
+      }
+      
+      if( document.getElementById("whileActive"+actionTypeId ).checked )
+      {
+        returnObj.TemplateToken = "com.axis.action.unlimited.recording.storage";
+      }
+      else
+      {
+        returnObj.TemplateToken = "com.axis.action.fixed.recording.storage";
+      }
+
+      if( document.getElementById("postEvent"+actionTypeId ).checked )
+      {
+        var postEvent = document.getElementById( "postEventTime"+actionTypeId ).value;
+        paramArray[ paramArray.length ] = new Parameter( "post_duration", parseFloat( postEvent ) * 1000 );
+      }
+      else
+      {
+        paramArray[ paramArray.length ] = new Parameter( "post_duration", 0 );
+      }
+
+      paramArray[ paramArray.length ] = new Parameter( "storage_id", document.getElementById( "storage"+actionTypeId).value ); 
+
+      returnObj.Name = actionTemplateMap[returnObj.TemplateToken].name;
+      returnObj.Parameters = paramArray;
+
+      return returnObj;
+    } 
+  <!--#endif -->
+<!--#elif expr="$action = render" -->
+
+  <!--#if expr="_$prefix != _" -->
+    <!--#set var="id" val="$prefix$_record_video" -->
+  <!--#endif -->
+
+     <div id="div_<!--#echo var="id" option="encoding:javascript" -->" class="actionContainer">
+
+      
+      <div class="row">
+        <label for="streamProfile<!--#echo var="id" option="encoding:javascript" -->"><span id="arvRecStreamProfile<!--#echo var="id" option="encoding:javascript" -->Output"></span></label>
+        <select name="streamProfile<!--#echo var="id" option="encoding:javascript" -->" id="streamProfile<!--#echo var="id" option="encoding:javascript" -->" class="large"></select>
+      </div>
+
+       <div class="row">
+        <label><span id="arvRecDuration<!--#echo var="id" option="encoding:javascript" -->Output"></span></label>
+        <div class="btnGroup">
+          <input type="checkbox" class="checkbox" name="preEvent<!--#echo var="id" option="encoding:javascript" -->" id="preEvent<!--#echo var="id" option="encoding:javascript" -->" value="yes" onclick="javascript:toggleCheckedEnable( this, 'preEventTime<!--#echo var="id" option="encoding:javascript" -->' )" />
+          <label for="preEvent<!--#echo var="id" option="encoding:javascript" -->" class="checkbox"><span id="arvRecPreEventTime<!--#echo var="id" option="encoding:javascript" -->Output"></span></label>
+          <input type="text" class="smaller" name="preEventTime<!--#echo var="id" option="encoding:javascript" -->" id="preEventTime<!--#echo var="id" option="encoding:javascript" -->" maxlength="5" value="1" disabled="disabled" />
+          <label class="checkbox"><span id="arvRecPreSeconds<!--#echo var="id" option="encoding:javascript" -->Output"></span></label>
+          <br />
+          <input type="checkbox" class="checkbox" name="whileActive<!--#echo var="id" option="encoding:javascript" -->" id="whileActive<!--#echo var="id" option="encoding:javascript" -->" value="yes" />
+          <label for="whileActive<!--#echo var="id" option="encoding:javascript" -->" class="checkbox"><span id="arvRecWhileActive<!--#echo var="id" option="encoding:javascript" -->Output"></span></label>
+          <br />
+          <input type="checkbox" class="checkbox" name="postEvent<!--#echo var="id" option="encoding:javascript" -->" id="postEvent<!--#echo var="id" option="encoding:javascript" -->" value="yes" onclick="javascript:toggleCheckedEnable( this, 'postEventTime<!--#echo var="id" option="encoding:javascript" -->' )" />
+          <label for="postEvent<!--#echo var="id" option="encoding:javascript" -->" class="checkbox"><span id="arvRecPostEventTime<!--#echo var="id" option="encoding:javascript" -->Output"></span></label>
+          <input type="text" class="smaller" name="postEventTime<!--#echo var="id" option="encoding:javascript" -->" id="postEventTime<!--#echo var="id" option="encoding:javascript" -->" maxlength="5" value="1" disabled="disabled" />
+          <label class="checkbox"><span id="arvRecPostSeconds<!--#echo var="id" option="encoding:javascript" -->Output"></span></label>
+        </div>
+        <br />
+      </div>
+
+      <div class="row">
+        <label for="storage<!--#echo var="id" option="encoding:javascript" -->"><span id="arvRecStorage<!--#echo var="id" option="encoding:javascript" -->Output"></span></label>
+        <select name="storage<!--#echo var="id" option="encoding:javascript" -->" id="storage<!--#echo var="id" option="encoding:javascript" -->" class="large">
+          <option value=""></option>
+        </select>
+      </div>
+      <input type="hidden" id="actionName<!--#echo var="id" option="encoding:javascript" -->" name="actionName<!--#echo var="id" option="encoding:javascript" -->" value="" />
+      <input type="hidden" id="stream_options<!--#echo var="id" option="encoding:javascript" -->" name="stream_options<!--#echo var="id" option="encoding:javascript" -->" value="" />
+
+    </div>
+    <script language="javascript" type="text/javascript">
+    <!--
+      var langObjEvTyRecVidRender = new Language("event_types", "action_record_video");
+      langObjEvTyRecVidRender.init(false, true);
+
+<!--#if expr="$root_ImageSource_NbrOfSources = 4" -->
+      document.getElementById("arvSelVidS<!--#echo var="id" option="encoding:javascript" -->Output").innerHTML = langObjEvTyRecVidRender.getText("arvSelVidSTxt");
+<!--#endif -->
+      document.getElementById("arvRecStreamProfile<!--#echo var="id" option="encoding:javascript" -->Output").innerHTML = langObjEvTyRecVidRender.getText("arvRecStreamProfileTxt");
+      document.getElementById("arvRecDuration<!--#echo var="id" option="encoding:javascript" -->Output").innerHTML = langObjEvTyRecVidRender.getText("arvRecDurationTxt");
+      document.getElementById("arvRecPreEventTime<!--#echo var="id" option="encoding:javascript" -->Output").innerHTML = langObjEvTyRecVidRender.getText("arvRecPreEventTimeTxt");
+      document.getElementById("arvRecPreSeconds<!--#echo var="id" option="encoding:javascript" -->Output").innerHTML = langObjEvTyRecVidRender.getText("arvRecPreSecondsTxt");
+      document.getElementById("arvRecWhileActive<!--#echo var="id" option="encoding:javascript" -->Output").innerHTML = langObjEvTyRecVidRender.getText("arvRecWhileActiveTxt");
+      document.getElementById("arvRecPostEventTime<!--#echo var="id" option="encoding:javascript" -->Output").innerHTML = langObjEvTyRecVidRender.getText("arvRecPostEventTimeTxt");
+      document.getElementById("arvRecPostSeconds<!--#echo var="id" option="encoding:javascript" -->Output").innerHTML = langObjEvTyRecVidRender.getText("arvRecPostSecondsTxt");
+      document.getElementById("arvRecStorage<!--#echo var="id" option="encoding:javascript" -->Output").innerHTML = langObjEvTyRecVidRender.getText("arvRecStorageTxt");
+    // -->
+    </script>
+<!--#else -->
+  ERROR: Missing parameter.
+<!--#endif -->

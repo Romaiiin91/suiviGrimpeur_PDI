@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+  <add_guardTour_h>
+    <pageTitle type="title" minor="0">Help/Guard Tour Setup</pageTitle>
+    <titleTxt type="msgAsText" minor="0">Guard Tour Setup</titleTxt>
+    <intro_Txt type="text" minor="0">Make the following settings for the new guard tour:</intro_Txt>
+    <layout_subTitle1Txt type="text" minor="0">General Settings</layout_subTitle1Txt>
+    <txt1 type="text" minor="0">&#x3C;b&#x3E;Name&#x3C;/b&#x3E; - Enter the name of the new guard tour.</txt1>
+    <txt2 type="text" minor="0">Select &#x3C;b&#x3E;Random view order&#x3C;/b&#x3E; to display the preset positions in random order. If not selected, set the view order for each position in the field provided in &#x3C;b&#x3E;Source&#x3C;/b&#x3E;.</txt2>
+    <time_Txt type="text" minor="0">&#x3C;b&#x3E;Pause between runs&#x3C;/b&#x3E; - Enter the number of minutes the guard tour should wait before running again.</time_Txt>
+    <layout_subTitle2Txt type="text" minor="0">Available Presets</layout_subTitle2Txt>
+    <presets_txt type="text" minor="1">Select a preset from the drop-down list and click &#x3C;b&#x3E;Add&#x3C;/b&#x3E;. The preset appears in the list of added presets under &#x3C;b&#x3E;Source&#x3C;/b&#x3E;.</presets_txt>
+    <layout_subTitle3Txt type="text" minor="0">Source</layout_subTitle3Txt>
+    <source_txt type="text" minor="0">Once a preset has been added, it is then possible to configure:</source_txt>
+    <sourceVwT_txt1 type="text" minor="0">the &#x3C;b&#x3E;View Time &#x3C;/b&#x3E;in seconds or minutes</sourceVwT_txt1>
+    <sourceVwT_txt2 type="text" minor="0">the &#x3C;b&#x3E;View Order&#x3C;/b&#x3E; (see also &#x3C;b&#x3E;Random view order&#x3C;/b&#x3E; above)</sourceVwT_txt2>
+    <sourceMve_txt type="text" minor="0">the&#x3C;b&#x3E; Move Speed&#x3C;/b&#x3E; at which to move the camera to the preset position</sourceMve_txt>
+    <sourceVwT_txt3 type="text" minor="0">the &#x3C;b&#x3E;View Time &#x3C;/b&#x3E;in seconds or minutes</sourceVwT_txt3>
+    <sourceVwT_txt4 type="text" minor="0">the &#x3C;b&#x3E;View Order&#x3C;/b&#x3E; (see also &#x3C;b&#x3E;Random view order&#x3C;/b&#x3E; above)</sourceVwT_txt4>
+    <sourceVwT_txt5 type="text" minor="0">Click the &#x3C;b&#x3E;Remove&#x3C;/b&#x3E; link to remove the preset from the Guard Tour.</sourceVwT_txt5>
+  </add_guardTour_h>
+
+  <add_recordedTour_h>
+    <pageTitle type="title" minor="0">Help/Recorded Tour Setup</pageTitle>
+    <titleTxt type="msgAsText" minor="0">Recorded Tour Setup</titleTxt>
+    <intro_Txt type="text" minor="0">Make the following settings for the new recorded tour:</intro_Txt>
+    <layout_subTitle1Txt type="text" minor="0">General Settings</layout_subTitle1Txt>
+    <txt1 type="text" minor="0">&#x3C;b&#x3E;Name&#x3C;/b&#x3E; - Enter a friendly name for the new recorded tour. The friendly name will be used on different configuration pages such as the embedded event pages where a preset position or a guard tour can be selected.</txt1>
+    <txt2 type="text" minor="0">&#x3C;b&#x3E;Pause between runs&#x3C;/b&#x3E; - Enter the number of minutes the recorded tour should wait before running again.</txt2>
+    <tour_subtitle type="text" minor="0">Recording a tour</tour_subtitle>
+    <record_button_txt type="text" minor="0">Press the &#x3C;b&#x3E;Record&#x3C;/b&#x3E; button to start and stop recording or to replace an existing tour. Recording of the PTZ movement will start immediately and the recording button will start blinking. The recording will be stopped automatically after 16 min.</record_button_txt>
+    <play_button_txt type="text" minor="0">Press the &#x3C;b&#x3E;Play&#x3C;/b&#x3E; button to verify the recorded tour before saving. During playback the play button will turn into a pause button enabling the operator to pause the playback.</play_button_txt>
+    <stop_button_txt type="text" minor="0">Press the &#x3C;b&#x3E;Stop&#x3C;/b&#x3E; button to stop a recording or playback.</stop_button_txt>
+    <cameracontrol_button_txt type="text" minor="0">Use the Joystick emulation to pan and tilt the camera and use the zoom bar for zooming.</cameracontrol_button_txt>
+    <oK_button_txt type="text" minor="0">Press the &#x3C;b&#x3E;OK&#x3C;/b&#x3E; button to save the recording and exit the recorded tour setup.</oK_button_txt>
+    <cancel_button_txt type="text" minor="0">Press &#x3C;b&#x3E;Cancel&#x3C;/b&#x3E; to exit the recorded tour setup without saving.</cancel_button_txt>
+  </add_recordedTour_h>
+
+  <add_tour_h>
+    <pageTitle type="title" minor="0">Help/Guard Tour Setup</pageTitle>
+    <titleTxt type="msgAsText" minor="0">Guard Tour Setup</titleTxt>
+    <txt type="text" minor="0">&#x3C;b&#x3E;Recorded tour setup - &#x3C;/b&#x3E;Record the tour with PTZ using any type of input devices like a joystick, mouse, keyboard, maneuver board or ADP application using VAPIX.</txt>
+    <preset_Txt type="text" minor="0">&#x3C;b&#x3E;Preset tour setup - &#x3C;/b&#x3E;Set up PTZ to move from one preset to another with individual speeds between presets and individual pauses at each presets.</preset_Txt>
+    <record_Txt type="text" minor="0">Select the &#x3C;b&#x3E;Create a record tour&#x3C;/b&#x3E; or the &#x3C;b&#x3E;Create a preset tour&#x3C;/b&#x3E; radio button and press &#x3C;b&#x3E;OK&#x3C;/b&#x3E; to set up a recorded- or a preset tour.</record_Txt>
+  </add_tour_h>
+
+  <driverSelection_h>
+    <pageTitle type="title" minor="0">Help/PTZ Drivers</pageTitle>
+    <titleTxt type="msgAsText" minor="0">PTZ Drivers</titleTxt>
+    <introTxt type="text" minor="0">A PTZ driver is required for the correct function of a connected Pan Tilt Zoom device. You can download the latest drivers from www.axis.com and then upload it to the Axis product.</introTxt>
+    <subTitleTxt1 type="text" minor="0">Upload</subTitleTxt1>
+    <helpUploadTxt type="text" minor="0">To upload a PTZ driver, Click &#x3C;b&#x3E;Browse&#x3C;/b&#x3E; to locate the file and then click &#x3C;b&#x3E;Upload&#x3C;/b&#x3E;.</helpUploadTxt>
+    <helpUpload2Txt1 type="text" minor="0">From the &#x3C;b&#x3E;Uploaded drivers&#x3C;/b&#x3E; drop-down list, select the driver to be installed and click &#x3C;b&#x3E;Save&#x3C;/b&#x3E;. If the driver was successfully installed the name will appear for &#x3C;b&#x3E;Installed driver&#x3C;/b&#x3E;.</helpUpload2Txt1>
+    <helpUpload2Txt2 type="text" minor="0">To delete a driver that has been uploaded, select it from the &#x3C;b&#x3E;Uploaded drivers&#x3C;/b&#x3E; drop-down list and click &#x3C;b&#x3E;Remove&#x3C;/b&#x3E;.</helpUpload2Txt2>
+    <subTitleTxt2 type="text" minor="0">Video Channel</subTitleTxt2>
+    <help3Txt1 type="text" minor="0">&#x3C;b&#x3E;Activate PTZ&#x3C;/b&#x3E; - Select this to enable PTZ.</help3Txt1>
+    <help3Txt2 type="text" minor="0">&#x3C;b&#x3E;Device ID&#x3C;/b&#x3E; - This is the address of the connected device. To find the Device ID consult the video source's documentation.</help3Txt2>
+    <help4Txt type="text" minor="0">&#x3C;b&#x3E;Device Type&#x3C;/b&#x3E; - Choose the Device type from the drop-down list. To find which Device type to use, consult the documentation supplied by the PTZ driver.</help4Txt>
+    <help5Txt type="text" minor="0">To complete the installation go to &#x3C;b&#x3E;System Options&#x3C;/b&#x3E; &#x3E; &#x3C;b&#x3E;Ports &#x26; Devices&#x3C;/b&#x3E; &#x3E; &#x3C;b&#x3E;COM Port&#x3C;/b&#x3E; and verify the settings.</help5Txt>
+  </driverSelection_h>
+
+  <guardTour_h>
+    <pageTitle type="title" minor="0">Help/Guard Tour</pageTitle>
+    <titleTxt type="msgAsText" minor="0">Guard Tour</titleTxt>
+    <intro_Txt1 type="text" minor="0">The list on this page shows the &#x3C;b&#x3E;guard tours&#x3C;/b&#x3E; currently configured in the Axis product.</intro_Txt1>
+    <intro_Txt2 type="text" minor="0">A guard tour is an automated series of camera movements from one preset position to another. A guard tour can be set up to display the video streams from different preset positions in a pre-determined order or at random, and for configurable time periods.</intro_Txt2>
+    <intro_Txt3 type="text" minor="0">Click the &#x3C;b&#x3E;Add&#x3C;/b&#x3E; button to set up a new guard tour, &#x3C;b&#x3E;Modify&#x3C;/b&#x3E; to change, and &#x3C;b&#x3E;Remove&#x3C;/b&#x3E; to remove an existing guard tour. The button &#x3C;b&#x3E;Start/Stop&#x3C;/b&#x3E; will start or stop the guard tour.</intro_Txt3>
+    <intro_Txt4 type="text" minor="0">&#x3C;b&#x3E;Note 1:&#x3C;/b&#x3E; Once a guard tour has been started it will continue to run until stopped again, even when there are no clients (web browsers) viewing the images.</intro_Txt4>
+    <note_Txt1 type="text" minor="1">&#x3C;b&#x3E;Note 2:&#x3C;/b&#x3E; To schedule a Guard Tour, go to the &#x3C;b&#x3E;Events&#x3C;/b&#x3E; menu.</note_Txt1>
+    <note_Txt2 type="text" minor="0">This is not the case for a &#x3C;b&#x3E;Sequence Mode&#x3C;/b&#x3E;, which although similar to a guard tour, will stop running as soon as the web browser is closed or navigates away from the Live View page.</note_Txt2>
+  </guardTour_h>
+
+  <ptz_h>
+    <pageTitle type="title" minor="0">Help/Preset Positions</pageTitle>
+    <titleTxt type="msgAsText" minor="0">Preset Positions</titleTxt>
+    <virtual_introTxt type="text" minor="0">This page provides the tools for creating and saving Preset positions. The entire area that was defined under &#x3C;b&#x3E;View Areas&#x3C;/b&#x3E; will be treated as the &#x3C;b&#x3E;Home&#x3C;/b&#x3E; position, which is then readily accessible by clicking on the &#x3C;b&#x3E;Home&#x3C;/b&#x3E; button in both the &#x3C;b&#x3E;Preset Position Setup&#x3C;/b&#x3E; window and the &#x3C;b&#x3E;Live View&#x3C;/b&#x3E; window.</virtual_introTxt>
+    <introTxt type="text" minor="0">This page provides the tools for creating and saving Preset positions.</introTxt>
+    <subTitle2Txt type="text" minor="0">Creating a new preset position</subTitle2Txt>
+    <help2Txt type="text" minor="0">A preset position is a pre-defined camera view that can quickly and easily be viewed, simply by selecting the preset's name.</help2Txt>
+    <preset_pos_temp type="text" minor="0">Preset positions can be used at temperatures above 10 &#xb0;C (50 &#xb0;F).</preset_pos_temp>
+    <mvctrlTxt type="text" minor="0">Using the Pan, Tilt and Zoom (PTZ) controls, move the camera view to the required position.</mvctrlTxt>
+    <descnameTxt type="text" minor="0">When satisfied with the camera view, enter a descriptive name for the position in the &#x3C;b&#x3E;Current position&#x3C;/b&#x3E; field.</descnameTxt>
+    <helphomebxTxt type="text" minor="0">If required, check the box for &#x3C;b&#x3E;Use current position as Home&#x3C;/b&#x3E;, see below.</helphomebxTxt>
+    <helpsaveTxt type="text" minor="0">Click &#x3C;b&#x3E;Add&#x3C;/b&#x3E;. This camera position is then saved as a preset position in the camera. The position can be assumed at any time, by selecting it from the drop-down list of available positions. Presets can be selected in Live View, from events, and from the Guard Tour</helpsaveTxt>
+    <subTitleTxt2 type="text" minor="0">Deleting a Preset Position</subTitleTxt2>
+    <help3Txt type="text" minor="0">From the &#x3C;b&#x3E;Available positions&#x3C;/b&#x3E; drop-down list, select the preset name to be deleted. Click &#x3C;b&#x3E;Remove&#x3C;/b&#x3E;.</help3Txt>
+    <subTitleTxt3 type="text" minor="0">Use Current Position as Home</subTitleTxt3>
+    <help4Txt type="text" minor="0">Checking this box for the &#x3C;I&#x3E;current position&#x3C;/I&#x3E; will save this preset as the &#x3C;b&#x3E;Home&#x3C;/b&#x3E; position, which is then readily accessible by clicking on the &#x3C;b&#x3E;Home&#x3C;/b&#x3E; button in both the &#x3C;b&#x3E;Preset Position Setup&#x3C;/b&#x3E; window and the &#x3C;b&#x3E;Live View&#x3C;/b&#x3E; window. The position's name will also have (H) added to the end of it.</help4Txt>
+    <subTitleOverviewTxt type="text" minor="0">Return to home when inactive</subTitleOverviewTxt>
+    <help5Txt type="text" minor="0">This setting is used to return the camera to the home position after a set time of viewing a preset position or a position set manually by the user. The interval is configurable from 0 seconds (i.e. disabled) to 300 seconds.</help5Txt>
+    <subTitleOverviewTxt1 type="text" minor="0">Return to home after</subTitleOverviewTxt1>
+    <subTitleOverviewTxt2 type="text" minor="0">Return to overview after</subTitleOverviewTxt2>
+    <help6Txt type="text" minor="0">This setting is used to return the camera to the home position after a set time of viewing a preset position or a position set manually by the user. The interval is configurable from 0 seconds (i.e. disabled) to 300 seconds.</help6Txt>
+    <help7Txt type="text" minor="0">This setting is used to return the camera to the overview image after a set time of viewing a preset position or a position set manually by the user. The interval is configurable from 0 seconds (i.e. disabled) to 300 seconds.</help7Txt>
+    <help8Txt type="text" minor="0">This feature is useful for events that trigger on motion detection and which move the camera view from overview mode to a preset position. As motion detection is disabled for as long as the camera is not in  overview mode, setting an automatic return to overview mode ensures that motion detection is re-enabled.</help8Txt>
+    <subTitleReturnHomeTxt type="text" minor="0">Return to home when inactive</subTitleReturnHomeTxt>
+    <return_homeTxt type="text" minor="0">Enter how many seconds the camera can be inactive before automatically returning to the &#x3C;b&#x3E;Home&#x3C;/b&#x3E; position. Disable this function by setting the time to '0'. Note that a &#x3C;b&#x3E;Home&#x3C;/b&#x3E; position must be configured in order to access the &#x3C;b&#x3E;Return to home when inactive&#x3C;/b&#x3E; feature.</return_homeTxt>
+    <subTitlePan0_Txt type="text" minor="0">Set new Pan 0&#xb0;</subTitlePan0_Txt>
+    <setPan0_Txt type="text" minor="1">Click Set new Pan 0&#xb0; to reset the pan coordinate system to zero in the current direction. The camera can be mounted in three different directions. Resetting pan may be useful if the camera is mounted so that it is pointing in an undesirable direction at Pan 0&#xb0;. Note that, resetting Pan 0&#xb0; will affect all previously defined presets, guard tours etc.</setPan0_Txt>
+  </ptz_h>
+
+  <handle_button_h>
+    <pageTitle type="title" minor="0">Help/Shortcut Command Button</pageTitle>
+    <titleTxt type="msgAsText" minor="0">Shortcut Command Button</titleTxt>
+    <introTxt1 type="text" minor="0">To add a shortcut command button, follow these steps:</introTxt1>
+    <introTxt2 type="text" minor="0">Select the&#x3C;b&#x3E; Button number&#x3C;/b&#x3E;.</introTxt2>
+    <introTxt3 type="text" minor="0">Provide a &#x3C;b&#x3E;label&#x3C;/b&#x3E; - this will be used as the button text.</introTxt3>
+    <introTxt4 type="text" minor="0">Optionally enter text in the &#x3C;b&#x3E;Information&#x3C;/b&#x3E; field. This is used as the tooltip text that is displayed when the cursor is held over the button.</introTxt4>
+    <introTxt5 type="text" minor="0">&#x3C;b&#x3E;URL&#x3C;/b&#x3E; - this is the path to an auxiliary command provided by the PTZ driver, or to some other command accessed via the HTTP API.</introTxt5>
+    <introTxt6 type="text" minor="0">&#x3C;b&#x3E;Notes&#x3C;/b&#x3E;:</introTxt6>
+    <introTxt7 type="text" minor="0">If supported by the PTZ driver, it may be possible to enter the URL in the format: &#x3C;b&#x3E;auxiliary:&#x3C; command name &#x3E;&#x3C;/b&#x3E;</introTxt7>
+    <introTxt8 type="text" minor="0">An HTTP API command should be entered in the format: &#x3C;b&#x3E;&#x3C; http-api-request &#x3E;&#x3C;/b&#x3E;</introTxt8>
+    <introTxt9 type="text" minor="0">To open the URL in a new window, use &#x3C;b&#x3E;link:&#x3C; url &#x3E;&#x3C;/b&#x3E;</introTxt9>
+  </handle_button_h>
+
+  <panel_view_h>
+    <pageTitle type="title" minor="0">Help/Control Settings</pageTitle>
+    <titleTxt type="msgAsText" minor="0">Control Settings</titleTxt>
+    <introTxt type="text" minor="0">This page provides the tools for managing the different controls provided for &#x3C;abbr title='Pan, Tilt and Zoom'&#x3E;PTZ&#x3C;/abbr&#x3E;.</introTxt>
+    <subTitle1Txt type="text" minor="0">Panel Shortcut Command Button list</subTitle1Txt>
+    <listTxt1 type="text" minor="0">Here are the controls for creating and saving &#x3C;b&#x3E;Panel Shortcut Command Buttons&#x3C;/b&#x3E;. These buttons provide direct access to various built-in auxiliary commands provided by the &#x3C;abbr title='Pan, Tilt and Zoom'&#x3E;PTZ&#x3C;/abbr&#x3E; driver. The buttons are displayed in the &#x3C;b&#x3E;PTZ Panel&#x3C;/b&#x3E;, which is available on the Live View page by clicking the &#x3C;b&#x3E;Ctrl panel&#x3C;/b&#x3E; button.</listTxt1>
+    <listTxt2 type="text" minor="0">The &#x3C;abbr title='Pan, Tilt and Zoom'&#x3E;PTZ&#x3C;/abbr&#x3E; panel also provides various buttons as standard, depending on the &#x3C;abbr title='Pan, Tilt and Zoom'&#x3E;PTZ&#x3C;/abbr&#x3E; driver being used. Examples of these are Autoiris,  Autofocus, etc. The list of shortcut command buttons displays the available information for each configured command button.</listTxt2>
+    <listTxt3 type="text" minor="0">The &#x3C;b&#x3E;Label&#x3C;/b&#x3E; is the text on the button itself</listTxt3>
+    <listTxt4 type="text" minor="0">&#x3C;b&#x3E;Information&#x3C;/b&#x3E; is the text displayed for the button when the cursor is held over the button</listTxt4>
+    <listTxt5 type="text" minor="0">&#x3C;b&#x3E;URL&#x3C;/b&#x3E; shows the path to the command</listTxt5>
+    <listTxt6 type="text" minor="0">&#x3C;b&#x3E;Enable&#x3C;/b&#x3E; shows whether the selected command is enabled or not. This is controlled by the &#x3C;b&#x3E;Enable/Disable&#x3C;/b&#x3E; button below the list.</listTxt6>
+    <listTxt7 type="text" minor="0">To work with shortcut command buttons, click &#x3C;b&#x3E;Add&#x3C;/b&#x3E; to create a new button, or select an existing button from the list and click &#x3C;b&#x3E;Modify&#x3C;/b&#x3E; or &#x3C;b&#x3E;Remove&#x3C;/b&#x3E;.</listTxt7>
+    <help6Txt type="text" minor="0">Enable/Disable controls</help6Txt>
+    <help7Txt type="text" minor="0">By checking/unchecking these boxes, the administrator can enable or disable the different controls for &#x3C;abbr title='Pan, Tilt and Zoom'&#x3E;PTZ&#x3C;/abbr&#x3E;. These settings are used on every page where &#x3C;abbr title='Pan, Tilt and Zoom'&#x3E;PTZ&#x3C;/abbr&#x3E; controls are usually found.</help7Txt>
+  </panel_view_h>
+
+  <ptzQueue_h>
+    <pageTitle type="title" minor="0">Help/PTZ Control Queue</pageTitle>
+    <titleTxt type="msgAsText" minor="0">PTZ Control Queue</titleTxt>
+    <intro_Txt1 type="text" minor="0">The &#x3C;b&#x3E;PTZ Control Queue&#x3C;/b&#x3E; is a system for placing PTZ control requests in a queue. The control queue fields on the Live View page show the user's current status and position in the queue and the amount of time remaining until PTZ control is given, or if the user already has control - the amount of control time remaining.</intro_Txt1>
+    <intro_Txt2 type="text" minor="0">This page provides the tools for setting up the PTZ Control Queue.</intro_Txt2>
+    <subTitleTxt_setup type="text" minor="0">Control Queue - Settings</subTitleTxt_setup>
+    <enable_single_Txt type="text" minor="0">&#x3C;b&#x3E;Enable PTZ Control Queue&#x3C;/b&#x3E; - This enables the queuing function and displays the user's status and position in the queue on the Live View page.</enable_single_Txt>
+    <enable_multi_Txt type="text" minor="0">&#x3C;b&#x3E;Enable PTZ Control Queue for&#x3C;/b&#x3E; - Check the relevant box to enable the queuing function for the required video source. The user's status and position in the queue is displayed on the Live View page.</enable_multi_Txt>
+    <limit_Txt type="text" minor="0">&#x3C;b&#x3E;Limit number of users in queue to&#x3C;/b&#x3E; - This can be specified up to 100. The default value is 20.</limit_Txt>
+    <poll_Txt1 type="text" minor="0">&#x3C;b&#x3E;Control queue poll time&#x3C;/b&#x3E; - To keep the control queue more or less up-to-date, the waiting clients must regularly poll the Axis product to keep their place in the queue. If the client does not send a new poll query within the time set here (in seconds), the client will be dropped from the queue.</poll_Txt1>
+    <poll_Txt2 type="text" minor="0">Setting a higher value can lead to greater numbers of 'dead' requests in the queue, i.e. when clients leave the queue, but before this is detected. Setting too low a value, so that clients are required to send frequent poll queries, may result in the product becoming overloaded.</poll_Txt2>
+    <save_Txt type="text" minor="0">Click &#x3C;b&#x3E;Save&#x3C;/b&#x3E; to save the settings or click &#x3C;b&#x3E;Reset&#x3C;/b&#x3E; to return to the previously saved values.</save_Txt>
+  </ptzQueue_h>
+
+  <ptz_settings_h>
+    <pageTitle type="title" minor="0">Help/Pan Tilt Zoom Settings</pageTitle>
+    <titleTxt type="msgAsText" minor="0">Pan Tilt Zoom Settings</titleTxt>
+    <ptz_subTitleDigitalPTZTxt type="text" minor="0">Settings</ptz_subTitleDigitalPTZTxt>
+    <ptz_settings_helpEnablePTZTxt type="text" minor="0">&#x3C;b&#x3E;Enable digital PTZ&#x3C;/b&#x3E; - Check this box and click &#x3C;b&#x3E;Save&#x3C;/b&#x3E; to enable digital pan/tilt/zoom and PTZ controls in Live View.</ptz_settings_helpEnablePTZTxt>
+   <ptz_settings_helpMaxZoomTxt type="text" minor="0">&#x3C;b&#x3E;Max zoom&#x3C;/b&#x3E; - Set the maximum possible zoom rate in Live View. Note that by increasing the maximum zoom rate you will be decreasing the maximum possible resolution in the Live View Image. See &#x3C;b&#x3E;Video &#x26; Audio&#x3C;/b&#x3E; &#x3E; &#x3C;b&#x3E;Video Stream Settings&#x3C;/b&#x3E; &#x3E; &#x3C;b&#x3E;Image&#x3C;/b&#x3E;.</ptz_settings_helpMaxZoomTxt>
+    <ptz_settings_helpLockTxt type="text" minor="0">&#x3C;b&#x3E;Lock to current position&#x3C;/b&#x3E; - This option disables PTZ in the Live view. Click in the image or use the Pan/Tilt/Zoom controls to navigate the view to the desired area. Check &#x3C;b&#x3E;lock to current position&#x3C;/b&#x3E;.</ptz_settings_helpLockTxt>
+  </ptz_settings_h>
+
+  <main_h>
+    <pageTitle type="title" minor="0">Help</pageTitle>
+    <static_driver_titleTxt type="msgAsText" minor="0">Device Settings</static_driver_titleTxt>
+    <no_static_driver_titleTxt type="msgAsText" minor="0">Pan Tilt Zoom Drivers</no_static_driver_titleTxt>
+    <pageSubTitle_static type="text" minor="0">Device Settings</pageSubTitle_static>
+    <pageSubTitle_no_static type="text" minor="0">Pan Tilt Zoom Drivers</pageSubTitle_no_static>
+    <ptz_driver type="text" minor="0">The PTZ driver</ptz_driver>
+    <static_drivers type="text" minor="0">&#x3C;B&#x3E;Important!&#x3C;/B&#x3E;&#x3C;br&#x3E;&#x3C;br&#x3E;Axis will under no circumstances guarantee the compatibility of any driver, conforming or otherwise, to a specific manufacturer's protocol.</static_drivers>
+    <no_static_drivers_1 type="text" minor="0">&#x3C;B&#x3E;Important!&#x3C;/B&#x3E;&#x3C;br&#x3E;&#x3C;br&#x3E;Although many PTZ drivers have been tested and found to work satisfactorily with the</no_static_drivers_1>
+    <no_static_drivers_2 type="text" minor="0">, Axis will under no circumstances guarantee the compatibility of any driver, conforming or otherwise, to a specific manufacturer's protocol.</no_static_drivers_2>
+    <unknown_driver_1 type="text" minor="0">For detailed information on the PTZ driver for a specific port, please go to the web page for that port, and from there use the direct link</unknown_driver_1>
+    <unknown_driver_2 type="text" minor="0">to the help page.</unknown_driver_2>
+  </main_h>
+</language_xml>

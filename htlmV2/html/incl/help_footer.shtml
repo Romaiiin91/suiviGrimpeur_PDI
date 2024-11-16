@@ -1,0 +1,31 @@
+          
+          </div>
+          <!--#if expr="$hideFooterButtons != yes" -->
+          <ul class="helpNavLinks">
+            <!--#if expr="$hideContent != yes" -->
+              <li>
+                <a href="/help/toc.shtml"><span id="hlpFotContTxt"></span></a>
+              </li>
+            <!--#endif -->
+            <li>
+              <a href="javascript:history.go(-1)"><img src="/pics/helpBack.gif" id="prevFotPic" /></a>
+            </li>
+            <li>
+              <a href="javascript:history.go(1)"><img src="/pics/helpForward.gif" id="nextFotPic" /></a>
+            </li>
+          </ul>
+          <!--#endif -->
+        </div><!-- helpContent -->
+        <div id="pageBottom"></div>
+      </div>
+      <div class="footerLeft"><div class="footerRight"></div></div>
+    </div>
+    <script language="JavaScript">
+    <!--
+      var langObjHlpFooter = new Language("emb2010_common", "help_footer");
+      langObjHlpFooter.init(true, true);
+    // -->
+    </script>
+  </body>  
+</html>
+

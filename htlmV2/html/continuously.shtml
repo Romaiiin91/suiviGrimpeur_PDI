@@ -1,0 +1,593 @@
+<!--#set var="helpURL" val="javascript:launch('/help/continuously_h.shtml')" -->
+<!--#set var="WizardFormAction" val="noAction" -->
+
+<!--#set var="activeMenu" val="recordings" -->
+<!--#set var="activePage" val="continuouslyRec" -->
+
+  <!--#include virtual="/sm/sm.srv?action=get&group=Recording.Continuous,Image.NbrOfConfigs" -->
+
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+  <!--#include virtual="/incl/wait.shtml" -->
+  <!--#include virtual="/operator/JS_recTimeZone.shtml" -->
+
+  <script language="javascript" type="text/javascript">
+  <!--
+
+  <!--#include virtual="/incl/functions.shtml" -->
+
+    //Global params
+    var langObjCont = new Language("recordingList", "continuously");
+    var savedConfiguration = null;
+    var savedNodeList = null;
+    var recNodes;
+    var ajaxRequest = AxisConnectionFactory.createAjaxConnection();
+    var nbrOfImageSources = 1;
+    //end global params
+
+    function onInit()
+    {
+      langObjCont.init();
+      //Go through channels to write out info about disks, profiles, and check the enable checkbox
+      for(var c=1;c<= nbrOfImageSources ;c++)
+      {
+        writeDisks("diskid", c);
+        writeProfiles(c);
+
+        if(getConfiguration(c))
+        {
+          document.getElementById("enabled"+c).checked = true;
+        }
+      }
+    }
+
+    //optionsString = the complete string of options, for example "streamprofile=Mobile&camera=0"
+    //optionName = the specific option to find the value for, for example "streamprofile" or "camera"
+    function getOptionFromOptionsString(optionsString, optionName)
+    {
+      var nrCharsInOptionName = optionName.length;
+      var optionsStringStart = optionsString.indexOf(optionName+"=");
+      if( optionsStringStart == -1 )
+        return null;
+
+      //the starting position for the optionName
+      var optionValueStartPos = parseInt(optionsStringStart, 10)+nrCharsInOptionName+1; //plus 1 for the "=" sign
+
+      //look for the next & sign after the optionName, if there is one, that will be the end of the optionName
+      //if there is none, then read the optionName until the end of the string
+      var optionValueEndPos = parseInt(optionsString.indexOf("&", optionValueStartPos), 10);
+
+      if(optionValueEndPos!=(-1))
+      {
+        //read from start of optionName until "&" (which means there are more attributes after in the string)
+        return optionsString.slice(optionValueStartPos, optionValueEndPos);
+      }
+      else
+      {
+        //read from start of optionName until end (which means there are NO more attributes after in the string)
+        return optionsString.slice(optionValueStartPos);
+      }
+    }
+
+    function getConfiguration(channelNo)
+    {
+      if(savedConfiguration == null)
+      {
+        var xmlNodes = null;
+        var now = new Date();
+        var timestamp = now.getTime();
+        var url = "/axis-cgi/record/continuous/listconfiguration.cgi?timestamp="+timestamp;
+
+        var listXml = AxisConnectionFactory.getResponseXmlWith(["GET", url, false], "", ajaxRequest);
+
+        if( listXml )
+        {
+          xmlNodes = listXml.selectNodes("//continuousrecordingconfiguration");
+        }
+
+        if( xmlNodes != null)
+        {
+          if(xmlNodes.length > 0)
+          {
+            //Get the <continuousrecordingconfiguration> for the current channel
+            for(var i=0;i<xmlNodes.length;i++)
+            {
+              var currentChannel = getOptionFromOptionsString(xmlNodes[i].getAttribute("options"), "camera");
+              if( currentChannel == null )
+                currentChannel = 1;
+
+              if(channelNo == currentChannel || (channelNo == (<!--#echo var="root_Image_NbrOfConfigs" option="encoding:none" -->) && currentChannel == "all"))
+              {
+                //returns the <continuousrecordingconfiguration> for the specified video channel (channelNo)
+                return xmlNodes[i];
+              }
+            }
+          }
+        }
+        return false;
+      }
+      else
+        return savedConfiguration;
+    }
+
+    function addConfiguration(channelNo)
+    {
+      var channelName = channelNo;
+
+
+      var xmlNode = null;
+      var now = new Date();
+      var timestamp = now.getTime();
+      var optionStr = escape("streamprofile="+document.getElementById("streamProfile"+channelNo).value+"&camera="+channelName);
+      var diskid = document.getElementById("diskid"+channelNo).value;
+
+      if(diskid == "") //If the disk list doesn't exist - get the diskSpan (this will happen when only one device is present)
+        diskid = document.getElementById("diskid"+channelNo+"Span").name;
+
+      var url = "/axis-cgi/record/continuous/addconfiguration.cgi?options="+optionStr+"&diskid="+diskid+"&timestamp="+timestamp;
+
+      var addXml = AxisConnectionFactory.getResponseXmlWith(["GET", url, false], "", ajaxRequest);
+
+      if( addXml )
+      {
+        var xmlNode = addXml.selectSingleNode("//configure");
+
+        if(xmlNode != null)
+        {
+          if( xmlNode.getAttribute("result") == "OK"  )
+            return true;
+        }
+      }
+
+      return false;
+    }
+
+    function removeConfiguration(channelNo)
+    {
+      var xmlNode = null;
+      var now = new Date();
+      var timestamp = now.getTime();
+      var conf = getConfiguration(channelNo);
+      if(conf)
+      {
+        var profile = conf.getAttribute("profile");
+
+        var url = "/axis-cgi/record/continuous/removeconfiguration.cgi?profile="+profile+"&timestamp="+timestamp;
+
+        var removeXml = AxisConnectionFactory.getResponseXmlWith(["GET", url, false], "", ajaxRequest);
+
+        if( removeXml )
+        {
+          var xmlNode = removeXml.selectSingleNode("//remove");
+
+          if(xmlNode != null)
+          {
+            if( xmlNode.getAttribute("result") == "OK"  )
+              return true;
+          }
+        }
+      }
+
+      return false;
+    }
+
+    function getStorageDisks(storageForm)
+    {
+      var disks = new Array();
+      var obj;
+      var storageStr, nameEls, tmpDisk;
+      var len = storageForm.elements.length;
+      for(var i = 0; i < len; i++ )
+      {
+        tmpDisk = storageForm.elements[i];
+        if (tmpDisk.name && tmpDisk.name.indexOf("_DiskID") != -1 )
+        {
+          obj = new Object();
+          obj.value = tmpDisk.value;
+
+          //get the name
+          storageStr = (tmpDisk.name).replace("_DiskID", "")+"_FriendlyName";
+          nameEls = document.getElementsByName( storageStr );
+          if( nameEls && nameEls.length > 0 && nameEls[0].value != "" )
+          {
+            obj.name = nameEls[0].value;
+          }
+          else
+          {
+            if( obj.value == "SD_DISK" )
+            {
+              obj.name = langObjCont.getText("sdCardTxt");
+            }
+            else if( obj.value == "NetworkShare" )
+            {
+              obj.name = langObjCont.getText("networkShareTxt");
+            }
+            else
+            {
+              obj.name = obj.value;
+            }
+          }
+          disks = disks.concat( obj );
+        }
+      }
+
+      return disks;
+    }
+
+    //This function is looped through every channel by onInit(), where updateSelectId == diskid[channel #]
+    function writeDisks( updateSelectId, channelNo )
+    {
+      //The list of all storage disks
+      var disks = getStorageDisks(document.storageDisks);
+      var i;
+
+      var conf = getConfiguration( channelNo );
+      var selectedValue = "";
+
+      //if there are any current recordings
+      if(conf)
+      {
+        selectedValue = conf.getAttribute( updateSelectId );
+      }
+
+      var updateSelect = document.getElementById( updateSelectId+channelNo );
+
+      if( !updateSelect )
+      {
+        return;
+      }
+
+      var len = disks.length;
+      var op;
+
+      for( var i = 0; i < len; i++ )
+      {
+        op = document.createElement("OPTION");
+        op.value = disks[i].value;
+        op.text = disks[i].name;
+        if( selectedValue == disks[i].value )
+        {
+          op.selected = true;
+        }
+        updateSelect.options.add( op );
+      }
+
+      if( len == 1 )
+      {
+        var spanEl = document.getElementById( updateSelectId+channelNo+"Span" );
+        if( spanEl )
+        {
+          spanEl.innerHTML = updateSelect.options[1].text;
+          spanEl.name = updateSelect.options[1].value;
+          updateSelect.style.display = "none";
+          spanEl.style.display = "inline";
+        }
+      }
+    }
+
+    //Finds current recordings and plots out the streamprofiles for those
+    function writeProfiles(channelNr)
+    {
+      var profiles = document.profileList.elements;
+      var len = profiles.length;
+      var elName, profileName, op;
+
+      var conf = getConfiguration(channelNr);
+      var currentNodeOptions = "";
+      var selectedValue="";
+
+      if(conf)
+      {
+        currentNodeOptions = conf.getAttribute("options");
+      }
+
+      if(currentNodeOptions)
+      {
+        selectedValue = getOptionFromOptionsString(currentNodeOptions, "streamprofile");
+      }
+
+      //Balanced is the default value
+      if( selectedValue == "" )
+      {
+        selectedValue = "Balanced";
+      }
+
+      //The element to update in the DOM
+      var updateSelect = document.getElementById( "streamProfile"+channelNr );
+
+      for(var i = 0; i < len; i++)
+      {
+        elName = profiles[i].name;
+        if (elName.indexOf("_Parameters") > 0 && elName.indexOf("_Default_") < 0)
+        {
+          profileName = document.getElementsByName(elName.substr(0, elName.length - 11) + "_Name")[0].value;
+            op = document.createElement("OPTION");
+            op.value = profileName;
+            op.text = profileName;
+            if( selectedValue == profileName )
+            {
+              op.selected = true;
+            }
+            try {
+              updateSelect.options.add( op );
+            } catch(e) {}
+        }
+      }
+    }
+
+    function checkDiskMount(diskId)
+    {
+      var now = new Date();
+      var timestamp = now.getTime();
+
+      var url = "/axis-cgi/disks/list.cgi?diskid="+diskId+"&type=xml&timestamp="+timestamp;
+
+      var disksXML = AxisConnectionFactory.getResponseXmlWith(["GET", url, false], "", ajaxRequest);
+
+      if( disksXML )
+      {
+        var disks = disksXML.selectNodes("/root/disks/disk");
+        var disk;
+
+        if( disks.length > 0 )
+        {
+          disk = disks[0];
+          if(disk.getAttribute( "status" ) == "OK")
+            return true;
+        }
+      }
+      else
+        return false;
+      return null;
+    }
+
+    function checkDiskLocked(diskId)
+    {
+      var now = new Date();
+      var timestamp = now.getTime();
+
+      var url = "/axis-cgi/disks/list.cgi?diskid="+diskId+"&type=xml&timestamp="+timestamp;
+
+      var disksXML = AxisConnectionFactory.getResponseXmlWith(["GET", url, false], "", ajaxRequest);
+
+      if( disksXML )
+      {
+        var disks = disksXML.selectNodes("/root/disks/disk");
+        var disk;
+
+        if( disks.length > 0 )
+        {
+          disk = disks[0];
+          if(disk.getAttribute( "locked" ) == "yes")
+            return true;
+        }
+      }
+      else
+        return false;
+      return null;
+    }
+
+    function saveData()
+    {
+      for(var c=1;c<= nbrOfImageSources ;c++)
+      {
+        var paramChanges = null;
+        var enabled = document.getElementById("enabled"+c).checked;
+        var diskIdEl = document.getElementById("diskid"+c);
+        var diskIdValue = diskIdEl.value;
+        var streamProfileValue = document.getElementById("streamProfile"+c).value;
+
+        if( diskIdEl.style.display == "none" )
+        {
+          diskIdValue = diskIdEl.options[1].value;
+        }
+
+        if( diskIdValue == "" && enabled )
+        {
+          alert( langObjCont.getText("selectDiskAlert") );
+          diskIdEl.focus();
+          return;
+        }
+
+        var isDiskLocked = checkDiskLocked(diskIdValue);
+        if(isDiskLocked)
+        {
+          if( !confirm( langObjCont.getText("lockedConfrm") ) )
+          {
+            resetFields();
+            return;
+          }
+        }
+
+        var isDiskMounted = checkDiskMount(diskIdValue);
+        if( (!isDiskMounted || isDiskMounted == null) && enabled)
+        {
+          if(!isDiskMounted)
+          {
+            if( !confirm( langObjCont.getText("notMounConfrm1") ) )
+            {
+              resetFields();
+              return;
+            }
+          }
+          else
+          {
+            if( !confirm( langObjCont.getText("notMounConfrm2") ) )
+              resetFields();
+              return;
+          }
+        }
+
+        var conf = getConfiguration(c);
+        var savedEnabled = false;
+        var savedDiskId = "";
+        var savedStreamProfile = "Balanced";
+
+        if(conf)
+        {
+          savedEnabled = true;
+          savedDiskId = conf.getAttribute("diskid");
+          var options = conf.getAttribute("options");
+          savedStreamProfile = getOptionFromOptionsString(options, "streamprofile");
+        }
+
+        if( savedDiskId != diskIdValue || savedStreamProfile != streamProfileValue)
+        {
+          paramChanges = true;
+        }
+        else if(savedEnabled != enabled)
+        {
+          paramChanges = false;
+        }
+
+        if( paramChanges == true)
+        {
+          var doIt = true;
+          if(enabled)
+          {
+            if(  savedEnabled )
+            {
+              var currentCameraName = getOptionFromOptionsString(options, "camera");
+              if( !confirm( langObjCont.getText("vidChannelCfrm")+" "+currentCameraName+"\n"+langObjCont.getText("confirmRestart") ) )
+              {
+                doIt = false;
+              }
+              else
+              {
+                resetFields();
+              }
+            }
+          }
+
+          if(doIt)
+          {
+            var removeOk = true;
+            if(conf)
+            {
+              if( !removeConfiguration(c) )
+              {
+                removeOk = false
+                alert( langObjCont.getText("notStopRec") );
+              }
+            }
+
+            if(removeOk && enabled)
+            {
+              if( !addConfiguration(c) )
+                alert( langObjCont.getText("notStartRec") );
+              else
+                resetFields();
+            }
+            else
+              resetFields();
+          }
+        }
+        else if( paramChanges == false ) //Will only stop as paramChanges has to be "true" to start a recording
+        {
+          if( !removeConfiguration(c) )
+            alert( langObjCont.getText("notStopRec") );
+          else
+            resetFields();
+        }
+        else
+          resetFields();
+      }
+    }
+
+    function resetFields()
+    {
+      document.location = "/operator/continuously.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->";
+    }
+    
+    var SaveBtnStatTxt;
+    var ResBtnStatTxt;
+    function globalLanguageVars()
+    {
+      var vidChannelText = langObjCont.getText("vidChannelTxt");
+      var recSettingsText = langObjCont.getText("recSettingsTxt");
+      var enableText = langObjCont.getText("enableTxt");
+      var diskText = langObjCont.getText("diskTxt");
+      var streamProfText = langObjCont.getText("streamProfTxt");
+      var txtObj = document.getElementById("recSettings");
+      if( txtObj )
+      {
+        txtObj.innerHTML = recSettingsText;
+      }
+      
+      try {
+        txtObj = document.getElementById("vidChannelOutput1");
+        if( txtObj )
+        {
+          txtObj.innerHTML = vidChannelText;
+        }
+        document.getElementById("enableOutput1").innerHTML = enableText;
+        document.getElementById("diskOutput1").innerHTML = diskText;
+        document.getElementById("streamProfOutput1").innerHTML = streamProfText;
+      } catch(e) {}
+    
+      SaveBtnStatTxt = langObjCont.getText("saveBtnStatTxt");
+      ResBtnStatTxt = langObjCont.getText("resBtnStatTxt");
+    }
+  //-->
+  </script>
+
+</head>
+<body <!--#include virtual="/incl/bodytag.shtml" --> onload="onInit()">
+
+  <form name="storageDisks" id="storageDisks" method="get" action="">
+    <!--#include virtual="/sm/sm.srv?action=get_htmlform&getgroup=Storage&format=hiddenhtmlform" -->
+  </form>
+  <form name="profileList" id="profileList" method="get" action="">
+    <!--#include virtual="/sm/sm.srv?action=get_htmlform&getgroup=root.StreamProfile&format=hiddenhtmlform" -->
+  </form>
+
+  <!--#include virtual="/incl/top_incl2.shtml" -->
+
+    <table border="0" cellpadding="<!--#echo var="cellpadding3" option="encoding:html" -->" cellspacing="<!--#echo var="zero" option="encoding:html" -->" border="0" width="<!--#echo var="tableWidth3" option="encoding:html" -->" class="alternateRows">
+      <tr>
+        <td class="topTitle" align="left" colspan="2" width="70%">
+          <span id="conRecTxt"></span>
+        </td>
+        <td class="topTitle" align="right" width="30%"><a href="<!--#echo var="helpURL" option="encoding:url" -->"><img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="hlpPic"></a></td>
+      </tr>
+
+        <tr class="subTitle">
+            <td colspan="3"><span id="recSettings"></span></td>
+        </tr>
+        <tr>
+          <td colspan="3"><input type="checkbox" name="enabled" id="enabled1" value="yes" />&nbsp;<span id="enableOutput1"></span></td>
+        </tr>
+        <tr>
+          <td width="25%"><span id="diskOutput1"></span></td>
+          <td width="75%" colspan="2">
+              <select name="diskid" id="diskid1" size="1">
+                <option value="">-----------</option>
+              </select>
+              <span id="diskid1Span" style="display:none;"></span>
+          </td>
+        </tr>
+        <tr>
+          <td><span id="streamProfOutput1"></span></td>
+          <td colspan="2">
+            <select name="streamProfile" id="streamProfile1" size="1">
+            </select>
+          </td>
+        </tr>
+
+
+      <tr class="topTitle">
+        <td align="center" colspan="3" style="padding:10px <!--#echo var="cellpadding3" option="encoding:html" -->px 13px <!--#echo var="cellpadding3" option="encoding:html" -->px;">
+          <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <td class="button"><input type="button" width="75" value="" class="btnNormal" onclick="saveData()" onMouseOver="return showStatus(SaveBtnStatTxt)" onMouseOut="return showStatus('')" id="conRec_saveBtn" /></td>
+              <td class="button">&nbsp;</td>
+              <td class="button"><input type="button" width="75" value="" class="btnNormal" onclick="resetFields()" onMouseOver="return showStatus(ResBtnStatTxt)" onMouseOut="return showStatus('')" id="conRec_resetBtn" /></td>
+            </tr>
+          </table>
+          <input type="hidden" name="return_page" value="/operator/continuously.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->" />
+          <input type="hidden" name="action" value="modify" />
+        </td>
+      </tr>
+    </table>
+    <br />
+<!--#include virtual="/incl/bottom_incl.shtml" -->

@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+  <about>
+    <pageTitle type="title" minor="0">About/About</pageTitle>
+    <licBtnStatTxt type="msg" minor="0">View license information</licBtnStatTxt>
+    <aboutTxt type="text" minor="0">About</aboutTxt>
+    <fiVeTxt type="text" minor="0">Firmware version:</fiVeTxt>
+    <macAdTxt type="text" minor="0">MAC address:</macAdTxt>
+    <copyTxt type="text" minor="0">Copyright (C) 1995-</copyTxt>
+    <copy2Txt type="text" minor="0">, Axis Communications AB</copy2Txt>
+    <thirdLicTxt type="text" minor="0">Third Party Software Licenses</thirdLicTxt>
+    <licBtn type="button" minor="0" buttonid="about_LicBtn">View licenses</licBtn>
+  </about>
+
+  <collectingData>
+    <pageTitle type="title" minor="0">System Options/Collecting Data</pageTitle>
+    <collDataTxt type="text" minor="0">Collecting data. Please wait.....</collDataTxt>
+  </collectingData>
+
+  <connection_list>
+    <pageTitle type="title" minor="0">Logs &#x26; Reports/Connection List</pageTitle>
+    <connListTxt type="text" minor="0">Connection List</connListTxt>
+    <ipAdrTxt type="text" minor="0">IP address</ipAdrTxt>
+    <portTxt type="text" minor="0">Port</portTxt>
+    <proTxt type="text" minor="0">Protocol</proTxt>
+    <procTxt type="text" minor="0">Pid/Process</procTxt>
+    <refrBtn type="button" minor="0" buttonid="refreshBtn">Refresh</refrBtn>
+    <closBtn type="button" minor="0" buttonid="closeBtn">Close</closBtn>
+  </connection_list>
+
+  <logs>
+    <pageTitle type="title" minor="0">System Options/Logs &#x26; Reports</pageTitle>
+		<serverReport type="msg" minor="0">Server Report</serverReport>
+		<logsBtnStatTxt type="msg" minor="0">Display log information</logsBtnStatTxt>
+		<accLogsBtnStatTxt type="msg" minor="0">Display access log information</accLogsBtnStatTxt>
+		<dispConBtnStatTxt type="msg" minor="0">Display connection list</dispConBtnStatTxt>
+		<dispServBtnStatTxt type="msg" minor="0">Display server report</dispServBtnStatTxt>
+		<downloadServBtnStatTxt type="msg" minor="0">Download server report</downloadServBtnStatTxt>
+		<dispParBtnStatTxt type="msg" minor="0">Display parameter list</dispParBtnStatTxt>
+		<createCrashReportBtnStatTxt type="msg" minor="0">Create crash report</createCrashReportBtnStatTxt>
+		<logsreportsTxt type="text" minor="0">Logs &#x26; Reports</logsreportsTxt>
+		<logsintroTxt type="text" minor="0">The log files and reports may prove useful when troubleshooting a problem or when contacting the Axis support web.</logsintroTxt>
+		<noteTitleTxt type="text" minor="0">Note:</noteTitleTxt>
+		<noteTxt type="text" minor="0">Depending on your connection, these pages may take a while to load.</noteTxt>
+		<logsTxt type="text" minor="0">Logs</logsTxt>
+		<systemLogBtn type="button" minor="0" buttonid="logs_systemLogBtn">System Log</systemLogBtn>
+		<sysLogExpTxt type="text" minor="0">System log information.</sysLogExpTxt>
+		<accLogBtn type="button" minor="0" buttonid="logs_accLogBtn">Access Log</accLogBtn>
+		<accLogExpTxt type="text" minor="0">Access log information.</accLogExpTxt>
+		<reportsTxt type="text" minor="0">Reports</reportsTxt>
+		<viewServreportBtn type="button" minor="0" buttonid="logs_viewServreportBtn">View Server Report</viewServreportBtn>
+		<explservreportTxt type="text" minor="0">Important information about the server's status.</explservreportTxt>
+		<downloadServreportBtn type="button" minor="0" buttonid="logs_downloadServreportBtn">Download Server Report</downloadServreportBtn>
+		<srDlWithImage type="text" minor="0">Include snapshot from Live View</srDlWithImage>
+		<paramlistBtn type="button" minor="0" buttonid="logs_paramlistBtn">Parameter List</paramlistBtn>
+		<explparamlistTxt type="text" minor="0">The unit's parameters and their current settings.</explparamlistTxt>
+		<connlistBtn type="button" minor="0" buttonid="logs_connlistBtn">Connection List</connlistBtn>
+		<explconnlistTxt type="text" minor="0">Connection list information.</explconnlistTxt>
+		<crashreportBtn type="button" minor="0" buttonid="logs_crashreportBtn">Crash Report</crashreportBtn>
+		<explcrashreportTxt type="text" minor="0">Detailed information about the server's internal status. This report may contain sensitive information. It may take several minutes to download this report, please wait for the download to finish.</explcrashreportTxt>
+		<readprivacystatementTxt type="text" minor="0">For more information, please read Axis</readprivacystatementTxt>
+		<axisPrivacyStatementURL type="msg" minor="0">http://www.axis.com/r/?keyword=server_report_privacy_policy</axisPrivacyStatementURL>
+		<axisPrivacyStatementURLTxt type="text" minor="0">Privacy statement.</axisPrivacyStatementURLTxt>
+    <hlpTxt type="image" minor="0" imageid="hlpPic">Click here for help on this page</hlpTxt>
+	</logs>
+
+	<logconfig>
+	  <pageTitle type="title" minor="0">System Options/Configuration</pageTitle>
+		<noAccLogSizeAlrtTxt type="alert" minor="0">The Log Size value has to be an integer between 1000 and 100000.</noAccLogSizeAlrtTxt>
+		<noLogSizeAlrtTxt type="alert" minor="0">The Log Size value has to be an integer between 1000 and 100000.</noLogSizeAlrtTxt>
+		<saveBtnStatTxt type="msg" minor="0">Save log level settings</saveBtnStatTxt>
+		<resBtnStatTxt type="msg" minor="0">Revert to last saved settings</resBtnStatTxt>
+		<confTxt type="text" minor="0">Configuration</confTxt>
+		<intro1Txt type="text" minor="0">Select the log level for the</intro1Txt>
+		<intro2Txt type="text" minor="0">. Data not contained in the selected log file level will not be available for viewing.</intro2Txt>
+		<sysLogSetTxt type="text" minor="0">System Log Settings</sysLogSetTxt>
+		<logLev1Txt type="text" minor="0">Log level:</logLev1Txt>
+		<logSiz1Txt type="text" minor="0">Log size:</logSiz1Txt>
+		<logSizByte1Txt type="text" minor="0">bytes</logSizByte1Txt>
+		<accLogSetTxt type="text" minor="0">Access Log Settings</accLogSetTxt>
+		<logLev2Txt type="text" minor="0">Log level:</logLev2Txt>
+		<logSiz2Txt type="text" minor="0">Log size:</logSiz2Txt>
+		<logSizByte2Txt type="text" minor="0">bytes</logSizByte2Txt>
+		<crWaInTxt type="msg" minor="0">Critical, Warnings &#x26; Info</crWaInTxt>
+		<crWaTxt type="msg" minor="0">Critical &#x26; Warnings</crWaTxt>
+		<crTxt type="msg" minor="0">Critical</crTxt>
+		<noTxt type="msg" minor="0">None</noTxt>
+		<saveBtn type="button" minor="0" buttonid="logroot_saveBtn">Save</saveBtn>
+		<resetBtn type="button" minor="0" buttonid="logroot_resetBtn">Reset</resetBtn>
+	</logconfig>
+
+  <overview>
+    <pageTitle type="title" minor="0">System Options/System Overview</pageTitle>
+    <rulesDefTxt type="msgAsText" minor="0">Rules defined</rulesDefTxt>
+    <rulesEnaTxt type="msgAsText" minor="0">Rules enabled</rulesEnaTxt>
+    <defUseTxt type="msgAsText" minor="0">Defined users</defUseTxt>
+    <overVTxt type="text" minor="0">System Overview</overVTxt>
+    <firVerTxt type="text" minor="0">Firmware version</firVerTxt>
+    <serNoTxt type="text" minor="0">Serial number</serNoTxt>
+    <clickToGetTxt type="msg" minor="0">Click here to get to the configuration page.</clickToGetTxt>
+    <ipAdrTxt type="text" minor="0">IP address</ipAdrTxt>
+    <dynTxt type="text" minor="0">dynamic</dynTxt>
+    <staTxt type="text" minor="0">static</staTxt>
+    <datTimTxt type="text" minor="0">Date &#x26; Time</datTimTxt>
+    <conCliTxt type="text" minor="0">Connected clients</conCliTxt>
+    <audTxt type="text" minor="0">Audio</audTxt>
+    <vieLogTxt type="text" minor="0">(View log)</vieLogTxt>
+    <upTimTxt type="text" minor="0">Uptime:</upTimTxt>
+    <recBanTxt type="text" minor="0">Recently used bandwidth:</recBanTxt>
+    <timModTxt type="text" minor="0">Time mode:</timModTxt>
+    <secTxt type="text" minor="0">Security</secTxt>
+    <anoAccTxt type="text" minor="0">Anonymous access:</anoAccTxt>
+    <vieTxt type="text" minor="0">View</vieTxt>
+    <ptzTxt type="text" minor="0">PTZ</ptzTxt>
+    <disTxt type="text" minor="0">Disabled</disTxt>
+    <httpsColTxt type="text" minor="0">HTTPS:</httpsColTxt>
+    <yesTxt type="msgAsText" minor="0">Yes</yesTxt>
+    <noTxt type="msgAsText" minor="0">No</noTxt>
+    <ipAdrFilColTxt type="text" minor="0">IP address filter:</ipAdrFilColTxt>
+    <onTxt type="text" minor="0">On</onTxt>
+    <offTxt type="text" minor="0">Off</offTxt>
+    <optNetSerTxt type="text" minor="0">Optional Network Services</optNetSerTxt>
+    <serTxt type="text" minor="0">Service</serTxt>
+    <enblTxt type="text" minor="0">Enabled</enblTxt>
+    <protTxt type="text" minor="0">Protocol</protTxt>
+    <serPorTxt type="text" minor="0">Server port</serPorTxt>
+    <ftpTxt type="text" minor="0">FTP</ftpTxt>
+    <tcpTxt type="msgAsText" minor="0">TCP</tcpTxt>
+    <rtspTxt type="text" minor="0">RTSP</rtspTxt>
+    <bonjourTxt type="text" minor="0">Bonjour</bonjourTxt>
+    <udpTxt type="msgAsText" minor="0">UDP</udpTxt>
+    <httpsTxt type="text" minor="0">HTTPS</httpsTxt>
+    <snmpTxt type="text" minor="0">SNMP</snmpTxt>
+    <upnpTxt type="text" minor="0">UPnP</upnpTxt>
+    <autoTxt type="text" minor="0">(auto)</autoTxt>
+    <arpPinAdrSetTxt type="text" minor="0">ARP/Ping IP address setting</arpPinAdrSetTxt>
+    <linLolTxt type="text" minor="0">Link-local address</linLolTxt>
+    <natTxt type="text" minor="0">NAT traversal</natTxt>
+    <socksTxt type="text" minor="0">SOCKS</socksTxt>
+    <aIDDTxt type="text" minor="0">AXIS Internet Dynamic DNS</aIDDTxt>
+    <ipAdrFilTxt type="text" minor="0">IP address filter</ipAdrFilTxt>
+    <onvifWebService type="text" minor="0">Web services</onvifWebService>
+    <eveSetTxt type="text" minor="0">Event Settings</eveSetTxt>
+    <encTxt type="text" minor="0">Video sources</encTxt>
+    <eNameTxt type="text" minor="0">Name</eNameTxt>
+    <eAddrTxt type="text" minor="0">Addr.</eAddrTxt>
+    <eTypeTxt type="text" minor="0">Type</eTypeTxt>
+    <eTransTxt type="text" minor="0">Trans.</eTransTxt>
+    <eResTxt type="text" minor="0">Res.</eResTxt>
+    <eAudioTxt type="text" minor="0">Audio</eAudioTxt>
+    <eHttpPortTxt type="text" minor="0">HTTP</eHttpPortTxt>
+    <eHttpsPortTxt type="text" minor="0">HTTPS</eHttpsPortTxt>
+    <imgSetTxt type="text" minor="0">Image Settings</imgSetTxt>
+    <resTxt type="text" minor="0">Res.</resTxt>
+    <comTxt type="text" minor="0">Comp.</comTxt>
+    <rotTxt type="text" minor="0">Rot.</rotTxt>
+    <colTxt type="text" minor="0">Color</colTxt>
+    <palTxt type="text" minor="0">Palette</palTxt>
+    <oveTxt type="text" minor="0">Overlay</oveTxt>
+    <souTxt type="text" minor="0">Source</souTxt>
+    <strTxt type="text" minor="0">Stream</strTxt>
+    <autoRotTxt type="text" minor="0">Auto</autoRotTxt>
+    <camTxt type="text" minor="0">Camera</camTxt>
+    <cam1Txt type="text" minor="0">Camera 1:</cam1Txt>
+    <cam2Txt type="text" minor="0">Camera 2:</cam2Txt>
+    <cam3Txt type="text" minor="0">Camera 3:</cam3Txt>
+    <cam4Txt type="text" minor="0">Camera 4:</cam4Txt>
+    <cam1ColYesTxt type="text" minor="0">Yes</cam1ColYesTxt>
+    <cam2ColYesTxt type="text" minor="0">Yes</cam2ColYesTxt>
+    <cam3ColYesTxt type="text" minor="0">Yes</cam3ColYesTxt>
+    <cam4ColYesTxt type="text" minor="0">Yes</cam4ColYesTxt>
+    <cam1ColNoTxt type="text" minor="0">No</cam1ColNoTxt>
+    <cam2ColNoTxt type="text" minor="0">No</cam2ColNoTxt>
+    <cam3ColNoTxt type="text" minor="0">No</cam3ColNoTxt>
+    <cam4ColNoTxt type="text" minor="0">No</cam4ColNoTxt>
+    <cam1OveImgTxt type="text" minor="0">Img</cam1OveImgTxt>
+    <cam2OveImgTxt type="text" minor="0">Img</cam2OveImgTxt>
+    <cam3OveImgTxt type="text" minor="0">Img</cam3OveImgTxt>
+    <cam4OveImgTxt type="text" minor="0">Img</cam4OveImgTxt>
+    <cam1OveTxtTxt type="text" minor="0">Txt</cam1OveTxtTxt>
+    <cam2OveTxtTxt type="text" minor="0">Txt</cam2OveTxtTxt>
+    <cam3OveTxtTxt type="text" minor="0">Txt</cam3OveTxtTxt>
+    <cam4OveTxtTxt type="text" minor="0">Txt</cam4OveTxtTxt>
+    <cam1OveNonTxt type="text" minor="0">None</cam1OveNonTxt>
+    <cam2OveNonTxt type="text" minor="0">None</cam2OveNonTxt>
+    <cam3OveNonTxt type="text" minor="0">None</cam3OveNonTxt>
+    <cam4OveNonTxt type="text" minor="0">None</cam4OveNonTxt>
+    <cam0DetTypTxt type="text" minor="0">none</cam0DetTypTxt>
+    <cam1DetTypTxt type="text" minor="0">none</cam1DetTypTxt>
+    <cam2DetTypTxt type="text" minor="0">none</cam2DetTypTxt>
+    <cam3DetTypTxt type="text" minor="0">none</cam3DetTypTxt>
+    <limTxt type="text" minor="0">Limited</limTxt>
+    <unlTxt type="text" minor="0">Unlimited</unlTxt>
+    <qudStrTxt type="text" minor="0">Quad stream:</qudStrTxt>
+    <quadOveNonTxt type="text" minor="0">None</quadOveNonTxt>
+    <quadOveTxtTxt type="text" minor="0">Txt</quadOveTxtTxt>
+    <quadOveImgTxt type="text" minor="0">Img</quadOveImgTxt>
+    <quadColYesTxt type="text" minor="0">Yes</quadColYesTxt>
+    <quadColNoTxt type="text" minor="0">No</quadColNoTxt>
+    <conDevTxt type="text" minor="0">Connected Devices</conDevTxt>
+    <recLogIteTxt type="text" minor="0">Recent Log Items</recLogIteTxt>
+    <vieAllTxt type="text" minor="0">View all</vieAllTxt>
+    <videoTxt type="text" minor="0">Video</videoTxt>
+    <minOvervTxt type="text" minor="0">min</minOvervTxt>
+    <daysOvervTxt type="text" minor="0">days</daysOvervTxt>
+    <dayOvervTxt type="text" minor="0">day</dayOvervTxt>
+    <usersOvervTxt type="text" minor="0">users</usersOvervTxt>
+  </overview>
+
+  <showReport>
+		<genReportWaitMsg type="msgAsText" minor="0">Generating report, please wait...</genReportWaitMsg>
+	</showReport>
+
+  <supportOverview>
+    <pageTitle type="title" minor="0">System Options/Support Overview</pageTitle>
+    <serverReport type="msg" minor="0">Server Report</serverReport>
+    <suppoverTxt type="text" minor="0">Support Overview</suppoverTxt>
+    <troblTxt type="text" minor="0">Troubleshooting</troblTxt>
+    <troublguide1Txt type="text" minor="0">If you have problems, please try the troubleshooting</troublguide1Txt>
+    <troublguide2Txt type="text" minor="0">guide</troublguide2Txt>
+    <troublguide3Txt type="text" minor="0">before contacting your local supplier.</troublguide3Txt>
+    <servrepTxt type="text" minor="0">Server Report</servrepTxt>
+    <attachservrep1Txt type="text" minor="0">Always attach the</attachservrep1Txt>
+    <servrepLinkTxt type="text" minor="0">Server Report</servrepLinkTxt>
+    <attachservrep2Txt type="text" minor="0">when contacting your support channel.</attachservrep2Txt>
+    <axisupservTxt type="text" minor="0">Axis Support Services</axisupservTxt>
+    <techass1Txt type="text" minor="0">Should you require any technical assistance, please contact your</techass1Txt>
+    <axisSaleURL type="msg" minor="0">http://www.axis.com/r/?keyword=sales</axisSaleURL>
+    <techass2Txt type="text" minor="0">Axis reseller</techass2Txt>
+    <tectass3Txt type="text" minor="0">If your questions cannot be answered immediately, your reseller will forward your queries through the appropriate channels to ensure a rapid response.</tectass3Txt>
+    <connInt1Txt type="text" minor="0">If you are connected to the Internet, you can:</connInt1Txt>
+    <connInt2Txt type="text" minor="0">Download user documentation and firmware updates</connInt2Txt>
+    <connInt3Txt type="text" minor="0">Find answers to resolved problems in the FAQ database. Search by product, category, or phrases</connInt3Txt>
+    <connInt4Txt type="text" minor="0">Report problems to Axis support staff by logging in to your private support area</connInt4Txt>
+    <visitaxissupTxt type="text" minor="0">Visit the Axis Support Web at</visitaxissupTxt>
+    <axisSupURL type="msg" minor="0">http://www.axis.com/r/?keyword=techsup</axisSupURL>
+    <axisSupURLTxt type="text" minor="0">www.axis.com/techsup/</axisSupURLTxt>
+  </supportOverview>
+</language_xml>

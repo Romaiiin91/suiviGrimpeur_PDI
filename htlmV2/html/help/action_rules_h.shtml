@@ -1,0 +1,56 @@
+<!--#include virtual="/sm/sm.srv?action=get&group=Properties.Brand.ProdNbr" -->
+<!--#set var="backButton" val="yes" -->
+<!--#set var="forwardButton" val="yes" -->
+<!--#include virtual="/incl/popup_header.shtml" -->
+
+<script language="JavaScript">
+<!--
+var langObjETARH = new Language("event_types_h", "action_rules_h");
+
+function globalLanguageVars()
+{
+	document.getElementById("titleId").innerHTML = langObjETARH.getText("titleTxt");
+}
+// -->
+</script>
+
+</head>
+<body onload="langObjETARH.init()">
+<!--#include virtual="/incl/help_top.shtml" -->
+<div class="row">
+	<span id="intro_Txt1"></span><br/><br/>
+	<span id="intro_Txt2"></span><br/><br/>
+</div>
+<h2>
+	<span id="listHeaderTxt"></span>
+</h2>
+<div class="row">
+	<span id="list_Txt1"></span>
+	<ul>
+		<li>
+			<span id="list_Txt2"></span>
+		</li>
+		<li>
+			<span id="list_Txt3"></span>
+		</li>
+		<li>
+			<span id="list_Txt4"></span>
+		</li>
+		<li>
+			<span id="list_Txt5"></span>
+		</li>
+		<li>
+			<span id="list_Txt6"></span>
+		</li>
+	</ul>
+</div>
+<div class="row">
+	<span id="checkbox_Txt"></span>
+</div>
+<div class="row">
+	<span id="button_Txt"></span>
+</div>
+<div class="row">
+	<span id="link_Txt"></span>
+</div>
+<!--#include virtual="/incl/help_footer.shtml" -->

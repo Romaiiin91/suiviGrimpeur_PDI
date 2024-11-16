@@ -1,0 +1,188 @@
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<!--#include virtual="/sm/sm.srv?action=get&group=Layout,System.BoaGroupPolicy" -->
+
+<!--#set var="showSetup" val="yes" -->
+<!--#if expr="$root_Layout_Axis = no" -->
+  <!--#if expr="$root_Layout_SetupLinkEnabled = no" -->
+    <!--#set var="showSetup" val="no" -->
+  <!--#endif -->
+<!--#endif -->
+
+<script language="JavaScript">
+<!--
+var langObjHttpDis;
+
+function onInit()
+{
+  langObjHttpDis = new Language("root_platoon", "httpDisabled");
+  langObjHttpDis.init();
+}
+
+function globalLanguageVars()
+{
+  var address = document.location + "";
+  var index1 = address.indexOf("://") + 3;
+  address = 'https://' + address.substring(index1, address.indexOf("/", index1));
+  
+  if (address.indexOf("[") == -1)
+  {
+    var lastColon = address.lastIndexOf(":");
+  
+    if (lastColon > 7)
+    {
+      address = address.substr(0,lastColon);
+    }
+  }
+  
+<!--#if expr="$showSetup = yes" -->
+  var aElSetup = document.createElement("a");
+  var linkStr = "";
+  <!--#if expr="$root_System_BoaGroupPolicy_admin = https" -->
+ linkStr = address;
+  <!--#elif expr="$root_System_BoaGroupPolicy_admin = both" -->
+ linkStr = address;
+  <!--#elif expr="$root_System_BoaGroupPolicy_operator = https" -->
+ linkStr = address;
+  <!--#elif expr="$root_System_BoaGroupPolicy_operator = both" -->
+  linkStr = address;
+  <!--#endif -->
+  linkStr += "<!--#if expr="$root_Layout_PlainConfigEnabled = yes" -->/admin/config.shtml<!--#else -->/operator/basic.shtml<!--#endif -->";
+
+  aElSetup.href = linkStr;
+  aElSetup.className = "linkInActive";
+  aElSetup.target = "_top";
+  aElSetup.appendChild( document.createTextNode( langObjHttpDis.getText("setTxt") ) );
+
+  document.getElementById("outputSetupLink").appendChild( aElSetup );
+<!--#endif -->
+
+  var aElHttps = document.createElement("a");
+  aElHttps.href = address;
+  aElHttps.appendChild( document.createTextNode( address ) );
+  
+  document.getElementById("outputHTTPSLink").appendChild( aElHttps );
+}
+// -->
+</script>
+</head>
+<body <!--#include virtual="/incl/bodytag.shtml" --> onload="onInit();">
+<BR>
+<table width="100%" cellspacing=0 cellpadding=0 border=0>
+<tr><td align="center">
+  <table width=774 cellspacing=0 cellpadding=0 border=0 style="font-size:0;">
+    <tr>
+      <td colspan=2><img src="/pics/line_corner_lt_5x5px.gif" width=5 height=5 border=0 alt=""></td>
+      <td colspan=4 background="/pics/line_t_100x5px.gif"><img src="/pics/line_t_100x5px.gif" width=768 height=5 border=0 alt=""></td>
+      <td colspan=2><img src="/pics/line_corner_rt_5x5px.gif" width=5 height=5 border=0 alt=""></td>
+    </tr>
+    <tr>
+      <td class="lineBg"><img src="/pics/blank.gif" width="1" border=0 alt=""></td>
+      <td><img src="/pics/blank.gif" width="4" height=1 border=0 alt=""></td>
+      <td colspan=4 valign="middle" align="left" width="100%">
+        <table border=0 cellspacing=0 cellpadding=0 width="100%">
+          <tr>
+
+<!--#if expr="$root_Layout_Axis = no" -->
+  <!--#if expr="$root_Layout_Logo_Link = default" -->
+    <!--#set var="root_Layout_Logo_LinkURL" val="http://www.axis.com/" -->
+  <!--#endif -->
+  <!--#if expr="$root_Layout_Logo_Source = default" -->
+    <!--#set var="root_Layout_Logo_Address" val="/pics/logo_70x29px.gif" -->
+  <!--#endif -->
+  <!--#if expr="$root_Layout_Logo_Source = own" -->
+    <!--#set var="root_Layout_Logo_Address" val="/local/$root_Layout_Logo_Path$" -->
+  <!--#endif -->
+
+  <!--#if expr="$root_Layout_Banner_Link = default" -->
+    <!--#set var="root_Layout_Banner_LinkURL" val="http://www.axis.com/" -->
+  <!--#endif -->
+  <!--#if expr="$root_Layout_Banner_Source = default" -->
+    <!--#set var="root_Layout_Banner_Address" val="/pics/banner_top.gif" -->
+  <!--#endif -->
+  <!--#if expr="$root_Layout_Banner_Source = own" -->
+    <!--#set var="root_Layout_Banner_Address" val="/local/$root_Layout_Banner_Path$" -->
+  <!--#endif -->
+
+          <td><!--#if expr="$root_Layout_Logo_Link != none" --><a href="<!--#echo var="root_Layout_Logo_LinkURL" option="encoding:url" -->" target=_blank><!--#endif --><!--#if expr="$root_Layout_Logo_Source != none" --><IMG src="<!--#echo var="root_Layout_Logo_Address" option="encoding:url" -->" border=0><!--#endif --><!--#if expr="$root_Layout_Logo_Link != none" --></A><!--#endif --></td>
+          <td><!--#if expr="$root_Layout_Banner_Link != none" --><a href="<!--#echo var="root_Layout_Banner_LinkURL" option="encoding:url" -->" target=_blank><!--#endif --><!--#if expr="$root_Layout_Banner_Source != none" --><IMG src="<!--#echo var="root_Layout_Banner_Address" option="encoding:url" -->" border=0><!--#endif --><!--#if expr="$root_Layout_Banner_Link != none" --></A><!--#endif --></td>
+<!--#else -->
+          <td><a href="http://www.axis.com/" target=_blank><IMG src="/pics/logo_70x29px.gif" width=68 height=29 border=0 title="Axis" alt="Axis"></A></td>
+<!--#endif -->
+          <td class="topTitle" align="center"><!--#echo var="glob_prodName" option="encoding:html" --></td>
+
+          <td align="right">
+            <table cellpadding=0 cellspacing=5 border=0>
+              <tr>
+                <td><a href="" target="_top" class="linkActive"><span id="lViewTxt"></span></a></td>
+                <td>|</td>
+<!--#if expr="$showSetup = yes" -->
+                <td id="outputSetupLink"></td>
+<!--#else -->
+                <td colspan="2"></td>
+<!--#endif -->
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+
+    <td><img src="/pics/blank.gif" width="4" border=0 alt=""></td>
+    <td class="lineBg"><img src="/pics/blank.gif" width=1 height=1 alt=""></td>
+  </tr>
+  <tr>
+    <td class="lineBg"><img src="/pics/blank.gif" width=1 height=5 alt=""></td>
+    <td colspan=6><img src="/pics/blank.gif" width=1 height=5 alt=""></td>
+    <td class="lineBg"><img src="/pics/blank.gif" width=1 height=5 alt=""></td>
+  </tr>
+  <tr>
+    <td colspan=2><img src="/pics/line_corner_lb_5x5px.gif" width=5 height=5 alt=""></td>
+    <td colspan=4 background="/pics/line_b_100x5px.gif"><img src="/pics/blank.gif" width=764 height=5 alt=""></td>
+    <td colspan=2><img src="/pics/line_corner_rb_5x5px.gif" width=5 height=5 alt=""></td>
+  </tr>
+  <tr>
+    <td colspan=8><img src="/pics/blank.gif" width=1 height=5 border=0 alt=""></td>
+  </tr>
+
+  <tr>
+    <td colspan="2"><img src="/pics/line_corner_lt_5x5px.gif" alt="" border="0" height="5" width="5"></td>
+    <td colspan="4" background="/pics/line_t_100x5px.gif"><img src="/pics/blank.gif" alt="" border="0" height="5" width="768"></td>
+    <td colspan="2"><img src="/pics/line_corner_rt_5x5px.gif" alt="" border="0" height="5" width="5"></td>
+  </tr>
+  <tr>
+    <td class="lineBg" width="1"><img src="/pics/blank.gif" alt="" border="0" height="1" width="1"></td>
+    <td colspan="6" align="center" valign="top" width="773">
+      <BR>
+      <P id="outputHTTPSLink"><span id="httpNotEnblTxt"></span><br><br>
+      </P><BR><BR>
+    </td>
+    <td width=4><img src="/pics/blank.gif" width=1 height=1 border=0 alt=""></td>
+    <td width=1 class="lineBg"><img src="/pics/blank.gif" width=1 height=1 border=0 alt=""></td>
+  </tr>
+  <!-- ################################################################ -->
+  <!-- Defines the table width -->
+  <tr>
+    <td colspan=1 width=1 class="lineBg"><img src="/pics/blank.gif" width=1 height=1 alt=""></td>
+    <td colspan=1 width=4><img src="/pics/blank.gif" width=1 height=1 alt=""></td>
+    <td colspan=1 width=180><img src="/pics/blank.gif" width=1 height=1 alt=""></td>
+    <td colspan=1 width=1><img src="/pics/blank.gif" width=1 height=1 alt=""></td>
+    <td colspan=1 width=199><img src="/pics/blank.gif" width=1 height=1 alt=""></td>
+    <td colspan=1 width=384><img src="/pics/blank.gif" width=1 height=1 alt=""></td>
+    <td colspan=1 width=4><img src="/pics/blank.gif" width=1 height=1 alt=""></td>
+    <td colspan=1 width=1 class="lineBg"><img src="/pics/blank.gif" width=1 height=1 alt=""></td>
+  </tr>
+  <!-- ################################################################ -->
+  <tr>
+    <td colspan=2><img src="/pics/line_corner_lb_5x5px.gif" width=5 height=5 alt=""></td>
+    <td colspan=1 background="/pics/line_b_100x5px.gif"><img src="/pics/blank.gif" width=1 height=1 alt=""></td>
+    <td colspan=2 background="/pics/line_b_100x5px.gif"><img src="/pics/blank.gif" width=1 height=1 alt=""></td>
+    <td colspan=1 background="/pics/line_b_100x5px.gif"><img src="/pics/blank.gif" width=1 height=1 alt=""></td>
+    <td colspan=2><img src="/pics/line_corner_rb_5x5px.gif" width=5 height=5 alt=""></td>
+  </tr>
+  </TABLE>
+</TD></TR>
+</TABLE>
+</BODY>
+</HTML>

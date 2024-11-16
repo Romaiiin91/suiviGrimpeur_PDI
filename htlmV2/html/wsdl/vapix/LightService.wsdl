@@ -1,0 +1,1470 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../wsdl-viewer.xsl"?>
+
+<wsdl:definitions targetNamespace="http://www.axis.com/vapix/ws/light"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:ali="http://www.axis.com/vapix/ws/light"
+    xmlns:wsnt="http://docs.oasis-open.org/wsn/b-2"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap12/">
+    <wsdl:documentation xmlns="http://www.w3.org/1999/xhtml">
+	<h2>COPYRIGHT NOTICE</h2>
+	 <p>
+		&#169; Axis Communications AB, 2011
+	</p>
+	<p>
+		This document is copyright protected and is the property of Axis
+		Communications AB and may not be copied, reproduced or distributed
+		in any way without the prior written consent of Axis
+		Communications AB.
+	</p>
+	<h2>TRADEMARK NOTICE</h2>
+	<p>
+		AXIS COMMUNICATIONS, AXIS, ETRAX, ARTPEC and VAPIX are registered
+		trademarks or trademark applications of Axis AB in various
+		jurisdictions. All other company names and products are trademarks
+		or registered trademarks of their respective companies. We reserve
+		the right to introduce modifications without notice.
+	</p>
+	<h2>Terms of Use</h2>
+	<p>
+		The use of the AXIS VAPIX application programming interface
+		(hereinafter referred to as "the INTERFACE" as further specified
+		below, is subject to the terms and conditions of the License
+		Agreement below. By using the INTERFACE and the written
+		specification of the INTERFACE (hereinafter referred to as “the
+		INTERFACE DESCRIPTION"), whether in whole or in part, you agree to
+		be bound by the terms of the License Agreement.
+	</p>
+	<h2>VAPIX&#174; LICENSE AGREEMENT</h2>
+	<p>
+		This is a legal agreement (the “License Agreement”) between you
+		(either individual or an entity) and Axis Communications AB
+		(hereinafter referred to as “Axis”).
+	</p>
+	<h3>1. GRANT OF LICENSE</h3>
+	<p>
+		Axis hereby grants to you the right to use the INTERFACE and the
+		INTERFACE DESCRIPTION for the sole and limited purpose of creating,
+		manufacturing and developing a solution that integrates any unit
+		or portion included in the Axis network products (as defined by
+		Axis at its discretion) and to market, sell and distribute any such
+		solution.
+	</p>
+	<h3>2. COPYRIGHT</h3>
+	<p>
+		The INTERFACE and the INTERFACE DESCRIPTION are owned by Axis and
+		are protected by copyright laws and international treaty
+		provisions. Any use of the INTERFACE and/or the INTERFACE
+		DESCRIPTION outside the limited purpose set forth in Section 1
+		above is strictly prohibited.
+	</p>
+	<h3>3. NO REVERSE ENGINEERING</h3>
+	<p>
+		You may not reverse engineer, decompile, or disassemble the
+		INTERFACE except to the extent required to obtain interoperability
+		with other independently created computer programs as permitted by
+		mandatory law.
+	</p>
+	<h3>4. TERMINATION</h3>
+	<p>
+		This License is effective until terminated. Your rights under this
+		License will terminate automatically without notice from Axis if
+		you fail to comply with any term(s) of this License. Upon the
+		termination of this License, you shall cease all use and
+		disposition of the INTERFACE and/or THE INTERFACE DESCRIPTION
+		whether for the purpose set forth in Section 1 above or not.
+	</p>
+	<h3>5. GOVERNING LAW</h3>
+	<p>
+		This agreement shall be deemed performed in and shall be construed
+		by the laws of Sweden. All disputes in connection with this
+		agreement shall be finally settled by arbitration in accordance
+		with the Rules of the Arbitration Institute of the Stockholm Chamber
+		of Commerce. The place of arbitration shall be Malmö, Sweden. The
+		language of the proceedings, documentation and the award shall be
+		English.
+	</p>
+	<h3>6. DISCLAIMER</h3>
+	<p>
+	   6.1 THE INTERFACE AND THE INTERFACE DESCRIPTION ARE DELIVERED FREE
+	   OF CHARGE AND “AS IS” WITHOUT WARRANTY OF ANY KIND. THE ENTIRE RISK
+	   AS TO THE USE, RESULTS AND PERFORMANCE OF THE INTERFACE AND THE
+	   INTERFACE DESCRIPTION IS ASSUMED BY THE USER/YOU. AXIS DISCLAIMS
+	   ALL WARRANTIES, WHETHER EXPRESS OR IMPLIED, INCLUDING BUT NOT
+	   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR
+	   A PARTICULAR PURPOSE, TITLE, NON-INFRINGEMENT AND PRODUCT LIABILITY,
+	   OR ANY WARRANTY ARISING OUT OF ANY PROPOSAL, SPECIFICATION OR SAMPLE
+	   WITH RESPECT TO THE INTERFACE AND THE INTERFACE DESCRIPTION.
+	</p>
+	<p>
+	  6.2 YOU ARE YOURSELF RESPONSIBLE FOR EXAMINING WHETHER THE INTERFACE
+	  AND THE INTERFACE DESCRIPTION ARE ENCUMBERED BY OR INFRINGES UPON A
+	  RIGHT HELD BY A THIRD PARTY. AXIS, WHO HAS NOT UNDERTAKEN ANY SUCH
+	  INVESTIGATIONS, HAS NO KNOWLEDGE OF NOR DOES AXIS ACCEPT ANY
+	  LIABILITY FOR ANY SUCH ENCUMBRANCES OR INFRINGEMENTS.
+	</p>
+	<p>
+	  6.3 YOU UNDERTAKE NOT TO PURSUE ANY CLAIMS WHATSOEVER AGAINST AXIS
+	  OR ITS AFFILIATES RELATING TO OR EMANATING FROM THE INTERFACE AND
+	  THE INTERFACE DESCRIPTION.
+	</p>
+	<p>
+	  6.4 AXIS SHALL NOT BE LIABLE FOR LOSS OF DATA, LOSS OF PRODUCTION,
+	  LOSS OF PROFIT, LOSS OF USE, LOSS OF CONTRACTS OR FOR ANY OTHER
+	  CONSEQUENTIAL, ECONOMIC OR INDIRECT LOSS WHATSOEVER IN RESPECT OF
+	  USE OR DISPOSITION OF THE INTERFACE AND THE INTERFACE DESCRIPTION.
+	</p>
+	<p>
+	  6.5 AXIS TOTAL LIABILITY FOR ALL CLAIMS IN ACCORDANCE WITH THE USE
+	  OF THE INTERFACE AND THE INTERFACE DESCRIPTION SHALL NOT EXCEED THE
+	  PRICE PAID FOR THE INTERFACE AND THE INTERFACE DESCRIPTION.
+	</p>
+	<p>
+	  6.6 YOU SHALL INDEMNIFY AND HOLD AXIS AND ITS AFFILIATES HARMLESS
+	  FROM ANY CLAIMS WHATSOEVER FROM ANY THIRD PARTY AGAINST AXIS OR ITS
+	  AFFILIATES RELATING TO OR EMANATING FROM YOUR USE OF THE INTERFACE
+	  AND THE INTERFACE DESCRIPTION UNDER THIS LICENSE AGREEMENT. THE
+	  FOREGOING INDEMNIFICATION INCLUDES BUT IS NOT LIMITED TO ANY AND ALL
+	  DAMAGES, COSTS AND EXPENSES (INCLUDING REASONABLE ATTORNEYS’ FEES).
+	</p>
+	<h1>VAPIX&#174; Light Control Service API</h1>
+	<p>
+		VAPIX&#174; Light Control Service API enables applications and users
+		to control built-in lights, for example infrared LEDs and white LEDs.
+		Lights can be activated and inactivated using this API or action rules.
+	</p>
+	 <p>
+		A light can be a single LED or a group of LEDs. Each light is identified by a unique Light ID.
+	 </p>
+	 <p>
+		Supported functionality:
+	</p>
+	 <ul>
+	 <li>Retrieve information about the light</li>
+	<li>Enable and activate light</li>
+	<li>Synchronize with day/night mode</li>
+	<li>Control light intensity</li>
+	<li>Control angle of illuminiation</li>
+	 </ul>
+	 <h2>Get Light Information</h2>
+	 <p>
+		Supported operations:
+	 </p>
+	 <ul>
+		<li><code>GetLightStatus</code> - check if the light is active or
+		inactive</li>
+		<li><code>GetLightInformation</code> - list light information, such
+		as Light ID, type of light, if the light is enabled and error
+		information. </li>
+		<li><code>GetServiceCapabilites</code> - list the light control capabilities
+		supported by the Axis product </li>
+	</ul>
+	 <h2>Enable and Activate Light</h2>
+	 <p>
+	 Enabling the light allows users and clients to control the light.
+	 Activating turns the light on.
+	 </p>
+	 <p>
+		The light cannot be activate if the IR cut filter is in "On" mode.
+	 </p>
+	 <p>
+	 Supported operations:
+	 </p>
+	 <ul>
+		<li><code>ActivateLight</code> - turn on the light manually</li>
+		<li><code>DeactivateLight</code> - turn off the light manually </li>
+		<li><code>EnableLight</code> - enable the light functionality</li>
+		<li><code>DisableLight</code> - disable the light functionality.
+		This prevents users and clients from turning on the light.</li>
+	</ul>
+	<h2>Synchronize with Day/Night Mode</h2>
+	<p>
+		For products supporting day/night mode, the light can be
+		synchronized with day/night mode so that the light is
+		automatically activated in night mode. For products with an IR cut
+		filter, the IR cut filter must be in "Auto" or "Off" mode for
+		day/night synchronization to work.
+	</p>
+	<p>
+		Supported operations:
+	</p>
+	<ul>
+		<li><code>GetLightSynchronizeDayNightMode</code> - check if
+		synchronization with day/night mode is enabled</li>
+		<li><code>SetLightSynchronizeDayNightMode</code> - enable or
+		disable automatic synchronization with day/night mode</li>
+	</ul>
+	 <h2>Light Intensity</h2>
+	 <p>
+		The light intensity can be controlled automatically or set manually.
+		Due to power or heat constraints, the actual light intensity may be
+		lower than the manually set value.
+	 </p>
+	 <p>
+		Supported operations:
+	</p>
+	<ul>
+		<li><code>SetAutomaticIntensityMode</code> - enable automatic light
+		intensity control</li>
+		<li><code>SetManualIntensity</code> - set the intensity manually</li>
+		<li><code>GetManualIntensity</code> - get the intensity sent in the
+		<code>SetManualIntensity</code> request</li>
+		<li><code>GetCurrentIntensity</code> - get the current light intensity</li>
+		<li><code>GetValidIntensity</code> - list valid light intensity values</li>
+	</ul>
+	<h2>Angle of Illumination</h2>
+	<p>
+	The angle of illumination defines the width of the light beam. A small
+	angle of illumination gives a narrow beam, a large angle of illumination
+	gives a wide beam.
+	</p>
+	<p>
+		The angle of illumination can be controlled automatically or set manually.
+		In automatic mode, the angle of illumination is set	according to the
+		camera's angle of view. For products with mechanical zoom, the angle of
+		illumination will be adjusted if the angle of view changes.
+	</p>
+	<ul>
+		<li><code>SetAutomaticAngleOfIlluminationMode</code> - control the angle of
+		illumination automatically</li>
+		<li><code>SetManualAngleOfIllumination</code> - set the angle of illumination
+		manually </li>
+		<li><code>GetManualAngleOfIllumination</code> - get the angle of illumination
+		sent in the <code>SetManualAngleOfIllumination</code> request</li>
+		<li><code>GetCurrentAngleOfIllumination</code> - get the current angle of
+		illumination</li>
+		<li><code>GetValidAngleOfIllumination</code> - list valid angle of illumination values</li>
+	</ul>
+    </wsdl:documentation>
+  <wsdl:types>
+    <xs:schema targetNamespace="http://www.axis.com/vapix/ws/light"
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        xmlns:wstop="http://docs.oasis-open.org/wsn/t-1"
+        elementFormDefault="qualified">
+      <!--===========Common====================-->
+      <xs:element name="GetServiceCapabilities">
+				<xs:complexType>
+					<xs:sequence/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="GetServiceCapabilitiesResponse">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Capabilities" type="ali:Capabilities">
+							<xs:annotation>
+								<xs:documentation>Capabilities supported by the Light Control Service.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+      <xs:element name="ActivateLight">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="LightID" type="xs:string">
+              <xs:annotation><xs:documentation>
+                The Light ID
+              </xs:documentation></xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="ActivateLightResponse">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="DeactivateLight">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="LightID" type="xs:string">
+              <xs:annotation><xs:documentation>
+                The Light ID
+              </xs:documentation></xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="DeactivateLightResponse">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="EnableLight">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="LightID" type="xs:string">
+              <xs:annotation><xs:documentation>
+                The Light ID
+              </xs:documentation></xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="EnableLightResponse">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="DisableLight">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="LightID" type="xs:string">
+              <xs:annotation><xs:documentation>
+                The Light ID
+              </xs:documentation></xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="DisableLightResponse">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="GetLightStatus">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="LightID" type="xs:string">
+              <xs:annotation><xs:documentation>
+                The Light ID
+              </xs:documentation></xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetLightStatusResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Status" type="xs:boolean">
+              <xs:annotation><xs:documentation>
+                The light is active or inactive.
+              </xs:documentation></xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetLightInformation">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="GetLightInformationResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="LightInfo" type="ali:LightInformationList">
+              <xs:annotation><xs:documentation>
+                Available light information.
+              </xs:documentation></xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <!--===========Intensity====================-->
+      <xs:element name="SetAutomaticIntensityMode">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="LightID" type="xs:string">
+              <xs:annotation><xs:documentation>
+                The Light ID
+              </xs:documentation></xs:annotation>
+            </xs:element>
+            <xs:element name="Automatic" type="xs:boolean">
+              <xs:annotation><xs:documentation>
+              </xs:documentation></xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetAutomaticIntensityModeResponse">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="SetManualIntensity">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="LightID" type="xs:string">
+              <xs:annotation><xs:documentation>
+                The Light ID
+              </xs:documentation></xs:annotation>
+            </xs:element>
+            <xs:element name="Intensity" type="xs:int">
+              <xs:annotation><xs:documentation>
+                The intensity to set.
+              </xs:documentation></xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetManualIntensityResponse">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="GetManualIntensity">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="LightID" type="xs:string">
+              <xs:annotation><xs:documentation>
+                The Light ID
+              </xs:documentation></xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    <xs:element name="GetManualIntensityResponse">
+      <xs:complexType>
+        <xs:sequence>
+          <xs:element name="Intensity" type="xs:int">
+            <xs:annotation><xs:documentation>
+              Intensity provided in the request.
+            </xs:documentation></xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:element>
+      <xs:element name="GetCurrentIntensity">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="LightID" type="xs:string">
+              <xs:annotation><xs:documentation>
+                The Light ID
+              </xs:documentation></xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetCurrentIntensityResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Intensity" type="xs:int">
+              <xs:annotation><xs:documentation>
+                The current intensity.
+              </xs:documentation></xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetValidIntensity">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="LightID" type="xs:string">
+              <xs:annotation><xs:documentation>
+                The Light ID
+              </xs:documentation></xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetValidIntensityResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="RangeList" type="ali:IntRangeList">
+              <xs:annotation><xs:documentation>
+                Valid intensity values.
+              </xs:documentation></xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <!--===========AngleOfIllumination====================-->
+      <xs:element name="SetManualAngleOfIllumination">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="LightID" type="xs:string">
+              <xs:annotation><xs:documentation>
+                The Light ID
+              </xs:documentation></xs:annotation>
+            </xs:element>
+            <xs:element name="AngleOfIllumination" type="xs:int">
+              <xs:annotation><xs:documentation>
+                The angle of illumination.
+              </xs:documentation></xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetManualAngleOfIlluminationResponse">
+        <xs:complexType/>
+      </xs:element>
+        <xs:element name="GetManualAngleOfIllumination">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="LightID" type="xs:string">
+                <xs:annotation><xs:documentation>
+                  The Light ID
+                </xs:documentation></xs:annotation>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="GetManualAngleOfIlluminationResponse">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="AngleOfIllumination" type="xs:int">
+                <xs:annotation><xs:documentation>
+                  Angle of illumination provided in the request.
+                </xs:documentation></xs:annotation>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="GetValidAngleOfIllumination">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="LightID" type="xs:string">
+                <xs:annotation><xs:documentation>
+                  The Light ID
+                </xs:documentation></xs:annotation>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="GetValidAngleOfIlluminationResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="RangeList" type="ali:IntRangeList">
+              <xs:annotation><xs:documentation>
+                Valid angle of illumination values.
+              </xs:documentation></xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetCurrentAngleOfIllumination">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="LightID" type="xs:string">
+              <xs:annotation><xs:documentation>
+                The Light ID
+              </xs:documentation></xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetCurrentAngleOfIlluminationResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="AngleOfIllumination" type="xs:int">
+              <xs:annotation><xs:documentation>
+                The current angle of illumination.
+              </xs:documentation></xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetAutomaticAngleOfIlluminationMode">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="LightID" type="xs:string">
+              <xs:annotation><xs:documentation>
+                The Light ID
+              </xs:documentation></xs:annotation>
+            </xs:element>
+            <xs:element name="Automatic" type="xs:boolean">
+              <xs:annotation><xs:documentation>
+              </xs:documentation></xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetAutomaticAngleOfIlluminationModeResponse">
+        <xs:complexType/>
+      </xs:element>
+      <!--=========Day/Night sync======================-->
+      <xs:element name="SetLightSynchronizeDayNightMode">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="LightID" type="xs:string">
+              <xs:annotation><xs:documentation>
+                The Light ID
+              </xs:documentation></xs:annotation>
+            </xs:element>
+            <xs:element name="Synchronize" type="xs:boolean">
+              <xs:annotation><xs:documentation>
+              </xs:documentation></xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetLightSynchronizeDayNightModeResponse">
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="GetLightSynchronizeDayNightMode">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="LightID" type="xs:string">
+              <xs:annotation><xs:documentation>
+                The Light ID
+              </xs:documentation></xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetLightSynchronizeDayNightModeResponse">
+        <xs:complexType>
+        <xs:sequence>
+          <xs:element name="DayNightSync" type="xs:boolean">
+            <xs:annotation><xs:documentation>
+              Day/night synchronization is enabled.
+            </xs:documentation></xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <!--===========Fault====================-->
+      <xs:element name="InvalidLightIDFault">
+        <xs:annotation>
+          <xs:documentation>
+            Invalid LightID.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="InvalidIntensityFault">
+        <xs:annotation>
+          <xs:documentation>
+            Invalid Intensity.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="InvalidAngleOfIlluminationFault">
+        <xs:annotation>
+          <xs:documentation>
+            Invalid angle of illumination.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="NotSupportedFault">
+        <xs:annotation>
+          <xs:documentation>
+            Function not supported.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType/>
+      </xs:element>
+      <xs:element name="CardMalfunctioningFault">
+        <xs:annotation>
+          <xs:documentation>
+            Card malfuntioning.
+          </xs:documentation>
+        </xs:annotation>
+        <xs:complexType/>
+      </xs:element>
+      <!--=========Type definitions======================-->
+      <xs:complexType name="LightInformationList">
+        <xs:sequence>
+          <xs:element name="LightInformation" type="ali:LightInformation" minOccurs="0" maxOccurs="unbounded">
+            <xs:annotation><xs:documentation>
+              Light Information.
+            </xs:documentation></xs:annotation>
+          </xs:element>
+      </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="LightInformation">
+        <xs:sequence>
+          <xs:element name="LightID" type="xs:string">
+            <xs:annotation><xs:documentation>
+              The Light ID
+            </xs:documentation></xs:annotation>
+          </xs:element>
+          <xs:element name="LightType" type="xs:string">
+            <xs:annotation><xs:documentation>
+              The light type.
+            </xs:documentation></xs:annotation>
+          </xs:element>
+          <xs:element name="Enabled" type="xs:boolean">
+            <xs:annotation><xs:documentation>
+              The light is enabled.
+            </xs:documentation></xs:annotation>
+          </xs:element>
+          <xs:element name="SynchronizeDayNightMode" type="xs:boolean">
+            <xs:annotation><xs:documentation>
+              Indicating if the light is synchronized with day night.
+            </xs:documentation></xs:annotation>
+          </xs:element>
+          <xs:element name="LightState" type="xs:boolean">
+            <xs:annotation><xs:documentation>
+              Indicating if the light ON or OFF.
+            </xs:documentation></xs:annotation>
+          </xs:element>
+          <xs:element name="AutomaticIntensityMode" type="xs:boolean">
+            <xs:annotation><xs:documentation>
+              Indicating if the mode of automatic intensity.
+            </xs:documentation></xs:annotation>
+          </xs:element>
+          <xs:element name="AutomaticAngleOfIlluminationMode" type="xs:boolean">
+            <xs:annotation><xs:documentation>
+              Indicating if the mode of automatic angle of illumination.
+            </xs:documentation></xs:annotation>
+          </xs:element>
+          <xs:element name="Error" type="xs:boolean">
+            <xs:annotation><xs:documentation>
+              An error has occurred.
+            </xs:documentation></xs:annotation>
+          </xs:element>
+          <xs:element name="ErrorInfo" type="xs:string">
+            <xs:annotation><xs:documentation>
+              Error description.
+            </xs:documentation></xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Capabilities">
+        <xs:sequence>
+          <xs:element name="AutomaticIntensitySupport" type="xs:boolean">
+            <xs:annotation><xs:documentation>
+              SetAutomaticIntensityMode is supported.
+            </xs:documentation></xs:annotation>
+          </xs:element>
+          <xs:element name="ManualIntensitySupport" type="xs:boolean">
+            <xs:annotation><xs:documentation>
+              GetManualIntensity and SetManualIntensity are supported.
+            </xs:documentation></xs:annotation>
+          </xs:element>
+          <xs:element name="GetCurrentIntensitySupport" type="xs:boolean">
+            <xs:annotation><xs:documentation>
+              GetCurrentIntensity is supported.
+            </xs:documentation></xs:annotation>
+          </xs:element>
+          <xs:element name="ManualAngleOfIlluminationSupport" type="xs:boolean">
+            <xs:annotation><xs:documentation>
+              SetManualAngleOfIllumination is supported.
+            </xs:documentation></xs:annotation>
+          </xs:element>
+          <xs:element name="AutomaticAngleOfIlluminationSupport" type="xs:boolean">
+            <xs:annotation><xs:documentation>
+              SetAutomaticAngleOfIlluminationMode is supported.
+            </xs:documentation></xs:annotation>
+          </xs:element>
+          <xs:element name="DayNightSynchronizeSupport" type="xs:boolean">
+            <xs:annotation><xs:documentation>
+              SetLightSynchronizeDayNightMode is supported.
+            </xs:documentation></xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="IntRangeList">
+        <xs:sequence>
+          <xs:element name="IntRange" type="ali:IntRange" minOccurs="0" maxOccurs="unbounded">
+            <xs:annotation><xs:documentation>
+              A list of IntRange objects.
+            </xs:documentation></xs:annotation>
+          </xs:element>
+      </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="IntRange">
+        <xs:sequence>
+        <xs:element name="Low" type="xs:integer">
+            <xs:annotation><xs:documentation>
+              The lowest value in the range.
+            </xs:documentation></xs:annotation>
+          </xs:element>
+          <xs:element name="High" type="xs:integer">
+            <xs:annotation><xs:documentation>
+             The highest value in the range.
+            </xs:documentation></xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+  </wsdl:types>
+  <!--===========Common====================-->
+  <wsdl:message name="ActivateLightRequest">
+    <wsdl:part name="parameters" element="ali:ActivateLight"/>
+  </wsdl:message>
+  <wsdl:message name="ActivateLightResponse">
+    <wsdl:part name="parameters" element="ali:ActivateLightResponse"/>
+  </wsdl:message>
+  <wsdl:message name="DeactivateLightRequest">
+    <wsdl:part name="parameters" element="ali:DeactivateLight"/>
+  </wsdl:message>
+  <wsdl:message name="DeactivateLightResponse">
+    <wsdl:part name="parameters" element="ali:DeactivateLightResponse"/>
+  </wsdl:message>
+  <wsdl:message name="EnableLightRequest">
+    <wsdl:part name="parameters" element="ali:EnableLight"/>
+  </wsdl:message>
+  <wsdl:message name="EnableLightResponse">
+    <wsdl:part name="parameters" element="ali:EnableLightResponse"/>
+  </wsdl:message>
+  <wsdl:message name="DisableLightRequest">
+    <wsdl:part name="parameters" element="ali:DisableLight"/>
+  </wsdl:message>
+  <wsdl:message name="DisableLightResponse">
+    <wsdl:part name="parameters" element="ali:DisableLightResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetLightStatusRequest">
+    <wsdl:part name="parameters" element="ali:GetLightStatus"/>
+  </wsdl:message>
+  <wsdl:message name="GetLightStatusResponse">
+    <wsdl:part name="parameters" element="ali:GetLightStatusResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetLightInformationRequest">
+    <wsdl:part name="parameters" element="ali:GetLightInformation"/>
+  </wsdl:message>
+  <wsdl:message name="GetLightInformationResponse">
+    <wsdl:part name="parameters" element="ali:GetLightInformationResponse"/>
+  </wsdl:message>
+    <wsdl:message name="GetServiceCapabilitiesRequest">
+    <wsdl:part name="parameters" element="ali:GetServiceCapabilities"/>
+  </wsdl:message>
+  <wsdl:message name="GetServiceCapabilitiesResponse">
+    <wsdl:part name="parameters" element="ali:GetServiceCapabilitiesResponse"/>
+  </wsdl:message>
+  <!--===========Intensity====================-->
+  <wsdl:message name="SetAutomaticIntensityModeRequest">
+    <wsdl:part name="parameters" element="ali:SetAutomaticIntensityMode"/>
+  </wsdl:message>
+  <wsdl:message name="SetAutomaticIntensityModeResponse">
+    <wsdl:part name="parameters" element="ali:SetAutomaticIntensityModeResponse"/>
+  </wsdl:message>
+  <wsdl:message name="SetManualIntensityRequest">
+    <wsdl:part name="parameters" element="ali:SetManualIntensity"/>
+  </wsdl:message>
+  <wsdl:message name="SetManualIntensityResponse">
+    <wsdl:part name="parameters" element="ali:SetManualIntensityResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetManualIntensityRequest">
+    <wsdl:part name="parameters" element="ali:GetManualIntensity"/>
+  </wsdl:message>
+  <wsdl:message name="GetManualIntensityResponse">
+    <wsdl:part name="parameters" element="ali:GetManualIntensityResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetCurrentIntensityRequest">
+    <wsdl:part name="parameters" element="ali:GetCurrentIntensity"/>
+  </wsdl:message>
+  <wsdl:message name="GetCurrentIntensityResponse">
+    <wsdl:part name="parameters" element="ali:GetCurrentIntensityResponse"/>
+  </wsdl:message>
+    <wsdl:message name="GetValidIntensityRequest">
+    <wsdl:part name="parameters" element="ali:GetValidIntensity"/>
+  </wsdl:message>
+  <wsdl:message name="GetValidIntensityResponse">
+    <wsdl:part name="parameters" element="ali:GetValidIntensityResponse"/>
+  </wsdl:message>
+  <!--===========AngleOfIllumination====================-->
+  <wsdl:message name="SetManualAngleOfIlluminationRequest">
+    <wsdl:part name="parameters" element="ali:SetManualAngleOfIllumination"/>
+  </wsdl:message>
+  <wsdl:message name="SetManualAngleOfIlluminationResponse">
+    <wsdl:part name="parameters" element="ali:SetManualAngleOfIlluminationResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetManualAngleOfIlluminationRequest">
+    <wsdl:part name="parameters" element="ali:GetManualAngleOfIllumination"/>
+  </wsdl:message>
+  <wsdl:message name="GetManualAngleOfIlluminationResponse">
+    <wsdl:part name="parameters" element="ali:GetManualAngleOfIlluminationResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetCurrentAngleOfIlluminationRequest">
+    <wsdl:part name="parameters" element="ali:GetCurrentAngleOfIllumination"/>
+  </wsdl:message>
+  <wsdl:message name="GetCurrentAngleOfIlluminationResponse">
+    <wsdl:part name="parameters" element="ali:GetCurrentAngleOfIlluminationResponse"/>
+  </wsdl:message>
+  <wsdl:message name="SetAutomaticAngleOfIlluminationModeRequest">
+    <wsdl:part name="parameters" element="ali:SetAutomaticAngleOfIlluminationMode"/>
+  </wsdl:message>
+  <wsdl:message name="SetAutomaticAngleOfIlluminationModeResponse">
+    <wsdl:part name="parameters" element="ali:SetAutomaticAngleOfIlluminationModeResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetValidAngleOfIlluminationRequest">
+    <wsdl:part name="parameters" element="ali:GetValidAngleOfIllumination"/>
+  </wsdl:message>
+  <wsdl:message name="GetValidAngleOfIlluminationResponse">
+    <wsdl:part name="parameters" element="ali:GetValidAngleOfIlluminationResponse"/>
+  </wsdl:message>
+  <!--===========Day/Night synchronization====================-->
+  <wsdl:message name="SetLightSynchronizeDayNightModeRequest">
+    <wsdl:part name="parameters" element="ali:SetLightSynchronizeDayNightMode"/>
+  </wsdl:message>
+  <wsdl:message name="SetLightSynchronizeDayNightModeResponse">
+    <wsdl:part name="parameters" element="ali:SetLightSynchronizeDayNightModeResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetLightSynchronizeDayNightModeRequest">
+    <wsdl:part name="parameters" element="ali:GetLightSynchronizeDayNightMode"/>
+  </wsdl:message>
+  <wsdl:message name="GetLightSynchronizeDayNightModeResponse">
+    <wsdl:part name="parameters" element="ali:GetLightSynchronizeDayNightModeResponse"/>
+  </wsdl:message>
+  <!--===========Faults====================-->
+  <wsdl:message name="InvalidLightIDFault">
+    <wsdl:part name="parameters" element="ali:InvalidLightIDFault"/>
+  </wsdl:message>
+  <wsdl:message name="InvalidIntensityFault">
+    <wsdl:part name="parameters" element="ali:InvalidIntensityFault"/>
+  </wsdl:message>
+  <wsdl:message name="InvalidAngleOfIlluminationFault">
+    <wsdl:part name="parameters" element="ali:InvalidAngleOfIlluminationFault"/>
+  </wsdl:message>
+  <wsdl:message name="NotSupportedFault">
+    <wsdl:part name="parameters" element="ali:NotSupportedFault"/>
+  </wsdl:message>
+  <wsdl:message name="CardMalfunctioningFault">
+    <wsdl:part name="parameters" element="ali:CardMalfunctioningFault"/>
+  </wsdl:message>
+  <!--===========Ports Common====================-->
+  <wsdl:portType name="LightCommon">
+        <wsdl:documentation>
+        This is light common port documentation.<operator/><admin/>
+      </wsdl:documentation>
+    <wsdl:operation name="ActivateLight">
+      <wsdl:documentation>
+        Activate the light.<operator/><admin/>
+      </wsdl:documentation>
+      <wsdl:input message="ali:ActivateLightRequest"/>
+      <wsdl:output message="ali:ActivateLightResponse"/>
+      <wsdl:fault name="InvalidLightIDFault"
+        message="ali:InvalidLightIDFault"/>
+      <wsdl:fault name="CardMalfunctioningFault"
+        message="ali:CardMalfunctioningFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="DeactivateLight">
+      <wsdl:documentation>
+        Deativate the light.<operator/><admin/>
+      </wsdl:documentation>
+      <wsdl:input message="ali:DeactivateLightRequest"/>
+      <wsdl:output message="ali:DeactivateLightResponse"/>
+      <wsdl:fault name="InvalidLightIDFault"
+        message="ali:InvalidLightIDFault"/>
+      <wsdl:fault name="CardMalfunctioningFault"
+        message="ali:CardMalfunctioningFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="EnableLight">
+      <wsdl:documentation>
+        Enable the light functionality.<admin/>
+      </wsdl:documentation>
+      <wsdl:input message="ali:EnableLightRequest"/>
+      <wsdl:output message="ali:EnableLightResponse"/>
+      <wsdl:fault name="InvalidLightIDFault"
+        message="ali:InvalidLightIDFault"/>
+      <wsdl:fault name="CardMalfunctioningFault"
+        message="ali:CardMalfunctioningFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="DisableLight">
+      <wsdl:documentation>
+        Disable the light functionality.<operator/><admin/>
+      </wsdl:documentation>
+      <wsdl:input message="ali:DisableLightRequest"/>
+      <wsdl:output message="ali:DisableLightResponse"/>
+      <wsdl:fault name="InvalidLightIDFault"
+        message="ali:InvalidLightIDFault"/>
+      <wsdl:fault name="CardMalfunctioningFault"
+        message="ali:CardMalfunctioningFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetLightStatus">
+      <wsdl:documentation>
+        Get the light status of a given Light ID.<operator/><admin/>
+      </wsdl:documentation>
+      <wsdl:input message="ali:GetLightStatusRequest"/>
+      <wsdl:output message="ali:GetLightStatusResponse"/>
+      <wsdl:fault name="InvalidLightIDFault"
+        message="ali:InvalidLightIDFault"/>
+      <wsdl:fault name="CardMalfunctioningFault"
+        message="ali:CardMalfunctioningFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetLightInformation">
+      <wsdl:documentation>
+        List light control information.<operator/><admin/>
+      </wsdl:documentation>
+      <wsdl:input message="ali:GetLightInformationRequest"/>
+      <wsdl:output message="ali:GetLightInformationResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetServiceCapabilities">
+      <wsdl:documentation>
+        List the light service capablilities.<operator/><admin/>
+      </wsdl:documentation>
+      <wsdl:input message="ali:GetServiceCapabilitiesRequest"/>
+      <wsdl:output message="ali:GetServiceCapabilitiesResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <!--===========Ports Intensity====================-->
+  <wsdl:portType name="Intensity">
+    <wsdl:operation name="SetAutomaticIntensityMode">
+      <wsdl:documentation>
+        Enable automatic light intensity control.<operator/><admin/>
+      </wsdl:documentation>
+      <wsdl:input message="ali:SetAutomaticIntensityModeRequest"/>
+      <wsdl:output message="ali:SetAutomaticIntensityModeResponse"/>
+      <wsdl:fault name="InvalidLightIDFault"
+        message="ali:InvalidLightIDFault"/>
+      <wsdl:fault name="NotSupportedFault"
+        message="ali:NotSupportedFault"/>
+      <wsdl:fault name="CardMalfunctioningFault"
+        message="ali:CardMalfunctioningFault"/>
+        </wsdl:operation>
+    <wsdl:operation name="SetManualIntensity">
+      <wsdl:documentation>
+        Set the intensity manually.<operator/><admin/>
+      </wsdl:documentation>
+      <wsdl:input message="ali:SetManualIntensityRequest"/>
+      <wsdl:output message="ali:SetManualIntensityResponse"/>
+      <wsdl:fault name="InvalidLightIDFault"
+        message="ali:InvalidLightIDFault"/>
+      <wsdl:fault name="InvalidIntensityFault"
+        message="ali:InvalidIntensityFault"/>
+      <wsdl:fault name="NotSupportedFault"
+        message="ali:NotSupportedFault"/>
+      <wsdl:fault name="CardMalfunctioningFault"
+        message="ali:CardMalfunctioningFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetManualIntensity">
+      <wsdl:documentation>
+        Get the intensity sent in the SetManualIntensity request.<operator/><admin/>
+      </wsdl:documentation>
+      <wsdl:input message="ali:GetManualIntensityRequest"/>
+      <wsdl:output message="ali:GetManualIntensityResponse"/>
+      <wsdl:fault name="InvalidLightIDFault"
+        message="ali:InvalidLightIDFault"/>
+      <wsdl:fault name="NotSupportedFault"
+        message="ali:NotSupportedFault"/>
+      <wsdl:fault name="CardMalfunctioningFault"
+        message="ali:CardMalfunctioningFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetCurrentIntensity">
+      <wsdl:documentation>
+        Get the current intensity.<operator/><admin/>
+      </wsdl:documentation>
+      <wsdl:input message="ali:GetCurrentIntensityRequest"/>
+      <wsdl:output message="ali:GetCurrentIntensityResponse"/>
+      <wsdl:fault name="InvalidLightIDFault"
+        message="ali:InvalidLightIDFault"/>
+      <wsdl:fault name="NotSupportedFault"
+        message="ali:NotSupportedFault"/>
+      <wsdl:fault name="CardMalfunctioningFault"
+        message="ali:CardMalfunctioningFault"/>
+    </wsdl:operation>
+        <wsdl:operation name="GetValidIntensity">
+      <wsdl:documentation>
+        List valid light intensity values.<operator/><admin/>
+      </wsdl:documentation>
+      <wsdl:input message="ali:GetValidIntensityRequest"/>
+      <wsdl:output message="ali:GetValidIntensityResponse"/>
+      <wsdl:fault name="InvalidLightIDFault"
+        message="ali:InvalidLightIDFault"/>
+      <wsdl:fault name="NotSupportedFault"
+        message="ali:NotSupportedFault"/>
+      <wsdl:fault name="CardMalfunctioningFault"
+        message="ali:CardMalfunctioningFault"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <!--===========Ports AngleOfIllumination====================-->
+  <wsdl:portType name="AngleOfIllumination">
+    <wsdl:operation name="SetManualAngleOfIllumination">
+      <wsdl:documentation>
+        Set the angle of illumination manually.<operator/><admin/>
+      </wsdl:documentation>
+      <wsdl:input message="ali:SetManualAngleOfIlluminationRequest"/>
+      <wsdl:output message="ali:SetManualAngleOfIlluminationResponse"/>
+      <wsdl:fault name="InvalidLightIDFault"
+        message="ali:InvalidLightIDFault"/>
+      <wsdl:fault name="InvalidAngleOfIlluminationFault"
+        message="ali:InvalidAngleOfIlluminationFault"/>
+      <wsdl:fault name="NotSupportedFault"
+        message="ali:NotSupportedFault"/>
+      <wsdl:fault name="CardMalfunctioningFault"
+        message="ali:CardMalfunctioningFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetManualAngleOfIllumination">
+      <wsdl:documentation>
+        Get the angle of illumination sent in the SetManualAngleOfIllumination request.<operator/><admin/>
+      </wsdl:documentation>
+      <wsdl:input message="ali:GetManualAngleOfIlluminationRequest"/>
+      <wsdl:output message="ali:GetManualAngleOfIlluminationResponse"/>
+      <wsdl:fault name="InvalidLightIDFault"
+        message="ali:InvalidLightIDFault"/>
+      <wsdl:fault name="NotSupportedFault"
+        message="ali:NotSupportedFault"/>
+      <wsdl:fault name="CardMalfunctioningFault"
+        message="ali:CardMalfunctioningFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetCurrentAngleOfIllumination">
+      <wsdl:documentation>
+        Get the current angle of illumination.<operator/><admin/>
+      </wsdl:documentation>
+      <wsdl:input message="ali:GetCurrentAngleOfIlluminationRequest"/>
+      <wsdl:output message="ali:GetCurrentAngleOfIlluminationResponse"/>
+      <wsdl:fault name="InvalidLightIDFault"
+        message="ali:InvalidLightIDFault"/>
+      <wsdl:fault name="NotSupportedFault"
+        message="ali:NotSupportedFault"/>
+      <wsdl:fault name="CardMalfunctioningFault"
+        message="ali:CardMalfunctioningFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="SetAutomaticAngleOfIlluminationMode">
+      <wsdl:documentation>
+        Control the angle of illumination automatically.<operator/><admin/>
+      </wsdl:documentation>
+      <wsdl:input message="ali:SetAutomaticAngleOfIlluminationModeRequest"/>
+      <wsdl:output message="ali:SetAutomaticAngleOfIlluminationModeResponse"/>
+      <wsdl:fault name="InvalidLightIDFault"
+        message="ali:InvalidLightIDFault"/>
+      <wsdl:fault name="NotSupportedFault"
+        message="ali:NotSupportedFault"/>
+      <wsdl:fault name="CardMalfunctioningFault"
+        message="ali:CardMalfunctioningFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetValidAngleOfIllumination">
+      <wsdl:documentation>
+        List valid angle of illumination values.<operator/><admin/>
+      </wsdl:documentation>
+      <wsdl:input message="ali:GetValidAngleOfIlluminationRequest"/>
+      <wsdl:output message="ali:GetValidAngleOfIlluminationResponse"/>
+      <wsdl:fault name="InvalidLightIDFault"
+        message="ali:InvalidLightIDFault"/>
+      <wsdl:fault name="NotSupportedFault"
+        message="ali:NotSupportedFault"/>
+      <wsdl:fault name="CardMalfunctioningFault"
+        message="ali:CardMalfunctioningFault"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <!--===========Ports DayNightSynchronize====================-->
+  <wsdl:portType name="DayNightSynchronize">
+    <wsdl:operation name="SetLightSynchronizeDayNightMode">
+      <wsdl:documentation>
+        Enable automatic synchronization with day/night mode.<operator/><admin/>
+      </wsdl:documentation>
+      <wsdl:input message="ali:SetLightSynchronizeDayNightModeRequest"/>
+      <wsdl:output message="ali:SetLightSynchronizeDayNightModeResponse"/>
+            <wsdl:fault name="InvalidLightIDFault"
+        message="ali:InvalidLightIDFault"/>
+      <wsdl:fault name="NotSupportedFault"
+        message="ali:NotSupportedFault"/>
+      <wsdl:fault name="CardMalfunctioningFault"
+        message="ali:CardMalfunctioningFault"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetLightSynchronizeDayNightMode">
+      <wsdl:documentation>
+        Check if automatic synchronization with day/night mode is enabled.<operator/><admin/>
+      </wsdl:documentation>
+      <wsdl:input message="ali:GetLightSynchronizeDayNightModeRequest"/>
+      <wsdl:output message="ali:GetLightSynchronizeDayNightModeResponse"/>
+      <wsdl:fault name="InvalidLightIDFault"
+        message="ali:InvalidLightIDFault"/>
+      <wsdl:fault name="NotSupportedFault"
+        message="ali:NotSupportedFault"/>
+      <wsdl:fault name="CardMalfunctioningFault"
+        message="ali:CardMalfunctioningFault"/>
+    </wsdl:operation>
+  </wsdl:portType>
+      <!--=============Bindings==================-->
+      <wsdl:binding name="CommonBinding" type="ali:LightCommon">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <!--===============================-->
+        <wsdl:operation name="ActivateLight">
+          <soap:operation soapAction="http://www.axis.com/vapix/ws/light/ActivateLight"/>
+          <wsdl:input>
+            <soap:body use="literal"/>
+          </wsdl:input>
+          <wsdl:output>
+            <soap:body use="literal"/>
+          </wsdl:output>
+          <wsdl:fault name="InvalidLightIDFault">
+            <soap:fault name="InvalidLightIDFault" use="literal"/>
+          </wsdl:fault>
+          <wsdl:fault name="CardMalfunctioningFault">
+            <soap:fault name="CardMalfunctioningFault" use="literal"/>
+          </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="DeactivateLight">
+          <soap:operation soapAction="http://www.axis.com/vapix/ws/light/DeactivateLight"/>
+          <wsdl:input>
+            <soap:body use="literal"/>
+          </wsdl:input>
+          <wsdl:output>
+            <soap:body use="literal"/>
+          </wsdl:output>
+          <wsdl:fault name="InvalidLightIDFault">
+            <soap:fault name="InvalidLightIDFault" use="literal"/>
+          </wsdl:fault>
+         <wsdl:fault name="CardMalfunctioningFault">
+            <soap:fault name="CardMalfunctioningFault" use="literal"/>
+          </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="EnableLight">
+          <soap:operation soapAction="http://www.axis.com/vapix/ws/light/EnableLight"/>
+          <wsdl:input>
+            <soap:body use="literal"/>
+          </wsdl:input>
+          <wsdl:output>
+            <soap:body use="literal"/>
+          </wsdl:output>
+          <wsdl:fault name="InvalidLightIDFault">
+            <soap:fault name="InvalidLightIDFault" use="literal"/>
+          </wsdl:fault>
+          <wsdl:fault name="CardMalfunctioningFault">
+            <soap:fault name="CardMalfunctioningFault" use="literal"/>
+          </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="DisableLight">
+          <soap:operation soapAction="http://www.axis.com/vapix/ws/light/EnableLight"/>
+          <wsdl:input>
+            <soap:body use="literal"/>
+          </wsdl:input>
+          <wsdl:output>
+            <soap:body use="literal"/>
+          </wsdl:output>
+          <wsdl:fault name="InvalidLightIDFault">
+            <soap:fault name="InvalidLightIDFault" use="literal"/>
+          </wsdl:fault>
+          <wsdl:fault name="CardMalfunctioningFault">
+            <soap:fault name="CardMalfunctioningFault" use="literal"/>
+          </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="GetLightStatus">
+          <soap:operation soapAction="http://www.axis.com/vapix/ws/light/GetLightStatus"/>
+          <wsdl:input>
+            <soap:body use="literal"/>
+          </wsdl:input>
+          <wsdl:output>
+            <soap:body use="literal"/>
+          </wsdl:output>
+          <wsdl:fault name="InvalidLightIDFault">
+            <soap:fault name="InvalidLightIDFault" use="literal"/>
+          </wsdl:fault>
+          <wsdl:fault name="CardMalfunctioningFault">
+            <soap:fault name="CardMalfunctioningFault" use="literal"/>
+          </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="GetLightInformation">
+          <soap:operation soapAction="http://www.axis.com/vapix/ws/light/GetLightInformation"/>
+          <wsdl:input>
+            <soap:body use="literal"/>
+          </wsdl:input>
+          <wsdl:output>
+            <soap:body use="literal"/>
+          </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetServiceCapabilities">
+          <soap:operation soapAction="http://www.axis.com/vapix/ws/light/GetServiceCapabilities"/>
+          <wsdl:input>
+            <soap:body use="literal"/>
+          </wsdl:input>
+          <wsdl:output>
+            <soap:body use="literal"/>
+          </wsdl:output>
+        </wsdl:operation>
+      </wsdl:binding>
+  <wsdl:binding name="IntensityBinding" type="ali:Intensity">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <!--===============================-->
+    <wsdl:operation name="SetAutomaticIntensityMode">
+      <soap:operation soapAction="http://www.axis.com/vapix/ws/light/SetAutomaticIntensityMode"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="InvalidLightIDFault">
+        <soap:fault name="InvalidLightIDFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="NotSupportedFault">
+        <soap:fault name="NotSupportedFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="CardMalfunctioningFault">
+         <soap:fault name="CardMalfunctioningFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="SetManualIntensity">
+      <soap:operation soapAction="http://www.axis.com/vapix/ws/light/SetManualIntensity"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="InvalidIntensityFault">
+        <soap:fault name="InvalidIntensityFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="InvalidLightIDFault">
+        <soap:fault name="InvalidLightIDFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="NotSupportedFault">
+        <soap:fault name="NotSupportedFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="CardMalfunctioningFault">
+        <soap:fault name="CardMalfunctioningFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetManualIntensity">
+      <soap:operation soapAction="http://www.axis.com/vapix/ws/light/GetManualIntensity"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="InvalidLightIDFault">
+        <soap:fault name="InvalidLightIDFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="NotSupportedFault">
+        <soap:fault name="NotSupportedFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="CardMalfunctioningFault">
+            <soap:fault name="CardMalfunctioningFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetCurrentIntensity">
+      <soap:operation soapAction="http://www.axis.com/vapix/ws/light/GetCurrentIntensity"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="InvalidLightIDFault">
+        <soap:fault name="InvalidLightIDFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="NotSupportedFault">
+        <soap:fault name="NotSupportedFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="CardMalfunctioningFault">
+            <soap:fault name="CardMalfunctioningFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+        <wsdl:operation name="GetValidIntensity">
+      <soap:operation soapAction="http://www.axis.com/vapix/ws/light/GetValidIntensity"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="InvalidLightIDFault">
+        <soap:fault name="InvalidLightIDFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="NotSupportedFault">
+        <soap:fault name="NotSupportedFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="CardMalfunctioningFault">
+        <soap:fault name="CardMalfunctioningFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="AngleOfIlluminationBinding" type="ali:AngleOfIllumination">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <!--===============================-->
+    <wsdl:operation name="SetManualAngleOfIllumination">
+      <soap:operation soapAction="http://www.axis.com/vapix/ws/light/SetManualAngleOfIllumination"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="NotSupportedFault">
+        <soap:fault name="NotSupportedFault" use="literal"/>
+      </wsdl:fault>
+       <wsdl:fault name="InvalidLightIDFault">
+        <soap:fault name="InvalidLightIDFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="InvalidAngleOfIlluminationFault">
+        <soap:fault name="InvalidAngleOfIlluminationFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="CardMalfunctioningFault">
+        <soap:fault name="CardMalfunctioningFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+      <wsdl:operation name="GetManualAngleOfIllumination">
+        <soap:operation soapAction="http://www.axis.com/vapix/ws/light/GetManualAngleOfIllumination"/>
+        <wsdl:input>
+          <soap:body use="literal"/>
+        </wsdl:input>
+        <wsdl:output>
+          <soap:body use="literal"/>
+        </wsdl:output>
+       <wsdl:fault name="InvalidLightIDFault">
+        <soap:fault name="InvalidLightIDFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="NotSupportedFault">
+        <soap:fault name="NotSupportedFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="CardMalfunctioningFault">
+        <soap:fault name="CardMalfunctioningFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetCurrentAngleOfIllumination">
+      <soap:operation soapAction="http://www.axis.com/vapix/ws/light/GetCurrentAngleOfIllumination"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="InvalidLightIDFault">
+        <soap:fault name="InvalidLightIDFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="NotSupportedFault">
+        <soap:fault name="NotSupportedFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="CardMalfunctioningFault">
+        <soap:fault name="CardMalfunctioningFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="SetAutomaticAngleOfIlluminationMode">
+      <soap:operation soapAction="http://www.axis.com/vapix/ws/light/SetAutomaticAngleOfIlluminationMode"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="InvalidLightIDFault">
+        <soap:fault name="InvalidLightIDFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="NotSupportedFault">
+        <soap:fault name="NotSupportedFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="CardMalfunctioningFault">
+        <soap:fault name="CardMalfunctioningFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetValidAngleOfIllumination">
+      <soap:operation soapAction="http://www.axis.com/vapix/ws/light/GetValidAngleOfIllumination"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="InvalidLightIDFault">
+        <soap:fault name="InvalidLightIDFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="NotSupportedFault">
+        <soap:fault name="NotSupportedFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="CardMalfunctioningFault">
+        <soap:fault name="CardMalfunctioningFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="DayNightSynchronizeBinding" type="ali:DayNightSynchronize">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="SetLightSynchronizeDayNightMode">
+      <soap:operation soapAction="http://www.axis.com/vapix/ws/light/SetLightSynchronizeDayNightMode"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="InvalidLightIDFault">
+        <soap:fault name="InvalidLightIDFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="NotSupportedFault">
+        <soap:fault name="NotSupportedFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="CardMalfunctioningFault">
+        <soap:fault name="CardMalfunctioningFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetLightSynchronizeDayNightMode">
+      <soap:operation soapAction="http://www.axis.com/vapix/ws/light/GetLightSynchronizeDayNightMode"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="InvalidLightIDFault">
+        <soap:fault name="InvalidLightIDFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="NotSupportedFault">
+        <soap:fault name="NotSupportedFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="CardMalfunctioningFault">
+        <soap:fault name="CardMalfunctioningFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+</wsdl:definitions>

@@ -1,0 +1,18 @@
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<script type="text/javascript" src="/incl/slider.js"></script>
+
+<script language="JavaScript">
+<!--
+  var langObjVidImgVidFrm = new Language("videoImage", "videoframeset");
+  langObjVidImgVidFrm.init();
+//-->
+</script>
+</head>
+
+<frameset cols="100%,0" border="0" cellpadding="0" id="videoframeset" name="videoframeset_name">
+  <frame src="video.shtml?nbr=<!--#echo var="nbr" option="encoding:html" -->&id=<!--#echo var="ssi_request_id" option="encoding:url" -->" name="video" scrolling="auto" noresize="true">
+  <frame src="" name="videosave" marginHeight="0" marginWidth="0" scrolling="no" noresize="true">
+</frameset>
+
+</html>

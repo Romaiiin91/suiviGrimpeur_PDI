@@ -1,0 +1,201 @@
+<!--#set var="helpURL" val="javascript:launch('/help/onvif_user_setup_h.shtml')" -->
+<!--#include virtual="/incl/popup_header.shtml" -->
+  
+  <script src="/incl/soapclient.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->" language="javascript" type="text/javascript"></script>
+  <script type="text/javascript" language="javascript">
+  <!--
+    var langObjOnvUsrSet;
+
+    var nameSpaces = new SOAPClientNS();
+    nameSpaces.add("tt", "http://www.onvif.org/ver10/schema" );
+    nameSpaces.add("tds", "http://www.onvif.org/ver10/device/wsdl" );
+    nameSpaces.add("tev", "http://www.onvif.org/ver10/event/wsdl" );
+    nameSpaces.add("ter", "http://www.onvif.org/ver10/error" );
+    nameSpaces.add("wsnt", "http://docs.oasis-open.org/wsn/b-2" );
+    var wsdlUrl = "/wsdl/onvif/devicemgmt.wsdl";
+
+    function onInit()
+    {
+      langObjOnvUsrSet = new Language("onvif_users", "onvif_user_setup");
+      langObjOnvUsrSet.init();
+    }
+
+    function saveData()
+    {
+      var okBtn = document.getElementById("btnOK");
+      okBtn.disabled = true;
+      <!--#if expr="$doAction = add" -->
+        var method = "tds:CreateUsers";
+
+        if( !checkUserName() )
+        {
+          okBtn.disabled = false;
+          return false;
+        }
+      <!--#else -->
+        var method = "tds:SetUser";
+      <!--#endif -->
+
+      if( !checkPassword() )
+      {
+        okBtn.disabled = false;
+        return false;
+      }
+      var params = new SOAPClientParameters();
+      var obj = new Object();
+      obj["tt:Username"] = document.getElementById("userName").value;
+      obj["tt:Password"] = ( document.getElementById("pwd").value ).replace('"', '\"');
+      obj["tt:UserLevel"] = getCheckedValue("userGrp");
+      params.add("User", obj );
+
+      var now = new Date();
+      var timestamp = "?timestamp="+now.getTime();
+      
+      var url = "/vapix/services"+timestamp;
+      SOAPClient.invoke( wsdlUrl, url, nameSpaces, method, params, true, onSaveData );
+    }
+
+    function onSaveData( responseObj )
+    {
+      if( responseObj )
+      {
+        if( responseObj.name == "Error" )
+        {
+          var errorMsg = ( ( responseObj.description )?responseObj.description:(responseObj.fileName)?responseObj.fileName:responseObj.message );
+          alert( errorMsg );
+          document.getElementById("btnOK").disabled = false;
+          return;
+        }
+      }//if response
+      
+      window.opener.reloadList();
+      closeWindow();
+    }
+
+    function closeWindow()
+    {
+      window.close();
+    }
+
+    function getCheckedValue( theName )
+    {
+      var els = document.getElementsByName( theName );
+      var len = els.length;
+      var val = "";
+      for( var i = 0; i < len && val == ""; i++ )
+      {
+        if( els[i].checked )
+        {
+          val = els[i].value;
+        }
+      }
+      return val;
+    }
+
+    function checkUserName()
+    {
+      var userNameEl = document.getElementById("userName");
+      var theName = ( userNameEl.value ).trim();
+      // Check empty username
+      if( theName == '' )
+      {
+        alert( langObjOnvUsrSet.getText("usNaAlert") );
+        userNameEl.focus();
+        userNameEl.select();
+        return false;
+      }
+      else
+      {
+        var alphaNumRe = /^[a-z0-9]+$/i;
+
+        if( !alphaNumRe.test( String(userNameEl.value) ) )
+        {
+            alert( langObjOnvUsrSet.getText("alwdChAlert") );
+            userNameEl.focus();
+            userNameEl.select();
+            return false;
+        }
+      }
+
+      return true;
+    }
+
+
+    function checkPassword()
+    {
+      var pwdEl = document.getElementById("pwd");
+      var pwdStr = pwdEl.value;
+      var confPwdStr = document.getElementById("confPwd").value;
+
+      var errorMsg = "";
+      if( pwdStr == "" )
+      {
+        errorMsg = langObjOnvUsrSet.getText("pswMustConAlert")
+      }
+      else if( pwdStr != confPwdStr )
+      {
+        errorMsg = langObjOnvUsrSet.getText("pwdConfAlert")
+      }
+
+      if( errorMsg != "" )
+      {
+        alert( errorMsg );
+        pwdEl.focus();
+        pwdEl.select();
+        return false;
+      }
+      return true;
+    }
+
+  // -->
+  </script>
+</head>
+
+<body onload="onInit();">
+
+  <!--#include virtual="/incl/popup_top.shtml" -->
+
+  <input type="hidden" name="action" value="<!--#echo var="doAction" option="encoding:html" -->" />
+
+  <h1><span id="onvifTxt"></span></h1>
+  
+  <a href="<!--#echo var="helpURL" option="encoding:url" -->" id="helpLink"><img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="hlpPic" /></a>
+  
+  <div class="normal_text alternateRows">
+    <div class="row">
+      <label for="userName"><span id="userNameTxt"></span></label>
+      <!--#if expr="$doAction = add" -->
+        <input class="medium" type="text" id="userName" name="userName" value="" maxlength="64" />
+      <!--#else -->
+        <!--#echo var="userName" option="encoding:html" -->
+        <input type="hidden" id="userName" name="userName" value="<!--#echo var="userName" option="encoding:html" -->" />
+      <!--#endif -->
+    </div>
+    <div class="row">
+      <label for="pwd"><span id="pwdTxt"></span></label>
+      <input class="medium" type="password" id="pwd" name="pwd" value="" maxlength="64" />
+    </div>
+    <div class="row">
+      <label for="pwd"><span id="conPwdTxt"></span></label>
+      <input class="medium" type="password" id="confPwd" name="confPwd" value="" maxlength="64" />
+    </div>
+    <div class="row">
+      <label><span id="userGrpTxt"></span></label>
+      <div class="btnGroup">
+        <input type="radio" class="radio" name="userGrp" value="User" id="groupMedia" <!--#if expr="$doAction = add" -->checked="checked"<!--#elif expr="$userLevel = User" -->checked="checked"<!--#endif --> />
+        <label for="groupMedia" class="radio"><span id="mediaTxt"></span></label>
+        <br />
+        <input type="radio" class="radio" name="userGrp" value="Operator" id="groupOperator" <!--#if expr="$userLevel = Operator" -->checked="checked"<!--#endif --> />
+        <label for="groupOperator" class="radio"><span id="operatorTxt"></span></label>
+        <br />
+        <input type="radio" class="radio" name="userGrp" value="Administrator" id="groupAdmin" <!--#if expr="$userLevel = Administrator" -->checked="checked"<!--#endif --> />
+        <label for="groupAdmin" class="radio"><span id="administratorTxt"></span></label>
+      </div>
+      <br />
+    </div>
+    <div class="formButtons">
+      <input type="button" value="" class="btnNormal" onclick="javascript:saveData()" id="btnOK" />
+      <input type="button" value="" class="btnNormal" onclick="javascript:closeWindow();" id="btnCancel" />
+    </div>
+  </div>
+<!--#include virtual="/incl/popup_footer.shtml" -->

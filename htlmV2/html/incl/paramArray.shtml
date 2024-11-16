@@ -1,0 +1,86 @@
+//var lookup = new Array();
+var aSortArray = new Array();
+
+function createParamArray(f_parameter_array, f_sort_on, f_prefix, f_form, f_extra)
+{
+  // Create the item list
+  
+  var anItemArray = new Array();
+  var processedID = new Array();
+  var inputEntries = f_form.length;
+  var j;
+  var aLen;
+  
+  aSortArray = new Array();
+  lookup = new Array();
+
+  // Produce a f_lookuptable to get index of a parameter in the resulting array.
+  // As example to get the index of Name (that is included in the f_parameter_array)
+  // Write f_lookup["Name"]
+  
+  aLen = f_parameter_array.length;
+  for (j = 0; j < aLen ; j++) {
+     lookup[f_parameter_array[j]] = j;
+  }
+  lookup["ID"] = j++;
+
+  // If any extra variables should be set for all entries, the extra variable is
+  // an array like (theVarName, theValue) - pairs.
+  if(f_extra) {
+     for (i = 0 ; i < f_extra.length ; i = i + 2) {
+        lookup[f_extra[i]] = j++;
+     }
+  }
+  
+
+  for (i = 0; i < inputEntries; i++) {
+  // Get ID
+     var aTempName = f_form.elements[i].name;
+     var aPreStr = f_prefix.length + 1;
+     var aPostStr = aTempName.indexOf("_", aPreStr);
+     var ID = aTempName.substring(aPreStr + 1, aPostStr);
+     var aGroupPrefix = aTempName.substring(aPreStr, aPreStr + 1);
+     var aParamName = "";
+
+     if(isNaN(ID) || (aTempName.substring(0, f_prefix.length) != f_prefix)) {
+        continue;
+     }
+
+     for(j = 0 ; ((j < processedID.length) && (processedID[j] != ID)) ; j++);
+
+     // Check if ID is already processed
+     if(j < processedID.length) {
+        continue;
+     }
+
+     processedID = processedID.concat(ID);
+
+     var anItem = [];
+
+     for(j = 0 ; j < f_parameter_array.length ; j++) {
+        aParamName = f_prefix + "_" + aGroupPrefix + ID + "_" + f_parameter_array[j];
+        if (f_form.elements[aParamName]) {
+  	 anItem = anItem.concat(f_form.elements[aParamName].value);
+        } else {
+         anItem = anItem.concat("");
+	}
+     }
+     
+     anItem = anItem.concat(ID);
+
+     if(f_extra) {
+        for (i = 0 ; i < f_extra.length ; i = i + 2) {
+           anItem = anItem.concat(f_extra[i + 1]);
+        }
+     }  
+
+     anItemArray = anItemArray.concat([anItem]);
+  }
+
+  for (i = 0; i < anItemArray.length; i++)
+  {
+     var anItem = anItemArray[i];
+     aSortArray = aSortArray.concat([[anItem[lookup[f_sort_on]], anItem]]); // Sorted by 'Name'
+  }
+
+  aSortArray.sort();

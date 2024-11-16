@@ -1,0 +1,143 @@
+<!--#set var="helpURL" val="javascript:launch('/help/packages_h.shtml')" -->
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#set var="activeMenu" val="apps" -->
+<!--#set var="activeParentPage" val="packages" -->
+<!--#set var="activeMenu1" val="$app$" -->
+<!--#set var="activePage" val="param_$app$" -->
+
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<script language="javascript" type="text/javascript">
+<!--
+  var langObjAppParams = new Language("adptools", "app_params");
+
+  function onInit()
+  {
+    var hiddenEl = document.GroupForm.elements;
+    if( hiddenEl.length == 0 )
+    {
+      var tbl = document.getElementById("mainTable");
+      var rows = tbl.rows;
+      var len = rows.length;
+      var started = false;
+      var done = false;
+      for( var i = 0; i < len && !done; i++ )
+      {
+        if( started )
+        {
+          if( rows[i].id == "btnRow" )
+          {
+            done = true;
+          }
+          rows[i].style.display = "none";
+        }
+        else if( rows[i].id == "paramRow" )
+        {
+          started = true;
+          rows[i].style.display = "none";
+        }
+      }
+    }
+
+    var tblCellLink = document.getElementById("mainpagelink");
+    if( tblCellLink.innerHTML == "" )
+    {
+      tblCellLink.parentNode.style.display = "none";
+    }
+
+    tblCellLink = document.getElementById("settingslink");
+    if( tblCellLink.innerHTML == "" )
+    {
+      tblCellLink.parentNode.style.display = "none";
+    }
+
+  }
+var appp_SaveBtnStat;
+var appp_ResetBtnStat;
+function globalLanguageVars()
+{
+  var currTitle = document.title;
+  var newTitle = currTitle.replace(langObjAppParams.getText("pageTitle"), langObjAppParams.getText("pageTitle")+"<!--#echo var="app" option="encoding:html" -->/"+langObjAppParams.getText("paramTxt"));
+  document.title = newTitle;
+
+  appp_SaveBtnStat = langObjAppParams.getText("saveBtnStatTxt");
+  appp_ResetBtnStat = langObjAppParams.getText("resetBtnStatTxt");
+}
+-->
+</script>
+
+</head>
+<body <!--#include virtual="/incl/bodytag.shtml" --> onload="javascript:langObjAppParams.init();onInit()">
+
+<!--#include virtual="/sm/sm.srv?action=get&group=Layout" -->
+<!--#include virtual="/incl/top_incl2.shtml" -->
+
+<!--#set var="get_htmlform_pre_format_odd" val="<TR+bgcolor='#ffffff'><TD+nowrap>+" -->
+<!--#set var="pre_format_odd" val="<TR bgcolor='#ffffff'><TD nowrap> " -->
+<!--#set var="get_htmlform_pre_format_even" val="<TR+bgcolor='#eeeeee'><TD+nowrap>+" -->
+<!--#set var="pre_format_even" val="<TR bgcolor='#eeeeee'><TD nowrap> " -->
+
+<!--#set var="get_htmlform_pre_format" val="$get_htmlform_pre_format_odd$¤$get_htmlform_pre_format_even$" -->
+<!--#set var="get_htmlform_middle_format" val=":%26nbsp;</TD><TD>" -->
+<!--#set var="get_htmlform_end_format" val="&nbsp;</TD><TD width=%2225%25%22>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD></TR>%0A" -->
+
+<!--#set var="group" val="root.$app$&showgroups=1" -->
+
+<form action="" method="post" name="GroupForm">
+  <!--#include virtual="/sm/sm.srv?action=get_htmlform&getgroup=$group$&format=hiddenhtmlform" -->
+</form>
+
+<form action="/sm/sm.srv" method="post" name="FormConfig">
+  <input type="hidden" name="action" value="modify" />
+  <table id="mainTable" border="<!--#echo var="zero" option="encoding:html" -->" cellpadding="<!--#echo var="cellpadding3" option="encoding:html" -->" cellspacing="<!--#echo var="zero" option="encoding:html" -->" width="<!--#echo var="tableWidth3" option="encoding:html" -->"  class="alternateRows">
+    <tr class="topTitle">
+      <td valign="top" colspan="2" nowrap>
+        <div align="left"><span id="appSetTxt1"></span>: <!--#exec cmd="/usr/html/bin/devtools.sh confvariable $app$ PACKAGENAME" --></div>
+      </td>
+      <td>
+        <div align="right"><a href="<!--#echo var="helpURL" option="encoding:url" -->"><img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="hlpPic"></a></div>
+      </td>
+    </tr>
+    <tr class="subTitle">
+      <td colspan="3">
+        <div align="left"><span id="appSetTxt2"></span></div>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3" id="mainpagelink"><!--#exec cmd="/usr/html/bin/devtools.sh mainpagelink $app$" --></td>
+    </tr>
+    <tr>
+      <td colspan="3" id="settingslink"><!--#exec cmd="/usr/html/bin/devtools.sh settingslink $app$" --></td>
+    </tr>
+    <tr>
+      <td><span id="statusTxt"></span></td>
+      <td><!--#exec cmd="/usr/html/bin/devtools.sh status $app$" --></td>
+      <td width="25%">&nbsp;</td>
+    </tr>
+    <tr class="subTitle" id="paramRow">
+      <td colspan="3">
+        <div align="left"><span id="paramSetTxt"></span></div>
+      </td>
+    </tr>
+    <!--#include virtual="/sm/sm.srv?action=get_htmlform&getgroup=$group$" -->
+    <tr id="btnRow">
+      <td colspan="3" align="center">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td class="button">
+              <input class="btnNormal" TYPE="submit" VALUE="" onMouseOver="return showStatus(appp_SaveBtnStat)" onMouseOut="return showStatus('')" id="saveBtn">
+            </td>
+            <td class="button"><br></td>
+            <td class="button">
+              <input class="btnNormal" TYPE="reset" VALUE="" onMouseOver="return showStatus(appp_ResetBtnStat)" onMouseOut="return showStatus('')" id="resetBtn">
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr><td colspan="3" class="oddItem"><br></td></tr>
+  </table>
+
+</form>
+
+<!--#include virtual="/incl/bottom_incl.shtml" -->

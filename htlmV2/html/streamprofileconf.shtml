@@ -1,0 +1,1595 @@
+<!--#set var="helpURL" val="javascript:launch('/help/streamprofile_h.shtml')" -->
+<!--#set var="WizardFormAction" val="noAction" -->
+
+<!--#if expr="_$nbr = _" --> 
+<!--#set var="nbr" val="0" -->
+<!--#endif -->
+
+<!--#set var="root_Image_I$nbr$_MPEG_BCount" val="0" -->
+
+<!--#include virtual="/sm/sm.srv?action=get&group=Layout.DefaultStreamProfile" -->
+
+<!--#include virtual="/sm/sm.srv?action=get&group=StreamProfile,Image.I$nbr$,ImageSource.NbrOfSources,ImageSource.I$nbr$,Properties.Image.H264" -->
+<!--#set var="maxFPS" val="30 * 1000" -->
+
+<!--#include virtual="/incl/top_incl_popup.shtml" -->
+
+<style type="text/css">
+div.defaultval { color: #aaaaaa; font-weight: bold; }
+</style>
+
+<!--#include virtual="/java/integer.shtml" -->
+<!--#include virtual="/java/chkbox.shtml" -->
+<!--#include virtual="/incl/tabs_functions.shtml" -->
+
+<script language="JavaScript">
+<!--
+
+<!--#if expr="$pageclose = 1" -->
+parent.opener.location = "/operator/<!--#echo var="openerpage" option="encoding:url" -->.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" --><!--#if expr="$basic = yes" -->&basic=yes<!--#endif -->";
+parent.window.close();
+<!--#endif -->
+
+var langObjStrmProfConf = new Language("videostream", "streamprofileconf");
+
+/********************************************
+ *
+ * Help functions
+ *
+ ********************************************/
+
+function getMaxFPS()
+{
+  return (Math.floor(<!--#echo var="maxFPS" option="encoding:javascript" --> / 1000));
+}
+
+function getMaxFPSLimit() {
+  return (getMaxFPS() == 0 ? 30 : getMaxFPS());
+}
+
+function getMax(ssidParStr)
+{
+  var max = 0;
+  var pos1 = ssidParStr.lastIndexOf("..");
+  var pos2 = ssidParStr.lastIndexOf("]");
+  if ((pos1 != -1) || (pos2 != -1 )) {
+    max = ssidParStr.substring(pos1 + 2, pos2);
+  }
+  return max;
+}
+
+function YesNo2Int(theYesNo)
+{
+  if (theYesNo == "yes") {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+function Bool2Int(theBool)
+{
+  if (theBool) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+/********************************************
+ *
+ * Validation
+ *
+ ********************************************/
+var hasError = false;
+var focusEl = null;
+var errorMsg = "";
+
+function validateInt(name, value, min, max, formEl )
+{
+  if (value.trim() === "") {
+    errorMsg += name + ": "+langObjStrmProfConf.getText("valueAlert")+"\n\r\n\r";
+    hasError = true;
+    if( !focusEl )
+    {
+      focusEl = formEl;
+    }
+    return "-";
+  }
+  var invalid = value.replace(/[0-9]/g, "");
+  if (invalid != "") {
+    errorMsg += name + ": "+langObjStrmProfConf.getText("invAlert1")+"\n\r\n\r";
+    hasError = true;
+    if( !focusEl )
+    {
+      focusEl = formEl;
+    }
+    return "-";
+  }
+  var numval = value * 1;
+  if (numval < min) {
+    errorMsg += name + ": "+langObjStrmProfConf.getText("invAlert2")+"\n\r\n\r";
+    //hasError = true;
+    if( formEl )
+    {
+      formEl.value = min;
+    }
+    return min;
+  } 
+  if (max != min && numval > max) {
+    errorMsg += name + ": "+langObjStrmProfConf.getText("invAlert3")+"\n\r\n\r";
+    //hasError = true;
+    if( formEl )
+    {
+      formEl.value = max;
+    }
+    return max;
+  } 
+  return numval;
+}
+
+
+function showTabErrorMsg( tabId )
+{
+  if( errorMsg != "" )
+  {
+    showTab( tabId );
+    alert( errorMsg );
+    if( hasError && focusEl != null )
+    {
+      focusEl.focus();
+      focusEl.select();
+    }
+  }
+  errorMsg = "";
+  focusEl = null;
+}
+
+function validateName(name)
+{
+  var profilePars =  getParam("root.StreamProfile");
+
+  if (name == "") {
+    alert( langObjStrmProfConf.getText("nameAlert1") );
+    hasError = true;
+    return false;
+  }
+
+  var invalid_chars = /[^a-z0-9_\-\s]/ig;
+  invalid_chars.compile(invalid_chars);
+
+  if (invalid_chars.test(name)) {
+    alert( langObjStrmProfConf.getText("nameAlert2_1")+" A-Z, a-z, 0-9, _ "+langObjStrmProfConf.getText("nameAlert2_2")+" -.\n" +langObjStrmProfConf.getText("nameAlert2_3") );
+    hasError = true;
+    return false;
+  }
+
+  invalid_chars = /[\s]/ig;
+  invalid_chars.compile(invalid_chars);
+
+  if (invalid_chars.test(name)) {
+    alert( langObjStrmProfConf.getText("nameAlert3_1")+"\n" +
+          langObjStrmProfConf.getText("nameAlert3_2"));
+    hasError = true;
+    return false;
+  }
+
+  maxProf = getParam("root.StreamProfile.MaxGroups");
+
+  for (i = 0; i <= maxProf; i++) {
+    var thisName = getParam('root.StreamProfile.S' + i + '.Name');
+    if (thisName == name<!--#if expr="$action = modify" --> && i != <!--#echo var="profilenbr" option="encoding:javascript" --><!--#endif -->) {
+      alert( langObjStrmProfConf.getText("nameAlert4") );
+      hasError = true;
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function validateDescription(name)
+{
+  var invalid_chars = /[<>]/g;
+  if (invalid_chars.test(name)) {
+    alert(langObjStrmProfConf.getText("nameAlert5")+" <>.");
+    hasError = true;
+    return false;
+  }
+  return true;
+}
+
+/********************************************
+ *
+ * Option management
+ *
+ ********************************************/
+
+function defaultFPSSetting()
+{
+  form = document.editForm;
+  if (form.fps.value == 0) {
+    form.fps.value = getMaxFPS();
+  }
+}
+
+function defaultOvlSettings() 
+{
+  var form = document.editForm;
+  form["text"].checked = ("<!--#echo var="root_Image_I$nbr$_Text_TextEnabled" option="encoding:javascript" -->" == "yes");
+  form["clock"].checked = ("<!--#echo var="root_Image_I$nbr$_Text_ClockEnabled" option="encoding:javascript" -->" == "yes");
+  form["date"].checked =  ("<!--#echo var="root_Image_I$nbr$_Text_DateEnabled" option="encoding:javascript" -->" == "yes");
+
+  var ovlText = getParam("root.Image.I<!--#echo var="nbr" option="encoding:javascript" -->.Text.String");
+  if( ovlText != false)
+    document.getElementById("overlayTextInput").value = ovlText;
+
+  form["textsize"].value = "<!--#echo var="root_Image_I$nbr$_Text_TextSize" option="encoding:javascript" -->";
+<!--#if expr="_$(root_Image_I$nbr$_Text_Color) != _" -->
+  form["textbackgroundcolor"].value = "<!--#echo var="root_Image_I$nbr$_Text_BGColor" option="encoding:javascript" -->";
+  form["textcolor"].value = "<!--#echo var="root_Image_I$nbr$_Text_Color" option="encoding:javascript" -->";
+<!--#endif -->
+  form["textposition"].value = "<!--#echo var="root_Image_I$nbr$_Text_Position" option="encoding:javascript" -->";
+  <!--#if expr="_$(root_Image_I$nbr$_Overlay_Enabled) != _" -->
+  form["overlayimage"].checked = ("<!--#echo var="root_Image_I$nbr$_Overlay_Enabled" option="encoding:javascript" -->" == "yes");
+  <!--#endif -->
+}
+
+var GOV_I<!--#echo var="nbr" option="encoding:javascript" --> = parseInt(<!--#echo var="root_Image_I$nbr$_MPEG_ICount" option="encoding:javascript" --> * (1 + <!--#echo var="root_Image_I$nbr$_MPEG_PCount" option="encoding:javascript" --> + (1 + <!--#echo var="root_Image_I$nbr$_MPEG_PCount" option="encoding:javascript" -->) * <!--#echo var="root_Image_I$nbr$_MPEG_BCount" option="encoding:javascript" -->), 10);
+
+function defaultGOVSettings()
+{
+  var form = document.editForm;
+  form["GOVlength"].value = GOV_I<!--#echo var="nbr" option="encoding:javascript" -->;
+}
+
+function enableBitrate(enable)
+{
+  var form = document.editForm;
+
+  form.bitrate.disabled = !enable;
+  form.bitrate_priority.disabled = !enable;
+}
+
+function setAllInclChecked(checked)
+{
+  form = document.editForm;
+  form.incl_resolution.checked = checked;
+  showDiv("resConf", "resDef", checked);
+  form.incl_compression.checked = checked;
+  showDiv("comConf", "comDef", checked);
+  form.incl_fps.checked = checked;
+  showDiv("fpsConf", "fpsDef", checked);
+  form.incl_overlay.checked = checked;
+  showDiv("ovlConf", "ovlDef", checked);
+  form.incl_gov.checked = checked;
+  showDiv("govConf", "govDef", checked);
+<!--#if expr="_$(root_Image_I$nbr$_MPEG_H264_Profile) != _" -->
+  form.incl_h264pro.checked = checked;
+  showDiv("h264proConf", "h264proDef", checked);
+<!--#endif -->
+  form.incl_ratecontrol.checked = checked;
+  showDiv("rateConf", "rateDef", checked);
+  form.incl_framesize.checked = checked;
+  showDiv("sizConf", "sizDef", checked);
+  defaultFPSSetting();
+  defaultOvlSettings();
+  defaultGOVSettings();
+}
+
+globOtherPars = new Array;
+
+function setParField(name, value)
+{
+  var form = document.editForm;
+  if (name == "videocodec") {
+      for (i = 0; i < form.videocodec.length; i++) {
+        if (form.videocodec[i].value == value) {
+          form.videocodec[i].selected = true;
+        }
+      }
+  } else if (name == "resolution") {
+      form.resolution.value = value;
+      form.incl_resolution.checked = true;
+      showDiv("resConf", "resDef", true);
+<!--#if expr="$(root_Image_I$nbr$_Appearance_SquarePixelEnabled) != " -->
+  } else if (name == "squarepixel") {
+      form.SquarePixelEnabled.checked = (value == 1);
+      form.incl_resolution.checked = true;
+      showDiv("resConf", "resDef", true);
+<!--#endif -->
+  } else if (name == "compression") {
+      form.compression.value = value;
+      form.incl_compression.checked = true;
+      showDiv("comConf", "comDef", true);
+<!--#if expr="_$(root_Image_I$nbr$_Text_Color) != _" -->
+  } else if (name == "textcolor") {
+      form.textcolor.value = decodeURIComponent(value);
+      form.incl_overlay.checked = true;
+      showDiv("ovlConf", "ovlDef", true);
+  } else if (name == "textbackgroundcolor") {
+      form.textbackgroundcolor.value = decodeURIComponent(value);
+      form.incl_overlay.checked = true;
+      showDiv("ovlConf", "ovlDef", true);
+<!--#endif -->
+  } else if (name == "textposition") {
+      form.textposition.value = decodeURIComponent(value);
+      form.incl_overlay.checked = true;
+      showDiv("ovlConf", "ovlDef", true);
+  } else if (name == "textstring") {
+      document.getElementById("overlayTextInput").value = decodeURIComponent(value);
+      form.incl_overlay.checked = true;
+      showDiv("ovlConf", "ovlDef", true);
+  } else if (name == "text") {
+      form.text.checked = (value == 1);
+      form.incl_overlay.checked = true;
+      showDiv("ovlConf", "ovlDef", true);
+  } else if (name == "clock") {
+      form.clock.checked = (value == 1);
+      form.incl_overlay.checked = true;
+      showDiv("ovlConf", "ovlDef", true);
+  } else if (name == "date") {
+      form.date.checked = (value == 1);
+      form.incl_overlay.checked = true;
+      showDiv("ovlConf", "ovlDef", true);
+<!--#if expr="_$(root_Image_I$nbr$_Overlay_Enabled) != _" -->
+  } else if (name == "overlayimage") {
+      form.overlayimage.checked = (value == 1);
+      form.incl_overlay.checked = true;
+      showDiv("ovlConf", "ovlDef", true);
+<!--#endif -->
+  } else if (name == "fps") {
+      form.fps.value = value;
+      form.fpsradio[0].checked = (value == 0);
+      form.fpsradio[1].checked = (value != 0);
+      form.incl_fps.checked = true;
+      showDiv("fpsConf", "fpsDef", true);
+  } else if (name == "videokeyframeinterval") {
+      form.GOVlength.value = value;
+      form.incl_gov.checked = true;
+      showDiv("govConf", "govDef", true); 
+<!--#if expr="_$(root_Image_I$nbr$_MPEG_H264_Profile) != _" -->
+  } else if (name == "h264profile") {
+      form.h264pro.value = value;
+      form.incl_h264pro.checked = true;
+      showDiv("h264proConf", "h264proDef", true); 
+<!--#endif -->
+  } else if (name == "videobitrate") {
+      form.bitrate.value = value;
+      form.cbrradio[0].checked = (value == 0);
+      form.cbrradio[1].checked = (value != 0);
+      form.incl_ratecontrol.checked = true;
+      showDiv("rateConf", "rateDef", true); 
+      enableBitrate(form.cbrradio[1].checked);
+  } else if (name == "videobitratepriority") {
+      form.bitrate_priority.value = value;
+      form.incl_ratecontrol.checked = true;
+      showDiv("rateConf", "rateDef", true);
+  } else if (name == "maxframesize") {
+      form.maxframesize.value = value;
+      form.sizeradio[0].checked = (value == 0);
+      form.sizeradio[1].checked = (value != 0);
+      form.incl_framesize.checked = true;
+      showDiv("sizConf", "sizDef", true); 
+  } else {
+      return false;
+  }
+  return true;
+}
+
+function initFieldsFromProfile(default_par)
+{
+  form = document.editForm;
+  var options = "";
+
+  <!--#if expr="$updateFromSourceForm = yes" -->
+    form.StreamProfile_Name.value = "<!--#echo var="profileName" option="encoding:none" -->";
+    form.StreamProfile_Description.value = "<!--#echo var="profileDescription" option="encoding:none" -->";
+    options = "<!--#echo var="profileParameters" option="encoding:none" -->";
+  <!--#elif expr="$action = modify" -->
+    if (default_par) {
+        form.StreamProfile_Name.value = getParam("root.StreamProfile.S<!--#echo var="profilenbr" option="encoding:javascript" -->.Default.Name");
+        form.StreamProfile_Description.value = getParam("root.StreamProfile.S<!--#echo var="profilenbr" option="encoding:javascript" -->.Default.Description");
+        options = getParam("root.StreamProfile.S<!--#echo var="profilenbr" option="encoding:javascript" -->.Default.Parameters");
+    }
+    else {
+      form.StreamProfile_Name.value = getParam("root.StreamProfile.S<!--#echo var="profilenbr" option="encoding:javascript" -->.Name");
+      form.StreamProfile_Description.value = getParam("root.StreamProfile.S<!--#echo var="profilenbr" option="encoding:javascript" -->.Description");
+      options = getParam("root.StreamProfile.S<!--#echo var="profilenbr" option="encoding:javascript" -->.Parameters");
+    }
+  <!--#elif expr="$action = add" -->
+    form.StreamProfile_Name.value = getParam("root.StreamProfile.S<!--#echo var="profilenbr" option="encoding:javascript" -->.Name");
+    form.StreamProfile_Description.value = getParam("root.StreamProfile.S<!--#echo var="profilenbr" option="encoding:javascript" -->.Description");
+    options = getParam("root.StreamProfile.S<!--#echo var="profilenbr" option="encoding:javascript" -->.Parameters");
+  <!--#endif -->
+
+  if( !options )
+    return;
+
+  var parCouples = options.split("&");
+  for (couple = 0; couple < parCouples.length; couple++) {
+    videoPar = parCouples[couple].split("=");
+    if (videoPar[0] == "resolution")
+    {
+      <!--#if expr="$root_Brand_ProdType = Network Camera" -->
+        videoPar[1] = setSelectedResolution(document.editForm.resolution, videoPar[1]);
+      <!--#else -->
+          videoPar[1] = setCorrectResolution(videoPar[1]);
+      <!--#endif -->
+    }
+
+    if ((videoPar[0] != "") && (videoPar[1] != "") && !setParField(videoPar[0], videoPar[1])) {
+      /* Save the value so that it kan be added when the option string is built */
+      var nextPos = globOtherPars.length;
+      globOtherPars[nextPos] = videoPar;
+    }
+  }
+}
+
+function addCodec(options)
+{
+  var form = document.editForm;
+  options += "&videocodec=" + form.videocodec.value;
+  return options;
+}
+
+function buildImageOptions(isPreview)
+{
+  var form = document.editForm,
+      intValidateStr;
+  options = new String("");
+
+  if (form.incl_resolution.checked ) {
+    var resolutionStr = "&resolution=" + form.resolution.value;
+    options += resolutionStr;
+    <!--#if expr="$(root_Image_I$nbr$_Appearance_SquarePixelEnabled) != " -->
+      options += "&squarepixel=" + (form.SquarePixelEnabled.checked ? "1" : "0");
+    <!--#endif -->
+  }
+  if (form.incl_compression.checked) {
+    var maxCompression = getMax('<!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.Image.I$nbr$.Appearance.Compression&name=dummyCompr&format=htmlvalue" -->');
+    intValidateStr = validateInt(langObjStrmProfConf.getText("comprTxt"), form.compression.value, 0, maxCompression, form.compression );
+    if (intValidateStr != "-")
+      options += "&compression=" + intValidateStr;
+  }
+  if (form.incl_overlay.checked) {
+    if (form.overlayTextInput.value != "") {
+      var str = form.overlayTextInput.value;
+      str = encodeURIComponent(str);
+      options += "&textstring=" + str;
+    }
+
+		options += "&textsize=" + form.textsize.value;
+<!--#if expr="_$(root_Image_I$nbr$_Text_Color) != _" -->
+    options += "&textcolor=" + form.textcolor.value;
+    options += "&textbackgroundcolor=" + form.textbackgroundcolor.value;
+<!--#endif -->
+    options += "&textposition=" + form.textposition.value;
+    options += "&text=" + Bool2Int(form.text.checked);
+    options += "&clock=" + Bool2Int(form.clock.checked);
+    options += "&date=" + Bool2Int(form.date.checked);
+<!--#if expr="$(root_Image_I$nbr$_Overlay_Enabled) = yes" -->
+    options += "&overlayimage=" + Bool2Int(form.overlayimage.checked);
+<!--#elif expr="_$(root_Image_I$nbr$_Overlay_Enabled) != _" -->
+   if (form.overlayimage.checked) {
+     options += "&overlayimage=" + Bool2Int(form.overlayimage.checked);
+   }
+<!--#endif -->
+  }
+  if (form.incl_fps.checked) {
+    if (form.fpsradio[0].checked) {
+      options += "&fps=0";
+    } else {
+      var max = getMaxFPS();
+      var val = validateInt(langObjStrmProfConf.getText("frmRatTxt"), form.fps.value, 0, max, form.fps);
+      if (val != "-") {
+        options += "&fps=" + val;
+      }
+    }
+  }
+  showTabErrorMsg( "image" );
+  return options;
+}
+
+
+function buildMPEG4Options()
+{
+  var form = document.editForm;
+  options = new String("");
+
+  if (form.incl_gov.checked) {
+    var val = validateInt(langObjStrmProfConf.getText("govTxt"), form.GOVlength.value, 1, 61440, form.GOVlength );
+    if (val != "-") 
+      options += "&videokeyframeinterval=" + val;
+  }
+<!--#if expr="_$(root_Image_I$nbr$_MPEG_H264_Profile) != _" -->
+  if (form.incl_h264pro.checked) {
+    options += "&h264profile=" + form.h264pro.value;
+  }
+<!--#endif -->
+  if (form.incl_ratecontrol.checked) {
+    if (form.cbrradio[0].checked) {
+      options += "&videobitrate=0";
+    } else {
+      var max = getMax('<!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.Image.I$nbr$.RateControl.TargetBitrate&name=dummyTargetB&format=htmlvalue" -->');
+      var val = validateInt(langObjStrmProfConf.getText("targBitTxt"), form.bitrate.value, 0, max, form.bitrate); 
+      if (val != "-")
+        options += "&videobitrate=" + val;
+      options += "&videobitratepriority=" + form.bitrate_priority.value;
+    }
+  }
+  showTabErrorMsg( "mpeg4" );
+  return options;
+}
+
+function buildMJPEGOptions()
+{
+  var form = document.editForm;
+  options = new String("");
+
+  if (form.incl_framesize.checked) {
+    if (form.sizeradio[0].checked) {
+      options += "&maxframesize=0";
+    } else {
+      var val = validateInt(langObjStrmProfConf.getText("maxsizeTxt"), form.maxframesize.value, 1, 100000, form.maxframesize ); 
+      if (val != "-")
+        options += "&maxframesize=" + val;
+    }
+  }
+  showTabErrorMsg( "mjpeg" );
+  return options;
+}
+
+function buildOptions(isPreview)
+{
+  hasError = false;
+  var form = document.editForm;
+
+  var options = buildImageOptions(isPreview);
+
+
+  if (!hasError && form.videocodec.value == "jpeg" ) {
+    options += buildMJPEGOptions();
+  } else if ( !hasError && ( (form.videocodec.value == "mpeg4") || (form.videocodec.value == "h264")) ) {
+    options += buildMPEG4Options();
+  }
+
+  if (options != "")  {
+    options = options.substring(1);
+  }
+  return options;
+}
+
+<!--#if expr="$action = modify" -->
+<!--#if expr="_$(root_StreamProfile_S$profilenbr$_Default_Name) != _" -->
+function restoreDefault()
+{
+<!--#if expr="$(root_Image_I$nbr$_Appearance_SquarePixelEnabled) != " -->
+  document.editForm.SquarePixelEnabled.checked = false;
+  updateResolutionSelect();
+<!--#endif -->
+
+  delete globOtherPars;
+  globOtherPars = new Array;
+  setAllInclChecked(false);
+  initFieldsFromProfile(true);
+  tabUpdate();
+}
+<!--#endif -->
+<!--#endif -->
+
+/********************************************
+ *
+ * Tab handling
+ *
+ ********************************************/
+
+function showDiv(confId, defaultId, showConf)
+{
+  if (showConf) {
+    eval("document.getElementById(confId).style.display='block'");
+    eval("document.getElementById(defaultId).style.display='none'");
+  } else {
+    eval("document.getElementById(confId).style.display='none'");
+    eval("document.getElementById(defaultId).style.display='block'");
+  }
+}
+
+function expandAllTabs()
+{
+  var current = "";
+  if (document.getElementById('image').style.display != 'none')
+    current = 'image';
+  if (document.getElementById('mpeg4').style.display != 'none')
+    current = 'mpeg4';
+  if (document.getElementById('mjpeg').style.display != 'none')
+    current = 'mjpeg';
+  eval("document.getElementById('image').style.display='block'");
+  eval("document.getElementById('mpeg4').style.display='block'");
+  eval("document.getElementById('mjpeg').style.display='block'");
+  return current;
+}
+
+function tabUpdate()
+{
+  var form = document.editForm;
+  enableTab("mpeg4", (form.videocodec.value == "mpeg4" || form.videocodec.value == "h264"));
+  enableTab("mjpeg", (form.videocodec.value == "jpeg"));
+}
+
+
+<!--#include virtual="/incl/videostream_incl.shtml" -->
+
+/********************************************
+ *
+ * Preview handling
+ *
+ ********************************************/
+
+var globPreviewPath = "";
+
+function previewOptions()
+{
+  var options = buildOptions(true);
+  options = addCodec(options);
+
+  /* rotation and resolution must be included in the File string */
+  if (options.indexOf("resolution=") < 0)
+    options += "&resolution=<!--#echo var="root_Image_I$nbr$_Appearance_Resolution" option="encoding:javascript" -->";
+  if (options.indexOf("rotation=") < 0) {
+    <!--#if expr="$(root_Image_I$nbr$_Appearance_AutoRotationEnabled) = yes" -->
+      options += "&rotation=<!--#echo var="root_ImageSource_I$nbr$_AutoRotation" option="encoding:html" -->";
+    <!--#else -->
+      options += "&rotation=<!--#echo var="root_Image_I$nbr$_Appearance_Rotation" option="encoding:javascript" -->";
+    <!--#endif -->
+  }
+
+  return options;
+}
+
+function previewPath(options)
+{
+  var form = document.editForm;
+
+  var cam = "";
+<!--#if expr="$liveFocus = no" -->
+<!--#endif -->
+
+  var live_path;
+  if (form.videocodec.value == "jpeg")
+    live_path = "/mjpg"+((cam != "")?"/"+cam:"")+"/video.mjpg";
+  else if (form.videocodec.value == "h264")
+    live_path = "/axis-media/media.amp"+((cam != "")?"?camera="+cam:"");
+  else
+    live_path = "/mjpg"+((cam != "")?"/"+cam:"")+"/video.mjpg";
+
+  live_path += (live_path.indexOf("?") > 0 ? "&" : "?") + options;
+  return live_path;
+}
+
+function previewSetCurrent()
+{
+  var options = previewOptions();
+  var live_path = previewPath(options);
+  if (live_path != globPreviewPath) {
+    var escaped_path = encodeURIComponent(live_path);
+    var url = "/operator/streampreview.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->&standalone=no<!--#if expr="$basic = yes" -->&basic=yes<!--#endif -->&imagepath=" + escaped_path + "&" + options;
+      var showResolutionMeasure = "yes";
+      if (!((navigator.appName == "Microsoft Internet Explorer") && (navigator.platform != "MacPPC") && (navigator.platform != "Mac68k"))) {
+        if (document.getElementById("videocodec").value != "jpeg") showResolutionMeasure = "no";
+      }
+      url += "&showResolutionMeasure=" + showResolutionMeasure;
+    var showMaxFrameSize = "no"
+    if (shownTab() == "mjpeg")
+      showMaxFrameSize = "yes"
+    url += "&showMaxFrameSize=" + showMaxFrameSize;
+
+<!--#if expr="$liveFocus = no" -->
+<!--#endif -->
+
+    if( parent && parent.frames['preview'] )
+      parent.frames['preview'].document.location = url;
+  }
+  return live_path;
+}
+
+function previewToggle()
+{
+  var live_path = "";
+  var form = document.editForm;
+
+  if (globPreviewPath == "") {
+    form.previewBtn.value = langObjStrmProfConf.getText("hideTxt");
+    live_path = previewSetCurrent();
+  } else {
+    form.previewBtn.value = langObjStrmProfConf.getText("showTxt");
+    var url = "/operator/streampreview.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->&standalone=no&imagepath=hide<!--#if expr="$basic = yes" -->&basic=yes<!--#endif -->";
+    if( parent && parent.frames['preview'] )
+      parent.frames['preview'].document.location = url;
+  }
+
+  globPreviewPath = live_path;
+}
+
+function previewUpdate()
+{
+  if (globPreviewPath != "") {
+    globPreviewPath = previewSetCurrent();
+  }
+}
+
+/********************************************
+ *
+ * Init / OK / Close
+ *
+ ********************************************/
+function translateValues() {
+  var pixRes = document.getElementById("pixelsResolution");
+  <!--#if expr="$root_Brand_ProdType = Network Camera" -->
+    pixRes.innerHTML = langObjStrmProfConf.getText('pixelsTxt');
+  <!--#else -->
+    <!--#include virtual="/sm/sm.srv?action=get&group=ImageSource.I$nbr$.Video.DetectedType" -->
+    <!--#set var="DetectedType" val="$(root_ImageSource_I$nbr$_Video_DetectedType)" -->
+    <!--#if expr="_$DetectedType = _" --><!--#set var="DetectedType" val="none" --><!--#endif -->
+    <!--#if expr="$DetectedType = none" -->
+      pixRes.innerHTML = langObjStrmProfConf.getText('ntfsPalTxt');
+    <!--#endif -->
+  <!--#endif -->
+}
+
+// Function to check if an entry exists in an array
+Array.prototype.exists = function(search) {
+  for (var i = 0; i < this.length; i++) {
+    if (this[i] == search)
+      return true;
+  }
+  return false;
+}
+
+if(!Array.indexOf) {
+  Array.prototype.indexOf = function(obj) {
+    for (var i = 0; i < this.length; i++) {
+      if (this[i] == obj) {
+        return i;
+      }
+    }
+
+    return -1;
+  }
+}
+
+// All resolutions for all channels
+var allResolutions = [];
+var overviewOnlyResolutions = [];
+
+function fetchResolutions()
+{
+  // Get the common resolutions
+  <!--#include virtual="/sm/sm.srv?action=get&group=root.Properties.Image.Resolution" -->
+  var common_res = '<!--#echo var="root_Properties_Image_Resolution" option="encoding:none" -->'.split(',');
+
+  // Variable for the channel-specific resolutions
+  var resolutions = {};
+
+  // Temporary variable to store the channel-specific resolutions
+  var channel_resolutions = [];
+
+  // Now get the resolutions specific to channels
+
+      <!--#include virtual="/sm/sm.srv?action=get&group=root.Properties.Image.I0.Resolution" -->
+      <!--#if expr="_$root_Properties_Image_I0_Resolution != _" -->
+        <!--#include virtual="/sm/sm.srv?action=get&group=root.ImageSource.I0.Name" -->
+        channel_resolutions.push({ 'name': '<!--#echo var="root_ImageSource_I0_Name option="encoding:javascript" -->',
+                                   'res': '<!--#echo var="root_Properties_Image_I0_Resolution" option="encoding:none" -->'.split(',')
+                                 });
+      <!--#endif -->
+
+
+
+  // Merge the channel-specific resolutions so we know what channels share resolutions
+  for (var i = 0; i < channel_resolutions.length; i++) {
+    for (var j = 0; j < channel_resolutions[i].res.length; j++) {
+      if (!common_res.exists(channel_resolutions[i].res[j])) {
+        if (channel_resolutions[i].res[j] in resolutions)
+          resolutions[channel_resolutions[i].res[j]].push(channel_resolutions[i].name);
+        else
+          resolutions[channel_resolutions[i].res[j]] = [channel_resolutions[i].name];
+      }
+    }
+  }
+
+  // Add the common resolutions first
+  for (var i = 0; i < common_res.length; i++) {
+    allResolutions.push({ 'res': common_res[i], 'channels': null })
+  }
+
+  // And then add the channel-specific resolutions
+  for (var res in resolutions) {
+    allResolutions.push({ 'res': res, 'channels': resolutions[res] });
+  }
+}
+
+// Create the option list for the resolution-select
+function updateResolutionSelect() {
+  var form = document.editForm;
+  <!--#if expr="$(root_Image_I$nbr$_Appearance_SquarePixelEnabled) != " -->
+  var isSquarePixel = form.SquarePixelEnabled.checked;
+  <!--#else -->
+  var isSquarePixel = false;
+  <!--#endif -->
+
+  var select = document.getElementById("resolution");
+  var selected_idx = select.selectedIndex;
+  var selected_res = select.selectedIndex != -1 ? select[select.selectedIndex].value : null;
+
+  // Remove old entries
+  while (select.firstChild != null) {
+    select.removeChild(select.firstChild);
+  }
+
+  // And add the reslution option elements
+  for (var i = 0; i < allResolutions.length; i++) {
+    var res = allResolutions[i].res;
+    var channels = allResolutions[i].channels;
+
+    var option = document.createElement('option');
+    option.setAttribute('value', res);
+
+    // Re-select the option?
+    if (selected_res != null && selected_res == res) {
+      option.setAttribute('selected', 'selected');
+      option.selected = true;
+    }
+
+    var text = resolutionText(res, isSquarePixel, "none");
+    if (text == "")
+      text = res;
+
+    option.appendChild(document.createTextNode(text));
+    select.appendChild(option);
+  }
+
+  // Make sure the selected option really is selected...
+  if (selected_idx != -1)
+    select.selectedIndex = selected_idx;
+}
+
+var okBtnStatTxt;
+var closeBtnStatTxt;
+var toggleBtnStatTxt;
+var restoreBtnStatTxt;
+var mpegTabName = "";
+function globalLanguageVars()
+{
+  mpegTabName = langObjStrmProfConf.getText("h264Txt");
+
+  var fontSizeHiddenDiv = document.getElementById("fontSizeHidden");
+  var fontSizeHiddenSelect = fontSizeHiddenDiv.getElementsByTagName("select")[0];
+  var fontSizeArr = [];
+  if (typeof fontSizeHiddenSelect != 'undefined') {
+    fontSizeArr = langObjStrmProfConf.createOptionArrayFromList(fontSizeHiddenSelect);
+  }
+  langObjStrmProfConf.addOptionsToList( document.getElementById("textsize"), fontSizeArr );
+
+<!--#if expr="_$(root_Image_I$nbr$_Text_Color) != _" -->
+  var colorHiddenDiv = document.getElementById("colorHidden");
+  var colorHiddenSelect = colorHiddenDiv.getElementsByTagName("select")[0];
+  var colorArr = langObjStrmProfConf.createOptionArrayFromList(colorHiddenSelect);
+  langObjStrmProfConf.addOptionsToList( document.getElementById("textcolor"), colorArr );
+
+  var bgcolorHiddenDiv = document.getElementById("bgcolorHidden");
+  var bgcolorHiddenSelect = bgcolorHiddenDiv.getElementsByTagName("select")[0];
+  var bgcolorArr = langObjStrmProfConf.createOptionArrayFromList(bgcolorHiddenSelect);
+  langObjStrmProfConf.addOptionsToList( document.getElementById("textbackgroundcolor"), bgcolorArr );
+<!--#endif -->
+
+  var positionHiddenDiv = document.getElementById("positionHidden");
+  var positionHiddenSelect = positionHiddenDiv.getElementsByTagName("select")[0];
+  var positionArr = langObjStrmProfConf.createOptionArrayFromList(positionHiddenSelect);
+  langObjStrmProfConf.addOptionsToList( document.getElementById("textposition"), positionArr );
+
+<!--#if expr="_$(root_Image_I$nbr$_MPEG_H264_Profile) != _" -->
+  var h264ProArr = new Array();
+  h264ProArr[0] = {val: "baseline", text: langObjStrmProfConf.getText("basel2Txt"), selected: <!--#if expr="$action = add" --><!--#if expr="$(root_Image_I$nbr$_MPEG_H264_Profile) = baseline" -->true<!--#else -->false<!--#endif --><!--#else -->false<!--#endif -->};
+  h264ProArr[1] = {val: "main", text: langObjStrmProfConf.getText("main2Txt"), selected: <!--#if expr="$action = add" --><!--#if expr="$(root_Image_I$nbr$_MPEG_H264_Profile) = main" -->true<!--#else -->false<!--#endif --><!--#else -->false<!--#endif -->};
+  <!--#if expr="$root_Properties_Image_H264_Profiles >< High" -->
+    h264ProArr[2] = {val: "high", text: langObjStrmProfConf.getText("high2Txt"), selected: <!--#if expr="$action = add" --><!--#if expr="$(root_Image_I$nbr$_MPEG_H264_Profile) = high" -->true<!--#else -->false<!--#endif --><!--#else -->false<!--#endif -->};
+  <!--#endif -->
+  langObjStrmProfConf.addOptionsToList(document.getElementById("h264pro"), h264ProArr);
+<!--#endif -->
+
+  var prioArr = new Array();
+  prioArr[0] = {val: "none", text: langObjStrmProfConf.getText("noTxt")};
+  prioArr[1] = {val: "framerate", text: langObjStrmProfConf.getText("frTxt")};
+  prioArr[2] = {val: "quality", text: langObjStrmProfConf.getText("iQTxt")};
+  langObjStrmProfConf.addOptionsToList(document.getElementById("bitrate_priority"), prioArr);
+
+
+
+  okBtnStatTxt = langObjStrmProfConf.getText("okBtnStatTxt");
+  closeBtnStatTxt = langObjStrmProfConf.getText("closeBtnStatTxt");
+  toggleBtnStatTxt = langObjStrmProfConf.getText("toggleBtnStatTxt");
+  restoreBtnStatTxt = langObjStrmProfConf.getText("restoreBtnStatTxt");
+
+  document.getElementById("strPro_Condition").innerHTML = langObjStrmProfConf.getText("conditionTxt");
+}
+
+function setResolutionCondition() {
+  var selectElmt = document.getElementById("resolution");
+  var condTextElmt = document.getElementById("resolution-condition");
+  var resolution = selectElmt.selectedIndex != -1 ? selectElmt[selectElmt.selectedIndex].value : null;
+
+  document.getElementById("resolution-cond-div").style.display = "none";
+
+  if (resolution == null)
+    return;
+
+  var text = null;
+
+  for (var i = 0; i < allResolutions.length; i++) {
+    if (resolution == allResolutions[i].res) {
+      var channels = allResolutions[i].channels;
+
+      if (channels != null) {
+        text = langObjStrmProfConf.getText("onlyFor");
+        for (var j = 0; j < channels.length; j++) {
+          text += channels[j];
+          if (j < (channels.length - 1))
+            text += ", ";
+        }
+      }
+
+      break;
+    }
+  }
+
+  if (text != null) {
+    if (condTextElmt.childNodes.length > 0)
+      condTextElmt.childNodes[0].nodeValue = text;
+    else
+      condTextElmt.appendChild(document.createTextNode(text));
+
+    document.getElementById("resolution-cond-div").style.display = "inline";
+  }
+}
+
+function doInit()
+{
+	langObjStrmProfConf.init();
+  var ovlText = getParam("root.Image.I<!--#echo var="nbr" option="encoding:javascript" -->.Text.String");
+  if( ovlText != false)
+  {
+    var ovlTextEl = document.getElementById("overlayText");
+    var ovlTextInput = document.getElementById("overlayTextInput");
+<!--#if expr="$(root_Image_I$nbr$_Text_TextEnabled) = yes" -->
+    ovlTextEl.innerHTML = ovlText;
+<!--#endif -->
+    ovlTextInput.value = ovlText;
+  }
+
+  fetchResolutions();
+  updateResolutionSelect();
+
+  // Option management
+  displayMaxFPS();
+<!--#if expr="$updateFromSourceForm = yes" -->
+  setAllInclChecked(false);
+  initFieldsFromProfile(false);
+<!--#else -->
+<!--#if expr="_$profilenbr != _" -->
+  setAllInclChecked(false);
+  initFieldsFromProfile(false);
+<!--#else -->
+  setAllInclChecked(true);
+<!--#endif -->
+<!--#endif -->
+
+  // Init parameters
+
+  // Tab handling
+  createTab("image", langObjStrmProfConf.getText("imageTxt"), 40);
+  createTab("mpeg4", mpegTabName, 40);
+  createTab("mjpeg", langObjStrmProfConf.getText("mjpegTxt"), 40);
+  writeTabs(500);
+
+<!--#if expr="_$tabId != _" -->
+  showTab("<!--#echo var="tabId" option="encoding:html" -->");
+<!--#else -->
+  showTab("image");
+<!--#endif -->
+<!--#if expr="$showPreview = yes" -->
+  previewToggle();
+<!--#endif -->
+  tabUpdate();
+
+
+  setResolutionCondition();
+  translateValues();
+
+  var oImgSrc = document.getElementById("videosource");
+  if( oImgSrc && oImgSrc.options )
+  {
+    for( var i=0; i < oImgSrc.options.length; i++ )
+    {
+      oImgSrc.options[i].text = getParam("root.Image.I" + oImgSrc.options[i].value + ".Name").crop(13, "...");
+    }
+  }
+}
+
+function onOK()
+{
+  var nameEl = document.editForm.StreamProfile_Name;
+  nameEl.value = nameEl.value.trim();
+  if (!validateName(nameEl.value)) {
+    nameEl.focus();
+    nameEl.select();
+    return;
+  }
+  var descEl = document.editForm.StreamProfile_Description;
+  if (!validateDescription(descEl.value)) {
+    descEl.focus();
+    descEl.select();
+    return;
+  }
+  var options = buildOptions(false);
+  if (hasError) return;
+  if (options == "") {
+    alert( langObjStrmProfConf.getText("parAlert") );
+    return;
+  }
+
+  options = addCodec(options);
+  checkForScript(document.getElementById("StreamProfile_Description"), "image");
+  if (hasError) return;
+  checkForScript(document.getElementById("overlayTextInput"),"image")
+  if (hasError) return;
+
+  var now = new Date();
+  var timestamp = now.getTime();
+
+  var url = "/axis-cgi/operator/param_authenticate.cgi";
+  var query = "";
+<!--#if expr="$action = add" -->
+  query += "action=add";
+  query += "&template=streamprofile";
+  query += "&group=root.StreamProfile";
+  query += "&root_StreamProfile_S_Name=" + document.editForm.StreamProfile_Name.value;
+  query += "&root_StreamProfile_S_Description=" + document.editForm.StreamProfile_Description.value;
+  query += "&root_StreamProfile_S_Parameters=" + encodeURIComponent(options);
+<!--#elif expr="$action = modify" -->
+  query += "action=update";
+
+  if( getParam("root.Layout.DefaultStreamProfile") ==
+      getParam("root.StreamProfile.S<!--#echo var="profilenbr" option="encoding:javascript" -->.Name"))
+    query += "&root_Layout_DefaultStreamProfile=" + document.editForm.StreamProfile_Name.value;
+
+  query += "&root_StreamProfile_S<!--#echo var="profilenbr" option="encoding:javascript" -->_Name=" + document.editForm.StreamProfile_Name.value;
+  query += "&root_StreamProfile_S<!--#echo var="profilenbr" option="encoding:javascript" -->_Description=" + document.editForm.StreamProfile_Description.value;
+  query += "&root_StreamProfile_S<!--#echo var="profilenbr" option="encoding:javascript" -->_Parameters=" + encodeURIComponent(options);
+<!--#endif -->
+  query += "&timestamp=" + timestamp;
+  
+  var ajaxRequest = AxisConnectionFactory.createAjaxConnection();
+  AxisConnectionFactory.sendSync(["POST", url], query, ajaxRequest);
+  onClose();
+}
+
+function onClose()
+{
+  if( parent && parent.opener )
+    parent.opener.location.reload(true);
+  if( parent && parent.window )
+    parent.window.close();
+}
+
+function displayMaxFPS()
+{
+  var o = document.getElementById("limitedMaxFPS");
+  if (o) {
+    var staticMaxFPS = /\.\.\d+/;
+    var dynamicMaxFPS = ".." + (Math.floor(<!--#echo var="maxFPS" option="encoding:javascript" --> / 1000));
+    o.innerHTML = o.innerHTML.replace(staticMaxFPS, dynamicMaxFPS);
+  }
+}
+
+// -->
+</script>
+
+<body class="bodyBg" topmargin="10" leftmargin="10" marginheight="10" marginwidth="10" bgcolor="white" onload="doInit();">
+<form id="dontPost">
+  <DIV STYLE="display: none" ID="fontSizeHidden"><!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.Image.I$nbr$.Text.TextSize&format=htmlvalue" --></DIV>
+<!--#if expr="_$(root_Image_I$nbr$_Text_Color) != _" -->
+  <DIV STYLE="display: none" ID="colorHidden"><!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.Image.I$nbr$.Text.Color&format=htmlvalue" --></DIV>
+  <DIV STYLE="display: none" ID="bgcolorHidden"><!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.Image.I$nbr$.Text.BGColor&format=htmlvalue" --></DIV>
+<!--#endif -->
+  <DIV STYLE="display: none" ID="positionHidden"><!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.Image.I$nbr$.Text.Position&format=htmlvalue" --></DIV>
+</form>
+
+<form name="editForm">
+    <div class="cornerBox">
+      <div class="content">
+<table border="0" cellpadding="2" cellspacing="0" width="500" class="alternateRows">
+  <tr class="topTitle">
+    <td colspan="3" nowrap><span id="strProfSetTxt"></span></td>
+    <td colspan="1" align="right">
+      <a href="<!--#echo var="helpURL" option="encoding:url" -->"><img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="hlpPic"></a>
+    </td>
+  </tr>
+  <tr class="subTitle">
+    <td colspan="4" align="left" width="500"><span id="strPrTxt"></span></td>
+  </tr>
+  <tr valign="top">
+    <td colspan="1" nowrap><span id="nameTxt"></span></td>
+    <td colspan="1"><input type="text" name="StreamProfile_Name" size="32" maxlength="64" value=""></td>
+    <td colspan="1" nowrap align="right"><span id="vidEncTxt"></span>&nbsp;</td>
+    <td colspan="1"><select name="videocodec" id="videocodec" onChange="JavaScript:previewUpdate();tabUpdate();">
+                        <option value="jpeg" selected>MJPEG</option>
+                        <option value="h264">H.264</option>
+                    </select>
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <td colspan="1" nowrap><span id="descTxt"></span></td>
+    <td colspan="3"><input type="text" name="StreamProfile_Description" id="StreamProfile_Description" size="64" maxlength="128" value=""></td>
+  </tr>
+
+  <tr>
+    <td colspan="4">
+
+<!-- TABS -->
+<!--#set var="tabheight" val="390" -->
+<!--#include virtual="/incl/tabs_start.shtml" -->
+
+<!-- -------------------- -->
+<!--                      -->
+<!--   IMAGE TAB        -->
+<!--                      -->
+<!-- -------------------- -->
+
+<div id="image" class="tabheight" style="display:block">
+
+<table border="0" cellpadding="2" cellspacing="0" width="500" valign="top" class="alternateRows">
+<tr class="subTitle">
+  <td colspan="3" align="left"><span id="imgAppTxt"></span></td>
+</tr>
+<tr>
+  <td nowrap width="20">
+    <input type="checkbox" name="incl_resolution" onClick="JavaScript:showDiv('resConf', 'resDef', this.checked);previewUpdate();">
+  </td>
+  <td nowrap><span id="resTxt"></span></td>
+  <td>
+    <img src="/pics/blank.gif" width="300" height="1"><br>
+    <div id="resDef" class="defaultval">
+    <!--#echo var="root_Image_I$nbr$_Appearance_Resolution" option="encoding:html" -->
+    </div>
+    <div id="resConf">
+    <table border="0" cellpadding="2" cellspacing="0">
+
+<!--#if expr="$(root_Image_I$nbr$_Appearance_SquarePixelEnabled) != " -->
+      <tr>
+        <td>
+          <input type="checkbox" name="SquarePixelEnabled" onclick="updateResolutionSelect();previewUpdate();">&nbsp;<span id="apsRatTxt"></span>
+        </td>
+      </tr>
+<!--#endif -->
+      <tr>
+        <td>
+          <div id="resolution-div">
+            <!-- IE7 can't set the width of the select-element properly -->
+            <!--[if lte IE 7]>
+              <select name="resolution" id="resolution" onchange="previewUpdate();setResolutionCondition();" style="width: 350px;"></select>
+            <![endif]-->
+            <!--[if gt IE 7]>
+              <select name="resolution" id="resolution" onchange="previewUpdate();setResolutionCondition();"></select>
+            <![endif]-->
+            <!--[if !IE]> -->
+              <select name="resolution" id="resolution" onchange="previewUpdate();setResolutionCondition();"></select>
+            <!-- <![endif]-->
+              &nbsp;<span id="pixelsResolution"></span>
+          </div>
+          <div id="resolution-cond-div" style="display: none; font-style: italic;">
+            <span style="font-weight: bold;" id="strPro_Condition"></span>
+            <span id="resolution-condition"></span>
+          </div>
+        </td>
+      </tr>
+    </table>
+    </div>
+  </td>
+</tr>
+<tr>
+  <td nowrap width="20">
+    <input type="checkbox" name="incl_compression" onClick="JavaScript:showDiv('comConf', 'comDef', this.checked);previewUpdate();">
+  </td>
+  <td nowrap><span id="comprColTxt"></span></td>
+  <td >
+    <img src="/pics/blank.gif" width="300" height="1"><br>
+    <div id="comDef" class="defaultval">
+    <!--#echo var="root_Image_I$nbr$_Appearance_Compression" option="encoding:html" -->
+    </div>
+    <div id="comConf">
+    <table border="0" cellpadding="2" cellspacing="0">
+      <tr>
+        <td><!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.Image.I$nbr$.Appearance.Compression&format=htmlvalue&name=compression&input_format=onchange%3d%22previewUpdate();%22" --></td>
+      </tr>
+    </table>
+    </div>
+  </td>
+</tr>
+
+
+
+
+<tr class="subTitle">
+  <td colspan="3" align="left"><span id="vidStrTxt"></span></td>
+</tr>
+<tr>
+  <td nowrap width="20">
+    <input type="checkbox" name="incl_fps" onClick="JavaScript:showDiv('fpsConf', 'fpsDef', this.checked);previewUpdate();">
+  </td>
+  <td colspan="1"><span id="rateTxt"></span></td>
+  <td colspan="1">
+    <img src="/pics/blank.gif" width="300" height="1"><br>
+    <div id="fpsDef" class="defaultval">
+    <!--#if expr="$(root_Image_I$nbr$_Stream_FPS) = 0" -->
+      <span id="unl1Txt"></span>
+    <!--#else -->
+      <!--#echo var="root_Image_I$nbr$_Stream_FPS" option="encoding:html" -->&nbsp;<span id="fps1Txt"></span>
+    <!--#endif -->
+    </div>
+  </td>
+</tr>
+<tr class="reuseLast">
+  <td colspan="2"></td>
+  <td colspan="1">
+    <img src="/pics/blank.gif" width="300" height="1"><br>
+    <div id="fpsConf">
+    <table border="0" cellpadding="2" cellspacing="0">
+      <tr>
+        <td>
+          <input type="radio" value="unlimited" name="fpsradio" checked onchange="previewUpdate();"><span id="unl2Txt"></span>
+        </td>
+      </tr>
+      <tr>
+        <td><input type="radio" value="limited" name="fpsradio" onchange="previewUpdate();"><span id="lim1Txt"></span>
+            &nbsp;
+            <input type="text" name="fps" value="<!--#if expr="$(root_Image_I$nbr$_Stream_FPS) != 0" --><!--#echo var="root_Image_I$nbr$_Stream_FPS" option="encoding:html" --><!--#endif -->" size="5" maxlength="2" onchange="previewUpdate()">
+            &nbsp;
+            [1..<script>document.write(getMaxFPSLimit())</script>]
+            &nbsp;
+            <span id="fps2Txt"></span>
+        </td>
+      </tr>
+    </table>
+    </div>
+  </td>
+</tr>
+<tr class="subTitle">
+  <td colspan="3" align="left"><span id="ovSetTxt"></span></td>
+</tr>
+<tr>
+  <td nowrap valign="top" width="20">
+    <input type="checkbox" name="incl_overlay" id="incl_overlay" onClick="JavaScript:showDiv('ovlConf', 'ovlDef', this.checked);previewUpdate();">
+  </td>
+  <td colspan="2">
+      <!--#if expr="_$(root_Image_I$nbr$_Overlay_Enabled) != _" --><span id="ovl1Txt"></span>
+      <!--#else --><span id="ovl2Txt"></span><!--#endif -->
+  </td>
+</tr>
+<tr class="reuseLast">
+  <td colspan="3" nowrap>
+    <img src="/pics/blank.gif" width="300" height="1"><br>
+    <div id="ovlDef" class="defaultval">
+    <table border="0" cellpadding="2" cellspacing="0" width="100%" class="alternateRows">
+      <tr>
+        <td width="20"><br></td>
+        <td>
+          <!--#set var="has_ovl" val="" -->
+          <!--#if expr="$(root_Image_I$nbr$_Text_DateEnabled) = yes" -->
+            <span id="dat1Txt"></span><br><!--#set var="has_ovl" val="yes" -->
+          <!--#endif -->
+          <!--#if expr="$(root_Image_I$nbr$_Text_ClockEnabled) = yes" -->
+            <span id="tim1Txt"></span><br><!--#set var="has_ovl" val="yes" -->
+          <!--#endif -->
+          <!--#if expr="$(root_Image_I$nbr$_Text_TextEnabled) = yes" -->
+            <span id="te1Txt"></span>&nbsp;<span id="overlayText"></span><br><!--#set var="has_ovl" val="yes" -->
+          <!--#endif -->
+          <!--#if expr="$(root_Image_I$nbr$_Overlay_Enabled) = yes" -->
+            <span id="imTxt"></span><br><!--#set var="has_ovl" val="yes" -->
+          <!--#endif -->
+
+          <!--#if expr="_$has_ovl = _" --><span id="noOvlTxt"></span><!--#endif -->
+        </td>
+      </tr>
+    </table>
+    </div>
+    <div id="ovlConf">
+    <table border="0" cellpadding="2" cellspacing="0" width="100%" class="alternateRows">
+      <tr>
+        <td width="20"><br></td>
+        <td>
+          <input type="checkbox" name="date" onclick="previewUpdate();">&nbsp;<span id="dat2Txt"></span>
+        </td>
+        <td>
+          <input type="checkbox" name="clock" onclick="previewUpdate();">&nbsp;<span id="tim2Txt"></span>
+        </td>
+      </tr>
+      <tr>
+        <td width="20"><br></td>
+        <td colspan="2" nowrap>
+          <input type="checkbox" name="text" onclick="previewUpdate();">&nbsp;<span id="te2Txt"></span>
+          &nbsp; <input type="text" id="overlayTextInput" onchange="previewUpdate()"/>
+        </td>
+      </tr>
+      <tr<!--#if expr="$(root_Image_I$nbr$_Source) = quad" --> style="display:none" <!--#endif -->>
+        <td width="20"><br></td>
+        <td colspan="2" nowrap>
+          <span id="teOvlSizTxt"></span>&nbsp;
+          <select name="textsize" id="textsize" onchange="previewUpdate();"></select>
+        </td>
+      </tr>
+<!--#if expr="_$(root_Image_I$nbr$_Text_Color) != _" -->
+  <tr>
+    <td width="20"><br></td>
+    <td colspan="1"><span id="teCoTxt"></span>&nbsp;
+    <select name="textcolor" id="textcolor" onchange="previewUpdate()"></select>
+    </td>
+    <td colspan="1" nowrap><span id="txBaCoTxt"></span>&nbsp;
+      <select name="textbackgroundcolor" id="textbackgroundcolor" onchange="previewUpdate()"></select>
+    </td>
+  </tr>
+<!--#endif -->
+      <tr>
+        <td width="20"><br></td>
+        <td colspan="2" nowrap>
+          <span id="place1Txt"></span>&nbsp;
+          <select name="textposition" id="textposition" onchange="previewUpdate()"></select>
+          <span id="place2Txt"></span>
+        </td>
+      </tr>
+      <!--#if expr="_$(root_Image_I$nbr$_Overlay_Enabled) != _" -->
+      <tr>
+        <td width="20"><br></td>
+        <td colspan="2" nowrap>
+          <input type="checkbox" name="overlayimage" onclick="previewUpdate();">&nbsp;<span id="img1Txt"></span>
+          <br>
+          <br>
+        </td>
+      </tr>
+      <!--#endif -->
+    </table>
+    </div>
+  </td>
+</tr>
+</table>
+</div> 
+<!-- IMAGE TAB -->
+
+<!-- -------------------- -->
+<!--                      -->
+<!--   MPEG4/H264 TAB     -->
+<!--                      -->
+<!-- -------------------- -->
+
+<div id="mpeg4" class="tabheight" style="display:block">
+<table border="0" cellpadding="2" cellspacing="0" width="500" valign="top" class="alternateRows">
+<tr class="subTitle">
+  <td colspan="5" align="left" width="500"><span id="encSetTxt"></span></td>
+</tr>
+<tr>
+  <td nowrap width="20">
+    <input type="checkbox" name="incl_gov" onClick="JavaScript:showDiv('govConf', 'govDef', this.checked);previewUpdate();">
+  </td>
+  <td nowrap><span id="govLenTxt"></span></td>
+  <td>
+    <img src="/pics/blank.gif" width="300" height="1"><br>
+    <div id="govDef" class="defaultval">
+    <script language="JavaScript">document.write(GOV_I<!--#echo var="nbr" option="encoding:javascript" -->);</script>
+    </div>
+    <div id="govConf">
+    <table border="0" cellpadding="2" cellspacing="0">
+      <tr>
+        <td><input type="text" size="5" maxlength="5" value="" name="GOVlength" onchange="previewUpdate();">&nbsp;[1..61440]</td>
+      </tr>
+    </table>
+  </td>
+</tr>
+
+<!--#if expr="_$(root_Image_I$nbr$_MPEG_H264_Profile) != _" -->
+<tr>
+  <td nowrap width="20">
+    <input type="checkbox" name="incl_h264pro" onClick="JavaScript:showDiv('h264proConf', 'h264proDef', this.checked);previewUpdate();">
+  </td>
+  <td nowrap><span id="h264ProTxt"></span></td>
+  <td>
+    <img src="/pics/blank.gif" width="300" height="1"><br>
+    <div id="h264proDef" class="defaultval">
+      <!--#if expr="$(root_Image_I$nbr$_MPEG_H264_Profile) = baseline" -->
+        <span id="basel1Txt"></span>
+      <!--#else -->
+      <!--#if expr="$(root_Image_I$nbr$_MPEG_H264_Profile) = main" -->
+        <span id="main1Txt"></span>
+      <!--#else -->
+        <span id="high1Txt"></span>
+      <!--#endif -->
+      <!--#endif -->
+    </div>
+    <div id="h264proConf">
+    <table border="0" cellpadding="2" cellspacing="0">
+      <tr>
+        <td>
+          <select name="h264pro" id="h264pro" onchange="previewUpdate();">
+          </select>
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<!--#endif -->
+
+<tr class="subTitle">
+  <td colspan="5" align="left" width="500"><span id="bitRateCtrlTxt"></span></td>
+</tr>
+<tr>
+  <td nowrap width="20">
+    <input type="checkbox" name="incl_ratecontrol" onClick="JavaScript:showDiv('rateConf', 'rateDef', this.checked);previewUpdate();">
+  </td>
+  <td><span id="rateCtrlTxt"></span></td>
+  <td>
+    <img src="/pics/blank.gif" width="300" height="1"><br>
+    <div id="rateDef" class="defaultval">
+    <!--#if expr="$(root_Image_I$nbr$_RateControl_Mode) = cbr" -->
+      <span id="cbr1Txt"></span>&nbsp;<!--#echo var="root_Image_I$nbr$_RateControl_TargetBitrate" option="encoding:html" -->&nbsp;<span id="kbps1Txt"></span>
+    <!--#else -->
+      <span id="vbr1Txt"></span>
+    <!--#endif -->
+    </div>
+  </td>
+</tr>
+<tr class="reuseLast">
+  <td></td>
+  <td colspan="2">
+    <img src="/pics/blank.gif" width="300" height="1"><br>
+    <div id="rateConf">
+      <table border="0" cellpadding="2" cellspacing="0">
+      <tr>
+        <td><img src="/pics/blank.gif" width="120" height="1"></td>
+        <td><input type="radio" value="vbr" name="cbrradio"<!--#if expr="$(root_Image_I$nbr$_RateControl_Mode) = vbr" --> checked<!--#endif --> onclick="enableBitrate(false)" onchange="previewUpdate();"><span id="vbr2Txt"></span></td>
+      </tr>
+      <tr>
+        <td><br></td>
+        <td>
+          <input type="radio" value="cbr" name="cbrradio"<!--#if expr="$(root_Image_I$nbr$_RateControl_Mode) = cbr" --> checked<!--#endif --> onclick="enableBitrate(true)" onchange="previewUpdate();">
+          <span id="cbr2Txt"></span>
+        </td>
+      </tr>
+      <tr>
+        <td><span id="targetTxt"></span>&nbsp;</td>
+        <td><input type="text" maxlength="5" name="bitrate" value="<!--#if expr="$(root_Image_I$nbr$_RateControl_TargetBitrate) != 0" --><!--#echo var="root_Image_I$nbr$_RateControl_TargetBitrate" option="encoding:html" --><!--#endif -->" size="10" onchange="previewUpdate();" <!--#if expr="$(root_Image_I$nbr$_RateControl_Mode) = vbr" --> disabled<!--#endif -->>&nbsp;<span id="kbps2Txt"></span>
+        </td>
+      </tr>
+      <tr>
+        <td><span id="prioTxt"></span>&nbsp;</td>
+        <td><select name="bitrate_priority" id="bitrate_priority" onchange="previewUpdate();" <!--#if expr="$(root_Image_I$nbr$_RateControl_Mode) = vbr" --> disabled<!--#endif -->>
+            </select>
+        </td>
+      </tr>
+    </table>
+    </div>
+  </td>
+</tr>
+</table>
+</div>
+<!-- MPEG-4 / H.264  TAB -->
+
+<!-- -------------------- -->
+<!--                      -->
+<!--   Motion JPEG TAB    -->
+<!--                      -->
+<!-- -------------------- -->
+
+<div id="mjpeg" class="tabheight" style="display:block">
+<table border="0" cellpadding="2" cellspacing="0" width="500" valign="top" class="alternateRows">
+<tr class="subTitle">
+  <td colspan="5" align="left" width="500"><span id="frSzTxt"></span></td>
+</tr>
+<tr>
+  <td nowrap width="20">
+    <input type="checkbox" name="incl_framesize" onClick="JavaScript:showDiv('sizConf', 'sizDef', this.checked);previewUpdate();">
+  </td>
+  <td colspan="1"><span id="frameTxt"></span></td>
+  <td colspan="1">
+    <img src="/pics/blank.gif" width="300" height="1"><br>
+    <div id="sizDef" class="defaultval">
+    <!--#if expr="$(root_Image_I$nbr$_SizeControl_MaxFrameSize) = 0" -->
+      <span id="def1Txt"></span>
+    <!--#else -->
+      <!--#echo var="root_Image_I$nbr$_SizeControl_MaxFrameSize" option="encoding:html" -->&nbsp;<span id="sizeTxt"></span>
+    <!--#endif -->
+    </div>
+  </td>
+</tr>
+<tr class="reuseLast">
+  <td colspan="2"></td>
+  <td>
+    <img src="/pics/blank.gif" width="300" height="1"><br>
+    <div id="sizConf">
+    <table border="0" cellpadding="2" cellspacing="0">
+      <tr>
+        <td>
+          <input type="radio" value="unlimited" name="sizeradio"<!--#if expr="$(root_Image_I$nbr$_SizeControl_MaxFrameSize) = 0" --> checked<!--#endif --> onchange="previewUpdate();"><span id="def2Txt"></span>
+        </td>
+      </tr>
+      <tr>
+        <td><input type="radio" value="limited" name="sizeradio"<!--#if expr="$(root_Image_I$nbr$_SizeControl_MaxFrameSize) != 0" --> checked<!--#endif --> onchange="previewUpdate();"><span id="lim2Txt"></span>
+            &nbsp;<input type="text"  maxlength="6" name="maxframesize" value="<!--#if expr="$(root_Image_I$nbr$_SizeControl_MaxFrameSize) != 0" --><!--#echo var="root_Image_I$nbr$_SizeControl_MaxFrameSize" option="encoding:html" --><!--#endif -->" size="10" onchange="previewUpdate();">
+            &nbsp;<span id="size100KTxt"></span>
+        </td>
+      </tr>
+    </table>
+    </div>
+  </td>
+</tr>
+</table>
+</div>
+<!-- Motion JPEG TAB -->
+
+<!-- -------------------- -->
+<!--                      -->
+<!--   Audio TAB          -->
+<!--                      -->
+<!-- -------------------- -->
+
+
+<!--#include virtual="/incl/tabs_end.shtml" -->
+<!--TABS END-->
+
+    </td>
+  </tr>
+  <tr class="subTitle">
+    <td colspan="4" align="left"><span id="previewTxt"></span></td>
+  </tr>
+  <tr>
+    <td colspan="3"><span id="view3Txt"></span></td>
+    <td colspan="1" width="80" class="button" align="right">
+      <input type="button" id="previewBtn" value="" width="75" class="btnNormal" onClick="previewToggle();" onMouseOver="return showStatus(toggleBtnStatTxt)" onMouseOut="return showStatus('')">
+    </td>
+  </tr>
+<!--#if expr="$action = modify" -->
+<!--#if expr="_$(root_StreamProfile_S$profilenbr$_Default_Name) != _" -->
+  <tr class="subTitle">
+    <td colspan="4" align="left"><span id="reProTxt"></span></td>
+  </tr>
+  <tr>
+    <td colspan="3"><span id="restAllValProfTxt"></span></td>
+    <td colspan="1" width="80" class="button" align="right">
+      <input type="button" value=""  width="75" class="btnNormal" onClick="JavaScript:restoreDefault();previewUpdate();" onMouseOver="return showStatus(restoreBtnStatTxt)" onMouseOut="return showStatus('')" id="restoreBtn"></td>
+  </tr>
+<!--#endif -->
+<!--#endif -->
+  <tr class="reuseLast">
+    <td colspan="4">
+    <div align="center">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td colspan="3"><br></td>
+        </tr>
+        <tr>
+          <td class="button"><input type="button" value="" name="save" class="btnNormal" width="75" onClick="javascript:onOK();" onMouseOver="return showStatus(okBtnStatTxt)" onMouseOut="return showStatus('')" id="saveBtn"></td>
+          <td class="button"><br></td>
+          <td class="button"><input type="button" value="" name="undo" class="btnNormal" width="75" onClick="javascript:onClose();" onMouseOver="return showStatus(closeBtnStatTxt)" onMouseOut="return showStatus('')" id="cancelBtn"></td>
+        </tr>
+      </table>
+    </div>
+    </td>
+  </tr>
+</table>
+      </div>
+      <div class="footerLeft"><div class="footerRight"></div></div>
+    </div>
+</form>
+<!--#include virtual="/incl/alternate_rows.shtml" -->
+
+</body>
+</html>

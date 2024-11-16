@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+	<comPort_h>
+		<pageTitle type="title" minor="0">Help/COM Port</pageTitle>
+		<titleTxt type="msgAsText" minor="0">COM Port</titleTxt>
+		<helpdecTxt type="text" minor="0">The serial connector allows you to connect legacy and auxiliary equipment to the Axis product. Once connected, a device can be configured to receive data such as alarms and messages. After consulting the auxiliary device's user documentation, select the appropriate settings for connecting to the product.</helpdecTxt>
+		<subTitle1Txt type="text" minor="0">Port Settings</subTitle1Txt>
+		<helpPortSettingsTxt type="text" minor="0">Check the &#x3C;b&#x3E;Enable port&#x3C;/b&#x3E; to enable the serial port and reveal more options.</helpPortSettingsTxt>
+		<helpSerialSettingsTxt type="text" minor="0">&#x3C;b&#x3E;Generic HTTP&#x3C;/b&#x3E; - Check this box to enable the serial port to be controlled by HTTP applications.</helpSerialSettingsTxt>
+		<helpPTZSettingsTxt type="text" minor="0">&#x3C;b&#x3E;Pan Tilt Zoom&#x3C;/b&#x3E; - Check this box to enable the port to be used for controlling a connected PTZ device. Click &#x3C;b&#x3E;Upload and select driver&#x3C;/b&#x3E; to upload a compatible driver. Click &#x3C;b&#x3E;Specify advanced device settings&#x3C;/b&#x3E; to set, for example, mechanical limits for the driver.</helpPTZSettingsTxt>
+		<helpPTZSettingsTxt-1 type="text" minor="0">&#x3C;b&#x3E;Pan Tilt Zoom&#x3C;/b&#x3E; - The port can be used for controlling a connected PTZ device. Click &#x3C;b&#x3E;Upload and select driver&#x3C;/b&#x3E; to upload a compatible driver.</helpPTZSettingsTxt-1>
+		<helpPTZSettingsTxt1 type="text" minor="0">Note that if the port type is Daisy Chain Client, a Daisy chain server must be running on another CPU for the driver to work.</helpPTZSettingsTxt1>
+		<helpTCPSettingsTxt1 type="text" minor="0">&#x3C;b&#x3E;Generic TCP/IP&#x3C;/b&#x3E; - Check this box to enable the port to be controlled by TCP applications.</helpTCPSettingsTxt1>
+		<helpTCPSettingsTxt2 type="text" minor="0">&#x3C;b&#x3E;Allowed IP addresses&#x3C;/b&#x3E; - Enter IP addresses allowed to communicate with the product. Each of the four parts of an IP address can be represented as</helpTCPSettingsTxt2>
+		<helpTCPSettingsTxt2-1 type="text" minor="0">&#x3C;b&#x3E;Allowed IP addresses&#x3C;/b&#x3E; - Enter IP addresses allowed to communicate with the product. Each of the parts of an IP address can be represented as</helpTCPSettingsTxt2-1>
+		<helpTCPSettingsTxt3 type="text" minor="0">a number, for example 12.123.12.123</helpTCPSettingsTxt3>
+		<helpTCPSettingsTxt4 type="text" minor="0">a range, for example 12.123.12.123-127 or 12.123.12-17.123-127</helpTCPSettingsTxt4>
+		<helpTCPSettingsTxt5 type="text" minor="0">a wildcard, for example 12.123.12.* or 12.123.*.*</helpTCPSettingsTxt5>
+		<helpTCPSettingsTxt6 type="text" minor="0">Use a comma as a separator for multiple patterns, for example 12.123.12-17.123-127,12.123.*.*</helpTCPSettingsTxt6>
+		<helpTCPSettingsTxt7 type="text" minor="0">&#x3C;b&#x3E;Timeout&#x3C;/b&#x3E; - If there is no activity on the connection for this amount of time, it will close. The value '0' means no timeout or wait.</helpTCPSettingsTxt7>
+		<helpTCPSettingsTxt8 type="text" minor="0">&#x3C;b&#x3E;Connect to&#x3C;/b&#x3E; - Check this box if the product should act as a client and connect to another host when data is received on the serial port.</helpTCPSettingsTxt8>
+		<helpTCPSettingsTxt9 type="text" minor="0">&#x3C;b&#x3E;Host&#x3C;/b&#x3E; and &#x3C;b&#x3E;Port&#x3C;/b&#x3E; - Enter the IP address and port number of the host.</helpTCPSettingsTxt9>
+		<helpTCPSettingsTxt10 type="text" minor="0">&#x3C;b&#x3E;Listener&#x3C;/b&#x3E; - The TCP server port to listen on.</helpTCPSettingsTxt10>
+		<helpTCPSettingsTxt11 type="text" minor="0">Ipv4</helpTCPSettingsTxt11>
+		<helpTCPSettingsTxt12 type="text" minor="0">Ipv6</helpTCPSettingsTxt12>
+		<helpTCPSettingsTxt13 type="text" minor="0">a number, for example 1:23:455:789A:bcde:f:ab12:34ff</helpTCPSettingsTxt13>
+		<helpTCPSettingsTxt14 type="text" minor="0">a range, for example 1:23:455:789A:bcde:f:ab12:34ff-35ff or 1:23-45:455:789A:bcde:f:ab12-ab13:34ff-35ff</helpTCPSettingsTxt14>
+		<helpTCPSettingsTxt15 type="text" minor="0">a wildcard, for example 1:23:455:789A:bcde:f:ab12:* or 1:23:455:789A:bcde:f:*:*</helpTCPSettingsTxt15>
+		<helpTCPSettingsTxt16 type="text" minor="0">Use a comma as a separator for multiple patterns, for example 12.123.12-17.123-127,12.123.*.*,1:0:0:0:*:0:0:34ff-35ff</helpTCPSettingsTxt16>
+		<helpRemoteServerTxt1 type="text" minor="0">&#x3C;b&#x3E;Daisy chain server&#x3C;/b&#x3E; - Check this box to enable the Daisy chain server and to reveal more options.</helpRemoteServerTxt1>
+		<helpRemoteServerTxt2 type="text" minor="0">&#x3C;b&#x3E;Allowed IP addresses&#x3C;/b&#x3E; - Enter IP addresses allowed to communicate with the product. See Generic TCP/IP for information about entering IP address combinations.</helpRemoteServerTxt2>
+		<helpRemoteServerTxt3 type="text" minor="0">&#x3C;b&#x3E;Timeout&#x3C;/b&#x3E; - If there is no activity on the connection for this amount of time, it will close. The value '0' means no timeout or wait.</helpRemoteServerTxt3>
+		<helpRemoteServerTxt4 type="text" minor="0">&#x3C;b&#x3E;Port&#x3C;/b&#x3E; - The server port to listen on.</helpRemoteServerTxt4>
+		<helpRemoteServerTxt5 type="text" minor="0">&#x3C;b&#x3E;Authentication key&#x3C;/b&#x3E; - Enter the remote server's authentication key. Use exactly 10 characters.</helpRemoteServerTxt5>
+		<helpRemoteServerTxt6 type="text" minor="0">Note that a Daisy chain client must not be used on the same CPU as the Daisy chain server is running on.</helpRemoteServerTxt6>
+		<helpRemoteServerTxt7 type="text" minor="0">&#x3C;b&#x3E;Note&#x3C;/b&#x3E;: The Axis product automatically generates the server authentication key when reset to factory default settings and will authenticate remote PTZ by default. To increase security, replace the default key with your own.</helpRemoteServerTxt7>
+		<subTitle3Txt type="text" minor="0">Port Type</subTitle3Txt>
+		<helpPortTypeTxt type="text" minor="0">&#x3C;b&#x3E;Port type&#x3C;/b&#x3E; - Select the desired port type from the drop-down list.</helpPortTypeTxt>
+		<helpPortTypeTxt_serial_port type="text" minor="0">&#x3C;b&#x3E;Port type&#x3C;/b&#x3E; - Serial Port</helpPortTypeTxt_serial_port>
+		<subTitle2Txt type="text" minor="0">Serial port settings</subTitle2Txt>
+		<helpSerialPortSettingsTxt type="text" minor="0">&#x3C;b&#x3E;Port mode&#x3C;/b&#x3E; - Select the desired port mode from the drop-down list.</helpSerialPortSettingsTxt>
+		<help2Txt type="text" minor="0">Parameter</help2Txt>
+		<help3Txt type="text" minor="0">Values</help3Txt>
+		<help5Txt type="text" minor="0">Baud Rate</help5Txt>
+		<help6Txt type="text" minor="0">300 to 460800 bps</help6Txt>
+		<help8Txt type="text" minor="0">Data Bits</help8Txt>
+		<help9Txt type="text" minor="0">7 or 8</help9Txt>
+		<help10Txt type="text" minor="0">Stop Bits</help10Txt>
+		<help11Txt type="text" minor="0">1 or 2</help11Txt>
+		<help12Txt type="text" minor="0">Parity</help12Txt>
+		<help13Txt type="text" minor="0">None, Even, Odd, Mark or Space</help13Txt>
+		<helptBTxt type="text" minor="0">&#x3C;b&#x3E;Termination/Bias&#x3C;/b&#x3E; -Check these boxes to use termination and/or bias functions.</helptBTxt>
+		<subTitle4Txt type="text" minor="0">Daisy Chain Port Settings</subTitle4Txt>
+		<helpDaisySettings2Txt type="text" minor="0">&#x3C;b&#x3E;Authentication key&#x3C;/b&#x3E; - Enter the authentication key of the daisy chain client.</helpDaisySettings2Txt>
+		<helpDaisySettingsNoteTxt type="text" minor="0">&#x3C;b&#x3E;Note&#x3C;/b&#x3E;: The Axis product automatically generates the client authentication key when reset to factory default settings and will authenticate a client by default. To increase security, replace the default key with your own.</helpDaisySettingsNoteTxt>
+	</comPort_h>
+
+
+
+
+
+	<ioports_h>
+		<pageTitle type="title" minor="0">Help/I/O Ports</pageTitle>
+		<titleTxt type="msgAsText" minor="0">I/O Ports</titleTxt>
+		<intro_Txt type="text" minor="0">This page allows configuration of the input and output ports supported by this device. Ports can be given descriptive names, and their &#x3C;b&#x3E;Normal state&#x3C;/b&#x3E; can be configured.</intro_Txt>
+		<subTitle_inputs_Txt type="text" minor="0">Inputs</subTitle_inputs_Txt>
+		<inactive_Txt type="text" minor="0">An input will be inactive as long as its &#x3C;b&#x3E;Normal state&#x3C;/b&#x3E; equals its &#x3C;b&#x3E;Current state&#x3C;/b&#x3E;.</inactive_Txt>
+		<options_Txt type="text" minor="1">The two options for Normal state are </options_Txt>
+		<in_opto_Txt type="text" minor="0">&#x3C;b&#x3E;Open circuit&#x3C;/b&#x3E; and &#x3C;b&#x3E;Closed circuit&#x3C;/b&#x3E;.</in_opto_Txt>
+		<in_trans_Txt type="text" minor="0">&#x3C;b&#x3E;Open circuit&#x3C;/b&#x3E; and &#x3C;b&#x3E;Grounded circuit&#x3C;/b&#x3E;.</in_trans_Txt>
+		<in_states_Txt1 type="text" minor="0">The input is activated when the state changes from the Normal state.</in_states_Txt1>
+		<in_states_Txt2 type="text" minor="0">As an example, if the Normal state for a pushbutton connected to an input is Open circuit, this means that as long as the button is not pushed, the &#x3C;b&#x3E;Current Status&#x3C;/b&#x3E; will be &#x3C;b&#x3E;Inactive&#x3C;/b&#x3E;.</in_states_Txt2>
+		<in_states_Txt3 type="text" minor="0">When the button is pushed, the circuit is grounded, the input's state changes to Grounded Circuit. and the input will no longer be in its normal state the &#x3C;b&#x3E;Current Status&#x3C;/b&#x3E; will be &#x3C;b&#x3E;Active&#x3C;/b&#x3E;</in_states_Txt3>
+		<in_states_Txt4 type="text" minor="0">An input on the Axis product has an Open Circuit when disconnected or when there is a voltage above 1V DC.</in_states_Txt4>
+		<in_states_Txt5 type="text" minor="0">The input is activated when the Current state changes so that it no longer equals the Normal state.</in_states_Txt5>
+		<in_states_Txt6 type="text" minor="0">As an example, if the Normal state for a pushbutton connected to an input is Open circuit, this means that as long as the button is not pushed (and the Current state remains as Open Circuit), the state will be &#x3C;b&#x3E;inactive&#x3C;/b&#x3E;.</in_states_Txt6>
+		<in_states_Txt7 type="text" minor="0">When the button is pushed, the circuit</in_states_Txt7>
+		<in_example_opto_Txt type="text" minor="0">closes, the input's state changes to Closed Circuit</in_example_opto_Txt>
+		<in_example_trans_Txt type="text" minor="0">is grounded, the input's state changes to Grounded Circuit</in_example_trans_Txt>
+		<in_example_end_Txt type="text" minor="0">and the input will no longer be in its normal state - it will have become &#x3C;b&#x3E;active&#x3C;/b&#x3E;.</in_example_end_Txt>
+		<in_voltage_Txt type="text" minor="0">An input on the product has an Open Circuit when disconnected or when there is a voltage above 1V DC.</in_voltage_Txt>
+		<subTitle_outputs_Txt type="text" minor="0">Outputs</subTitle_outputs_Txt>
+		<outputs_default_Txt1 type="text" minor="0">In the product, as long as the Current state is &#x3C;b&#x3E;Open circuit&#x3C;/b&#x3E;, the output is disconnected (floating). When the circuit closes, the current state will change to &#x3C;b&#x3E;Closed circuit&#x3C;/b&#x3E;.</outputs_default_Txt1>
+		<outputs_default_Txt2 type="text" minor="0">The default hardware setting for outputs on the product is &#x3C;i&#x3E;Open circuit&#x3C;/i&#x3E;. This will also be the case every time the unit is restarted.</outputs_default_Txt2>
+		<outputs_default_Txt3 type="text" minor="0">Note that while the unit is restarting, the output will be in the default hardware state (i.e. Open circuit) for at least as long as it takes for the unit to fully initialize. Consider this carefully when connecting equipment to the output. After a completed restart, the unit will then switch to &#x3C;i&#x3E;Open circuit&#x3C;/i&#x3E; (but only if configured to do so.)</outputs_default_Txt3>
+		<outputs_trans_Txt1 type="text" minor="0">In the product, as long as the current state is &#x3C;b&#x3E;Open circuit&#x3C;/b&#x3E;, the output is disconnected (floating). When the circuit is grounded, the current state changes to &#x3C;b&#x3E;Grounded circuit&#x3C;/b&#x3E;.</outputs_trans_Txt1>
+		<outputs_trans_Txt2 type="text" minor="0">The default hardware setting for outputs on the product is &#x3C;i&#x3E;Open circuit&#x3C;/i&#x3E;. This will also be the case every time the unit is restarted.</outputs_trans_Txt2>
+		<outputs_trans_Txt3 type="text" minor="0">While the unit is restarting, the output will be in the default hardware state (i.e. Open circuit) for at least as long as it takes for the unit to fully initialize. Consider this carefully when connecting equipment to the output. After a completed restart, the unit will then switch to &#x3C;i&#x3E;Grounded circuit&#x3C;/i&#x3E; (but only if configured to do so).</outputs_trans_Txt3>
+		<outputs_note_Txt type="text" minor="0">&#x3C;b&#x3E;Note:&#x3C;/b&#x3E; Changing and saving settings on this  page will also reset outputs to their default states. The state will be correct the next time the triggering event activates the output.</outputs_note_Txt>
+		<subTitle3Txt type="text" minor="0">Connections</subTitle3Txt>
+		<conn_nodiagram_Txt type="text" minor="0">For details of the connections available on the</conn_nodiagram_Txt>
+		<conn_connmod_Txt type="text" minor="0">connection module for the</conn_connmod_Txt>
+		<conn_seeUM_Txt type="text" minor="0">product, please see the User's Manual.</conn_seeUM_Txt>
+		<single_help_diagram_Txt type="text" minor="0">For detailed information on how to connect the input and output on this device, please see the User's Manual.</single_help_diagram_Txt>
+	</ioports_h>
+
+
+
+
+
+	<pirport_h>
+		<pageTitle type="title" minor="0">Help/PIR Sensor</pageTitle>
+		<titleTxt type="msgAsText" minor="0">PIR Sensor</titleTxt>
+		<intro_Txt type="text" minor="0">&#x3C;b&#x3E;Passive InfraRed sensor (PIR Sensor)&#x3C;/b&#x3E; is an electronic device that measures infrared (IR) light radiating from objects in its field of view. It is generally used to detect movement, even in the dark and it can be used as an intruder alarm when, for example, a thief tries to break into a building at night.</intro_Txt>
+		<testLightHintTxt1 type="text" minor="0">Motion is detected when an infrared object such as a person that has one temperature passes in front of another object that has a different temperature such as a wall. An Action Rule can be configured to use PIR sensor to trigger an event which can automatically result in a camera doing an action such as activating the light, record video or send notification such as an email etc.</testLightHintTxt1>
+		<testLightHintTxt2 type="text" minor="0">&#x3C;b&#x3E;PIR Sensor State - &#x3C;/b&#x3E; This setting shows the current state of the PIR Sensor, such as being active or inactive.</testLightHintTxt2>
+		<testLightHintTxt3 type="text" minor="0">&#x3C;b&#x3E;Sensitivity Settings - &#x3C;/b&#x3E; This setting is used to adjust the sensitivity of the PIR Sensor from 0 - 100%. The   default sensitivity is 75%.</testLightHintTxt3>
+		<testLightHintTxt4 type="text" minor="0">To set up a suitable sensitivity for when the PIR sensor triggers, first go to &#x3C;b&#x3E;Events&#x3C;/b&#x3E; and set up an &#x3C;b&#x3E;Action Rule&#x3C;/b&#x3E; using PIR as a &#x3C;b&#x3E;Trigger&#x3C;/b&#x3E;. Then set sensitivity by moving the sensitivity slider to adjust the PIR Sensor's sensitivity and range until the light is triggered. By increasing the sensitivity, the range of the PIR Sensor is also increased</testLightHintTxt4>
+		<introsimple_Txt type="text" minor="0">This page shows the status of the PIR Sensor.</introsimple_Txt>
+	</pirport_h>
+
+	<rsPort_h>
+		<pageTitle type="title" minor="0">Help/COM Port Modes</pageTitle>
+		<titleTxt type="msgAsText" minor="0">COM Port Modes</titleTxt>
+		<introTxt type="text" minor="0">The COM port on the Axis product supports several operational modes. Choose the desired &#x3C;b&#x3E;Port mode&#x3C;/b&#x3E; and &#x3C;b&#x3E;Usage&#x3C;/b&#x3E; from the drop-down lists. The following operational modes are available:</introTxt>
+		<tcpTxt type="text" minor="0">&#x3C;a href='rsPort_tcpip_h.shtml'&#x3E;Generic TCP/IP&#x3C;/a&#x3E; - allows the port to be controlled by TCP/IP applications.</tcpTxt>
+		<hTTPTxt type="text" minor="0">&#x3C;a href='rsPort_http_h.shtml?portMode=HTTP'&#x3E;Generic HTTP&#x3C;/a&#x3E; - allows access to the port via HTTP.</hTTPTxt>
+		<dCHTTPTxt type="text" minor="0">&#x3C;a href='rsPort_http_h.shtml?portMode=DCHTTP'&#x3E;Daisy Chain HTTP&#x3C;/a&#x3E;</dCHTTPTxt>
+		<pTZTxt type="text" minor="0">&#x3C;a href='rsPort_ptz_h.shtml?portMode=PTZ'&#x3E;Pan Tilt Zoom&#x3C;/a&#x3E; - uses the port to control a Pan Tilt Zoom device. A PTZ device requires a driver for its function. Drivers may be obtained from www.axis.com</pTZTxt>
+		<dCPTZTxt type="text" minor="0">&#x3C;a href='rsPort_ptz_h.shtml?portMode=DCPTZ'&#x3E;Daisy Chain Pan Tilt Zoom&#x3C;/a&#x3E;</dCPTZTxt>
+	</rsPort_h>
+
+	<rsPort_http_h>
+		<pageTitle type="title" minor="0">Help/COM Port - Daisy Chain HTTP</pageTitle>
+		<titleTxt type="msgAsText" minor="0">COM Port - Daisy Chain HTTP</titleTxt>
+		<alternativePageTitle type="msgAsText" minor="0">Help/COM Port - Generic HTTP</alternativePageTitle>
+		<alternativeTitleTxt type="msgAsText" minor="0">COM Port - Generic HTTP</alternativeTitleTxt>
+		<daisyTxt type="text" minor="0">This mode should be selected if the HTTP applications are connected in a daisy chain.</daisyTxt>
+		<subTitleTxt1 type="text" minor="0">&#x3C;a name='ptz'&#x3E;&#x3C;/a&#x3E;Port Settings</subTitleTxt1>
+		<usageTxt1 type="text" minor="0">For information about usage, see:</usageTxt1>
+		<usageTxt2 type="text" minor="0">COM Port Modes</usageTxt2>
+		<keyTxt1 type="text" minor="0">&#x3C;b&#x3E;Authentication Key&#x3C;/b&#x3E; - The Axis product provides a single RS-485 port, which is available on video input 1. This port can be used to control PTZ devices, and it can also be accessed by HTTP applications.</keyTxt1>
+		<keyTxt2 type="text" minor="0">Although the single RS-485 port is provided on video input 1, it is still possible for the other video inputs to access it, by making use of internal connections between the inputs in the product.</keyTxt2>
+		<keyTxt3 type="text" minor="0">Each connection can optionally be protected by the use of an authentication key, which must consist of 10 alphanumeric characters. The same key should be used by all other video inputs that wish to use the port.</keyTxt3>
+		<keyTxt4 type="text" minor="0">&#x3C;b&#x3E;Note:&#x3C;/b&#x3E; If video input 1 is restarted independently of the other inputs, this will terminate any active PTZ or HTTP connections to inputs 2-4. To fix this, either restart the whole product, or de-select and re-select PTZ or HTTP as the usage on the RS-485 port.</keyTxt4>
+		<subTitleTxt3 type="text" minor="0">Generic HTTP Settings</subTitleTxt3>
+		<help1Txt type="text" minor="0">Generic HTTP allows the port to be controlled by HTTP applications. The available parameters are listed below.</help1Txt>
+		<help31Txt type="text" minor="0">Parameter</help31Txt>
+		<help32Txt type="text" minor="0">Values</help32Txt>
+		<help33Txt type="text" minor="0">Notes</help33Txt>
+		<help34Txt type="text" minor="0">Baud Rate</help34Txt>
+		<help35Txt type="text" minor="0">300 to</help35Txt>
+		<help35aTxt type="text" minor="0">460800 bps</help35aTxt>
+		<help35bTxt type="text" minor="0">115200 bps</help35bTxt>
+		<help36Txt type="text" minor="0">Data Bits</help36Txt>
+		<help37Txt type="text" minor="0">7 or 8</help37Txt>
+		<help38Txt type="text" minor="0">Stop Bits</help38Txt>
+		<help39Txt type="text" minor="0">1 or 2</help39Txt>
+		<help40Txt type="text" minor="0">Parity</help40Txt>
+		<help41Txt type="text" minor="0">None, Even or Odd</help41Txt>
+	</rsPort_http_h>
+
+	<rsPort_ptz_h>
+		<pageTitle type="title" minor="0">Help/COM Port - Daisy Chain PTZ</pageTitle>
+		<titleTxt type="msgAsText" minor="0">COM Port - Daisy Chain PTZ</titleTxt>
+		<alternativePageTitle type="msgAsText" minor="0">Help/COM Port - Pan Tilt Zoom</alternativePageTitle>
+		<alternativeTitleTxt type="msgAsText" minor="0">COM Port - Pan Tilt Zoom</alternativeTitleTxt>
+		<daisyTxt type="text" minor="0">PTZ devices can be connected in a daisy chain allowing the devices to share a single serial port. See User's Manual for instructions.</daisyTxt>
+		<subTitleTxt1 type="text" minor="0">&#x3C;a name='ptz'&#x3E;&#x3C;/a&#x3E;Port Settings</subTitleTxt1>
+		<help1Txt type="text" minor="0">Selecting Pan Tilt Zoom enables the port to be used for controlling a connected PTZ device. Basic serial port settings can be adjusted by clicking the &#x3C;b&#x3E;Port Options&#x3C;/b&#x3E; button.</help1Txt>
+		<usageTxt1 type="text" minor="0">For information about usage, see:</usageTxt1>
+		<usageTxt2 type="text" minor="0">COM Port Modes</usageTxt2>
+		<keyTxt1 type="text" minor="0">&#x3C;b&#x3E;Authentication Key&#x3C;/b&#x3E; - The Axis product provides a single RS-485 port, which is available on video input 1. This port can be used to control PTZ devices, and it can also be accessed by HTTP applications.</keyTxt1>
+		<keyTxt2 type="text" minor="0">Although the single RS-485 port is provided on video input 1, it is still possible for the other video inputs to access it, by making use of internal connections between the inputs in the product.</keyTxt2>
+		<keyTxt3 type="text" minor="0">Each connection can optionally be protected by the use of an authentication key, which must consist of 10 alphanumeric characters. The same key should be used by all other video inputs that wish to use the port.</keyTxt3>
+		<keyTxt4 type="text" minor="0">&#x3C;b&#x3E;Note:&#x3C;/b&#x3E; If video input 1 is restarted independently of the other inputs, this will terminate any active PTZ or HTTP connections to inputs 2-4. To fix this, either restart the whole product, or de-select and re-select PTZ or HTTP as the usage on the RS-485 port.</keyTxt4>
+		<subTitleTxt2 type="text" minor="0">PTZ Driver Management</subTitleTxt2>
+		<help2Txt1 type="text" minor="0">This section shows the name and version of the PTZ driver currently in use. To install a new driver, click the &#x3C;b&#x3E;Upload&#x3C;/b&#x3E; button.</help2Txt1>
+		<help2Txt2 type="text" minor="0">PTZ drivers can be obtained from www.axis.com.</help2Txt2>
+		<help2Txt3 type="text" minor="0">Please note that using the wrong PTZ driver for a PTZ device may cause unwanted effects.</help2Txt3>
+		<subTitleTxt3 type="text" minor="0">Video Source Configuration</subTitleTxt3>
+		<help3Txt1 type="text" minor="0">After uploading a PTZ driver, select the video source it will be used on. Depending on the PTZ driver being used, it may be possible to control several PTZ units (for several video sources), by connecting these in a 'daisy chain'</help3Txt1>
+		<help3Txt2 type="text" minor="0">In this case, each unit is automatically given a unique &#x3C;b&#x3E;Device ID&#x3C;/b&#x3E;, so that the driver can differentiate between the various units. These ID values may be changed as desired. Please see the documentation for your PTZ unit for information on how to set device ID values.</help3Txt2>
+		<help3Txt3 type="text" minor="0">It may also be possible to select the (PTZ) &#x3C;b&#x3E;Device Type&#x3C;/b&#x3E; for the video source.</help3Txt3>
+	</rsPort_ptz_h>
+
+	<rsPort_tcpip_h>
+		<pageTitle type="title" minor="0">Help/COM Ports</pageTitle>
+		<titleTxt type="msgAsText" minor="0">COM Ports</titleTxt>
+		<alternativePageTitle type="msgAsText" minor="0">Help/COM Ports - Generic TCP/IP</alternativePageTitle>
+		<alternativeTitleTxt type="msgAsText" minor="0">COM Ports - Generic TCP/IP</alternativeTitleTxt>
+		<subTitlePortTxt type="text" minor="0">Port Settings</subTitlePortTxt>
+		<helpPortsTxt1 type="text" minor="0">Choose the port mode. The available options are:</helpPortsTxt1>
+		<helpPortsTxt2 type="text" minor="0">RS-232</helpPortsTxt2>
+		<helpPortsTxt3 type="text" minor="0">RS-485/422 - 2 wire</helpPortsTxt3>
+		<helpPortsTxt4 type="text" minor="0">RS-485/422 - 4 wire</helpPortsTxt4>
+		<help1Txt type="text" minor="0">Generic TCP/IP allows the port to be controlled by TCP/IP applications. The available parameters are listed below.</help1Txt>
+		<subTitle2Txt type="text" minor="0">Generic TCP/IP Settings</subTitle2Txt>
+		<help2Txt type="text" minor="0">Parameter</help2Txt>
+		<help3Txt type="text" minor="0">Values</help3Txt>
+		<help4Txt type="text" minor="0">Notes</help4Txt>
+		<help5Txt type="text" minor="0">Baud Rate</help5Txt>
+		<help6Txt type="text" minor="0">300 to</help6Txt>
+		<help6aTxt type="text" minor="0">460800 bps</help6aTxt>
+		<help6bTxt type="text" minor="0">115200 bps</help6bTxt>
+		<help8Txt type="text" minor="0">Data Bits</help8Txt>
+		<help9Txt type="text" minor="0">7 or 8</help9Txt>
+		<help10Txt type="text" minor="0">Stop Bits</help10Txt>
+		<help11Txt type="text" minor="0">1 or 2</help11Txt>
+		<help12Txt type="text" minor="0">Parity</help12Txt>
+		<help13Txt type="text" minor="0">None, Even or Odd</help13Txt>
+		<help14Txt type="text" minor="0">Flow Control RTS/CTS</help14Txt>
+		<help15Txt type="text" minor="0">Enabled/disabled</help15Txt>
+		<help16Txt type="text" minor="0">Flow Control XON/XOFF</help16Txt>
+		<help17Txt type="text" minor="0">Enabled/disabled</help17Txt>
+		<help18Txt type="text" minor="0">Connect to</help18Txt>
+		<help19Txt type="text" minor="0">The IP address and port number to use if the Axis product should act as a client and connect to another host when data is received on the serial port.</help19Txt>
+		<help21Txt1 type="text" minor="0">Example: 10.13.7.12 4000 or 10.13.7.12:4000</help21Txt1>
+		<help21Txt2 type="text" minor="0">If no port number is specified, the Listener Port (see below) is used.</help21Txt2>
+		<help22Txt1 type="text" minor="0">Listener Port</help22Txt1>
+		<help22Txt2 type="text" minor="0">80, 1024-65535</help22Txt2>
+		<help23Txt type="text" minor="0">The TCP Server port to listen on. Default is 4001. If 0 or empty, server functionality is disabled for the port.</help23Txt>
+		<help24Txt type="text" minor="0">Timeout</help24Txt>
+		<help25Txt type="text" minor="0">0-3600 seconds.</help25Txt>
+		<help26Txt type="text" minor="0">If there is no activity on the connection for this time, it will be closed. 0 means no timeout/wait forever.</help26Txt>
+		<help27Txt type="text" minor="0">Support Telnet Options</help27Txt>
+		<help28Txt type="text" minor="0">YES/NO</help28Txt>
+		<help29Txt type="text" minor="0">Set to &#x3C;b&#x3E;YES&#x3C;/b&#x3E; to use Telnet options for controlling settings and pin status.</help29Txt>
+		<help30Txt type="text" minor="0">Allowed users</help30Txt>
+		<help31Txt type="text" minor="0">Any valid user name.</help31Txt>
+		<help32Txt type="text" minor="0">Use comma or space as separator. For this option to work &#x3C;b&#x3E;Support Telnet Option&#x3C;/b&#x3E; must be set to &#x3C;b&#x3E;YES&#x3C;/b&#x3E;.</help32Txt>
+		<help33Txt type="text" minor="0">Allowed IP addresses</help33Txt>
+		<help34Txt type="text" minor="0">IP addresses.</help34Txt>
+		<help35Txt type="text" minor="0">Use comma or space as separator.</help35Txt>
+	</rsPort_tcpip_h>
+
+
+
+
+
+	<driverMan_settings_h>
+		<pageTitle type="title" minor="0">Help/PTZ Driver Management</pageTitle>
+		<titleTxt type="msgAsText" minor="0">PTZ Driver Management</titleTxt>
+		<help1Txt type="text" minor="0">A PTZ driver is required for the correct function of a connected Pan Tilt Zoom device.</help1Txt>
+		<subTitle1Txt type="text" minor="0">Uploading a PTZ driver</subTitle1Txt>
+		<help2Txt1 type="text" minor="0">To upload a PTZ driver, enter the name of the file in the text field, or use the &#x3C;b&#x3E;Browse&#x3C;/b&#x3E; button to locate it. Then click the &#x3C;b&#x3E;Upload &#x3C;/b&#x3E;button. The driver will be uploaded and automatically installed.</help2Txt1>
+		<help2Txt2 type="text" minor="0">By checking the box provided, it is also possible to &#x3C;b&#x3E;Force&#x3C;/b&#x3E; the driver installation, that is, to install the driver even if there might be a conflict with the installed firmware. This function can be useful in certain circumstances, e.g. for test purposes, or when installing new driver versions on older firmware versions. Note that the Force option will have no effect on serious conflicts.</help2Txt2>
+		<help3Txt1 type="text" minor="0">&#x3C;b&#x3E;Important Notes!&#x3C;/b&#x3E;</help3Txt1>
+		<help3Txt2 type="text" minor="0">Note that replacing or re-installing a PTZ driver will set all of the PTZ unit's parameters to the default settings for the new driver.</help3Txt2>
+		<help3Txt3 type="text" minor="0">Using the correct driver for the PTZ unit is important, but it is equally important to use a driver that supports the serial port protocol (RS485, RS232, etc.)</help3Txt3>
+		<help3Txt4 type="text" minor="0">To completely uninstall a PTZ driver, simply perform the driver upload again, but do not specify a file name.</help3Txt4>
+	</driverMan_settings_h>
+
+
+
+
+
+	<portMan_settings_h>
+		<pageTitle type="title" minor="0">Help/Port Management</pageTitle>
+		<titleTxt type="msgAsText" minor="0">Port Management</titleTxt>
+		<help1Txt type="text" minor="0">After selecting Pan Tilt Zoom for the port, there are several serial port settings that can be configured. The default values correspond to the values specified by the PTZ driver.</help1Txt>
+		<subTitle1Txt type="text" minor="0">Serial Port Settings</subTitle1Txt>
+		<help2Txt type="text" minor="0">Parameter</help2Txt>
+		<help3Txt type="text" minor="0">Values</help3Txt>
+		<help4Txt type="text" minor="0">Notes</help4Txt>
+		<help5Txt type="text" minor="0">Baud Rate</help5Txt>
+		<help6Txt type="text" minor="0">300 to</help6Txt>
+		<help6aTxt type="text" minor="0">460800 bps</help6aTxt>
+		<help6bTxt type="text" minor="0">115200 bps</help6bTxt>
+		<help7Txt type="text" minor="0">Data Bits</help7Txt>
+		<help8Txt type="text" minor="0">7 or 8</help8Txt>
+		<help9Txt type="text" minor="0">Stop Bits</help9Txt>
+		<help10Txt type="text" minor="0">1 or 2</help10Txt>
+		<help11Txt type="text" minor="0">Parity</help11Txt>
+		<help12Txt type="text" minor="0">None, Even or Odd</help12Txt>
+		<help13Txt type="text" minor="0">To restore the default settings for the selected driver, click the &#x3C;b&#x3E;Default&#x3C;/b&#x3E; button.</help13Txt>
+	</portMan_settings_h>
+
+
+
+
+
+	<portStatus_h>
+		<pageTitle type="title" minor="0">Help/Port Status</pageTitle>
+		<titleTxt type="msgAsText" minor="0">Port Status</titleTxt>
+		<help1Txt type="text" minor="0">This list shows the status for the</help1Txt>
+		<help1Txt-1 type="text" minor="0">This list shows the status of the input and output ports supported by the Axis product.</help1Txt-1>
+		<help3Txt type="text" minor="0">1 input port</help3Txt>
+		<help4Txt type="text" minor="0">input ports</help4Txt>
+		<help6Txt type="text" minor="0">and</help6Txt>
+		<help7Txt type="text" minor="0">1 output port</help7Txt>
+		<help8Txt type="text" minor="0">output ports</help8Txt>
+		<help8aTxt type="text" minor="0">supported by the Axis product.</help8aTxt>
+		<help8bTxt type="text" minor="0">The ports shown in the list cannot be configured here - this must be done from &#x3C;a href='ioports_h.shtml'&#x3E;Ports &#x26; Devices&#x3C;/a&#x3E; in the System options, which requires administrator access.</help8bTxt>
+	</portStatus_h>
+
+
+
+
+
+	<accelerometer_h>
+		<pageTitle type="title" minor="0">Help/Accelerometer</pageTitle>
+		<titleTxt type="msgAsText" minor="0">Accelerometer</titleTxt>
+		<intro_Txt type="text" minor="0">The leveling assistant produces audio beeps and changes the color of the status LED to ensure that the Axis product is mounted horizontally during installation.</intro_Txt>
+		<subTitle_Leveling_Txt type="text" minor="0">Leveling</subTitle_Leveling_Txt>
+		<Leveling1_Txt type="text" minor="0">The leveling assistant is enabled by default. To disable it, uncheck the &#x3C;b&#x3E;Enable leveling assistant&#x3C;/b&#x3E; box and click &#x3C;b&#x3E;Save&#x3C;/b&#x3E;. To restore the leveling assistant to previous settings, click &#x3C;b&#x3E;Reset&#x3C;/b&#x3E;.</Leveling1_Txt>
+		<Leveling2_Txt type="text" minor="0">To activate the leveling assistant, press and hold the assistant button (hardware button 1) for two seconds.</Leveling2_Txt>
+		<Leveling2_Txt-1 type="text" minor="1">To activate the leveling assistant, press and hold the &#x3C;b&#x3E;Function button (button 2)&#x3C;/b&#x3E; for two seconds.</Leveling2_Txt-1>
+		<Leveling2buttons_Txt type="text" minor="0">To activate the leveling assistant, press and hold the &#x3C;b&#x3E;Function button&#x3C;/b&#x3E; for two seconds.</Leveling2buttons_Txt>
+		<Leveling3_Txt type="text" minor="0">The internal speaker produces short beeps when the leveling assistant is active. The delay between the beeps decreases gradually as the camera approaches a 0, 90, 180 or 270 degree angle. When the angle is 0, 90, 180 or 270 degrees the tone is continuous.</Leveling3_Txt>
+		<Leveling4_Txt type="text" minor="0">Similarly, the status LED changes from flashing red to flashing yellow to flashing green as the camera approaches a 0, 90, 180 or 270 degree angle. When the angle is 0, 90, 180 or 270 degrees the LED will turn green.</Leveling4_Txt>
+		<Leveling5_Txt type="text" minor="0">To deactivate the leveling assistant, press and hold the assistant button for more than 2 seconds.</Leveling5_Txt>
+		<Leveling5_Txt-1 type="text" minor="1">To deactivate the leveling assistant, press and hold the &#x3C;b&#x3E;Function button&#x3C;/b&#x3E; for more than 2 seconds.</Leveling5_Txt-1>
+		<Leveling5buttons_Txt type="text" minor="0">To deactivate the leveling assistant, press and hold the &#x3C;b&#x3E;Function button (button 2)&#x3C;/b&#x3E; for more than 2 seconds.</Leveling5buttons_Txt>
+		<LevelingNote_Txt type="text" minor="0">&#x3C;b&#x3E;Note&#x3C;/b&#x3E;: The leveling assistant will automatically deactivate itself when it has been active for more than 15 minutes.</LevelingNote_Txt>
+	</accelerometer_h>
+</language_xml>

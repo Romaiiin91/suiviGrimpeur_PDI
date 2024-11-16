@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<language_xml>
+	<wait>
+		<processing type="msgAsText">Traitement en cours...</processing>
+	</wait>
+</language_xml>

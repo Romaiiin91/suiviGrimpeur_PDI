@@ -1,0 +1,7 @@
+
+  .actionContainer{ display:none; }
+  #gatekeeperSetupPage{ width:556px; }
+  #instructionText{ padding:3px 3px 6px; float:none; clear:both; display:block; }
+  .wizardButtons{ float:none; clear:both; padding:5px 0; width:100%; text-align:right;}
+  #motionTopicTxt{ clear:none; float:left; }
+  #gatekeeperSetupPage #statesContainer, #gatekeeperSetupPage #triggerContainer{ clear:none; float:left; }

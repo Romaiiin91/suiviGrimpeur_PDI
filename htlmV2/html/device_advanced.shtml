@@ -1,0 +1,556 @@
+
+<!--#set var="helpURL" val="javascript:launch('/help/device_advanced_h.shtml')" -->
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#set var="activeMenu" val="dome" -->
+<!--#include virtual="/incl/nbr_to_camnbr.shtml" -->
+<!--#set var="activePage" val="device_advanced$nbr$" -->
+<!--#set var="activeMenu1" val="preset$nbr$" -->
+<!--#set var="activeMenu2" val="device$nbr$" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+
+<!--#include virtual="/sm/sm.srv?action=get&group=PTZ" -->
+
+<!--#set var="index" val="$camnbr" -->
+
+<!--#if expr="$(root_PTZ_CamPorts_Cam$index$Port) = 1" -->
+  <!--#set var="COMport" val="1" -->
+<!--#endif -->
+<!--#if expr="$(root_PTZ_CamPorts_Cam$index$Port) = 2" -->
+  <!--#set var="COMport" val="2" -->
+<!--#endif -->
+<!--#if expr="$(root_PTZ_CamPorts_Cam$index$Port) = 3" -->
+  <!--#set var="COMport" val="3" -->
+<!--#endif -->
+<!--#if expr="$(root_PTZ_CamPorts_Cam$index$Port) = 4" -->
+  <!--#set var="COMport" val="4" -->
+<!--#endif -->
+
+<!--#include virtual="/java/chkbox.shtml" -->
+
+<!--#set var="inputsize" val="4" -->
+<!--#if expr="$(root_PTZ_Support_S$index$_DigitalZoom) = true" -->
+  <!--#set var="inputsize" val="5" -->
+<!--#endif -->
+<!--#if expr="_$(root_PTZ_Support_S$index$_BackLight) != _" -->
+  <!--#set var="light" val="yes" -->
+<!--#endif -->
+<!--#if expr="_$(root_PTZ_Support_S$index$_IrCutFilter) != _" -->
+  <!--#set var="light" val="yes" -->
+<!--#endif -->
+
+<script language="JavaScript">
+
+var langObjPtzDevAdv = new Language("ptz", "device_advanced");
+
+function setCheckbox(theCheckbox, isEnabled)
+{
+  if (isEnabled == "true") {
+    theCheckbox.checked = true;
+    theCheckbox.value = "true";
+  } else {
+    theCheckbox.value = "false";
+  }
+}
+
+function initDoc()
+{
+  langObjPtzDevAdv.init();
+
+  setCheckbox(document.getElementById("ZoomEnabled"), "<!--#echo var="root_PTZ_Various_V$index$_ZoomEnabled" option="encoding:javascript" -->");
+  setCheckbox(document.getElementById("FocusEnabled"), "<!--#echo var="root_PTZ_Various_V$index$_FocusEnabled" option="encoding:javascript" -->");
+
+  <!--#if expr="$light = yes" -->
+    setCheckbox(document.getElementById("BackLightEnabled"), "<!--#echo var="root_PTZ_Various_V$index$_BackLightEnabled" option="encoding:javascript" -->");
+  <!--#endif -->
+  hideParams();
+  warn();
+}
+
+function savePTZData()
+{
+  var portno = parseInt("<!--#echo var="COMport" option="encoding:javascript" -->", 10);
+  var period = 250;
+  var delay = 0;
+
+  if (<!--#echo var="root_PTZ_CamPorts_Cam1Port" option="encoding:javascript" --> == portno) {
+    document.PTZ.submit();
+    delay += period;
+  }
+ // delay to allow errors to be resported back
+ // window.setTimeout("window.location.reload()", delay + 500);
+}
+
+function setParams()
+{
+  var delay = 0;
+  var period = 500;
+  var portno = parseInt("<!--#echo var="COMport" option="encoding:javascript" -->", 10);
+
+  if (!isValidParams())
+    return;
+
+  document.limitform.submit();
+
+<!--#if expr="$http_user_realms >< ¤Administrator¤" -->
+  window.setTimeout("document.advform.submit()",  delay += period);
+<!--#endif -->
+  if (<!--#echo var="root_PTZ_CamPorts_Cam1Port" option="encoding:javascript" --> == portno) {
+    window.setTimeout("document.PTZ.submit()", delay += 2*period);
+  }
+  // delay to allow parameters to be updated and any warning to be set
+  window.setTimeout("window.location.reload(true)", delay += 4*period);
+}
+
+<!-- Set variables determining whether input elements should be disabled -->
+<!--#if expr="$(root_PTZ_Support_S$index$_AbsolutePan) = true" -->
+  <!--#set var="abs_pan" val="yes" -->
+<!--#endif -->
+
+<!--#if expr="$(root_PTZ_Support_S$index$_AbsoluteTilt) = true" -->
+  <!--#set var="abs_tilt" val="yes" -->
+<!--#endif -->
+
+<!--#if expr="$(root_PTZ_Support_S$index$_AbsoluteZoom) = true" -->
+  <!--#set var="zoom" val="yes" -->
+  <!--#set var="abs_zoom" val="yes" -->
+  <!--#if expr="$(root_PTZ_Various_V$index$_ZoomEnabled) = true" -->
+    <!--#set var="optical" val="yes" -->
+  <!--#endif -->
+<!--#else -->
+  <!--#if expr="$(root_PTZ_Support_S$index$_RelativeZoom) = true" -->
+    <!--#set var="zoom" val="yes" -->
+  <!--#endif -->
+<!--#endif -->
+
+<!--#if expr="$(root_PTZ_Support_S$index$_AbsoluteFocus) = true" -->
+  <!--#set var="focus" val="yes" -->
+  <!--#set var="abs_focus" val="yes" -->
+<!--#else -->
+  <!--#if expr="$(root_PTZ_Support_S$index$_RelativeFocus) = true" -->
+    <!--#set var="focus" val="yes" -->
+  <!--#endif -->
+<!--#endif -->
+
+<!--#if expr="$(root_PTZ_Support_S$index$_BackLight) = true" -->
+  <!--#set var="blc" val="yes" -->
+<!--#endif -->
+<!--#if expr="$(root_PTZ_Support_S$index$_IrCutFilter) = true" -->
+  <!--#set var="irc" val="yes" -->
+<!--#endif -->
+function isValidParams()
+{
+<!--#if expr="$abs_pan = yes" -->
+  var oMin = document.getElementsByName("root_PTZ_Limit_L<!--#echo var="index" option="encoding:html" -->_MinPan")[0];
+  var oMax = document.getElementsByName("root_PTZ_Limit_L<!--#echo var="index" option="encoding:html" -->_MaxPan")[0];
+  var minPan = parseInt(oMin.value, 10);
+  var maxPan = parseInt(oMax.value, 10);
+  var panMinTxt = '<!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.PTZ.Limit.L$index$.MinPan&format=htmlvalue" -->';
+  var panMaxTxt = '<!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.PTZ.Limit.L$index$.MaxPan&format=htmlvalue" -->';
+  if (!checkParam(panMinTxt, langObjPtzDevAdv.getText("minPanTxt")))
+    return false;
+  if (!checkParam(panMaxTxt, langObjPtzDevAdv.getText("maxPanTxt")))
+    return false;
+  if (minPan > maxPan) {
+    alert( langObjPtzDevAdv.getText("minmaxPanAlert") );
+    oMin.focus();
+    oMin.select();
+    return false;
+  }
+<!--#endif -->
+
+<!--#if expr="$abs_tilt = yes" -->
+  oMin = document.getElementsByName("root_PTZ_Limit_L<!--#echo var="index" option="encoding:html" -->_MinTilt")[0];
+  oMax = document.getElementsByName("root_PTZ_Limit_L<!--#echo var="index" option="encoding:html" -->_MaxTilt")[0];
+  var minTilt = parseInt(oMin.value, 10);
+  var maxTilt = parseInt(oMax.value, 10);
+  var tiltMinTxt = '<!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.PTZ.Limit.L$index$.MinTilt&format=htmlvalue" -->';
+  var tiltMaxTxt = '<!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.PTZ.Limit.L$index$.MaxTilt&format=htmlvalue" -->';
+  if (!checkParam(tiltMinTxt, langObjPtzDevAdv.getText("minTiltTxt")))
+    return false;
+  if (!checkParam(tiltMaxTxt, langObjPtzDevAdv.getText("maxTiltTxt")))
+    return false;
+  if (minTilt > maxTilt) {
+    alert( langObjPtzDevAdv.getText("minmaxTiltAlert") );
+    oMax.focus();
+    oMax.select();
+    return false;
+  }
+<!--#endif -->
+
+<!--#if expr="$abs_zoom = yes" -->
+  oMin = document.getElementsByName("root_PTZ_Limit_L<!--#echo var="index" option="encoding:html" -->_MinZoom")[0];
+  oMax = document.getElementsByName("root_PTZ_Limit_L<!--#echo var="index" option="encoding:html" -->_MaxZoom")[0];
+  var minZoom = parseInt(oMin.value, 10);
+  var maxZoom = parseInt(oMax.value, 10);
+  var zoomMinTxt = '<!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.PTZ.Limit.L$index$.MinZoom&format=htmlvalue" -->';
+  var zoomMaxTxt = '<!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.PTZ.Limit.L$index$.MaxZoom&format=htmlvalue" -->';
+  if (!checkParam(zoomMinTxt, langObjPtzDevAdv.getText("minZoomTxt")))
+    return false;
+  if (!checkParam(zoomMaxTxt, langObjPtzDevAdv.getText("maxZoomTxt")))
+    return false;
+  if (minZoom > maxZoom) {
+    alert( langObjPtzDevAdv.getText("minmaxZoomAlert") );
+    oMin.focus();
+    oMin.select();
+    return false;
+  }
+<!--#endif -->
+
+<!--#if expr="$abs_focus = yes" -->
+  oMin = document.getElementsByName("root_PTZ_Limit_L<!--#echo var="index" option="encoding:html" -->_MinFocus")[0];
+  oMax = document.getElementsByName("root_PTZ_Limit_L<!--#echo var="index" option="encoding:html" -->_MaxFocus")[0];
+  var minFocus = parseInt(oMin.value, 10);
+  var maxFocus = parseInt(oMax.value, 10);
+  var focusMinTxt = '<!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.PTZ.Limit.L$index$.MaxFocus&format=htmlvalue" -->';
+  var focusMaxTxt = '<!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.PTZ.Limit.L$index$.MinFocus&format=htmlvalue" -->';
+  if (!checkParam(focusMinTxt, langObjPtzDevAdv.getText("minFocusTxt")))
+    return false;
+  if (!checkParam(focusMaxTxt, langObjPtzDevAdv.getText("maxFocusTxt")))
+    return false;
+  if (minFocus > maxFocus) {
+    alert( langObjPtzDevAdv.getText("minmaxFocusAlert") );
+    oMin.focus();
+    oMin.select();
+    return false;
+  }
+<!--#endif -->
+
+<!--#if expr="$optical = yes" -->
+  oMin = document.getElementsByName("root_PTZ_Limit_L<!--#echo var="index" option="encoding:html" -->_MinFieldAngle")[0];
+  oMax = document.getElementsByName("root_PTZ_Limit_L<!--#echo var="index" option="encoding:html" -->_MaxFieldAngle")[0];
+  var minFieldAngle = parseInt(oMin.value, 10);
+  var maxFieldAngle = parseInt(oMax.value, 10);
+  var fieldAngleMinTxt = '<!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.PTZ.Limit.L$index$.MinFieldAngle&format=htmlvalue" -->';
+  var fieldAngleMaxTxt = '<!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.PTZ.Limit.L$index$.MaxFieldAngle&format=htmlvalue" -->';
+  if (!checkParam(fieldAngleMinTxt, langObjPtzDevAdv.getText("minFieldAngleTxt")))
+    return false;
+  if (!checkParam(fieldAngleMaxTxt, langObjPtzDevAdv.getText("maxFieldAngleTxt")))
+    return false;
+
+  if (minFieldAngle > maxFieldAngle) {
+    alert( langObjPtzDevAdv.getText("minmaxFieldAngleAlert") );
+    oMin.focus();
+    oMin.select();
+    return false;
+  }
+<!--#endif -->
+
+  <!--#if expr="$(root_PTZ_Various_V$index$_ProportionalSpeedEnabled) != " --><!--#if expr="$(root_PTZ_Support_S$index$_ProportionalSpeed) != false" -->
+    oMax = document.getElementsByName("root_PTZ_Various_V<!--#echo var="index" option="encoding:html" -->_MaxProportionalSpeed")[0];
+    var maxPropSpeed = parseInt(oMax.value, 10);
+    var propSpeedTxt = '<!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.PTZ.Various.V$index$.MaxProportionalSpeed&format=htmlvalue" -->';
+    if (!checkParam(propSpeedTxt, langObjPtzDevAdv.getText("maxPropSpeedTxt")))
+      return false;
+  <!--#endif --><!--#endif -->
+
+<!--#if expr="$http_user_realms >< ¤Administrator¤" -->
+  var o = document.getElementById("extendedSettings");
+  for (var i = 0; i < o.rows.length; i++)
+  {
+    var n = o.rows.item(i).cells.item(0).innerHTML;
+    var p = o.rows.item(i).cells.item(1).innerHTML;
+    if (!checkParam(p, n))
+      return false;
+  }
+<!--#endif -->
+  return true;
+}
+
+function getLimits(txtLimit)
+{
+  if (typeof(txtLimit) != "string")
+    return false;
+
+  var id1 = txtLimit.lastIndexOf("[") + 1;
+  var id2 = txtLimit.lastIndexOf("..");
+  var id3 = txtLimit.lastIndexOf("]");
+
+  if (id1 != -1 && id2 != -1 && id3 != -1) {
+    var minLimit = parseInt(txtLimit.substring(id1,id2));
+    var maxLimit = parseInt(txtLimit.substring(id2+2,id3), 10);
+    return {min:minLimit, max:maxLimit}
+  } else {
+    return false;
+  }
+}
+
+function checkParam(txt, settingName)
+{
+  if (txt.indexOf(" type=\"text\"") < 0)
+    return true;
+
+  var limits = getLimits(txt);
+  var name = "";
+  var a = txt.split(" ");
+  for (var i = 0; i < a.length; i++)
+  {
+    if (a[i].indexOf("name=") == 0)
+    {
+      name = a[i].split("=")[1].replace(/[\">]/g, "");
+      break;
+    }
+  }
+
+  var o = document.getElementsByName(name)[0];
+  if (!o) {
+    alert( langObjPtzDevAdv.getText("paramNotFoundAlert")+" "+settingName );
+    return false;
+  }
+
+  var value = o.value;
+  var reNaN = new RegExp("[^0-9\-]","g");
+
+  if (reNaN.test(value)) {
+    alert(settingName + " " + langObjPtzDevAdv.getText("setLimitNaNAlert"));
+    o.focus();
+    o.select();
+    return false;
+  } else if (limits && (parseInt(value, 10) < limits.min || parseInt(value, 10) > limits.max)) {
+    alert(settingName + " "+langObjPtzDevAdv.getText("setOutOfLimit1Alert")+" " + limits.min + " "+langObjPtzDevAdv.getText("setOutOfLimit2Alert")+" " + limits.max + langObjPtzDevAdv.getText("setOutOfLimit3Alert"));
+    o.focus();
+    o.select();
+    return false;
+  } else {
+    return true;
+  }
+}
+
+function hideParams()
+{
+  var params = new Array();
+  params = [
+    "DeviceModVer",
+    "DeviceStatus"
+  ];
+
+  var input, td, tr;
+  for(var i = 0; i < params.length; i++)
+  {
+    input = document.getElementsByName("root_PTZ_UserAdv_U<!--#echo var="index" option="encoding:html" -->_" + params[i]);
+    if(input && input.length > 0) {
+      td = input[0].parentNode;
+      tr = td.parentNode;
+      tr.parentNode.removeChild(tr);
+    }
+  }
+}
+
+function warn()
+{
+<!--#if expr="$root_PTZ_Warning$ != " -->
+  alert('<!--#echo var="root_PTZ_Warning" option="encoding:javascript" -->');
+  // reset warning
+  document.WarningResetForm.submit();
+<!--#endif -->
+}
+
+function resetForms()
+{
+  document.limitform.reset();
+<!--#if expr="$http_user_realms >< ¤Administrator¤" -->
+  document.advform.reset();
+<!--#endif -->
+  resetPTZ();
+  initDoc();
+}
+
+
+function resetPTZ()
+{
+  var portno = parseInt("<!--#echo var="COMport" option="encoding:javascript" -->", 10);
+
+  if (<!--#echo var="root_PTZ_CamPorts_Cam1Port" option="encoding:javascript" --> == portno) {
+    var form = document.PTZ;
+    form.reset();
+  }
+}
+
+var resetAllBtnStatTxt;
+var resetBtnStatTxt;
+var saveBtnStatTxt;
+function globalLanguageVars()
+{
+  resetAllBtnStatTxt = langObjPtzDevAdv.getText("resetAllBtnStatTxt");
+  resetBtnStatTxt = langObjPtzDevAdv.getText("resetBtnStatTxt");
+  saveBtnStatTxt = langObjPtzDevAdv.getText("saveBtnStatTxt");
+}
+
+</script>
+
+</head>
+
+<body onload="initDoc()" <!--#include virtual="/incl/bodytag_popup.shtml" --> >
+<!--#include virtual="/incl/top_incl2.shtml" -->
+
+<form name="WarningResetForm" action="/sm/sm.srv" method="POST">
+  <input type="hidden" name="root_PTZ_Warning" value="">
+  <input type="hidden" name="action" value="modify">
+</form>
+
+<form name="PTZ" action="/sm/sm.srv" method="post">
+<input type="hidden" name="action" value="modify" />
+<table border="0" cellpadding="3" cellspacing="<!--#echo var="zero" option="encoding:html" -->" width="<!--#echo var="tableWidth3" option="encoding:html" -->" class="alternateRows">
+  <tr class="topTitle">
+    <td colspan="2" valign="top" noWrap><span id="devSetTxt"></span></td>
+    <td align="right">
+      <a href="javascript:launch('/help/ptz/main.shtml?port=<!--#echo var="COMport" option="encoding:url" -->&index=<!--#echo var="index" option="encoding:url" -->#adv_params')"><img height="27" width="27" src="/pics/help.gif" border="0" id="hlpPic"></a>
+    </td>
+  </tr>
+  <tr class="subTitle">
+    <td colspan="3"><span id="confViSoTxt"></span>&nbsp;<!--#echo var="index" option="encoding:html" --></td>
+  </tr>
+    <tr>
+      <td noWrap colspan="3"><span id="cuDrTxt"></span>&nbsp;<!--#echo var="root_PTZ_PTZDrivers_Driver$COMport$" option="encoding:html" --> <!--#if expr="$(root_PTZ_Various_V$index$_DeviceType) != -" --> - <!--#echo var="root_PTZ_Various_V$index$_DeviceType" option="encoding:html" --> <!--#endif --></td>
+    </tr>
+  <tr>
+    <td colspan="3">
+      <table border="0" width="100%" cellspacing="0" cellpadding="3" class="reuseLast">
+        <!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.PTZ.UserBasic.U$index$&pre_format=<tr><td%20width=%22150%22%20noWrap>&middle_format=</td><td>&end_format=</td></tr>" -->
+      </table>
+    </td>
+  </tr>
+</table>
+</form>
+<form action="/sm/sm.srv" method="POST" name="limitform">
+  <input type="hidden" name="action" value="modify">
+<table border="0" cellpadding="3" cellspacing="<!--#echo var="zero" option="encoding:html" -->" width="<!--#echo var="tableWidth3" option="encoding:html" -->" class="alternateRows">
+  <tr>
+    <td colspan="3"><span id="warningTxt"></span></td>
+  </tr>
+  <tr class="subTitle">
+    <td colspan="3"><span id="meLiMoTxt"></span>&nbsp;<!--#echo var="index" option="encoding:html" --></td>
+  </tr>
+  <tr>
+    <td colspan="3">
+      <table cellspacing ="0" border="0" cellpadding="3" class="alternateRows">
+        <tr>
+          <td noWrap><b><span id="moLiTxt"></span></b></td>
+          <td>&nbsp;&nbsp;<span id="leTxt"></span></td>
+          <td><input name="root_PTZ_Limit_L<!--#echo var="index" option="encoding:html" -->_MinPan" maxLength="<!--#echo var="inputsize" option="encoding:html" -->" size="<!--#echo var="inputsize" option="encoding:html" -->" value="<!--#echo var="root_PTZ_Limit_L$index$_MinPan" option="encoding:html" -->" <!--#if expr="$abs_pan != yes" -->disabled<!--#endif -->></td>
+          <td>&nbsp;&nbsp;<span id="riTxt"></span></td>
+          <td><input name="root_PTZ_Limit_L<!--#echo var="index" option="encoding:html" -->_MaxPan" maxLength="<!--#echo var="inputsize" option="encoding:html" -->" size="<!--#echo var="inputsize" option="encoding:html" -->" value="<!--#echo var="root_PTZ_Limit_L$index$_MaxPan" option="encoding:html" -->" <!--#if expr="$abs_pan != yes" -->disabled<!--#endif -->></td>
+          <td>&nbsp;&nbsp;<span id="upTxt"></span></td>
+          <td><input name="root_PTZ_Limit_L<!--#echo var="index" option="encoding:html" -->_MaxTilt" maxLength="<!--#echo var="inputsize" option="encoding:html" -->" size="<!--#echo var="inputsize" option="encoding:html" -->" value="<!--#echo var="root_PTZ_Limit_L$index$_MaxTilt" option="encoding:html" -->" <!--#if expr="$abs_tilt != yes" -->disabled<!--#endif -->></td>
+          <td><span id="doTxt"></span></td>
+          <td><input name="root_PTZ_Limit_L<!--#echo var="index" option="encoding:html" -->_MinTilt" maxLength="<!--#echo var="inputsize" option="encoding:html" -->" size="<!--#echo var="inputsize" option="encoding:html" -->" value="<!--#echo var="root_PTZ_Limit_L$index$_MinTilt" option="encoding:html" -->" <!--#if expr="$abs_tilt != yes" -->disabled<!--#endif -->></td>
+        </tr>
+        <tr>
+          <td noWrap><b><span id="zoLiTxt"></span></b></td>
+          <td noWrap>&nbsp;&nbsp;<span id="zoEnTxt"></span></td>
+          <td>
+            <input type="checkbox" id="ZoomEnabled" onClick="JavaScript:CheckBoxClicked(this.form, this, 'root_PTZ_Various_V<!--#echo var="index" option="encoding:html" -->_ZoomEnabled', true, 'false')" <!--#if expr="$zoom != yes" -->disabled<!--#endif -->>
+            <input type="hidden" name="root_PTZ_Various_V<!--#echo var="index" option="encoding:html" -->_ZoomEnabled" value="<!--#echo var="root_PTZ_Various_V$index$_ZoomEnabled" option="encoding:html" -->">
+          </td>
+          <td noWrap>&nbsp;&nbsp;<span id="zoWiTxt"></span></td>
+          <td><input name="root_PTZ_Limit_L<!--#echo var="index" option="encoding:html" -->_MinZoom" maxLength="<!--#echo var="inputsize" option="encoding:html" -->" size="<!--#echo var="inputsize" option="encoding:html" -->" value="<!--#echo var="root_PTZ_Limit_L$index$_MinZoom" option="encoding:html" -->" <!--#if expr="$abs_zoom != yes" -->disabled<!--#endif -->></td>
+          <td noWrap>&nbsp;&nbsp;<span id="zoTeTxt"></span></td>
+          <td colspan="3"><input name="root_PTZ_Limit_L<!--#echo var="index" option="encoding:html" -->_MaxZoom" maxLength="<!--#echo var="inputsize" option="encoding:html" -->" size="<!--#echo var="inputsize" option="encoding:html" -->" value="<!--#echo var="root_PTZ_Limit_L$index$_MaxZoom" option="encoding:html" -->" <!--#if expr="$abs_zoom != yes" -->disabled<!--#endif -->></td>
+        </tr>
+        <tr>
+          <td><b><span id="foLiTxt"></span></b></td>
+          <td noWrap >&nbsp;&nbsp;<span id="foEnTxt"></span></td>
+          <td>
+            <input type="checkbox" id="FocusEnabled" onClick="JavaScript:CheckBoxClicked(this.form, this, 'root_PTZ_Various_V<!--#echo var="index" option="encoding:html" -->_FocusEnabled', true, 'false')" <!--#if expr="$focus != yes" -->disabled<!--#endif -->>
+            <input type="hidden" name="root_PTZ_Various_V<!--#echo var="index" option="encoding:html" -->_FocusEnabled" value="<!--#echo var="root_PTZ_Various_V$index$_FocusEnabled" option="encoding:html" -->">
+          </td>
+          <td >&nbsp;&nbsp;<span id="foNeTxt"></span></td>
+          <td ><input name="root_PTZ_Limit_L<!--#echo var="index" option="encoding:html" -->_MinFocus" maxLength="<!--#echo var="inputsize" option="encoding:html" -->" size="<!--#echo var="inputsize" option="encoding:html" -->" value="<!--#echo var="root_PTZ_Limit_L$index$_MinFocus" option="encoding:html" -->" <!--#if expr="$abs_focus != yes" -->disabled<!--#endif -->></td>
+          <td noWrap >&nbsp;&nbsp;<span id="foFaTxt"></span></td>
+          <td colspan="3"><input name="root_PTZ_Limit_L<!--#echo var="index" option="encoding:html" -->_MaxFocus" maxLength="<!--#echo var="inputsize" option="encoding:html" -->" size="<!--#echo var="inputsize" option="encoding:html" -->" value="<!--#echo var="root_PTZ_Limit_L$index$_MaxFocus" option="encoding:html" -->" <!--#if expr="$abs_focus != yes" -->disabled<!--#endif -->></td>
+        </tr>
+        <tr>
+          <td><b><span id="opDaTxt"></span></b></td>
+          <td nowrap>&nbsp;&nbsp;<span id="miFiTxt"></span></td>
+          <td><input name="root_PTZ_Limit_L<!--#echo var="index" option="encoding:html" -->_MinFieldAngle" maxLength="<!--#echo var="inputsize" option="encoding:html" -->" size="<!--#echo var="inputsize" option="encoding:html" -->" value="<!--#echo var="root_PTZ_Limit_L$index$_MinFieldAngle" option="encoding:html" -->" <!--#if expr="$optical != yes" -->disabled<!--#endif -->></td>
+          <td nowrap>&nbsp;&nbsp;<span id="maFiTxt"></span></td>
+          <td colspan="5"><input name="root_PTZ_Limit_L<!--#echo var="index" option="encoding:html" -->_MaxFieldAngle" maxLength="<!--#echo var="inputsize" option="encoding:html" -->" size="<!--#echo var="inputsize" option="encoding:html" -->" value="<!--#echo var="root_PTZ_Limit_L$index$_MaxFieldAngle" option="encoding:html" -->" <!--#if expr="$optical != yes" -->disabled<!--#endif -->></td>
+        </tr>
+          <!--#if expr="$(root_PTZ_Various_V$index$_ProportionalSpeedEnabled) != " --><!--#if expr="$(root_PTZ_Support_S$index$_ProportionalSpeed) != false" -->
+            <tr>
+              <td noWrap><b><span id="proSpeTxt"></span></b></td>
+              <td>&nbsp;&nbsp;<span id="ena1Txt"></span></td>
+              <td><!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.PTZ.Various.V$index$.ProportionalSpeedEnabled&format=htmlvalue" --></td>
+              <td noWrap>&nbsp;&nbsp;<span id="maProSpTxt"></span></td>
+              <td noWrap colspan="3" ><!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.PTZ.Various.V$index$.MaxProportionalSpeed&format=htmlvalue" --></td>
+            </tr>
+          <!--#endif --><!--#endif -->
+        <tr>
+          <td colspan="10"><span id="noteTxt"></span></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+<!--#if expr="$light = yes" -->
+  <tr  class="subTitle">
+    <td colspan="3"><span id="liCoTxt"></span>&nbsp;<!--#echo var="index" option="encoding:html" --></td>
+  </tr>
+  <tr>
+    <td colspan="3">
+      <table cellspacing ="0" border="0" width="100%" class="alternateRows" cellpadding="3">
+        <tr>
+          <td  width="150"><b><span id="ircTxt"></span></b></td>
+          <td  width="35" nowrap>&nbsp;&nbsp;<span id="ena2Txt"></span></td>
+          <td  width="50" alight="left">
+          <!--#if expr="$irc != yes" -->
+            <!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.PTZ.Various.V$index$.IrCutFilterEnabled&format=htmlvalue&input_format=disabled" -->
+          <!--#else -->
+            <!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.PTZ.Various.V$index$.IrCutFilterEnabled&format=htmlvalue" -->
+          <!--#endif -->
+          </td>
+          <td  width="150" alight="left"><img src="/pics/blank.gif" width="1" height="0" border="0"></td>
+        </tr>
+        <tr>
+          <td width="150"><b><span id="blcTxt"></span></b></td>
+          <td width="35" nowrap>&nbsp;&nbsp;<span id="ena3Txt"></span></td>
+          <td width="50" alight="left">
+            <input type="checkbox" id="BackLightEnabled" onClick="JavaScript:CheckBoxClicked(this.form, this, 'root_PTZ_Various_V<!--#echo var="index" option="encoding:html" -->_BackLightEnabled', true, 'false')" <!--#if expr="$blc != yes" -->disabled<!--#endif -->>
+            <input type="hidden" name="root_PTZ_Various_V<!--#echo var="index" option="encoding:html" -->_BackLightEnabled" value="<!--#echo var="root_PTZ_Various_V$index$_BackLightEnabled" option="encoding:html" -->">
+          </td>
+          <td width="150" alight="left"><img src="/pics/blank.gif" width="1" height="0" border="0"></td>
+        </tr>
+        <tr>
+          <td colspan="4"><span id="note2Txt"></span></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+<!--#endif -->
+</table>
+</form>
+
+
+<table border="0" cellpadding="3" cellspacing="<!--#echo var="zero" option="encoding:html" -->" width="<!--#echo var="tableWidth3" option="encoding:html" -->" class="alternateRows">
+<!--#if expr="$http_user_realms >< ¤Administrator¤" -->
+  <tr class="subTitle">
+    <td colspan="3"><span id="drSpSeTxt"></span>&nbsp;<!--#echo var="index" option="encoding:html" --></td>
+  </tr>
+  <tr>
+    <td colspan="3" >
+      <form name="advform" action="/sm/sm.srv" method="post">
+      <input type="hidden" name="action" value="modify" />
+      <table border="0" width="100%" class="alternateRows" cellspacing="0" id="extendedSettings">
+        <!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.PTZ.UserAdv.U$index$&pre_format=<tr><td width=%22150%22 noWrap>&middle_format=</td><td nowrap>&end_format=</td></tr>" -->
+      </table>
+      </form>
+    </td>
+  </tr>
+<!--#endif -->
+
+  <tr>
+    <td colspan="3" align="center" class="button">
+      <form>
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td class="button"><input type="button" class="btnNormal" value="" onClick="JavaScript:setParams()" onMouseOver="return showStatus(saveBtnStatTxt)" onMouseOut="return showStatus('')" id="saveBtn"></td>
+          <td class="button">&nbsp;</td>
+          <td class="button"><input type="button" class="btnNormal" value="" onClick="resetForms()" onMouseOver="return showStatus(resetBtnStatTxt)" onMouseOut="return showStatus('')" id="resetBtn"></td>
+        </tr>
+      </table>
+      </form>
+    </td>
+  </tr>
+</table>
+
+<!--#include virtual="/incl/bottom_incl.shtml" -->
+

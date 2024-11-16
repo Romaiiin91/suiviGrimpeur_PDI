@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+	<recipient_setup_h>
+		<pageTitle type="title" minor="0">Help/Recipient Setup</pageTitle>
+		<titleTxt type="msgAsText" minor="0">Recipient Setup</titleTxt>
+		<intro_Txt type="text" minor="0">Recipient Setup page facilitates set up of different types of recipients depending on user's needs.</intro_Txt>
+		<subtitleFTP type="text" minor="0">Adding an FTP Server</subtitleFTP>
+		<fTP_Txt1 type="text" minor="0">Provide the following information to setup an FTP server as a recipient:</fTP_Txt1>
+		<fTP_Txt2 type="text" minor="0">&#x3C;b&#x3E;Name&#x3C;/b&#x3E; - Enter a descriptive name for the FTP server.</fTP_Txt2>
+		<fTP_Txt3 type="text" minor="0">&#x3C;b&#x3E;Type&#x3C;/b&#x3E; - Select &#x3C;b&#x3E;FTP&#x3C;/b&#x3E; from the drop-down list.</fTP_Txt3>
+		<fTP_Txt4 type="text" minor="0">&#x3C;b&#x3E;Network address&#x3C;/b&#x3E; - Enter the server's IP address or host name. Note that a DNS server must be specified in the TCP/IP network settings if using a host name.</fTP_Txt4>
+		<fTP_Txt5 type="text" minor="0">&#x3C;b&#x3E;Upload path&#x3C;/b&#x3E; - Specify the path to the directory where the uploaded images will be stored. If this directory does not already exist on the FTP server, there will be an error message when uploading.</fTP_Txt5>
+		<fTP_Txt6 type="text" minor="0">&#x3C;b&#x3E;Port number&#x3C;/b&#x3E; - Enter the port number used by the FTP server. The default is 21.</fTP_Txt6>
+		<fTP_Txt7 type="text" minor="0">&#x3C;b&#x3E;User name/Password&#x3C;/b&#x3E; - Provide the login information for the FTP server.</fTP_Txt7>
+		<fTP_Txt8 type="text" minor="0">&#x3C;b&#x3E;Use passive mode&#x3C;/b&#x3E; - Under normal circumstances the product simply requests the target FTP server to open the data connection. Checking this box issues a PASV command to the FTP server to establish a passive FTP connection. The product actively initiates both the FTP control and data connections to the target server. This is normally needed if there is a firewall between the product and the target FTP server.</fTP_Txt8>
+		<fTP_Txt9 type="text" minor="0">When the setup is complete, the connection can be tested by clicking &#x3C;b&#x3E;Test&#x3C;/b&#x3E;.</fTP_Txt9>
+		<fTP_Txt10 type="text" minor="0">&#x3C;b&#x3E;Use temporary mode&#x3C;/b&#x3E; - Under normal circumstances the product simply requests the target FTP server to open the data connection. Checking this box issues a command to the FTP server to create a temporary file in FTP connection and then renames it to the original file name.</fTP_Txt10>
+		<subtitleSFTP type="text" minor="0">Adding an SFTP Server</subtitleSFTP>
+		<sFTP_Txt1 type="text" minor="0">Provide the following information to setup an SFTP server as a recipient:</sFTP_Txt1>
+		<sFTP_Txt2 type="text" minor="0">&#x3C;b&#x3E;Name&#x3C;/b&#x3E; - Enter a descriptive name for the SFTP server.</sFTP_Txt2>
+		<sFTP_Txt3 type="text" minor="0">&#x3C;b&#x3E;Type&#x3C;/b&#x3E; - Select &#x3C;b&#x3E;SFTP&#x3C;/b&#x3E; from the drop-down list.</sFTP_Txt3>
+		<sFTP_Txt4 type="text" minor="0">&#x3C;b&#x3E;Network address&#x3C;/b&#x3E; - Enter the server's IP address or host name. Note that a DNS server must be specified in the TCP/IP network settings if using a host name.</sFTP_Txt4>
+		<sFTP_Txt5 type="text" minor="0">&#x3C;b&#x3E;Upload path&#x3C;/b&#x3E; - Specify the path to the directory where the uploaded images will be stored. If this directory does not already exist on the SFTP server, there will be an error message when uploading.</sFTP_Txt5>
+		<sFTP_Txt6 type="text" minor="0">&#x3C;b&#x3E;Port number&#x3C;/b&#x3E; - Enter the port number used by the SFTP server. The default is 22.</sFTP_Txt6>
+		<sFTP_Txt7 type="text" minor="0">&#x3C;b&#x3E;User name/Password&#x3C;/b&#x3E; - Provide the login information for the SFTP server.</sFTP_Txt7>
+		<sFTP_Txt8 type="text" minor="0">&#x3C;b&#x3E;Public key MD5&#x3C;/b&#x3E; - The fingerprint of the remote host's public key (a 32 hexadecimal digits string).</sFTP_Txt8>
+		<sFTP_Txt9 type="text" minor="0">When the setup is complete, the connection can be tested by clicking &#x3C;b&#x3E;Test&#x3C;/b&#x3E;.</sFTP_Txt9>
+		<subTitleHTTP type="text" minor="0">Adding an HTTP Server</subTitleHTTP>
+		<hTTP_Txt1 type="text" minor="0">Provide the following information to setup an HTTP server as a recipient:</hTTP_Txt1>
+		<hTTP_Txt2 type="text" minor="0">&#x3C;b&#x3E;Name&#x3C;/b&#x3E; - Enter a descriptive name for the HTTP server.</hTTP_Txt2>
+		<hTTP_Txt3 type="text" minor="0">&#x3C;b&#x3E;Type&#x3C;/b&#x3E; - Select &#x3C;b&#x3E;HTTP&#x3C;/b&#x3E; from the drop-down list.</hTTP_Txt3>
+		<hTTP_Txt4 type="text" minor="0">&#x3C;b&#x3E;URL&#x3C;/b&#x3E; - Enter the network address to the HTTP server and the script that will handle the request. For example: http://192.168.254.10/cgi-bin/notify.cgi</hTTP_Txt4>
+		<hTTP_Txt5 type="text" minor="0">&#x3C;b&#x3E;User name/Password&#x3C;/b&#x3E; - Provide the login information for the HTTP server.</hTTP_Txt5>
+		<hTTP_Txt6 type="text" minor="0">&#x3C;b&#x3E;Proxy settings&#x3C;/b&#x3E; - If it is a must to pass a proxy server to connect to the HTTP server, check the &#x3C;b&#x3E;Proxy settings&#x3C;/b&#x3E; box and enter:</hTTP_Txt6>
+		<hTTP_Txt7 type="text" minor="0">&#x3C;b&#x3E;Address&#x3C;/b&#x3E; - The proxy server's address</hTTP_Txt7>
+		<hTTP_Txt8 type="text" minor="0">&#x3C;b&#x3E;Port number&#x3C;/b&#x3E; - The number of the port used for access.</hTTP_Txt8>
+		<hTTP_Txt9 type="text" minor="0">&#x3C;b&#x3E;User name/Password&#x3C;/b&#x3E; - If a user name and password is needed for the  proxy server, enter these here.</hTTP_Txt9>
+		<hTTP_Txt10 type="text" minor="0">When the setup is complete, the connection can be tested by clicking &#x3C;b&#x3E;Test&#x3C;/b&#x3E;.</hTTP_Txt10>
+		<subTitleHTTPS type="text" minor="0">Adding an HTTPS Server</subTitleHTTPS>
+		<hTTPS_Txt1 type="text" minor="0">Provide the following information to setup an HTTPS server as a recipient:</hTTPS_Txt1>
+		<hTTPS_Txt2 type="text" minor="0">&#x3C;b&#x3E;Name&#x3C;/b&#x3E; - Enter a descriptive name for the HTTPS server.</hTTPS_Txt2>
+		<hTTPS_Txt3 type="text" minor="0">&#x3C;b&#x3E;Type&#x3C;/b&#x3E; - Select &#x3C;b&#x3E;HTTPS&#x3C;/b&#x3E; from the drop-down list.</hTTPS_Txt3>
+		<hTTPS_Txt4 type="text" minor="0">&#x3C;b&#x3E;URL&#x3C;/b&#x3E; - Enter the network address to the HTTPS server and the script that will handle the request. For example: https://192.168.254.10/cgi-bin/notify.cgi</hTTPS_Txt4>
+		<hTTPS_Txt5 type="text" minor="0">&#x3C;b&#x3E;User name/Password&#x3C;/b&#x3E; - Provide the login information.</hTTPS_Txt5>
+		<hTTPS_Txt6 type="text" minor="0">&#x3C;b&#x3E;Validate server certificate&#x3C;/b&#x3E; - Check this box to validate the certificate that was created by HTTPS server.</hTTPS_Txt6>
+		<hTTPS_Txt7 type="text" minor="0">&#x3C;b&#x3E;Proxy settings&#x3C;/b&#x3E; - If it is a must to pass a proxy server to connect to the HTTPS server, check the &#x3C;b&#x3E;Proxy settings&#x3C;/b&#x3E; box and enter:</hTTPS_Txt7>
+		<hTTPS_Txt8 type="text" minor="0">&#x3C;b&#x3E;Address&#x3C;/b&#x3E; - The proxy server's address</hTTPS_Txt8>
+		<hTTPS_Txt9 type="text" minor="0">&#x3C;b&#x3E;Port number&#x3C;/b&#x3E; - Enter the number of the port used for access.</hTTPS_Txt9>
+		<hTTPS_Txt10 type="text" minor="0">&#x3C;b&#x3E;User name/Password&#x3C;/b&#x3E; - If a user name and password is needed for the  proxy server, enter these here.</hTTPS_Txt10>
+		<hTTPS_Txt11 type="text" minor="0">When the setup is complete, the connection can be tested by clicking &#x3C;b&#x3E;Test&#x3C;/b&#x3E;.</hTTPS_Txt11>
+		<subtitleNetworkShare type="text" minor="0">Adding a Network Share</subtitleNetworkShare>
+		<networkShare_Txt1 type="text" minor="0">Network share allows you to add network storage such as a NAS (Network Attached Storage) and use it as a recipient to store recordings. The files are stored as Matroska (MKV) file format. Provide the following information to setup a Network Share as a recipient:</networkShare_Txt1>
+		<networkShare_Txt2 type="text" minor="0">&#x3C;b&#x3E;Name&#x3C;/b&#x3E; - Enter a descriptive name for the Network Share.</networkShare_Txt2>
+		<networkShare_Txt3 type="text" minor="0">&#x3C;b&#x3E;Type&#x3C;/b&#x3E; - Select &#x3C;b&#x3E;Network Share&#x3C;/b&#x3E; from the drop-down list.</networkShare_Txt3>
+		<networkShare_Txt4 type="text" minor="0">&#x3C;b&#x3E;Network address&#x3C;/b&#x3E; - Enter the IP adress or Host name for the Network Share.</networkShare_Txt4>
+		<networkShare_Txt5 type="text" minor="0">&#x3C;b&#x3E;Share&#x3C;/b&#x3E; - Enter the name of the share on the host.</networkShare_Txt5>
+		<networkShare_Txt6 type="text" minor="0">&#x3C;b&#x3E;Upload path&#x3C;/b&#x3E; - Specify the path to the directory where the uploaded images or recordings will be stored.</networkShare_Txt6>
+		<networkShare_Txt7 type="text" minor="0">&#x3C;b&#x3E;User name/Password&#x3C;/b&#x3E; - Provide login information for the Network Share.</networkShare_Txt7>
+		<networkShare_Txt8 type="text" minor="0">When the setup is complete, the connection can be tested by clicking &#x3C;b&#x3E;Test&#x3C;/b&#x3E;.</networkShare_Txt8>
+		<subtitleEmail type="text" minor="0">Adding an Email Recipient</subtitleEmail>
+		<email_Txt1 type="text" minor="0">Triggers the Action Rule for the product to send images, video clips and notifications through email. Enter the following information for the email:</email_Txt1>
+		<email_Txt2 type="text" minor="0">&#x3C;b&#x3E;Name&#x3C;/b&#x3E; - Enter a descriptive name for the email recipient.</email_Txt2>
+		<email_Txt3 type="text" minor="0">&#x3C;b&#x3E;Type&#x3C;/b&#x3E; - Select &#x3C;b&#x3E;Email&#x3C;/b&#x3E; from the drop-down list.</email_Txt3>
+		<email_Txt4 type="text" minor="0">&#x3C;b&#x3E;To&#x3C;/b&#x3E; - Enter the email address(es) to send emails to. In case it is needed to send to more than one address, use comma to separate email addresses.</email_Txt4>
+		<email_Txt5 type="text" minor="0">&#x3C;b&#x3E;Provider&#x3C;/b&#x3E; - From the drop-down list, choose email provider for example Gmail, Yahoo etc.</email_Txt5>
+		<email_Txt6 type="text" minor="0">&#x3C;b&#x3E;User id/Password&#x3C;/b&#x3E; - Provide login information for the email recipient server. Leave this field empty if the email server does not need authentication.</email_Txt6>
+		<email_Txt7 type="text" minor="0">&#x3C;b&#x3E;Advanced settings&#x3C;/b&#x3E; - This setting is important for setting your own email server by choosing the option &#x3C;b&#x3E;User defined&#x3C;/b&#x3E; in the &#x3C;b&#x3E;Provider&#x3C;/b&#x3E; option above.</email_Txt7>
+		<email_Txt8 type="text" minor="0">&#x3C;b&#x3E;From email&#x3C;/b&#x3E; - Enter the email address of the sending server.</email_Txt8>
+		<email_Txt9 type="text" minor="0">&#x3C;b&#x3E;SMTP Server&#x3C;/b&#x3E; - Enter the name of the SMTP server for example, smtp.gmail.com, smtp.mail.yahoo.com</email_Txt9>
+		<email_Txt10 type="text" minor="0">&#x3C;b&#x3E;Port&#x3C;/b&#x3E; - Enter the port number for the SMTP server, using values in the range 0-65535. The default value is 587.</email_Txt10>
+		<email_Txt11 type="text" minor="0">&#x3C;b&#x3E;Select authentication to use&#x3C;/b&#x3E;:</email_Txt11>
+		<email_Txt12 type="text" minor="0">&#x3C;b&#x3E;SMTP&#x3C;/b&#x3E;</email_Txt12>
+		<email_Txt13 type="text" minor="0">&#x3C;b&#x3E;POP&#x3C;/b&#x3E;</email_Txt13>
+		<email_Txt14 type="text" minor="0">&#x3C;b&#x3E;Server&#x3C;/b&#x3E; - Enter the name of the POP server for example, pop.gmail.com</email_Txt14>
+		<email_Txt15 type="text" minor="0">&#x3C;b&#x3E;User name/Password&#x3C;/b&#x3E; - Provide login information for the SMTP server.</email_Txt15>
+		<email_Txt16 type="text" minor="0">&#x3C;b&#x3E;Encryption&#x3C;/b&#x3E; - If not using encryption select None, to use encryption select either TLS or SSL.</email_Txt16>
+		<email_Txt17 type="text" minor="0">&#x3C;b&#x3E;Validate server certificate&#x3C;/b&#x3E; - check this box to validate the identity of the Axis product. The certificate can be self-signed or issued by a Certificate Authority (CA). For more on how certificates can be used, see &#x3C;b&#x3E;System Options &#x3E; Certificates&#x3C;/b&#x3E;.</email_Txt17>
+		<email_Txt18 type="text" minor="0">The connection can be tested by clicking &#x3C;b&#x3E;Test&#x3C;/b&#x3E;.</email_Txt18>
+		<emailSendLimit_Txt type="text" minor="0">&#x3C;b&#x3E;Note&#x3C;/b&#x3E;: Some email providers have security filters that prevent users from receiving or viewing large amount of attachments, from receiving scheduled emails and similar. Check the email provider's security policy to avoid your email account being locked or missing on your expected emails.</emailSendLimit_Txt>
+		<subtitleTCP type="text" minor="0">Setting up a TCP Server</subtitleTCP>
+		<tCP_Txt1 type="text" minor="0">Sends a notification to a TCP notification server that listens for messages. Provide the following information:</tCP_Txt1>
+		<tCP_Txt2 type="text" minor="0">&#x3C;b&#x3E;Name&#x3C;/b&#x3E; - Enter a descriptive name for the TCP server.</tCP_Txt2>
+		<tCP_Txt3 type="text" minor="0">&#x3C;b&#x3E;Type&#x3C;/b&#x3E; - Select &#x3C;b&#x3E;TCP&#x3C;/b&#x3E; from the drop-down list.</tCP_Txt3>
+		<tCP_Txt4 type="text" minor="0">&#x3C;b&#x3E;Network address&#x3C;/b&#x3E; - Enter the notification server's host name or IP address. Note that a DNS server must be specified in the TCP/IP network setting if using a host name.</tCP_Txt4>
+		<tCP_Txt5 type="text" minor="0">&#x3C;b&#x3E;Port number&#x3C;/b&#x3E; - Enter the port number used to access the server.</tCP_Txt5>
+		<tCP_Txt6 type="text" minor="0">When the setup is complete, the connection can be tested by clicking &#x3C;b&#x3E;Test&#x3C;/b&#x3E;.</tCP_Txt6>
+	</recipient_setup_h>
+
+
+
+
+
+	<recipients_h>
+		<pageTitle type="title" minor="0">Help/Recipients</pageTitle>
+		<titleTxt type="msgAsText" minor="0">Recipients</titleTxt>
+		<intro_Txt1 type="text" minor="0">Recipients FTP, HTTP, HTTPS, Network Share, Email and TCP servers are used to receive uploaded image files, video clips and notification messages.</intro_Txt1>
+		<intro_Txt2 type="text" minor="0">&#x3C;b&#x3E;FTP server&#x3C;/b&#x3E; - Receives uploaded images</intro_Txt2>
+		<intro_Txt3 type="text" minor="0">&#x3C;b&#x3E;HTTP server&#x3C;/b&#x3E; - Receives notification messages, uploaded images and video clips</intro_Txt3>
+		<intro_Txt4 type="text" minor="0">&#x3C;b&#x3E;HTTPS server&#x3C;/b&#x3E; - Receives uploaded images and video clips</intro_Txt4>		
+		<intro_Txt5 type="text" minor="0">&#x3C;b&#x3E;Network share&#x3C;/b&#x3E; - Receives images and video clips</intro_Txt5>
+		<intro_Txt6 type="text" minor="0">&#x3C;b&#x3E;Email&#x3C;/b&#x3E; - Stores e-mail addresses for notifications or sending images</intro_Txt6>
+		<intro_Txt7 type="text" minor="0">&#x3C;b&#x3E;TCP server&#x3C;/b&#x3E; - Receives notification messages</intro_Txt7>
+		<subtitle_list type="text" minor="0">Recipients List</subtitle_list>
+		<list_Txt1 type="text" minor="0">The list on this page shows all of the recipients currently configured. The following information is provided:</list_Txt1>
+		<list_Txt2 type="text" minor="0">&#x3C;b&#x3E;Name&#x3C;/b&#x3E; - The name that was entered when server was set up.</list_Txt2>
+		<list_Txt3 type="text" minor="0">&#x3C;b&#x3E;Type&#x3C;/b&#x3E; - FTP, HTTP, HTTPS, Network Share, Email or TCP.</list_Txt3>
+		<list_Txt4 type="text" minor="0">&#x3C;b&#x3E;Address&#x3C;/b&#x3E; - Depending on the type of recipient server, the address column may contain details such as IP, Host name, URL address or email address.</list_Txt4>
+		<list_Txt5 type="text" minor="0">&#x3C;b&#x3E;Upload path&#x3C;/b&#x3E; - Lists the images upload path for FTP servers and Network Share.</list_Txt5>
+		<list_Txt6 type="text" minor="0">&#x3C;b&#x3E;User name&#x3C;/b&#x3E; - Shows the user name used by the server.</list_Txt6>
+		<buttons_Txt type="text" minor="0">To add a new recipient click &#x3C;b&#x3E;Add&#x3C;/b&#x3E;. To view an existing recipient select it and click &#x3C;b&#x3E;View&#x3C;/b&#x3E;. To create a new recipient from an existing one select it and click &#x3C;b&#x3E;Copy&#x3C;/b&#x3E;. To delete a recipient select it and click &#x3C;b&#x3E;Remove&#x3C;/b&#x3E;.</buttons_Txt>
+		<modify_note type="text" minor="0">&#x3C;b&#x3E;Note&#x3C;/b&#x3E;: Deleting a recipient will not affect existing action rules using that recipient. The settings of the deleted recipient are stored in the action rule. To change the recipient settings in the action rule, select an existing recipient in the Action Rule List or create a new recipient in the Action Rule Setup page.</modify_note>
+		<recipientsetup_link type="text" minor="0">See &#x3C;a href='recipient_setup_h.shtml'&#x3E;Recipient Setup&#x3C;/a&#x3E; for more information on how to set Recipients.</recipientsetup_link>
+	</recipients_h>
+</language_xml>

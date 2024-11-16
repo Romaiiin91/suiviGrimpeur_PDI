@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+  <httpDisabled>
+    <pageTitle type="title" minor="0">HTTP not enabled</pageTitle>
+    <lViewTxt type="text" minor="0">Live View</lViewTxt>
+    <setTxt type="msgAsText" minor="0">Setup</setTxt>
+    <httpNotEnblTxt type="text" minor="0">This page is not accessible through HTTP. Use the following address instead:</httpNotEnblTxt>
+  </httpDisabled>
+
+  <index>
+  </index>
+</language_xml>

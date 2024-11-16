@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+	<language>
+		<pageTitle type="title">언어/언어</pageTitle>
+		<removeLanguage type="msgAsText">제거</removeLanguage>
+		<removeConfirm type="alert">제거하시겠습니까?</removeConfirm>
+		<quesMarkTxt type="alert">?</quesMarkTxt>
+		<uplLangBtnStatTxt type="msg">선택한 언어 업로드</uplLangBtnStatTxt>
+		<remBtnStatTxt type="msg">선택한 언어 제거</remBtnStatTxt>
+		<langBtnStatTxt type="msg">언어 파일 선택</langBtnStatTxt>
+		<saveBtnStatTxt type="msg">설정 저장</saveBtnStatTxt>
+		<tesBtnStatTxt type="msg">마지막으로 저장한 설정으로 되돌리기</tesBtnStatTxt>
+		<langTxt type="text">언어</langTxt>
+		<hlpTxt type="image" buttonid="helpPic">여기를 클릭하여 이 페이지에 대한 도움말 보기</hlpTxt>
+		<getLanTxt type="text">언어 가져오기</getLanTxt>
+		<getLanFroTxt type="text">다음 위치에서 언어 파일 가져오기</getLanFroTxt>
+		<uplLanTxt type="text">언어 업로드</uplLanTxt>
+		<text3Txt type="text">업로드할 언어 파일 선택</text3Txt>
+		<anCliTxt type="text">및 클릭</anCliTxt>
+		<uplNewLangBtn type="button" buttonid="uploadLangBtn">언어 업로드</uplNewLangBtn>
+		<selLanTxt type="text">언어 선택</selLanTxt>
+		<saveBtn type="button" buttonid="saveBtn">저장</saveBtn>
+		<resetBtn type="button" buttonid="resetBtn">리셋</resetBtn>
+		<err1Alert type="alert">언어 파일을 업로드할 수 없습니다. 이 파일은 tar 파일 보관이어야 합니다.</err1Alert>
+		<err2Alert type="alert">언어 파일을 확인하지 못했기 때문에 언어 파일을 업로드할 수 없습니다.  이 제품 및 펌웨어 버전과 호환되는 언어 파일을 업로드 중인지 확인하십시오.</err2Alert>
+		<err3Alert type="alert">언어 파일이 너무 커서 파일을 업로드할 수 없습니다.</err3Alert>
+		<err4Alert type="alert">기본 언어 또는 내장된 언어는 제거할 수 없습니다.</err4Alert>
+		<err5Alert type="alert">이 언어 파일은 제품의 다른 펌웨어 버전용으로 개발되었습니다. 그래도 사용할 수는 있지만 일부 번역의 일관성이 떨어질 수 있습니다.</err5Alert>
+	</language>
+	<language_selection1>
+		<pageTitle type="title">언어 선택</pageTitle>
+		<englishStat type="msg">이미 설치된 언어(한국어) 사용</englishStat>
+		<downlLangStat type="msg">언어 다운로드</downlLangStat>
+		<haveLangBtnStat type="msg">2단계에서 미리 다운로드한 언어 파일 사용</haveLangBtnStat>
+		<selectLangTxt type="text">언어 선택</selectLangTxt>
+		<stepTxt1 type="text">1/2단계: 다운로드</stepTxt1>
+		<stepTxt2 type="text">언어 파일</stepTxt2>
+		<stepInstrTxt1 type="text">새 언어 파일(</stepInstrTxt1>
+		<languageTxt type="msgAsText">한국어</languageTxt>
+		<stepInstrTxt2 type="text">)을 다운로드하거나 기존 파일을 사용합니다.</stepInstrTxt2>
+		<downloadBtn type="button" buttonid="langSe1_downloadBtn">다운로드</downloadBtn>
+		<haveLangFileTxt type="button" buttonid="langSe1_haveLangBtn">기존 파일 사용</haveLangFileTxt>
+		<skipTxt type="text">언어 선택 건너뛰기</skipTxt>
+		<skipRegTxt type="text">언어는 나중에 설정 &#62; 언어에서 선택할 수 있습니다.</skipRegTxt>
+		<useEngBtn type="button" buttonid="langSe1_englishBtn">한국어 사용</useEngBtn>
+	</language_selection1>
+	<language_selection2>
+		<pageTitle type="title">언어 선택</pageTitle>
+		<englishConfirm type="alert">취소하면 한국어가 제품 언어로 설정됩니다.&#10;취소하시겠습니까?</englishConfirm>
+		<englishStat type="msg">이미 설치된 언어(한국어) 사용</englishStat>
+		<downlLangStat type="msg">다운로드한 언어 파일 설치</downlLangStat>
+		<err1Alert type="alert">언어 파일을 업로드할 수 없습니다. 이 파일은 tar 파일 보관이어야 합니다.</err1Alert>
+		<err2Alert type="alert">언어 파일을 확인하지 못했기 때문에 언어 파일을 업로드할 수 없습니다.  이 제품 및 펌웨어 버전과 호환되는 언어 파일을 업로드 중인지 확인하십시오.</err2Alert>
+		<err3Alert type="alert">언어 파일이 너무 커서 파일을 업로드할 수 없습니다.</err3Alert>
+		<err4Alert type="alert">기본 언어 또는 내장된 언어는 제거할 수 없습니다.</err4Alert>
+		<err5Alert type="alert">이 언어 파일은 제품의 다른 펌웨어 버전용으로 개발되었습니다. 그래도 사용할 수는 있지만 일부 번역의 일관성이 떨어질 수 있습니다.</err5Alert>
+		<err6Alert1 type="alert">선택한 파일이 다음 위치에 없습니다.</err6Alert1>
+		<err6Alert2 type="alert">.&#10;다른 언어를 설치하려면 취소를 클릭하고 설정 &#62; 언어로 가십시오.</err6Alert2>
+		<languageTxt type="msgAsText">한국어</languageTxt>
+		<selectLangTxt type="text">언어 선택</selectLangTxt>
+		<stepTxt type="text">2/2단계: 설치</stepTxt>
+		<stepInstrTxt type="text">언어 파일을 선택하고 계속을 클릭합니다.</stepInstrTxt>
+		<cancelBtn type="button" buttonid="langSe2_cancelBtn">취소</cancelBtn>
+		<installBtn type="button" buttonid="langSe2_installBtn">계속</installBtn>
+	</language_selection2>
+</language_xml>

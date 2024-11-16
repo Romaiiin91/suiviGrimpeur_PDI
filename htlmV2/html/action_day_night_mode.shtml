@@ -1,0 +1,117 @@
+
+    <!--#include virtual="/sm/sm.srv?action=get&group=PTZ.Support,PTZ.Various" -->
+
+<!--#set var="id" val="day_night_mode" -->
+
+<!--#if expr="$action = scripts" -->
+  var langObjEvTyDayNight = new Language("event_types", "action_day_night_mode");
+  langObjEvTyDayNight.init(false, true);
+
+  var actionName = langObjEvTyDayNight.getText("adnmDayNightModeTxt");
+  var hideAction = false;
+  var isPTZAction = false;
+
+  addToActionMaps( "com.axis.action.unlimited.ircutfilter", "<!--#echo var="id" option="encoding:javascript" -->", actionName, hideAction, isPTZAction );
+
+  <!--#if expr="$map_only != yes" -->
+
+    function init_<!--#echo var="id" option="encoding:javascript" -->( actionTypeId, configParamArr )
+    {
+      var selectActiveEl = document.getElementById( "activeState"+actionTypeId );
+      var selectInActiveEl = document.getElementById( "inactiveState"+actionTypeId );
+      var active_state = "";
+      var inactive_state = "";
+
+      if( configParamArr )
+      {
+        if( configParamArr["active_state"] )
+        {
+          active_state = configParamArr["active_state"];
+        }
+        if( configParamArr["inactive_state"])
+        {
+          inactive_state = configParamArr["inactive_state"];
+        }
+      }
+
+      addSelectOption( selectActiveEl, "auto", langObjEvTyDayNight.getText("adnmAutoTxt"), active_state == "auto" );
+      addSelectOption( selectActiveEl, "on", langObjEvTyDayNight.getText("adnmDayTxt"), active_state == "on" );
+      addSelectOption( selectActiveEl, "off", langObjEvTyDayNight.getText("adnmNightTxt"), active_state == "off" || active_state == "" );
+
+      addSelectOption( selectInActiveEl, "auto", langObjEvTyDayNight.getText("adnmAutoTxt"), inactive_state == "auto" );
+      addSelectOption( selectInActiveEl, "on", langObjEvTyDayNight.getText("adnmDayTxt"), inactive_state == "on" || inactive_state == "" );
+      addSelectOption( selectInActiveEl, "off", langObjEvTyDayNight.getText("adnmNightTxt"), inactive_state == "off" );
+    }
+
+    function validate_<!--#echo var="id" option="encoding:javascript" -->( actionTypeId, isCondition )
+    {
+      if ( !isCondition )
+      {
+        alert( langObjEvTyDayNight.getText("adnmNoDurationAlrtTxt") );
+        return false;
+      }
+
+      return true;
+    }
+
+    function is_action_while_active<!--#echo var="id" option="encoding:javascript" -->()
+    {
+      return true;
+    }
+
+    function setup_save_<!--#echo var="id" option="encoding:javascript" -->( actionTypeId )
+    {
+      var returnObj = new Object();
+      returnObj.TemplateToken = "com.axis.action.unlimited.ircutfilter";
+
+      var selectActiveEl = document.getElementById( "activeState"+actionTypeId );
+      var active_state = selectActiveEl.options[selectActiveEl.selectedIndex].value;
+      var selectInActiveEl = document.getElementById( "inactiveState"+actionTypeId );
+      var inactive_state = selectInActiveEl.options[selectInActiveEl.selectedIndex].value;
+
+      var paramArray = new Array();
+      paramArray[ paramArray.length ] = new Parameter( "active_state", active_state );
+      paramArray[ paramArray.length ] = new Parameter( "inactive_state", inactive_state );
+
+      returnObj.Name = actionTemplateMap[returnObj.TemplateToken].name;
+      returnObj.Parameters = paramArray;
+
+      return returnObj;
+    } 
+  <!--#endif -->
+<!--#elif expr="$action = render" -->
+  
+  <!--#if expr="_$prefix != _" -->
+    <!--#set var="id" val="$prefix$_day_night_mode" -->
+  <!--#endif -->
+
+  <!--#if expr="$root_ImageSource_I0_DayNight_IrCutFilter != " -->
+    <!--#set var="IrCutFilter" val="$root_ImageSource_I0_DayNight_IrCutFilter" -->
+  <!--#else -->
+    <!--#set var="IrCutFilter" val="$root_PTZ_Various_V1_IrCutFilter" -->
+  <!--#endif -->
+  <div id="div_<!--#echo var="id" option="encoding:javascript" -->" class="actionContainer">
+    <div class="row">
+      <label for="activeState<!--#echo var="id" option="encoding:javascript" -->"><span id="adnmModeActive<!--#echo var="id" option="encoding:javascript" -->Output"></span></label>
+      <select name="activeState<!--#echo var="id" option="encoding:javascript" -->" id="activeState<!--#echo var="id" option="encoding:javascript" -->" class="large">
+      </select>
+      <br />
+      <label for="inactiveState<!--#echo var="id" option="encoding:javascript" -->"><span id="adnmModeInActive<!--#echo var="id" option="encoding:javascript" -->Output"></span></label>
+      <select name="inactiveState<!--#echo var="id" option="encoding:javascript" -->" id="inactiveState<!--#echo var="id" option="encoding:javascript" -->" class="large">
+      </select>
+    </div>
+  </div>
+
+  <script language="javascript" type="text/javascript">
+  <!--
+    var langObjEvTyDayNightRender = new Language("event_types", "action_day_night_mode");
+    langObjEvTyDayNightRender.init(false, true);
+  
+    document.getElementById("adnmModeActive<!--#echo var="id" option="encoding:javascript" -->Output").innerHTML = langObjEvTyDayNightRender.getText("adnmModeActiveTxt");
+    document.getElementById("adnmModeInActive<!--#echo var="id" option="encoding:javascript" -->Output").innerHTML = langObjEvTyDayNightRender.getText("adnmModeInActiveTxt");
+
+  // -->
+  </script>
+<!--#else -->
+  ERROR: Missing parameter.
+<!--#endif -->

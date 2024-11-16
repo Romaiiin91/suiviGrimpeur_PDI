@@ -1,0 +1,306 @@
+<!--#include virtual="/sm/sm.srv?action=get&group=System.RootPwdSet,HTTPS,System.BoaPort,System.BoaGroupPolicy" -->
+<!--#if expr="$root_System_RootPwdSet = yes" -->
+
+
+<html>
+<head>
+<META HTTP-EQUIV="Expires" CONTENT="Tue, 01 Jan 1980 1:00:00 GMT">
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<META HTTP-EQUIV="Cache-Control" CONTENT="no-cache">
+<META HTTP-EQUIV="Refresh" CONTENT="0; URL=/admin/users.shtml">
+</head>
+<body>
+</body>
+</html>
+
+<!--#else -->
+<!--#set var="helpURL" val="javascript:launch('/help/cam_settings.shtml')" -->
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#set var="activeMenu" val="system" -->
+<!--#set var="activeMenu1" val="security" -->
+<!--#set var="activePage" val="users" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<!--#include virtual="/java/chkbox.shtml" -->
+
+<!--#if expr="$submitdata$ != " -->
+<script>
+
+var redirect_path = "/";
+
+
+  addvars = "/axis-cgi/pwdroot/pwdroot.cgi?" +
+            "<!--#echo var="submitdata" option="encoding:url" -->" +
+            "<!--#echo var="pwd" option="encoding:url_rfc3986" -->" +
+            "&" + "return_page=" + escape(redirect_path);
+  window.location=addvars;
+</script>
+<!--#else -->
+
+<!--#if expr="$root_HTTPS_Enabled != yes" -->
+<!--#include virtual="/incl/wait.shtml" -->
+<!--#endif -->
+<script language="JavaScript">
+<!--
+
+var langObjPwdRoot;
+function onLoad()
+{
+  langObjPwdRoot = new Language("users", "pwdRoot");
+  langObjPwdRoot.init();
+  document.useraddForm.pwd.focus();
+}
+
+function relocate()
+{
+// Workaround for location.hostname that doesn't work with IPv6 in all browsers
+  var pageurl = location.href
+  if (pageurl.indexOf("https://") != -1) {
+    var startIndex = 8;
+  } else {
+    var startIndex = 7;
+  }
+  document.location = 'https://' + pageurl.substring(startIndex, pageurl.indexOf("/", 9)) + '/pwdroot/pwdRoot.shtml'
+}
+
+
+function checkPassword()
+{
+  var form = document.useraddForm
+  var aPass1 = form.pwd.value
+  var aPass2 = form.pwd_confirm.value
+  var c
+
+  // Check short password
+  if ((aPass1.length < 1) && (aPass2.length < 1))
+  {
+      alert( langObjPwdRoot.getText("pswMustConAlert") );
+      form.pwd.focus();
+      form.pwd.select();
+      return false;
+  }
+
+  // Password length check
+  if (aPass1.length > 64)
+  {
+    alert(langObjPwdRoot.getText("maxPcAlert1")+" 64 "+langObjPwdRoot.getText("maxPcAlert2"));
+    form.pwd.focus();
+    form.pwd.select();
+    return false;
+  }
+
+  // Check that the real password is same as the confirm password.
+  if (aPass1 != aPass2)
+  {
+    alert( langObjPwdRoot.getText("pwdConfAlert") );
+    form.pwd.focus()
+    form.pwd.select()
+    return false
+  }
+
+  return true
+}
+
+
+function saveData()
+{
+  var submitForm = document.submitForm;
+  var userForm = document.useraddForm;
+  var aQuery = "";
+
+  if(!checkPassword()) {
+     return false;
+  }
+
+  // Build submitstring
+  aQuery = "action=update&user=root&pwd=";
+  if(userForm.pwd.value.length > 0) {
+    submitForm.pwd.value = userForm.pwd.value;
+  }
+  submitForm.submitdata.value = aQuery;
+  submitForm.submit();
+  return false;
+}
+
+<!--#if expr="$root_HTTPS_Enabled != yes" -->
+
+function showWaitMsg( msg )
+{
+  wait_start( msg, 125, 250 );
+}
+
+function enableHttps() {
+  var msg = langObjPwdRoot.getText("loadingTxt");
+  delayWaitTimer = window.setTimeout('showWaitMsg( "' + msg + '" )', 1000);
+
+  var cn = location.hostname;
+  var url = "/axis-cgi/pwdroot/enable_https.cgi?cn="+cn;
+  var xmlHttp = new XMLHttpRequest();
+  xmlHttp.onreadystatechange = function() {
+    if (xmlHttp.readyState == 4) {
+      finishedEnableHttps(xmlHttp.status);
+    }
+  }
+  xmlHttp.open("GET", url, true);
+  xmlHttp.send(null);
+}
+
+function finishedEnableHttps(status) {
+  if (status != 200) {
+    wait_stop();
+
+    if (delayWaitTimer) {
+      window.clearTimeout(delayWaitTimer);
+    }
+
+    alert("Failed to enable HTTPS");
+    return;
+  }
+
+  // Apache restarts, wait before redirect
+  setTimeout(relocate, 15000);
+}
+
+<!--#endif -->
+
+var pwdR_CreCerBtnStat;
+var pwdR_okBtnStat;
+var httpText;
+function globalLanguageVars()
+{
+
+  pwdR_CreCerBtnStat = langObjPwdRoot.getText("creCerBtnStatTxt");
+  pwdR_okBtnStat = langObjPwdRoot.getText("okBtnStatTxt");
+  
+   var anArray = document.location.href.split(":");
+   if (anArray[0].indexOf("s") == -1)
+     httpText = langObjPwdRoot.getText("usHttpTxt");
+   else
+     httpText = langObjPwdRoot.getText("usHttpsTxt");
+   document.getElementById("httpText").innerHTML = httpText;
+}
+// -->
+</script>
+
+</head>
+<body <!--#include virtual="/incl/bodytag.shtml" --> onLoad="onLoad()">
+<center>
+<form name="setPolicy">
+  <input type="hidden" name="root_System_BoaGroupPolicy_admin" value="https">
+  <input type="hidden" name="return_page" value="">
+</form>
+  <br>
+  <table style="width;450px;text-align:left;" cellspacing=0 cellpadding=0 border=0>
+    <tr class="top-mainborder">
+      <td colspan=2><img src="/pics/line_corner_lt_5x5px.gif" width=5 height=5 border=0 alt=""></td>
+      <td colspan=5 background="/pics/line_t_100x5px.gif"><img src="/pics/line_t_100x5px.gif" width=1 height=5 border=0 alt=""></td>
+      <td colspan=2><img src="/pics/line_corner_rt_5x5px.gif" width=5 height=5 border=0 alt=""></td>
+    </tr>
+    <tr>
+      <td class="lineBg"><img src="/pics/blank.gif" width="1" border=0 alt=""></td>
+      <td><img src="/pics/blank.gif" width="4" height=1 border=0 alt=""></td>
+      <td colspan=4 valign="middle" align="left">
+        <table border=0 cellspacing=0 cellpadding=0>
+          <tr>
+            <td><a href="<!--#echo var="root_Brand_WebURL" option="encoding:url" -->" target=_blank><img src="/pics/logo_70x29px.gif" width=68 height=29 border=0 alt="<!--#echo var="root_Brand_Brand" option="encoding:url" -->" /></a></td>
+            <td><a href="<!--#echo var="root_Brand_WebURL" option="encoding:url" -->" target=_blank></a></td>
+          </tr>
+        </table>
+      </td>
+      <td colspan=2><img src="/pics/blank.gif" width="4" border=0 alt=""></td>
+      <td class="lineBg"><img src="/pics/blank.gif" width=1 height=1 alt=""></td>
+    </tr>
+    <tr>
+      <td colspan=9 class="lineBg"><img src="/pics/blank.gif" width=1 height=1 border=0 alt=""></td>
+    </tr>
+    <tr>
+      <td class="lineBg"><img src="/pics/blank.gif" width=1 height=1 alt=""></td>
+      <td valign="top"><img src="/pics/blank.gif" width=4 height=1 alt=""></td>
+      <td valign="top" colspan=5>
+        <form name="useraddForm" onSubmit="javascript: return saveData();">
+        <table border="0" cellpadding="3" cellspacing="0" width="450">
+<!--#if expr="$root_HTTPS_Enabled != yes" -->
+  <tr>
+    <td class="topTitle" colspan="2" align="left"><span id="creCerTxt"></span></td>
+  </tr>
+  <tr><td class="oddItem" colspan="2"><span id="secConTxt"></span></td>
+  </tr>
+   <tr>
+      <td class="oddItem" colspan="3">
+        <table border="0" cellpadding="0" cellspacing="3">
+          <tr>
+            <td class="button"><input type="button" name="create_cert" value="" width="200" class="btnXXL" onclick="JavaScript:enableHttps()" onMouseOver="return showStatus(pwdR_CreCerBtnStat)" onMouseOut="return showStatus('')" id="pwdR_CreCerBtn"></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+       <tr><td colspan="2"><hr></td></tr>
+<!--#endif -->
+   <tr><td class="topTitle" colspan="2" align="left"><span id="usrSetTxt"></span>&nbsp;<span id="httpText"></span>
+
+ </td></tr>
+          <tr><td class="oddItem" width="35%"><span id="usrNaTxt"></span></td><td nowrap class="oddItem">root<input type="hidden" name="user" value="root"></td></tr>
+          <tr><td class="oddItem" nowrap><span id="pwdTxt"></span>&nbsp;<span>64</span>&nbsp;<span id="pwdTxt2"></span></td><td class="oddItem"><input type="password" class="fieldName" maxlength="64" name="pwd"></td></tr>
+          <tr><td nowrap class="oddItem"><span id="confPwdTxt"></span></td><td class="oddItem"><input type="password" class="fieldName" maxlength="64" name="pwd_confirm"></td></tr>
+          <tr>
+            <td class="topTitle" align="right" colspan="2">
+              <table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td class="button"><input type="button" width="75" value="" class="btnNormal" onClick="JavaScript:saveData()" onMouseOver="return showStatus(pwdR_okBtnStat)" onMouseOut="return showStatus('')" id="pwdR_okBtn"></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td class="oddItem" colspan="2"><hr></td>
+          </tr>
+          <tr>
+            <td class="oddItem" colspan="2">
+              <span id="infoTxt"></span>
+            </td>
+          </tr>
+          <tr>
+            <td class="oddItem" colspan="2"><hr></td>
+          </tr>
+          <tr>
+            <td class="oddItem" colspan="2">
+              <span id="onvifTxt"></span>
+            </td>
+          </tr>
+        </table>
+</form>
+
+    <form name="submitForm" action="/pwdroot/pwdRoot.shtml" method="post">
+      <input type="hidden" name="submitdata" value="">
+      <input type="hidden" name="pwd" value="">
+      <input type="hidden" name="dummy" value="">
+    </form>
+
+<!--#endif -->
+
+    </td>
+    <td width=4><img src="/pics/blank.gif" width=1 height=1 border=0 alt=""></td>
+    <td width=1 class="lineBg"><img src="/pics/blank.gif" width=1 height=1 border=0 alt=""></td>
+  </tr>
+
+  <tr class="bottom-mainborder">
+    <td colspan=2><img src="/pics/line_corner_lb_5x5px.gif" width=5 height=5 alt=""></td>
+    <td colspan=2 background="/pics/line_b_100x5px.gif"><img src="/pics/blank.gif" width=1 height=1 alt=""></td>
+
+    <td colspan=3 background="/pics/line_b_100x5px.gif"><img src="/pics/blank.gif" width=1 height=1 alt=""></td>
+    <td colspan=2><img src="/pics/line_corner_rb_5x5px.gif" width=5 height=5 alt=""></td>
+  </tr>
+  <tr>
+    <td colspan=9><img src="/pics/blank.gif" width=1 height=5 border=0 alt=""></td>
+  </tr>
+  <tr>
+    <td width=1><img src="/pics/blank.gif" width="1" height="1" border=0 alt=""></td>
+    <td colspan=7 valign="middle" align="left">
+    </td>
+    <td width=1><img src="/pics/blank.gif" width="1" height="1" border=0 alt=""></td>
+  </tr>
+  </table>
+</center>
+  </body>
+</html>
+<!--#endif -->

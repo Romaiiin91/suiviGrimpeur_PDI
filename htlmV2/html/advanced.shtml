@@ -1,0 +1,1183 @@
+<!--#include virtual="/sm/sm.srv?action=get&group=ImageSource,Image,Properties.ImageSource,Properties.Image.Format,Properties.Audio.Audio,Brand,PTZ.Various.V1,PTZ.Support.S1,PTZ.UserAdv.U1.ImageFreeze,Properties.LightControl" -->
+
+<!--#if expr="_$nbr = _" -->
+  <!--#set var="nbr" val="0" -->
+<!--#endif -->
+
+<!--#set var="helpURL" val="javascript:launch('/help/advanced_h.shtml')" -->
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#set var="CustomWizFormAction" val="/sm/sm.srv" -->
+
+<!--#if expr="$basic = yes" -->
+  <!--#set var="activeMenu" val="basic" -->
+  <!--#set var="activePage" val="camera_basic" -->
+<!--#else -->
+  <!--#set var="activeMenu" val="videoImage" -->
+  <!--#set var="activePage" val="camera" -->
+<!--#endif -->
+
+<!--#set var="showIris" val="no" -->
+<!--#set var="showShutter" val="no" -->
+<!--#set var="showGain" val="no" -->
+
+<!--#if expr="$root_ImageSource_I0_Sensor_ExposureAutoMode = iris" -->
+  <!--#set var="showIris" val="yes" -->
+<!--#endif -->
+<!--#if expr="$root_ImageSource_I0_Sensor_ExposureAutoMode = shutter" -->
+  <!--#set var="showShutter" val="yes" -->
+<!--#endif -->
+<!--#if expr="$root_ImageSource_I0_Sensor_ExposureAutoMode = manual" -->
+  <!--#set var="showShutter" val="yes" -->
+  <!--#set var="showIris" val="yes" -->
+  <!--#set var="showGain" val="no" -->
+<!--#endif -->
+
+
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<!--#include virtual="/java/integer.shtml" -->
+<!--#include virtual="/java/chkbox.shtml" -->
+
+<STYLE TYPE="text/css">
+
+<!--#if expr="$root_Image_I0_Appearance_Rotation = 0" -->
+.blacksquare {
+   border: 1px solid #000;
+   width:  176px;
+   height: 120px;
+}
+<!--#endif -->
+<!--#if expr="$root_Image_I0_Appearance_Rotation = 90" -->
+.blacksquare {
+   border: 1px solid #000;
+   width: 120px;
+   height: 176px;
+}
+<!--#endif -->
+<!--#if expr="$root_Image_I0_Appearance_Rotation = 180" -->
+.blacksquare {
+   border: 1px solid #000;
+   width: 176px;
+   height: 120px;
+}
+<!--#endif -->
+<!--#if expr="$root_Image_I0_Appearance_Rotation = 270" -->
+.blacksquare {
+   border: 1px solid #000;
+   width: 120px;
+   height: 176px;
+}
+<!--#endif -->
+
+.redsquare {
+   border: 1px solid #990000;
+   width: 100%;
+   height: 100%;
+}
+
+.pirispos { position: absolute; border: red 1px solid; background:red; font-size: 7px; }
+.errorBox { border: red 1px solid; background: #ffebeb; padding: 2px; }
+
+</style>
+
+<script src="/incl/zxml.js" language="javascript" type="text/javascript"></script>
+<script src="/incl/xmlPrototypes.js" language="javascript" type="text/javascript"></script>
+<script src="/incl/language_incl.js" language="javascript" type="text/javascript"></script>
+<script type="text/javascript" src="/incl/pos.js"></script>
+<script type="text/javascript" src="/incl/slider.js"></script>
+<!--#include virtual="/incl/wait.shtml" -->
+
+<script LANGUAGE="JavaScript">
+<!--
+var langObjVidImgHaiAdv = new Language("videoImage_advanced_haiti", "advanced");
+
+<!--#include virtual="/incl/functions.shtml" -->
+
+if ((navigator.appName == "Microsoft Internet Explorer") && (navigator.platform != "MacPPC") && (navigator.platform != "Mac68k")) {
+  var browser = "IE"
+} else {
+  var browser = "Netscape"
+}
+
+function openPopUpTest(thePage, theName, theWidth, theHeight)
+{
+  var someFeatures = 'scrollbars=yes,toolbar=0,location=no,directories=0,status=0,menubar=0,resizable=1,width=' + theWidth + ',height=' + theHeight;
+
+  thePage += 'id=<!--#echo var="ssi_request_id" option="encoding:url" -->&standalone=yes&imagepath=/axis-cgi/mjpg/video.cgi';
+  var aPopUpWin = window.open(thePage, theName, someFeatures);
+
+  if (browser == "Netscape") {
+    aPopUpWin.focus();
+  }
+}
+
+
+var maxFPS = 30
+
+var fromSsid='<!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.Image.I$nbr$.Stream.FPS&name=FPSdummy&format=htmlvalue" -->'
+var fpsIdx1=fromSsid.lastIndexOf("..")
+var fpsIdx2=fromSsid.lastIndexOf("]")
+if ((fpsIdx1 != -1) || (fpsIdx2 != -1 )) {
+  maxFPS = fromSsid.substring(fpsIdx1+2,fpsIdx2)
+}
+
+
+function setExposureTimeAndGain()
+{
+
+<!--#if expr="$root_Properties_ImageSource_DCIris = yes" --><!--#if expr="$root_Properties_ImageSource_PositionableIris = yes" -->
+  if (form.root_ImageSource_I0_Sensor_Exposure.value == "hold") {
+    document.getElementById("irispos-handle").style.display = 'none';
+    document.getElementById("irispos-left").style.visibility = 'hidden';
+    document.getElementById("irispos-right").style.visibility = 'hidden';
+    document.getElementById("irispos").disabled = true;
+  } else {
+    document.getElementById("irispos-handle").style.display = '';
+    document.getElementById("irispos-left").style.visibility = '';
+    document.getElementById("irispos-right").style.visibility = '';
+    document.getElementById("irispos").disabled = false;
+  }
+<!--#endif --><!--#endif -->
+}
+
+function callToggleShutter()
+{
+  var form = document.WizardForm;
+    var expVal = form.root_ImageSource_I0_Sensor_Exposure.value;
+    <!--#if expr="_$root_ImageSource_I0_Sensor_MaxExposureTime != _" -->
+      var isShown = (expVal == "auto");
+      toggleShutter(document.getElementById('max_exposure_lbl'), isShown);
+      toggleShutter(document.getElementById('max_exposure_input_1'), isShown);
+      <!--#if expr="$root_ImageSource_I0_Sensor_AutoSlowShutter != " -->
+        toggleShutter(document.getElementById('max_exposure_input_2'), isShown);
+      <!--#endif -->
+    <!--#endif -->
+    <!--#if expr="$root_ImageSource_I0_Sensor_Shutter != " -->
+      var isShown = (expVal == "manual" || expVal == 'shutter');
+      toggleShutter(document.getElementById('exposure_time_lbl'), isShown);
+      toggleShutter(document.getElementById('exposure_time_input'), isShown);
+    <!--#endif -->
+  <!--#if expr="_$root_ImageSource_I0_Sensor_MaxExposureTime != _" -->
+    ableMaxExpTimeAndPrio()
+  <!--#endif -->
+}
+
+function toggleShutter(child, isHidden)
+{
+  var form = document.WizardForm
+
+  if (isHidden) {
+    child.className = "shownItems";
+  } else {
+    child.className = "collapsed";
+  }
+}
+
+
+function showShutterGain()
+{
+  <!--#if expr="_$root_ImageSource_I0_Sensor_ExposurePriority != _" -->
+    var isShown = (document.WizardForm.root_ImageSource_I0_Sensor_ExposurePriority.selectedIndex != 0);
+  <!--#else -->
+      var expVal = document.WizardForm.root_ImageSource_I0_Sensor_Exposure.value;
+      var isShown = (expVal == "manual" || expVal == 'shutter');
+  <!--#endif -->
+    <!--#if expr="_$root_ImageSource_I0_Sensor_MaxExposureTime != _" -->
+      toggleShutter(document.getElementById("exposure_time_lbl"), isShown);
+      toggleShutter(document.getElementById("exposure_time_input"), isShown);
+    <!--#endif -->
+    <!--#if expr="_$root_ImageSource_I0_Sensor_MaxGain != _" -->
+      toggleShutter(document.getElementById("gain"), isShown);
+    <!--#endif -->
+<!--#if expr="_$root_ImageSource_I0_Sensor_MaxExposureTime != _" -->
+  ableMaxExpTimeAndPrio()
+<!--#endif -->
+  updateSliders()
+}
+
+<!--#if expr="_$root_ImageSource_I0_Sensor_MaxExposureTime != _" -->
+function ableMaxExpTimeAndPrio()
+{
+  <!--#if expr="$root_ImageSource_I0_Sensor_AutoSlowShutter != " -->
+  var form = document.WizardForm
+
+  if (form.root_ImageSource_I0_Sensor_Exposure.value == "auto") {
+    if (document.getElementById('slowShut').checked) {
+    <!--#if expr="_$root_ImageSource_I0_Sensor_MaxExposureTime != _" -->
+      form.root_ImageSource_I0_Sensor_MaxExposureTime.disabled = false;
+    <!--#endif -->
+    <!--#if expr="_$root_ImageSource_I0_Sensor_ExposurePriority != _" -->
+      form.root_ImageSource_I0_Sensor_ExposurePriority.disabled = false;
+    <!--#endif -->
+    } else {
+    <!--#if expr="_$root_ImageSource_I0_Sensor_MaxExposureTime != _" -->
+      form.root_ImageSource_I0_Sensor_MaxExposureTime.disabled = true;
+    <!--#endif -->
+    <!--#if expr="_$root_ImageSource_I0_Sensor_ExposurePriority != _" -->
+      form.root_ImageSource_I0_Sensor_ExposurePriority.disabled = true;
+    <!--#endif -->
+    }
+  }
+  else {
+    <!--#if expr="_$root_ImageSource_I0_Sensor_MaxExposureTime != _" -->
+      form.root_ImageSource_I0_Sensor_MaxExposureTime.disabled = true
+    <!--#endif -->
+    <!--#if expr="_$root_ImageSource_I0_Sensor_ExposurePriority != _" -->
+      form.root_ImageSource_I0_Sensor_ExposurePriority.disabled = true
+    <!--#endif -->
+  }
+  <!--#endif -->
+}
+<!--#endif -->
+
+function ableSensitivity()
+{
+<!--#if expr="$root_ImageSource_I0_Sensor_AFLowSensitivity != " -->
+  var form = document.WizardForm
+
+  if (form.AutoFocus.value == "false")
+    form.root_ImageSource_I0_Sensor_AFLowSensitivity.disabled = true
+  else
+    form.root_ImageSource_I0_Sensor_AFLowSensitivity.disabled = false
+<!--#endif -->
+}
+
+function setChecked(param)
+{
+  var form = document.WizardForm
+  var tempParam = param.name.slice(param.name.lastIndexOf("_") + 1)
+
+  if (param.checked)
+    form[tempParam].value = "true"
+  else
+    form[tempParam].value = "false"
+}
+
+function setIRLamp(status)
+{
+  if (status == "on")
+    sendAction("/axis-cgi/com/ptz.cgi?auxiliary=irlampon", "GET");
+  else
+    sendAction("/axis-cgi/com/ptz.cgi?auxiliary=irlampoff", "GET");
+}
+
+var request = zXmlHttp.createRequest();
+
+function sendAction(action, method)
+{
+  request.open(method, action, false);
+  try{ request.send(null); } catch(e) { delete e; }
+  var result = (request.status == 200 ? request.responseText : null);
+  return result;
+ }
+
+
+<!--#if expr="_$root_ImageSource_I0_Sensor_ColorLevel$$root_ImageSource_I0_Video_Saturation$ != _" -->
+var colorlevelSlider = null;
+<!--#endif -->
+<!--#if expr="_$root_ImageSource_I0_Sensor_Brightness != _" -->
+var brightnessSlider = null;
+<!--#endif -->
+<!--#if expr="_$root_ImageSource_I0_Sensor_Sharpness != _" -->
+var sharpnessSlider = null;
+<!--#endif -->
+<!--#if expr="_$root_ImageSource_I0_Sensor_Contrast$$root_ImageSource_I0_Video_Contrast$ != _" -->
+var contrastSlider = null;
+<!--#endif -->
+<!--#if expr="_$root_ImageSource_I0_Sensor_ExposureValue != _" -->
+var exposurevalSlider = null;
+<!--#endif -->
+<!--#if expr="$root_Properties_ImageSource_PositionableIris = yes" -->
+var irisposSlider = null;
+<!--#endif -->
+<!--#if expr="_$root_ImageSource_I0_DayNight_ShiftLevel != _" -->
+var daynightshiftSlider = null;
+<!--#endif -->
+function setFields()
+{
+  var form = document.WizardForm
+<!--#if expr="_$root_ImageSource_I0_Sensor_ColorLevel$$root_ImageSource_I0_Video_Saturation$ != _" -->
+  document.getElementById("colorlevel-handle").style.display = "inline";
+  <!--#if expr="_$root_ImageSource_I0_Sensor_ColorLevel$ != _" -->
+    colorlevelSlider = new Slider('colorlevel', 0, 100, form.root_ImageSource_I<!--#echo var="nbr" option="encoding:javascript" -->_Sensor_ColorLevel.value, validateColorLevel);
+  <!--#else -->
+    colorlevelSlider = new Slider('colorlevel', 0, 100, form.root_ImageSource_I<!--#echo var="nbr" option="encoding:javascript" -->_Video_Saturation.value, validateColorLevel);
+  <!--#endif -->
+<!--#endif -->
+<!--#if expr="_$root_ImageSource_I0_Sensor_Brightness != _" -->
+  document.getElementById("brightness-handle").style.display = "inline";
+  brightnessSlider = new Slider('brightness', 0, 100, form.root_ImageSource_I<!--#echo var="nbr" option="encoding:javascript" -->_Sensor_Brightness.value, validateBrightness);
+<!--#endif -->
+<!--#if expr="_$root_ImageSource_I0_Sensor_Sharpness != _" -->
+  document.getElementById("sharpness-handle").style.display = "inline";
+  sharpnessSlider = new Slider('sharpness', 0, 100, form.root_ImageSource_I<!--#echo var="nbr" option="encoding:javascript" -->_Sensor_Sharpness.value, validateSharpness);
+<!--#endif -->
+<!--#if expr="_$root_ImageSource_I0_Sensor_Contrast$$root_ImageSource_I0_Video_Contrast$ != _" -->
+  document.getElementById("contrast-handle").style.display = "inline";
+  <!--#if expr="_$root_ImageSource_I0_Sensor_Contrast$ != _" -->
+    contrastSlider = new Slider('contrast', 0, 100, form.root_ImageSource_I<!--#echo var="nbr" option="encoding:javascript" -->_Sensor_Contrast.value, validateContrast);
+  <!--#else -->
+    contrastSlider = new Slider('contrast', 0, 100, form.root_ImageSource_I<!--#echo var="nbr" option="encoding:javascript" -->_Video_Contrast.value, validateContrast);
+  <!--#endif -->
+<!--#endif -->
+<!--#if expr="_$root_ImageSource_I0_Sensor_ExposureValue != _" -->
+  <!--#if expr="$root_ImageSource_I0_Sensor_DynamicContrastEnabled != yes" -->
+  document.getElementById("exposureval-handle").style.display = "inline";
+  exposurevalSlider = new Slider('exposureval', 0, 100, form.root_ImageSource_I<!--#echo var="nbr" option="encoding:javascript" -->_Sensor_ExposureValue.value, validateExposure);
+  <!--#endif -->
+<!--#endif -->
+<!--#if expr="$root_Properties_ImageSource_PositionableIris = yes" -->
+ <!--#if expr="$root_ImageSource_I0_Sensor_Exposure != hold" -->
+  document.getElementById("irispos-handle").style.display = "inline";
+ <!--#endif -->
+  irisposSlider = new Slider('irispos', 0, 100, form.root_ImageSource_I<!--#echo var="nbr" option="encoding:javascript" -->_DCIris_Position.value, validateIris);
+<!--#endif -->
+
+<!--#if expr="_$root_ImageSource_I0_DayNight_ShiftLevel != _" -->
+  document.getElementById("daynightshift-handle").style.display = "inline";
+  daynightshiftSlider = new Slider('daynightshift', 0, 100, form.root_ImageSource_I<!--#echo var="nbr" option="encoding:javascript" -->_DayNight_ShiftLevel.value);
+<!--#endif -->
+}
+
+
+function updateSliders()
+{
+<!--#if expr="_$root_ImageSource_I0_Sensor_ColorLevel$$root_ImageSource_I0_Video_Saturation$ != _" -->
+  colorlevelSlider.moveTo();
+<!--#endif -->
+<!--#if expr="_$root_ImageSource_I0_Sensor_Brightness != _" -->
+  brightnessSlider.moveTo();
+<!--#endif -->
+<!--#if expr="_$root_ImageSource_I0_Sensor_Sharpness != _" -->
+  sharpnessSlider.moveTo();
+<!--#endif -->
+<!--#if expr="_$root_ImageSource_I0_Sensor_Contrast$$root_ImageSource_I0_Video_Contrast$ != _" -->
+  contrastSlider.moveTo();
+<!--#endif -->
+<!--#if expr="_$root_ImageSource_I0_Sensor_ExposureValue != _" -->
+  <!--#if expr="$root_ImageSource_I0_Sensor_DynamicContrastEnabled != yes" -->
+  exposurevalSlider.moveTo();
+  <!--#endif -->
+<!--#endif -->
+<!--#if expr="$root_Properties_ImageSource_PositionableIris = yes" -->
+  irisposSlider.moveTo();
+<!--#endif -->
+}
+
+
+function ableExpWin()
+{
+  var form = document.WizardForm
+
+  if (form.zoneType[0].checked) {
+    document.getElementById("adv_EditBtn").disabled = true
+  } else {
+    document.getElementById("adv_EditBtn").disabled = false
+  }
+}
+
+function setDefExpWin(theValue)
+{
+  var txt;
+  if (theValue == "auto")        txt = langObjVidImgHaiAdv.getText("centTxt");
+  else if (theValue == "spot")   txt = langObjVidImgHaiAdv.getText("spotTxt");
+  else if (theValue == "upper")  txt = langObjVidImgHaiAdv.getText("uppTxt");
+  else if (theValue == "lower")  txt = langObjVidImgHaiAdv.getText("lowerTxt");
+  else if (theValue == "left")   txt = langObjVidImgHaiAdv.getText("leftTxt");
+  else if (theValue == "right")  txt = langObjVidImgHaiAdv.getText("rightTxt");
+  else if (theValue == "custom") txt = langObjVidImgHaiAdv.getText("custTxt");
+  else txt = theValue;
+
+  document.getElementById("defExpWin").innerHTML = txt
+}
+
+function saveData()
+{
+  var form = document.WizardForm
+  var errorMessage = langObjVidImgHaiAdv.getText("inValAlrt");
+
+<!--#if expr="_$root_ImageSource_I0_Sensor_CustomExposureWindow_Weight != _" -->
+  if (form.zoneType[0].checked) {
+    form.root_ImageSource_I<!--#echo var="nbr" option="encoding:javascript" -->_Sensor_ExposureWindow.value = "auto";
+  } else {
+    form.root_ImageSource_I<!--#echo var="nbr" option="encoding:javascript" -->_Sensor_ExposureWindow.value = "<!--#echo var="root_ImageSource_I$nbr$_Sensor_ExposureWindow" option="encoding:url" -->";
+  }
+<!--#endif -->
+
+<!--#if expr="_$root_ImageSource_I0_Sensor_MaxExposureTime != _" --><!--#if expr="_$root_ImageSource_I0_Sensor_MinExposureTime$ != _" --><!--#if expr="_$root_ImageSource_I0_Sensor_MaxGain != _" -->
+  if (parseInt(form.root_ImageSource_I0_Sensor_MinExposureTime.value,10) > parseInt(form.root_ImageSource_I0_Sensor_MaxExposureTime.value,10)) {
+    alert( langObjVidImgHaiAdv.getText("shutTimAlrt") );
+    return;
+  }
+  if (parseInt(form.root_ImageSource_I0_Sensor_MinGain.value,10) > parseInt(form.root_ImageSource_I0_Sensor_MaxGain.value,10)) {
+    alert( langObjVidImgHaiAdv.getText("gainAlrt") );
+    return;
+  }
+<!--#endif --><!--#endif --><!--#endif -->
+
+  <!--#if expr="$root_ImageSource_I0_Sensor_ColorLevel$$root_ImageSource_I0_Video_Saturation$ != " -->
+    if(!validateColorLevel()) {
+      alert(errorMessage);
+      colorlevelSlider.text.focus();
+      colorlevelSlider.text.select();
+      return false;
+    }
+  <!--#endif -->
+  <!--#if expr="$root_ImageSource_I0_Sensor_Brightness != " -->
+    if(!validateBrightness()) {
+      alert(errorMessage);
+      brightnessSlider.text.focus();
+      brightnessSlider.text.select();
+      return false;
+    }
+  <!--#endif -->
+  <!--#if expr="_$root_ImageSource_I0_Sensor_Contrast$$root_ImageSource_I0_Video_Contrast$ != _" -->
+    if(!validateContrast()) {
+      alert(errorMessage);
+      contrastSlider.text.focus();
+      contrastSlider.text.select();
+      return false;
+    }
+  <!--#endif -->
+  <!--#if expr="$root_ImageSource_I0_Sensor_Sharpness != " -->
+    if(!validateSharpness()) {
+      alert(errorMessage);
+      sharpnessSlider.text.focus();
+      sharpnessSlider.text.select();
+      return false;
+    }
+  <!--#endif -->
+
+  <!--#if expr="_$root_ImageSource_I0_Sensor_ExposureValue != _" -->
+    <!--#if expr="$root_ImageSource_I0_Sensor_DynamicContrastEnabled != yes" -->
+    if(!validateExposure()) {
+      alert(errorMessage);
+      exposurevalSlider.text.focus();
+      exposurevalSlider.text.select();
+      return false;
+    }
+    <!--#endif -->
+  <!--#endif -->
+
+
+  <!--#if expr="$root_Properties_ImageSource_PositionableIris = yes" -->
+    if(!validateIris()) {
+      alert(errorMessage);
+      irisposSlider.text.focus();
+      irisposSlider.text.select();
+      return false;
+    }
+  <!--#endif -->
+
+
+
+  var irIllum = document.getElementById("IrIllum");
+  var irSync = document.getElementById("IrSync")
+  var isError = false;
+  <!--#if expr="$root_Properties_LightControl_LightControlAvailable = yes" -->
+  if( ir["info"] ) {
+    if( ir["info"]["Enabled"] == "true" && irIllum.checked )
+    {
+      isError |= setLightParam("EnableLight", ir["info"]["LightID"], false, false);
+      isError |= setLightParam("SetLightSynchronizeDayNightMode", ir["info"]["LightID"], "Synchronize", (irSync.checked ? "true" : "false"));
+    }
+    else if( ir["info"]["Enabled"] == "true" && !irIllum.checked )
+    {
+      isError |= setLightParam("DisableLight", ir["info"]["LightID"], false, false);
+    }
+    else if( ir["info"]["Enabled"] == "false" && irIllum.checked )
+    {
+      isError |= setLightParam("EnableLight", ir["info"]["LightID"], false, false);
+    }
+  }
+  <!--#endif -->
+
+  form.submit();
+}
+
+var request
+request = zXmlHttp.createRequest();
+
+function sendAction(action, method)
+{
+  request.open(method, action, false);
+  try{
+    request.send(null);
+  }
+  catch(e) {
+    delete e;
+  }
+  var result = (request.status == 200 ? request.responseText : null);
+  return result;
+}
+
+
+function reloadPage()
+{
+  document.location = "/operator/advanced.shtml?nbr=<!--#echo var="nbr" option="encoding:url" -->&id=<!--#echo var="ssi_request_id" option="encoding:url" --><!--#if expr="$basic = yes" -->&basic=yes<!--#endif -->";
+}
+
+
+function bodyonload() {
+  setExposureTimeAndGain();
+<!--#if expr="_$root_ImageSource_I0_Sensor_CustomExposureWindow_Weight != _" -->
+  ableExpWin();
+  setDefExpWin('<!--#echo var="root_ImageSource_I$nbr$_Sensor_ExposureWindow" option="encoding:url" -->');
+<!--#endif -->
+<!--#if expr="$root_Properties_ImageSource_PositionableIris = yes" -->
+  requestF();
+<!--#endif -->
+  callToggleShutter();
+  setFields();
+  showShutterGain();
+}
+
+function filterSelector(selector, filter)
+{
+  if( selector && (filter != "[none]" && filter != "") ){
+    var i = 0;
+    var set_selected = "";
+    while (i < selector.length) {
+      // Remove all options that does not begin with the filter string.
+      if (selector.options[i].text.substr(0,filter.length) != filter) {
+        if (selector.selectedIndex == i) {
+          set_selected = selector.options[i].value;
+        }
+        selector.options[i] = null;
+      } else {
+        // Remove filter string from option text.
+        selector.options[i].text = selector.options[i].text.substr(filter.length);
+        i++;
+      }
+    }
+    if (set_selected != "") {
+      // Select a remaining option with same value, if posible.
+      for (i = 0 ; i < selector.length ; i++) {
+        if (selector.options[i].value == set_selected) {
+          selector.options[i].selected = true;
+          break;
+        }
+      }
+    }
+  }
+}
+
+function reloadPage()
+{
+  document.location.reload(true);
+}
+function validate(o, min, max, last_value)
+{
+  var value = parseInt(o.value, 10);
+  var r = false;
+  if (isNaN(value))
+    o.value = last_value;
+  else if (value < min)
+    o.value = min;
+  else if (value > max)
+    o.value = max;
+  else
+    r = true;
+
+  return r;
+}
+<!--#if expr="$root_ImageSource_I0_Sensor_ColorLevel$$root_ImageSource_I0_Video_Saturation$ != " -->
+<!--#if expr="_$root_ImageSource_I0_Sensor_ColorLevel != _" -->
+  var colorlevel_last_valid = <!--#echo var="root_ImageSource_I0_Sensor_ColorLevel" option="encoding:javascript" -->;
+<!--#else -->
+  var colorlevel_last_valid = <!--#echo var="root_ImageSource_I0_Video_Saturation" option="encoding:javascript" -->;
+<!--#endif -->
+
+function validateColorLevel() {
+  var o = document.getElementById("colorlevel");
+  var isValid = validate(o, 0, 100, colorlevel_last_valid);
+  if (isValid)
+    colorlevel_last_valid = parseInt(o.value, 10);
+  return isValid;
+}
+<!--#endif -->
+<!--#if expr="$root_ImageSource_I0_Sensor_Saturation != " -->
+var saturation_last_valid = <!--#echo var="root_ImageSource_I0_Sensor_Saturation" option="encoding:javascript" -->;
+function validateSaturation() {
+  var o = document.getElementById("saturation");
+  var isValid = validate(o, 0, 100, saturation_last_valid);
+  if (isValid)
+    saturation_last_valid = parseInt(o.value, 10);
+  return isValid;
+}
+<!--#endif -->
+<!--#if expr="$root_ImageSource_I0_Sensor_Brightness != " -->
+var brightness_last_valid = <!--#echo var="root_ImageSource_I0_Sensor_Brightness" option="encoding:javascript" -->;
+function validateBrightness() {
+  var o = document.getElementById("brightness");
+  var isValid = validate(o, 0, 100, brightness_last_valid);
+  if (isValid)
+    brightness_last_valid = parseInt(o.value, 10);
+  return isValid;
+}
+<!--#endif -->
+<!--#if expr="_$root_ImageSource_I0_Sensor_Contrast$$root_ImageSource_I0_Video_Contrast$ != _" -->
+<!--#if expr="_$root_ImageSource_I0_Sensor_Contrast != _" -->
+  var contrast_last_valid = <!--#echo var="root_ImageSource_I0_Sensor_Contrast" option="encoding:javascript" -->;
+<!--#else -->
+  var contrast_last_valid = <!--#echo var="root_ImageSource_I0_Video_Contrast" option="encoding:javascript" -->;
+<!--#endif -->
+
+function validateContrast() {
+  var o = document.getElementById("contrast");
+  var isValid = validate(o, 0, 100, contrast_last_valid);
+  if (isValid)
+    contrast_last_valid = parseInt(o.value, 10);
+  return isValid;
+}
+<!--#endif -->
+<!--#if expr="$root_ImageSource_I0_Sensor_Sharpness != " -->
+var sharpness_last_valid = <!--#echo var="root_ImageSource_I0_Sensor_Sharpness" option="encoding:javascript" -->;
+function validateSharpness() {
+  var o = document.getElementById("sharpness");
+  var isValid = validate(o, 0, 100, sharpness_last_valid);
+  if (isValid)
+    sharpness_last_valid = parseInt(o.value, 10);
+  return isValid;
+}
+<!--#endif -->
+
+<!--#if expr="_$root_ImageSource_I0_Sensor_ExposureValue != _" -->
+  <!--#if expr="$root_ImageSource_I0_Sensor_DynamicContrastEnabled != yes" -->
+var exposure_last_valid = <!--#echo var="root_ImageSource_I0_Sensor_ExposureValue" option="encoding:javascript" -->;
+
+function validateExposure() {
+  var o = document.getElementById("exposureval");
+  var isValid = validate(o, 0, 100, exposure_last_valid);
+  if (isValid)
+    exposure_last_valid = parseInt(o.value, 10);
+  return isValid;
+}
+  <!--#endif -->
+<!--#endif -->
+
+<!--#if expr="$root_Properties_ImageSource_PositionableIris = yes" -->
+function validateIris() {
+  var o = document.getElementById("irispos");
+  var isValid = validate(o, 0, 100, o.value);
+  return isValid;
+}
+
+
+var requestFStatus = zXmlHttp.createRequest();
+var Fcur
+var thepirisarea;
+var pirispos;
+
+function requestF()
+{
+  thepirisarea = document.getElementById("irispos-bg");
+  pirispos = getPos(thepirisarea)
+
+  var now = new Date();
+  var timestamp = now.getTime();
+  requestFStatus.open("GET", "/axis-cgi/irissetup.cgi?query=position&timestamp=" + timestamp, true);
+  requestFStatus.onreadystatechange = showFValue;
+  requestFStatus.send("");
+}
+
+function showFValue()
+{
+  if (requestFStatus.readyState == 4) {
+    if (requestFStatus.status == 200) {
+      F_values = requestFStatus.responseText.split(":");
+      FPosition = parseInt(F_values[1], 10);
+      FValue = parseFloat(F_values[2]);
+      FValue = Math.round(FValue*100)/100;
+      document.getElementById("currentfvalue").innerHTML = FValue;
+      irisposSlider.setActual(FPosition);
+    <!--#if expr="$root_ImageSource_I0_Sensor_Exposure != hold" -->
+      setTimeout(requestF, 1000);
+    <!--#endif -->
+    }
+  }
+}
+
+<!--#endif -->
+
+
+  var OpenImgWinTxt;
+  var SaveAdvBtnStatTxt;
+  var ResBtnStatTxt;
+  function globalLanguageVars()
+  {
+<!--#if expr="_$root_ImageSource_I0_Sensor_WhiteBalance != _" -->
+  var whiteBalanceHiddenDiv = document.getElementById("whiteBalanceHidden");
+  var whiteBalanceHiddenSelect = whiteBalanceHiddenDiv.getElementsByTagName("select")[0];
+  var whiteBalArr = langObjVidImgHaiAdv.createOptionArrayFromList(whiteBalanceHiddenSelect);
+  langObjVidImgHaiAdv.addOptionsToList(document.getElementById("root_ImageSource_I<!--#echo var="nbr" option="encoding:javascript" -->_Sensor_WhiteBalance"), whiteBalArr);
+<!--#endif -->
+
+<!--#if expr="_$root_ImageSource_I0_Sensor_WDR != _" -->
+  var wideDynamicRangeHiddenDiv = document.getElementById("wideDynamicRangeHidden");
+  var wideDynamicRangeHiddenSelect = wideDynamicRangeHiddenDiv.getElementsByTagName("select")[0];
+  var widDynRangeArr = langObjVidImgHaiAdv.createOptionArrayFromList(wideDynamicRangeHiddenSelect);
+  langObjVidImgHaiAdv.addOptionsToList(document.getElementById("root_ImageSource_I0_Sensor_WDR"), widDynRangeArr);
+<!--#endif -->
+
+<!--#if expr="_$root_ImageSource_I0_Sensor_ExposurePriority != _" -->
+  var exposurePriorityHiddenDiv = document.getElementById("exposurePriorityHidden");
+  var exposurePriorityHiddenSelect = exposurePriorityHiddenDiv.getElementsByTagName("select")[0];
+  var expPrioArr = langObjVidImgHaiAdv.createOptionArrayFromList(exposurePriorityHiddenSelect);
+  langObjVidImgHaiAdv.addOptionsToList(document.getElementById("root_ImageSource_I0_Sensor_ExposurePriority"), expPrioArr);
+<!--#endif -->
+
+  var exposureWindowHiddenDiv = document.getElementById("exposureWindowHidden");
+  var exposureWindowHiddenSelect = exposureWindowHiddenDiv.getElementsByTagName("select")[0];
+  var expWinArr = langObjVidImgHaiAdv.createOptionArrayFromList(exposureWindowHiddenSelect);
+  
+  for(var i=0; i < expWinArr.length; i++)
+  {
+    if(expWinArr[i].text.indexOf( langObjVidImgHaiAdv.getText("autoPHTxt") ) != -1)
+      expWinArr[i].text = expWinArr[i].text.replace( langObjVidImgHaiAdv.getText("autoPHTxt"),langObjVidImgHaiAdv.getText("autoTxt") );
+  }
+  
+  langObjVidImgHaiAdv.addOptionsToList(document.getElementById("root_ImageSource_I0_Sensor_ExposureWindowSelect"), expWinArr);
+
+<!--#if expr="$root_PTZ_Support_S1_IrCutFilter = true" -->
+  var irCutFilterHiddenDiv = document.getElementById("irCutFilterHidden");
+  var irCutFilterHiddenSelect = irCutFilterHiddenDiv.getElementsByTagName("select")[0];
+  var irCutFilArr = langObjVidImgHaiAdv.createOptionArrayFromList(irCutFilterHiddenSelect);
+
+  for(var i=0; i < irCutFilArr.length; i++)
+  {
+    if(irCutFilArr[i].text.indexOf( langObjVidImgHaiAdv.getText("autoPHTxt") ) != -1)
+      irCutFilArr[i].text = irCutFilArr[i].text.replace( langObjVidImgHaiAdv.getText("autoPHTxt"),langObjVidImgHaiAdv.getText("autoTxt") );
+  }
+  
+  langObjVidImgHaiAdv.addOptionsToList(document.getElementById("root_PTZ_Various_V1_IrCutFilter"), irCutFilArr);
+<!--#endif -->
+
+<!--#if expr="_$root_ImageSource_I0_Sensor_NoiseReduction != _" -->
+  var noiseReductionHiddenDiv = document.getElementById("noiseReductionHidden");
+  var noiseReductionHiddenSelect = noiseReductionHiddenDiv.getElementsByTagName("select")[0];
+  var noiseReducArr = langObjVidImgHaiAdv.createOptionArrayFromList(noiseReductionHiddenSelect);
+  langObjVidImgHaiAdv.addOptionsToList(document.getElementById("root_ImageSource_I0_Sensor_NoiseReduction"), noiseReducArr);
+<!--#endif -->
+
+<!--#if expr="_$root_ImageSource_I0_Sensor_Stabilizer != _" -->
+  var stabilizerHiddenDiv = document.getElementById("stabilizerHidden");
+  var stabilizerHiddenSelect = stabilizerHiddenDiv.getElementsByTagName("select")[0];
+  var stabilizArr = langObjVidImgHaiAdv.createOptionArrayFromList(stabilizerHiddenSelect);
+  langObjVidImgHaiAdv.addOptionsToList(document.getElementById("root_ImageSource_I0_Sensor_Stabilizer"), stabilizArr);
+<!--#endif -->
+
+<!--#if expr="_$root_PTZ_UserAdv_U1_ImageFreeze != _" -->
+  var imageFreezeHiddenDiv = document.getElementById("imageFreezeHidden");
+  var imageFreezeHiddenSelect = imageFreezeHiddenDiv.getElementsByTagName("select")[0];
+  var imgFrzArr = langObjVidImgHaiAdv.createOptionArrayFromList(imageFreezeHiddenSelect);
+  
+  for(var i=0; i < imgFrzArr.length; i++)
+  {
+    if(imgFrzArr[i].text.indexOf( langObjVidImgHaiAdv.getText("autoPHTxt") ) != -1)
+      imgFrzArr[i].text = imgFrzArr[i].text.replace( langObjVidImgHaiAdv.getText("autoPHTxt"),langObjVidImgHaiAdv.getText("presetsTxt") );
+    else if(imgFrzArr[i].text.indexOf( langObjVidImgHaiAdv.getText("onPHTxt") ) != -1)
+      imgFrzArr[i].text = imgFrzArr[i].text.replace( langObjVidImgHaiAdv.getText("onPHTxt"),langObjVidImgHaiAdv.getText("allTxt") );
+  }
+  
+  langObjVidImgHaiAdv.addOptionsToList(document.getElementById("root_PTZ_UserAdv_U1_ImageFreeze"), imgFrzArr);
+<!--#endif -->
+
+  var sensExpArr = new Array();
+  sensExpArr.push({val: "auto", text: langObjVidImgHaiAdv.getText("automaticTxt"), selected: <!--#if expr="$root_ImageSource_I0_Sensor_Exposure = auto" -->true<!--#else -->false<!--#endif -->});
+    sensExpArr.push({val: "manual", text: langObjVidImgHaiAdv.getText("manTxt"), selected: <!--#if expr="$root_ImageSource_I0_Sensor_Exposure = manual" -->true<!--#else -->false<!--#endif -->});
+  langObjVidImgHaiAdv.addOptionsToList(document.getElementById("root_ImageSource_I0_Sensor_ExposureSelect"), sensExpArr);
+    
+    OpenImgWinTxt = langObjVidImgHaiAdv.getText("openImgWinTxt");
+    SaveAdvBtnStatTxt = langObjVidImgHaiAdv.getText("saveAdvBtnStatTxt");
+    ResBtnStatTxt = langObjVidImgHaiAdv.getText("resBtnStatTxt");
+  }
+//-->
+</script>
+
+</head>
+<body <!--#include virtual="/incl/bodytag.shtml" --> onLoad="langObjVidImgHaiAdv.init();bodyonload();" onResize="setFields()<!--#if expr="$root_Properties_ImageSource_PositionableIris = yes" -->;requestF()<!--#endif -->">
+
+<!--#include virtual="/incl/top_incl2.shtml" -->
+<form name="WizardForm" action="<!--#echo var="CustomWizFormAction" option="encoding:url" -->" method="POST" onSubmit="return false;">
+<table border="<!--#echo var="zero" option="encoding:html" -->" cellpadding="<!--#echo var="cellpadding3" option="encoding:html" -->" cellspacing="<!--#echo var="zero" option="encoding:html" -->" width="<!--#echo var="tableWidth3" option="encoding:html" -->" class="alternateRows">
+  <tr class="topTitle">
+    <td nowrap align="left" colspan="4"><span id="camSetTxt"></span></td>
+    <td width="10%">
+      <div align="right"><a href="<!--#echo var="helpURL" option="encoding:url" -->"><img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="hlpPic"></a></div>
+    </td>
+  </tr>
+
+
+
+  <tr class="subTitle">
+    <td align="left" colspan="5"><span id="imApTxt"></span></td>
+  </tr>
+  <!--#if expr="_$root_ImageSource_I0_Sensor_ColorLevel$$root_ImageSource_I0_Video_Saturation$ != _" -->
+  <tr>
+    <td><span id="colLevTxt1"></span></td>
+    <td colspan="4">
+      <table border=0 cellpadding=0 cellspacing=0>
+        <tr>
+          <td valign="middle">
+            <img src="/pics/slider_left.gif" width="14" height="14" id="colorlevel-left"><img src="/pics/slider_bg_151x14px.gif" width="151" height="14" id="colorlevel-bg"><img src="/pics/slider_handle.gif" width="5" height="14" id="colorlevel-handle" style="display: none"><img src="/pics/slider_right.gif" width="14" height="14" id="colorlevel-right">
+          </td>
+          <td>
+            <!--#if expr="_$root_ImageSource_I0_Sensor_ColorLevel$ != _" -->
+              &nbsp;<!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.ImageSource.I$nbr$.Sensor.ColorLevel&format=htmlvalue&input_format=id%3D%22colorlevel%22%20size%3D5%20maxlength%3D3" -->
+	    <!--#else -->
+              &nbsp;<!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.ImageSource.I$nbr$.Video.Saturation&format=htmlvalue&input_format=id%3D%22colorlevel%22%20size%3D5%20maxlength%3D3" -->
+	    <!--#endif -->
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <!--#endif -->
+  <!--#if expr="_$root_ImageSource_I0_Sensor_ColorEnabled != _" -->
+  <tr>
+    <td><span id="colSTxt"></span></td>
+    <td colspan="3">
+      <!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.Image.I$nbr$.Appearance.ColorEnabled&format=htmlvalue" -->
+    </td><td><br></td>
+  </tr>
+  <!--#endif -->
+
+<!--#if expr="$root_ImageSource_I0_Sensor_Brightness != " -->
+  <tr>
+    <td><span id="briTxt"></span></td>
+    <td colspan="4">
+      <table border=0 cellpadding=0 cellspacing=0>
+        <tr>
+          <td valign="middle">
+            <img src="/pics/slider_left.gif" width="14" height="14" id="brightness-left"><img src="/pics/slider_bg_151x14px.gif" width="151" height="14" id="brightness-bg"><img src="/pics/slider_handle.gif" width="5" height="14" id="brightness-handle" style="display: none"><img src="/pics/slider_right.gif" width="14" height="14" id="brightness-right">
+          </td>
+          <td>
+            &nbsp;<!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.ImageSource.I$nbr$.Sensor.Brightness&format=htmlvalue&input_format=id%3D%22brightness%22%20size%3D5%20maxlength%3D3" -->
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+<!--#endif -->
+<!--#if expr="$root_ImageSource_I0_Sensor_Sharpness != " -->
+  <tr>
+    <td width="20%"><span id="sharpTxt"></span></td>
+    <td colspan="4" width="80%">
+      <table border=0 cellpadding=0 cellspacing=0>
+        <tr>
+          <td valign="middle">
+            <img src="/pics/slider_left.gif" width="14" height="14" id="sharpness-left"><img src="/pics/slider_bg_151x14px.gif" width="151" height="14" id="sharpness-bg"><img src="/pics/slider_handle.gif" width="5" height="14" id="sharpness-handle" style="display: none"><img src="/pics/slider_right.gif" width="14" height="14" id="sharpness-right">
+          </td>
+          <td>
+            &nbsp;<!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.ImageSource.I$nbr$.Sensor.Sharpness&format=htmlvalue&input_format=id%3D%22sharpness%22%20size%3D5%20maxlength%3D3" -->
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+<!--#endif -->
+<!--#if expr="_$root_ImageSource_I0_Sensor_Contrast$$root_ImageSource_I0_Video_Contrast$ != _" -->
+<tr>
+    <td width="20%"><span id="contrTxt"></span></td>
+    <td colspan="4" width="80%">
+      <table border=0 cellpadding=0 cellspacing=0>
+        <tr>
+          <td valign="middle">
+            <img src="/pics/slider_left.gif" width="14" height="14" id="contrast-left"><img src="/pics/slider_bg_151x14px.gif" width="151" height="14" id="contrast-bg"><img src="/pics/slider_handle.gif" width="5" height="14" id="contrast-handle" style="display: none"><img src="/pics/slider_right.gif" width="14" height="14" id="contrast-right">
+          </td>
+          <td>
+            <!--#if expr="_$root_ImageSource_I0_Sensor_Contrast$ != _" -->
+              &nbsp;<!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.ImageSource.I$nbr$.Sensor.Contrast&format=htmlvalue&input_format=id%3D%22contrast%22%20size%3D5%20maxlength%3D3" -->
+            <!--#else -->
+              &nbsp;<!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.ImageSource.I$nbr$.Video.Contrast&format=htmlvalue&input_format=id%3D%22contrast%22%20size%3D5%20maxlength%3D3" -->
+            <!--#endif -->
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+<!--#endif -->
+
+<!--#if expr="_$root_ImageSource_I0_Sensor_WhiteBalance != _" -->
+  <tr class="subTitle">
+    <td align="left" colspan="5"><span id="witBal1Txt"></span></td>
+  </tr>
+  <tr>
+    <td nowrap width="25%"><span id="witBal2Txt"></span></td>
+    <td nowrap colspan="4">
+      <select name="root_ImageSource_I<!--#echo var="nbr" option="encoding:html" -->_Sensor_WhiteBalance" id="root_ImageSource_I<!--#echo var="nbr" option="encoding:html" -->_Sensor_WhiteBalance"></select>
+    </td>
+  </tr>
+<!--#endif -->
+
+  <!--#if expr="_$root_ImageSource_I0_Sensor_WDR != _" -->
+    <tr class="subTitle">
+      <td align="left" colspan="5"><span id="wdr2Txt"></span></td>
+    </tr>
+    <tr>
+      <td nowrap><span id="wdr3Txt"></span></td>
+      <td colspan="4">
+        <select name="root_ImageSource_I0_Sensor_WDR" id="root_ImageSource_I0_Sensor_WDR"></select>
+      </td>
+    </tr>
+  <!--#endif -->
+
+  <tr class="subTitle">
+    <td align="left" colspan="5"><span id="exSeTxt"></span></td>
+  </tr>
+
+<!--#if expr="$root_ImageSource_I0_Sensor_ExposureValue != " -->
+ <!--#if expr="$root_ImageSource_I0_Sensor_DynamicContrastEnabled = yes" -->
+  <tr id="expoVal" style="display:none">
+ <!--#else -->
+  <tr id="expoVal" style="display:visible">
+<!--#endif -->
+    <td><span id="expValTxt"></span></td>
+    <td colspan="4">
+      <table border=0 cellpadding=0 cellspacing=0>
+        <tr>
+          <td valign="middle">
+            <img src="/pics/slider_left.gif" width="14" height="14" id="exposureval-left"><img src="/pics/slider_bg_151x14px.gif" width="151" height="14" id="exposureval-bg"><img src="/pics/slider_handle.gif" width="5" height="14" id="exposureval-handle" style="display: none"><img src="/pics/slider_right.gif" width="14" height="14" id="exposureval-right">
+          </td>
+          <td>
+            &nbsp;<!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.ImageSource.I$nbr$.Sensor.ExposureValue&format=htmlvalue&input_format=id%3D%22exposureval%22%20size%3D5%20maxlength%3D3" -->
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+<!--#endif -->
+  <tr>
+    <td nowrap><span id="expCtl1Txt"></span></td>
+      <td colspan="4">
+        <select name="root_ImageSource_I0_Sensor_Exposure" id="root_ImageSource_I0_Sensor_ExposureSelect" onChange="<!--#if expr="_$root_ImageSource_I0_Sensor_MaxExposureTime != _" -->setExposureTimeAndGain();<!--#endif -->callToggleShutter();">
+        </select>
+      </td>
+  </tr>
+  <!--#if expr="_$root_ImageSource_I0_Sensor_MaxExposureTime != _" -->
+    <tr>
+      <td align="left" width="25%" nowrap>
+          <div id="max_exposure_lbl" class="collapsed">
+            <span id="maExTxt"></span>
+          </div>
+          <div id="exposure_time_lbl" class="collapsed">
+            <span id="expTimeTxt"></span>
+          </div>
+      </td>
+      <td colspan="2" align="left">
+          <div id="max_exposure_input_1" class="collapsed">
+            <!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.ImageSource.I0.Sensor.MaxExposureTime&format=htmlvalue" -->
+          </div>
+          <div id="exposure_time_input" class="collapsed">
+            <!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.ImageSource.I0.Sensor.Shutter&format=htmlvalue" -->
+          </div>
+      </td>
+      <td colspan="2">
+        <!--#if expr="$root_ImageSource_I0_Sensor_AutoSlowShutter != " -->
+          <div id="max_exposure_input_2" class="" style="white-space:nowrap">
+              <!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.ImageSource.I0.Sensor.AutoSlowShutter&format=htmlvalue&input_format=onClick%3D%22ableMaxExpTimeAndPrio()%22%20id%3D%22slowShut%22" -->
+            <span id="usSlowTxt"></span>
+          </div>
+        <!--#endif -->
+      </td>
+    </tr>
+  <!--#endif -->
+
+  <!--#if expr="$root_PTZ_Various_V1_BackLightEnabled = true" -->
+    <tr>
+      <td nowrap>
+        <span id="enBacTxt"></span>
+      </td>
+      <td colspan="4">
+        <!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.PTZ.Various.V1.BackLight&format=htmlvalue&input_format=id%3D%22root_PTZ_Various_V1_BackLightEnabled%22" -->
+      </td>
+    </tr>
+  <!--#endif -->
+
+<!--#if expr="_$root_ImageSource_I0_Sensor_MaxGain != _" -->
+  <tr id="gain">
+    <td align="left"><span id="maGaTxt"></span></td>
+    <td colspan="4" nowrap align="left">
+      <!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.ImageSource.I0.Sensor.MaxGain&format=htmlvalue" -->
+    </td>
+  </tr>
+<!--#endif -->
+
+  <tr>
+    <td align="left"><span id="exWinTxt"></span></td>
+          <td colspan="4" width="80%">
+            <select name="root_ImageSource_I0_Sensor_ExposureWindow" id="root_ImageSource_I0_Sensor_ExposureWindowSelect"></select>
+        </td>
+      </tr>
+
+    <!--#if expr="$root_PTZ_Support_S1_IrCutFilter = true" -->
+      <tr>
+        <td nowrap width="25%"><span id="niVi2Txt"></span></td>
+        <td nowrap colspan="4">
+          <select name="root_PTZ_Various_V1_IrCutFilter" id="root_PTZ_Various_V1_IrCutFilter"></select>
+        </td>
+      </tr>
+    <!--#endif -->
+
+<!--#if expr="_$root_ImageSource_I0_Sensor_ExposurePriority != _" -->
+  <tr>
+    <td align="left"><span id="expPriTxt"></span></td>
+    <td colspan="4" nowrap align="left">
+      <select name="root_ImageSource_I0_Sensor_ExposurePriority" id="root_ImageSource_I0_Sensor_ExposurePriority" onchange="showShutterGain()"></select>
+    </td>
+  </tr>
+<!--#endif -->
+
+
+
+  <!--#set var="showImaSetTxt" val="no" -->
+    <!--#if expr="_$root_PTZ_Various_V1_AutoFocus != _" -->
+      <!--#set var="showImaSetTxt" val="yes" -->
+    <!--#endif -->
+  <!--#if expr="_$root_ImageSource_I0_Sensor_NoiseReduction != _" -->
+    <!--#set var="showImaSetTxt" val="yes" -->
+  <!--#elif expr="_$root_ImageSource_I0_Sensor_Stabilizer != _" -->
+    <!--#set var="showImaSetTxt" val="yes" -->
+  <!--#elif expr="_$root_PTZ_UserAdv_U1_ImageFreeze != _" -->
+    <!--#set var="showImaSetTxt" val="yes" -->
+  <!--#elif expr="$root_Properties_ImageSource_DCIris = yes" -->
+    <!--#set var="showImaSetTxt" val="yes" -->
+  <!--#endif -->
+
+  <!--#if expr="$showImaSetTxt = yes" -->
+    <tr class="subTitle">
+      <td align="left" colspan="5"><span id="imaSetTxt"></span></td>
+    </tr>
+      <!--#if expr="_$root_PTZ_Various_V1_AutoFocus != _" -->
+        <tr>
+          <td nowrap><span id="auFoTxt"></span></td>
+          <td colspan="2">
+            <!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.PTZ.Various.V1.AutoFocus&format=htmlvalue&input_format=onClick%3D%22setChecked(this)%2CableSensitivity()%22" -->
+            <input type="hidden" name="AutoFocus" value="<!--#echo var="root_PTZ_Various_V1_AutoFocus" option="encoding:html" -->">
+          </td>
+          <!--#if expr="_$root_ImageSource_I0_Sensor_AFLowSensitivity != _" -->
+            <td noWrap width="10%">&nbsp;&nbsp;<span id="seTxt"></span></td>
+            <td width="40%">&nbsp;<!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.ImageSource.I0.Sensor.AFLowSensitivity&format=htmlvalue" --></td>
+          <!--#else -->
+            <td colspan="2"><br></td>
+          <!--#endif -->
+        </tr>
+      <!--#endif -->
+
+    <!--#if expr="_$root_ImageSource_I0_Sensor_NoiseReduction != _" -->
+      <tr>
+        <td nowrap><span id="noiseReductionSettingTxt"></span></td>
+        <td colspan="4">
+          <select name="root_ImageSource_I0_Sensor_NoiseReduction" id="root_ImageSource_I0_Sensor_NoiseReduction"></select>
+        </td>
+      </tr>
+    <!--#endif -->
+
+    <!--#if expr="_$root_ImageSource_I0_Sensor_Stabilizer != _" -->
+      <tr>
+        <td nowrap><span id="stabilTxt"></span></td>
+        <td colspan="4">
+          <select name="root_ImageSource_I0_Sensor_Stabilizer" id="root_ImageSource_I0_Sensor_Stabilizer"></select>
+        </td>
+      </tr>
+    <!--#endif -->
+
+    <!--#if expr="_$root_PTZ_UserAdv_U1_ImageFreeze != _" -->
+      <tr>
+        <td nowrap><span id="imgFreTxt"></span></td>
+        <td colspan="4">
+          <select name="root_PTZ_UserAdv_U1_ImageFreeze" id="root_PTZ_UserAdv_U1_ImageFreeze"></select>
+        </td>
+      </tr>
+    <!--#endif -->
+
+  <!--#endif -->
+
+
+<!--#if expr="$root_Properties_ImageSource_DCIris = yes" -->
+  <tr>
+    <td colspan="5">
+      <!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.ImageSource.I0.DCIris.Enabled&format=htmlvalue" -->
+      <span id="enAuIrAdTxt"></span>
+    </td>
+  </tr>
+ <!--#if expr="$root_Properties_ImageSource_PositionableIris = yes" -->
+  <tr>
+    <td><span id="irisAdjTxt"></span><br><br></td>
+    <td colspan="4">
+      <table border=0 cellpadding=0 cellspacing=0>
+        <tr>
+          <td valign="middle">
+            <img src="/pics/slider_left.gif" width="14" height="14" id="irispos-left"><img src="/pics/slider_bg_151x14px.gif" width="151" height="14" id="irispos-bg"><img src="/pics/slider_handle.gif" width="5" height="14" id="irispos-handle" style="display: none"><img src="/pics/slider_right.gif" width="14" height="14" id="irispos-right">
+          </td>
+          <td>
+            &nbsp;<!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.ImageSource.I$nbr$.DCIris.Position&format=htmlvalue&input_format=id%3D%22irispos%22%20size%3D5%20maxlength%3D3" -->
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">F <span id="currentfvalue"></span></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+ <!--#endif -->
+<!--#endif -->
+
+
+  <tr class="subTitle">
+    <td align="left" colspan="5"><span id="viewTxt"></span></td>
+  </tr>
+  <tr>
+    <td colspan="5">
+      <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+          <td class="oddItem"><span id="viewImgTxt"></span></td>
+          <td class="button"><br></td>
+          <td class="button" align="right"><input type="button" value="" width="75" class="btnNormal" onClick="openPopUpTest('/operator/streampreview.shtml?', 'image_test', 10, 10)" onMouseOver="return showStatus(OpenImgWinTxt)" onMouseOut="return showStatus('')" id="adv_ViewBtn"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td class="topTitle" align="center" colspan="5">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td class="button"><input type="button" value="" width="75" class="btnNormal" onClick="saveData()" onMouseOver="return showStatus(SaveAdvBtnStatTxt)" onMouseOut="return showStatus('')" id="adv_SaveBtn"></td>
+          <td class="button"><br></td>
+          <td class="button">
+            <input type="button" value=""  width="75" class="btnNormal" onClick="reloadPage()" onMouseOver="return showStatus(ResBtnStatTxt)" onMouseOut="return showStatus('')" id="adv_ResetBtn">
+            <input type="hidden" name="return_page" value="/operator/advanced.shtml?nbr=<!--#echo var="nbr" option="encoding:url" -->&id=<!--#echo var="ssi_request_id" option="encoding:url" --><!--#if expr="$basic = yes" -->&basic=yes<!--#endif -->">
+            <input type="hidden" name="action" value="modify">
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+</form>
+<form>
+<!--#if expr="_$root_ImageSource_I0_Sensor_WhiteBalance != _" -->
+  <DIV STYLE="display: none" ID="whiteBalanceHidden"><!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.ImageSource.I$nbr$.Sensor.WhiteBalance&format=htmlvalue" --></DIV>
+<!--#endif -->
+<!--#if expr="_$root_ImageSource_I0_Sensor_WDR != _" -->
+  <DIV STYLE="display: none" ID="wideDynamicRangeHidden"><!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.ImageSource.I0.Sensor.WDR&format=htmlvalue" --></DIV>
+<!--#endif -->
+<!--#if expr="_$root_ImageSource_I0_Sensor_ExposurePriority != _" -->
+  <DIV STYLE="display: none" ID="exposurePriorityHidden"><!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.ImageSource.I0.Sensor.ExposurePriority&format=htmlvalue" --></DIV>
+<!--#endif -->
+  <DIV STYLE="display: none" ID="exposureWindowHidden"><!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.ImageSource.I0.Sensor.ExposureWindow&format=htmlvalue" --></DIV>
+<!--#if expr="$root_PTZ_Support_S1_IrCutFilter = true" -->
+  <DIV STYLE="display: none" ID="irCutFilterHidden"><!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.PTZ.Various.V1.IrCutFilter&format=htmlvalue&input_format=id%3D%22root_PTZ_Support_S1_IrCutFilter%22" --></DIV>
+<!--#endif -->
+<!--#if expr="_$root_ImageSource_I0_Sensor_NoiseReduction != _" -->
+  <DIV STYLE="display: none" ID="noiseReductionHidden"><!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.ImageSource.I0.Sensor.NoiseReduction&format=htmlvalue" --></DIV>
+<!--#endif -->
+<!--#if expr="_$root_ImageSource_I0_Sensor_Stabilizer != _" -->
+  <DIV STYLE="display: none" ID="stabilizerHidden"><!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.ImageSource.I0.Sensor.Stabilizer&format=htmlvalue" --></DIV>  
+<!--#endif -->
+<!--#if expr="_$root_PTZ_UserAdv_U1_ImageFreeze != _" -->
+  <DIV STYLE="display: none" ID="imageFreezeHidden"><!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.PTZ.UserAdv.U1.ImageFreeze&format=htmlvalue" --></DIV>  
+<!--#endif -->
+</form>
+<!--#include virtual="/incl/bottom_incl.shtml" -->

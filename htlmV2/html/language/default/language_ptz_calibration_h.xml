@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+  <ptz_calibration_h>
+    <intro_Txt type="text" minor="0">PTZ Calibration is alignment of camera's Pan, Tilt and Zoom mechanics in order to get a better orientation accuracy between objects in Overview mode and Normal view. PTZ calibration can be done initially when accessing the product for the first time or later on through &#x3C;b&#x3E;System Options &#x3E; Maintenance &#x3E; Calibrate PTZ&#x3C;/b&#x3E;.</intro_Txt>
+    <subTitleTxt type="text" minor="0">Adjust orientation</subTitleTxt>
+    <calibStep1 type="text" minor="0">Use the buttons &#x3C;b&#x3E;Rotate right&#x3C;/b&#x3E; and &#x3C;b&#x3E;Rotate left&#x3C;/b&#x3E; to adjust the image orientation in Overview mode. Click &#x3C;b&#x3E;next&#x3C;/b&#x3E; button to go to the next PTZ calibration step.</calibStep1>
+    <calibStep2 type="text" minor="0">Click an object inside the small circle in overview mode. Make sure to remember the object you have clicked because you will be required to click on the same object again in the next step.</calibStep2>
+    <calibStep3 type="text" minor="0">Click on the same object again in normal mode. Note that, this should be the same object that you clicked in the previous step.</calibStep3>
+    <calibStep4 type="text" minor="0">Repeat steps 2 and 3 until PTZ calibration is finished, that is, the &#x3C;b&#x3E;Finish&#x3C;/b&#x3E; button becomes active.</calibStep4>
+    <calibStep5 type="text" minor="0">Click &#x3C;b&#x3E;Finish&#x3C;/b&#x3E;, to complete the PTZ calibration.</calibStep5>
+    <pageTitle type="title" minor="0">Help/PTZ Calibration Setup</pageTitle>
+    <titleTxt type="msgAsText" minor="0">PTZ Calibration Setup</titleTxt>
+  </ptz_calibration_h>
+</language_xml>

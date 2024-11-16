@@ -1,0 +1,50 @@
+<!--#include virtual="/sm/sm.srv?action=get&group=Network.Filter.Input.Policy" -->
+<!--#set var="backButton" val="yes" -->
+<!--#set var="forwardButton" val="yes" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<script language="JavaScript">
+<!--
+var langObjRIRISH = new Language("restrictIP_h", "restrictIP_setup_h");
+
+function globalLanguageVars()
+{
+	document.getElementById("titleId").innerHTML = langObjRIRISH.getText("titleTxt");
+}
+// -->
+</script>
+
+</head>
+<body onload="langObjRIRISH.init()">
+<!--#include virtual="/incl/helpTop_incl2.shtml" -->
+<table class="alternateRows" border="0" cellpadding="3" cellspacing="0" width="440" bgcolor="white">
+<!--#include virtual="/incl/helpTop_incl3.shtml" -->
+<tr>
+	<td colspan="2">
+<!--#if expr="_$root_Network_Filter_Input_Policy != _" -->
+		<span id="allow_deny_Txt"></span>
+<!--#else -->
+		<span id="allow_1_Txt"></span>
+<!--#endif -->
+<br/><br/>
+		<span id="add_Txt1"></span><br/><br/>
+		<span id="add_Txt2"></span>
+
+		<ul>
+			<li>
+				<span id="add_ipv4_6_Txt1"></span><br/><br/>
+			</li>
+			<li>
+				<span id="add_ipv4_6_Txt2"></span>
+			</li>
+		</ul>
+
+		<span id="add_okTxt1"></span>
+		<blockquote><span id="add_okTxt2"></span></blockquote>
+		<span id="add_okTxt3"></span><br/><br/>
+	</td>
+</tr>
+</table>
+<!--#include virtual="/incl/helpBottom_incl.shtml" -->
+</body>
+</html>

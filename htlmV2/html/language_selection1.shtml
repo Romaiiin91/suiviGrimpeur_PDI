@@ -1,0 +1,172 @@
+<!--#include virtual="/sm/sm.srv?action=get&group=Properties.System.Language,Properties.Firmware.Version,Brand.ProdNbr" -->
+
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<script language="JavaScript">
+<!--
+
+var langObjLangSel1 = new Language("language", "language_selection1");
+function onLoad()
+{
+  langObjLangSel1.init();
+}
+
+function useEnglish()
+{
+  var now = new Date();
+  var timestamp = now.getTime();
+  
+  var url = "/axis-cgi/admin/language.cgi?action=set&language=default&timestamp="+timestamp;
+
+  AxisConnectionFactory.sendSync(["GET", url], null);
+  
+  window.location ="/";
+}
+
+function downloadSpecifiedLanguage()
+{
+  var langCode = langObjLangSel1.getLanguageCode("<!--#echo var="root_Properties_System_Language" option="encoding:javascript" -->");
+  var prodName = "<!--#echo var="root_Brand_prodNbr" option="encoding:html" -->".toLowerCase();
+  var version = "<!--#echo var="root_Properties_Firmware_Version" option="encoding:html" -->".replace(/\./g, "_");
+
+  var axis_url = "http://www.axis.com/core/php/translate/cam_gui.php?lang="+langCode+"&prodname="+prodName+"&version="+version;
+  document.open(axis_url,"getLanguage","width=800,height=600,toolbar=yes,location=yes,directories=yes,status=yes,menubar=yes,scrollbars=yes,copyhistory=yes,resizable=yes");
+  
+  goToStep2();
+}
+
+function goToStep2()
+{
+  window.location = "language_selection2.shtml?action=no";
+}
+
+var englishBtnStat;
+var downloadBtnStat;
+var haveLangBtnStat;
+function globalLanguageVars()
+{
+  var langTxt = langObjLangSel1.getText("languageTxt");
+  document.getElementById("putLanguageSpan").innerHTML = langTxt;
+  document.getElementById("langSe1_downloadBtn").value += " "+langTxt;
+  document.getElementById("stepTxtLangOutput").innerHTML = langTxt+" ";
+
+  englishBtnStat = langObjLangSel1.getText("englishStat");
+  downloadBtnStat = langObjLangSel1.getText("downlLangStat");
+  haveLangBtnStat = langObjLangSel1.getText("haveLangBtnStat");
+}
+
+// -->
+</script>
+
+</head>
+<body <!--#include virtual="/incl/bodytag.shtml" --> onLoad="onLoad()">
+<center>
+
+<form name="WizardForm">
+  <br>
+  <table width=450 cellspacing=0 cellpadding=0 border=0>
+    <tr class="top-mainborder">
+      <td colspan=2><img src="/pics/line_corner_lt_5x5px.gif" width=5 height=5 border=0 alt=""></td>
+      <td colspan=5 background="/pics/line_t_100x5px.gif"><img src="/pics/line_t_100x5px.gif" width=1 height=5 border=0 alt=""></td>
+      <td colspan=2><img src="/pics/line_corner_rt_5x5px.gif" width=5 height=5 border=0 alt=""></td>
+    </tr>
+    <tr>
+      <td class="lineBg"><img src="/pics/blank.gif" width="1" border=0 alt=""></td>
+      <td><img src="/pics/blank.gif" width="4" height=1 border=0 alt=""></td>
+      <td colspan=4 valign="middle" align="left">
+        <table border=0 cellspacing=0 cellpadding=0>
+          <tr>
+            <td><a href="<!--#echo var="root_Brand_WebURL" option="encoding:url" -->" target=_blank><img src="/pics/logo_70x29px.gif" width=68 height=29 border=0 alt="<!--#echo var="root_Brand_Brand" option="encoding:url" -->"></A></td>
+            <td><a href="<!--#echo var="root_Brand_WebURL" option="encoding:url" -->" target=_blank></a></td>
+          </tr>
+        </table>
+      </td>
+      <td colspan=2><img src="/pics/blank.gif" width="4" border=0 alt=""></td>
+      <td class="lineBg"><img src="/pics/blank.gif" width=1 height=1 alt=""></td>
+    </tr>
+    <tr>
+      <td colspan=9 class="lineBg"><img src="/pics/blank.gif" width=1 height=1 border=0 alt=""></td>
+    </tr>
+    <tr>
+      <td class="lineBg"><img src="/pics/blank.gif" width=1 height=1 alt=""></td>
+      <td valign="top"><img src="/pics/blank.gif" width=4 height=1 alt=""></td>
+      <td valign="top" colspan=5>
+        <table border="0" cellpadding="3" cellspacing="0" width="450">
+          <tr><td class="topTitle" colspan="2" align="left"><span id="selectLangTxt"></span></td></tr>
+          <tr class="subTitle">
+            <td colspan="2"><span id="stepTxt1"></span>&nbsp;<span id="stepTxtLangOutput"></span><span id="stepTxt2"></span></td>
+          </tr>
+          <tr>
+            <td class="oddItem" colspan="2">
+              <p>
+                <span id="stepInstrTxt1"></span>&nbsp;<span id="putLanguageSpan"></span>&nbsp;<span id="stepInstrTxt2"></span>
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td class="oddItem" colspan="2">
+              &nbsp;
+            </td>
+          </tr>
+          <tr>
+            <td align="right" style="width:50%;">
+              <input type="button" style="margin-left:5px;" value="" onClick="downloadSpecifiedLanguage()" onMouseOver="return showStatus(downloadBtnStat)" onMouseOut="return showStatus('')" id="langSe1_downloadBtn">
+            </td>
+            <td align="left" style="width:50%;">
+              <input type="button" style="margin-right:5px;" value="" onClick="JavaScript:goToStep2()" onMouseOver="return showStatus(haveLangBtnStat)" onMouseOut="return showStatus('')" id="langSe1_haveLangBtn">
+            </td>
+          </tr>
+          <tr>
+            <td class="oddItem" colspan="2">
+              &nbsp;
+            </td>
+          </tr>
+          <tr class="subTitle">
+            <td colspan="2"><span id="skipTxt"></span></td>
+          </tr>
+           <tr>
+            <td class="oddItem" colspan="2">
+              <p>
+               <span id="skipRegTxt"></span>
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td class="oddItem" colspan="2">
+              &nbsp;
+            </td>
+          </tr>
+          <tr>
+            <td align="center" colspan="2">
+              <input type="button" value="" onClick="JavaScript:useEnglish()" onMouseOver="return showStatus(englishBtnStat)" onMouseOut="return showStatus('')" id="langSe1_englishBtn">
+            </td>
+          </tr>
+          <tr>
+            <td class="oddItem" colspan="2">
+              &nbsp;
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td width=4><img src="/pics/blank.gif" width=1 height=1 border=0 alt=""></td>
+      <td width=1 class="lineBg"><img src="/pics/blank.gif" width=1 height=1 border=0 alt=""></td>
+    </tr>
+    <tr class="bottom-mainborder">
+      <td colspan=2><img src="/pics/line_corner_lb_5x5px.gif" width=5 height=5 alt=""></td>
+      <td colspan=2 background="/pics/line_b_100x5px.gif"><img src="/pics/blank.gif" width=1 height=1 alt=""></td>
+      <td colspan=3 background="/pics/line_b_100x5px.gif"><img src="/pics/blank.gif" width=1 height=1 alt=""></td> 
+      <td colspan=2><img src="/pics/line_corner_rb_5x5px.gif" width=5 height=5 alt=""></td>
+    </tr>
+    <tr>
+      <td colspan=9><img src="/pics/blank.gif" width=1 height=5 border=0 alt=""></td>
+    </tr>
+    <tr>
+      <td width=1><img src="/pics/blank.gif" width="1" height="1" border=0 alt=""></td>
+      <td colspan=7 valign="middle" align="left"></td>
+      <td width=1><img src="/pics/blank.gif" width="1" height="1" border=0 alt=""></td>
+    </tr>
+  </table>
+</form>
+</center>
+</body>
+</html>

@@ -1,0 +1,198 @@
+
+<!--#set var="WizardFormAction" val="/sm/sm.srv" -->
+
+<!--#set var="activeMenu" val="system" -->
+<!--#set var="activeMenu1" val="support" -->
+<!--#set var="activeMenu2" val="logsReports" -->
+<!--#set var="activePage" val="logconfig" -->
+
+<!--#include virtual="/sm/sm.srv?action=get&group=Log.System,Log.Access" -->
+
+<!--#include virtual="/incl/top_incl.shtml" -->
+<!--#include virtual="/java/integer.shtml" -->
+<!--#include virtual="/java/chkbox.shtml" -->
+
+<script language="JavaScript">
+<!--
+
+var langObjLogConf = new Language("support", "logconfig");
+
+function saveData()
+{
+  var form = document.WizardForm;
+
+  if (form.logLevel.selectedIndex == 0) {
+    form.root_Log_System_Informational.value = "on";
+    form.root_Log_System_Warning.value       = "on";
+    form.root_Log_System_Critical.value      = "on";
+  } else if (form.logLevel.selectedIndex == 1) {
+    form.root_Log_System_Informational.value = "off";
+    form.root_Log_System_Warning.value       = "on";
+    form.root_Log_System_Critical.value      = "on";
+  } else {
+    form.root_Log_System_Informational.value = "off";
+    form.root_Log_System_Warning.value       = "off";
+    form.root_Log_System_Critical.value      = "on";
+  }
+    if (form.accLogLevel.selectedIndex == 0) {
+      form.root_Log_Access_Informational.value = "detailed";
+      form.root_Log_Access_Warning.value       = "detailed";
+      form.root_Log_Access_Critical.value      = "detailed";
+    } else if (form.accLogLevel.selectedIndex == 1) {
+      form.root_Log_Access_Informational.value = "off";
+      form.root_Log_Access_Warning.value       = "detailed";
+      form.root_Log_Access_Critical.value      = "detailed";
+    } else if (form.accLogLevel.selectedIndex == 2) {
+      form.root_Log_Access_Informational.value = "off";
+      form.root_Log_Access_Warning.value       = "off";
+      form.root_Log_Access_Critical.value      = "detailed";
+    } else {
+      form.root_Log_Access_Informational.value = "off";
+      form.root_Log_Access_Warning.value       = "off";
+      form.root_Log_Access_Critical.value      = "off";
+    }
+
+
+    if ( isNaN(form.accessLogSize.value) ||
+         (IntegerCheck(parseInt(form.accessLogSize.value,10).toString(), 1000, 100000) == 0)) {
+     alert( langObjLogConf.getText("noAccLogSizeAlrtTxt") );
+     form.accessLogSize.focus();
+     form.accessLogSize.select();
+     return
+    }
+
+    form.root_Log_Access_MaxSize.value = parseInt(form.accessLogSize.value,10);
+
+  if ( isNaN(form.logSize.value) ||
+        (IntegerCheck(parseInt(form.logSize.value,10).toString(), 1000, 100000) == 0)) {
+     alert( langObjLogConf.getText("noLogSizeAlrtTxt") );
+     form.logSize.focus();
+     form.logSize.select();
+     return
+  }
+
+  form.root_Log_System_MaxSize.value = parseInt(form.logSize.value,10);
+
+  form.submit();
+}
+
+function setLogSelect()
+{
+  var form = document.WizardForm;
+  var LogForm = document.logForm;
+
+  if ((LogForm.root_Log_System_Informational.value == "on") && (LogForm.root_Log_System_Warning.value == "on") && (LogForm.root_Log_System_Critical.value == "on")) {
+    form.logLevel.selectedIndex = 0;
+  } else if ((LogForm.root_Log_System_Informational.value == "off") && (LogForm.root_Log_System_Warning.value == "on") && (LogForm.root_Log_System_Critical.value == "on")) {
+    form.logLevel.selectedIndex = 1;
+  } else if ((LogForm.root_Log_System_Informational.value == "off") && (LogForm.root_Log_System_Warning.value == "off") && (LogForm.root_Log_System_Critical.value == "on")) {
+    form.logLevel.selectedIndex = 2;
+  }
+  if ((LogForm.root_Log_Access_Informational.value == "on") && (LogForm.root_Log_Access_Warning.value == "detailed") && (LogForm.root_Log_Access_Critical.value == "detailed")) {
+    form.accLogLevel.selectedIndex = 0;
+  } else if ((LogForm.root_Log_Access_Informational.value == "off") && (LogForm.root_Log_Access_Warning.value == "detailed") && (LogForm.root_Log_Access_Critical.value == "detailed")) {
+    form.accLogLevel.selectedIndex = 1;
+  } else if ((LogForm.root_Log_Access_Informational.value == "off") && (LogForm.root_Log_Access_Warning.value == "off") && (LogForm.root_Log_Access_Critical.value == "detailed")) {
+    form.accLogLevel.selectedIndex = 2;
+  } else if  ((LogForm.root_Log_Access_Informational.value == "off") && (LogForm.root_Log_Access_Warning.value == "off") && (LogForm.root_Log_Access_Critical.value == "off")) {
+    form.accLogLevel.selectedIndex = 3;
+  }
+}
+
+function reloadPage()
+{
+  window.location.href = "/admin/logconfig.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->";
+}
+
+var SaveBtnStatTxt;
+var ResBtnStatTxt;
+function globalLanguageVars()
+{
+  SaveBtnStatTxt = langObjLogConf.getText("saveBtnStatTxt");
+  ResBtnStatTxt = langObjLogConf.getText("resBtnStatTxt");
+  
+  var logLevArr = new Array();
+  logLevArr[0] = {val: "0", text: langObjLogConf.getText("crWaInTxt")};
+  logLevArr[1] = {val: "1", text: langObjLogConf.getText("crWaTxt")};
+  logLevArr[2] = {val: "2", text: langObjLogConf.getText("crTxt")};
+  langObjLogConf.addOptionsToList(document.getElementById("logLevel"), logLevArr);
+  
+  var accLogLevArr = new Array();
+  accLogLevArr[0] = {val: "0", text: langObjLogConf.getText("crWaInTxt")};
+  accLogLevArr[1] = {val: "1", text: langObjLogConf.getText("crWaTxt")};
+  accLogLevArr[2] = {val: "2", text: langObjLogConf.getText("crTxt")};
+  accLogLevArr[3] = {val: "3", text: langObjLogConf.getText("noTxt")};
+  langObjLogConf.addOptionsToList(document.getElementById("accLogLevel"), accLogLevArr);
+}
+
+// -->
+</script>
+</head>
+<body <!--#include virtual="/incl/bodytag.shtml" --> onLoad="langObjLogConf.init();setLogSelect();">
+<form name="logForm">
+  <!--#include virtual="/sm/sm.srv?action=get_htmlform&getgroup=root.Log&format=hiddenhtmlform" -->
+</form>
+<!--#include virtual="/incl/top_incl2.shtml" -->
+
+<input type="hidden" name="root_Log_System_Informational" value="<!--#echo var="root_Log_System_Informational" option="encoding:html" -->">
+<input type="hidden" name="root_Log_System_Warning" value="<!--#echo var="root_Log_System_Warning" option="encoding:html" -->">
+<input type="hidden" name="root_Log_System_Critical" value="<!--#echo var="root_Log_System_Critical" option="encoding:html" -->">
+<input type="hidden" name="root_Log_System_MaxSize" value="<!--#echo var="root_Log_System_MaxSize" option="encoding:html" -->">
+  <input type="hidden" name="root_Log_Access_Informational" value="<!--#echo var="root_Log_Access_Informational" option="encoding:html" -->">
+  <input type="hidden" name="root_Log_Access_Warning" value="<!--#echo var="root_Log_Access_Warning" option="encoding:html" -->">
+  <input type="hidden" name="root_Log_Access_Critical" value="<!--#echo var="root_Log_Access_Critical" option="encoding:html" -->">
+  <input type="hidden" name="root_Log_Access_MaxSize" value="<!--#echo var="root_Log_Access_MaxSize" option="encoding:html" -->">
+
+<table border="<!--#echo var="zero" option="encoding:html" -->" cellpadding="<!--#echo var="cellpadding3" option="encoding:html" -->" cellspacing="<!--#echo var="zero" option="encoding:html" -->" width="<!--#echo var="tableWidth3" option="encoding:html" -->">
+  <tr><td class="topTitle" align="left" colspan="3"><span id="confTxt"></span></td></tr>
+  <tr>
+    <td colspan="3" class="oddItem"><span id="intro1Txt"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" --><span id="intro2Txt"></span></td>
+  </tr>
+  <tr>
+    <td align="left" class="subTitle" colspan="3"><span id="sysLogSetTxt"></span></td>
+  </tr>
+
+  <tr>
+    <td colspan="1" width="30%" class="oddItem"><span id="logLev1Txt"></span></td>
+    <td colspan="2" class="oddItem"><select name="logLevel" id="logLevel">
+      </select></td>
+  </tr>
+  <tr>
+    <td class="evenItem"><span id="logSiz1Txt"></span></td>
+    <td colspan="2" class="evenItem"><input type="text" value="<!--#echo var="root_Log_System_MaxSize" option="encoding:html" -->" name="logSize" maxlength="6">&nbsp;[1000..100000]&nbsp;<span id="logSizByte1Txt"></span></td>
+  </tr>
+  <tr>
+    <td colspan="3" class="oddItem"><br /></td>
+  </tr>
+    <tr>
+      <td align="left" class="subTitle" colspan="3"><span id="accLogSetTxt"></span></td>
+    </tr>
+    <tr>
+      <td colspan="1" width="30%" class="oddItem"><span id="logLev2Txt"></span></td>
+      <td colspan="2" class="oddItem"><select name="accLogLevel" id="accLogLevel">
+        </select></td>
+    </tr>
+    <tr>
+      <td class="evenItem"><span id="logSiz2Txt"></span></td>
+      <td colspan="2" class="evenItem"><input type="text" value="<!--#echo var="root_Log_Access_MaxSize" option="encoding:html" -->" name="accessLogSize" maxlength="6" />&nbsp;[1000..100000]&nbsp;<span id="logSizByte2Txt"></span></td>
+    </tr>
+  <tr>
+    <td colspan="3" class="oddItem"><br /></td>
+  </tr>
+  <tr>
+    <td colspan="3" align="center" class="button">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td colspan="3" align="right" class="button"><input type="button" value="" width="75" class="btnNormal" onClick="saveData()" onMouseOver="return showStatus(SaveBtnStatTxt)" onMouseOut="return showStatus('')" id="logroot_saveBtn"></td>
+          <td class="button"><br /></td>
+          <td class="button"><input type="button" value="" width="75" class="btnNormal" onClick="reloadPage()" onMouseOver="return showStatus(ResBtnStatTxt)" onMouseOut="return showStatus('')" id="logroot_resetBtn">
+            <input type="hidden" name="return_page" value="/admin/logconfig.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->">
+            <input type="hidden" name="action" value="modify">
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<!--#include virtual="/incl/bottom_incl.shtml" -->

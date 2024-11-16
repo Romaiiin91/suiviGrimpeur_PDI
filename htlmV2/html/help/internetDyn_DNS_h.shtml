@@ -1,0 +1,76 @@
+<!--#include virtual="/sm/sm.srv?action=get&group=Network.AxisNS.LockButton,Network.AxisNS.ServerLink,Properties.System.SerialNumber" -->
+<!--#set var="backButton" val="yes" -->
+<!--#set var="forwardButton" val="yes" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<!--#if expr="_$root_Network_AxisNS_ServerLink = _" -->
+	<!--#set var="root_Network_AxisNS_ServerLink" val="www.axiscam.net" -->
+<!--#endif -->
+
+<script language="JavaScript">
+<!--
+var langObjNIDDH = new Language("network_h", "internetDyn_DNS_h");
+
+function globalLanguageVars()
+{
+	document.getElementById("titleId").innerHTML = langObjNIDDH.getText("titleTxt");
+}
+// -->
+</script>
+
+</head>
+<body onload="langObjNIDDH.init()">
+<!--#include virtual="/incl/helpTop_incl2.shtml" -->
+<table border="0" cellpadding="3" cellspacing="0" width="440" bgcolor="white">
+<!--#include virtual="/incl/helpTop_incl3.shtml" -->
+<tr>
+	<td colspan="2" class="oddItem">
+		<span id="helpInfo1Txt1a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" --><span id="helpInfo1Txt1b"></span><br/><br/>
+	</td>
+</tr>
+		
+<tr>
+	<td colspan='2' class="evenItem">
+		<span id="help4aTxt1a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="help4aTxt1b"></span>&nbsp;<a href='http://<!--#echo var="root_Network_AxisNS_ServerLink" option="encoding:html" -->?serno=<!--#echo var="root_Properties_System_SerialNumber" option="encoding:html" -->' target='_blank'><!--#echo var="root_Network_AxisNS_ServerLink" option="encoding:html" --></a>&nbsp;<span id="help4aTxt1c"></span><br/><br/>
+		<span id="help4aTxt2a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="help4aTxt2b"></span><br/><br/>
+	</td>
+</tr>
+
+<tr>
+	<td colspan='2' class="oddItem">
+		<span id="help5aTxt1a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" --><span id="help5aTxt1b"></span><br/><br/>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="4" class="subTitle">
+		<div align="left">
+			<span id="conf"></span>
+		</div>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2" class="oddItem">
+		<span id="help1aTxt1a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="help1aTxt1b"></span><br/><br/>
+		<span id="help1cTxt1a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="help1cTxt1b"></span><br/><br/>
+		<span id="help1eTxt"></span><br/><br/>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2" class="evenItem">
+		<span id="help2aTxt"></span>
+    <blockquote><span id="help2bTxt"></span></blockquote>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2" class="oddItem">
+		<span id="help3aTxt1a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" --><span id="help3aTxt1b"></span><br/><br/>
+	</td>
+</tr>
+</table>
+<!--#include virtual="/incl/helpBottom_incl.shtml" -->
+</body>
+</html>

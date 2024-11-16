@@ -1,0 +1,51 @@
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#include virtual="/incl/top_incl_popup.shtml" -->
+
+<!--#include virtual="/incl/wait.shtml" -->
+
+<script language="javascript" type="text/javascript">
+<!--
+var langObjShowRep = new Language("support", "showReport");
+var ajaxRequest = AxisConnectionFactory.createAjaxConnection();
+
+function onInit()
+{
+  langObjShowRep.init(false);
+  wait_start( langObjShowRep.getText("genReportWaitMsg") );
+
+  AxisConnectionFactory.sendAsync(["GET", "/axis-cgi/admin/<!--#echo var="content" option="encoding:url" -->?id=<!--#echo var="ssi_request_id" option="encoding:url" -->"], "", reportGenerated, ajaxRequest);
+  window.focus();
+}
+
+function reportGenerated()
+{
+  if( ajaxRequest.getReadyState() == 4 )
+  {
+    wait_stop();
+   
+    var responseText = ajaxRequest.getResponseText();
+    var str = String( responseText );
+    str = str.replace(/(?!\r)\n/g, "\r\n");
+    str = str.replace(/</g, "&lt;");
+    str = str.replace(/>/g, "&gt;");
+
+    var htmlStrArr = new Array('<!DOCTYPE HTML PUBLIC "-\/\/W3C\/\/DTD HTML 4.01 Transitional\/\/EN">');
+    htmlStrArr[ htmlStrArr.length ] = '<html><head><title>';
+    htmlStrArr[ htmlStrArr.length ] = document.title;
+    htmlStrArr[ htmlStrArr.length ] = '<\/title><\/head>';
+    htmlStrArr[ htmlStrArr.length ] = '<body><pre>';
+    htmlStrArr[ htmlStrArr.length ] = str;
+    htmlStrArr[ htmlStrArr.length ] = '<\/pre><\/body><\/html>';
+    
+    document.open("text/html", "replace");
+    document.write( htmlStrArr.join("") );
+    document.close();
+  }
+}
+
+// -->
+</script>
+</head>
+<body onload="onInit();">
+</body>
+</html>

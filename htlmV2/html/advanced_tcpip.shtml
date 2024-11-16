@@ -1,0 +1,1119 @@
+<!--#set var="helpURL" val="javascript:launch('/help/advanced_tcpip_h.shtml')" -->
+<!--#set var="WizardFormAction" val="/sm/sm.srv" -->
+<!--#set var="activeMenu" val="system" -->
+<!--#set var="activeMenu1" val="network" -->
+<!--#set var="activeMenu2" val="tcpip" -->
+<!--#set var="activePage" val="advtcpip" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+
+<!--#include virtual="/sm/sm.srv?action=get&group=Network,System.AlternateBoaPort,HTTPS.Port,Properties.HTTPS.HTTPS,Bandwidth.Limit,Time.ObtainFromDHCP,Time.NTP,Time.SyncSource" -->
+
+<!--#include virtual="/java/chkbox.shtml" -->
+<!--#include virtual="/java/integer.shtml" -->
+
+<!--#if expr="$dnsupdate_delete != " -->
+  <!--#include virtual="/axis-cgi/admin/dnsupdate.cgi?delete=$dnsupdate_delete$&hdgen=no" -->
+<!--#endif -->
+<!--#if expr="$dnsupdate_add != " -->
+  <!--#include virtual="/axis-cgi/admin/dnsupdate.cgi?add=$dnsupdate_add$&hdgen=no" -->
+<!--#endif -->
+
+<!--#set var="showHostNameDHCP" val="yes" -->
+
+<!--#if expr="$root_Network_Enabled = yes" -->
+  <!--#set var="showSetting" val="yes" -->
+<!--#else -->
+  <!--#set var="showSetting" val="no" -->
+<!--#endif -->
+
+<!--#set var="dhcp" val="off" -->
+<!--#if expr="$root_Network_Enabled != no" -->
+<!--#if expr="$root_Network_BootProto = dhcp" -->
+   <!--#set var="dhcp" val="on" -->
+<!--#endif -->
+<!--#endif -->
+
+<!--#if expr="$root_Network_IPv6_DHCPv6 != off" -->
+<!--#if expr="$root_Network_IPv6_Enabled = yes" -->
+  <!--#set var="dhcp" val="on" -->
+<!--#endif -->
+<!--#endif -->
+<!--#if expr="$root_Network_BootProto != dhcp" -->
+  <!--#if expr="$root_Network_IPv6_Enabled = yes" -->
+    <!--#set var="showHostNameDHCP" val="no" -->
+  <!--#endif -->
+<!--#endif -->
+
+<!--#if expr="$showSetting = yes" -->
+  <!--#if expr="$dhcp != on" -->
+    <!--#set var="showHostNameDHCP" val="no" -->
+  <!--#endif -->
+<!--#else -->
+  <!--#set var="showHostNameDHCP" val="no" -->
+<!--#endif -->
+
+<!--#include virtual="/admin/JS_tcpIp.shtml" -->
+<!--#include virtual="/java/ip.shtml" -->
+
+<script language="JavaScript">
+<!--
+
+<!--#include virtual="/incl/functions.shtml" -->
+
+var langObjAdvTcpIp = new Language("network", "advanced_tcpip");
+var fillenabled = true;
+
+function onLoad()
+{
+  langObjAdvTcpIp.init();
+  var form = document.WizardForm;
+  var oldVal = /( +)/gi;
+  var newVal = ";";
+
+  setValues();
+  parseDNS();
+
+  if ("<!--#echo var="root_Network_Resolver_ObtainFromDHCP" option="encoding:javascript" -->" == "yes")
+  {
+    disableStaticDNS();
+    disableStaticDNSFields();
+  }
+
+<!--#if expr="$showHostNameDHCP = no" -->
+    form.root_Network_HostName.disabled = false;
+    form.hostName.checked = true;
+<!--#endif -->
+
+  if ("<!--#echo var="dhcp" option="encoding:javascript" -->" != "on")
+  {
+    form.root_Network_Resolver_ObtainFromDHCP[1].checked = true
+    ableStaticNTP();
+    form.root_Network_HostName.disabled = false;
+    form.root_Time_ObtainFromDHCP[1].checked = true;
+    
+    form.root_Network_Resolver_ObtainFromDHCP[0].disabled = true;
+    form.root_Time_ObtainFromDHCP[0].disabled = true;
+    
+<!--#if expr="$showHostNameDHCP = yes" -->
+    form.hostName[1].checked = true;
+  }
+  else
+  {
+    form.viewHostName.disabled = false;
+    <!--#if expr="$root_Network_VolatileHostName_ObtainFromDHCP = yes" -->
+      disableStaticHost();
+    <!--#else -->
+      ableStaticHost();
+    <!--#endif -->
+<!--#endif -->
+  }
+
+  <!--#if expr="$root_Network_DNSUpdate_Enabled = yes" -->
+    form.Network_DNSUpdate_Enabled.checked = true
+    form.root_Network_DNSUpdate_DNSName.disabled = false
+    form.root_Network_DNSUpdate_TTL.disabled = false
+  <!--#else -->
+    form.Network_DNSUpdate_Enabled.checked = false
+    form.root_Network_DNSUpdate_DNSName.disabled = true
+    form.root_Network_DNSUpdate_TTL.disabled = true
+  <!--#endif -->
+
+  if (form.root_Network_Resolver_ObtainFromDHCP[1].checked == true)
+    ableStaticDNSFields();
+
+  <!--#if expr="$fillenabled = true" -->
+    fillEmptyStaticDNSFields();
+  <!--#endif -->
+  if (form.root_Network_Resolver_ObtainFromDHCP[1].checked == true)
+    disableFill();
+
+  if (form.root_Network_Resolver_ObtainFromDHCP[0].checked == true)
+    enableFill();
+
+  if ("<!--#echo var="root_Time_ObtainFromDHCP" option="encoding:javascript" -->" == "yes" &&  "<!--#echo var="dhcp" option="encoding:javascript" -->" == "on") {
+    disableStaticNTP();
+  } 
+
+
+  if ("<!--#echo var="root_Network_DomainName" option="encoding:javascript" -->" != "")
+    form.idDomainName.value = form.root_Network_DomainName.value.replace(oldVal, newVal);
+
+  <!--#if expr="$root_Network_BootProto != dhcp" -->
+    <!--#if expr="$root_Network_IPv6_Enabled = yes" -->
+      disableHostAbleStatic();
+    <!--#endif -->
+  <!--#endif -->
+}
+
+function disableHostAbleStatic()
+{
+  var form = document.WizardForm;
+<!--#if expr="$showHostNameDHCP = yes" -->
+  form.hostName[0].checked = false;
+  form.hostName[0].disabled = true;
+  form.viewHostName.disabled = true;
+  form.hostName[1].checked = true;
+  form.hostName[1].disabled = false;
+<!--#else -->
+  form.hostName.checked = true;
+  form.hostName.disabled = false;
+<!--#endif -->
+  form.root_Network_HostName.disabled = false;
+}
+
+function ValidateParameters()
+{
+  var form = document.WizardForm;
+
+  //DNS Configuration
+  var DNSUpdate_Changed = "no";
+  if ((form.Network_DNSUpdate_Enabled.checked && ("<!--#echo var="root_Network_DNSUpdate_Enabled" option="encoding:javascript" -->" == "no")) || ((form.Network_DNSUpdate_Enabled.checked == false) && ("<!--#echo var="root_Network_DNSUpdate_Enabled" option="encoding:javascript" -->" == "yes")))
+  {
+    DNSUpdate_Changed = "yes";
+  }
+  if ((form.root_Network_DNSUpdate_DNSName.value != "<!--#echo var="root_Network_DNSUpdate_DNSName" option="encoding:javascript" -->") || (form.root_Network_DNSUpdate_TTL.value != "<!--#echo var="root_Network_DNSUpdate_TTL" option="encoding:javascript" -->"))
+  {
+    DNSUpdate_Changed = "yes";
+  }
+  if (DNSUpdate_Changed == "yes")
+  {
+    if (("<!--#echo var="root_Network_Resolver_NameServer1" option="encoding:javascript" -->" == "") && ("<!--#echo var="root_Network_Resolver_NameServer2" option="encoding:javascript" -->" == ""))
+    {
+      if (("<!--#echo var="root_Network_Resolver_ObtainFromDHCP" option="encoding:javascript" -->" == "yes") && (form.root_Network_Resolver_ObtainFromDHCP[0].checked))
+      {
+        alert( langObjAdvTcpIp.getText("dnsUpAlrt1") );
+        return;
+      }
+    }
+    if ((form.root_Network_Resolver_ObtainFromDHCP[1].checked) && (form.root_Network_DNSServer1.value == "") && (form.root_Network_DNSServer2.value == ""))
+    {
+      alert( langObjAdvTcpIp.getText("dnsUpAlrt2") )
+      form.root_Network_DNSServer1.focus()
+      form.root_Network_DNSServer1.select()
+      return
+    }
+  }
+  
+  form.root_Network_DomainName.value = form.idDomainName.value;
+  if (checkDomainName() == 0)
+      return false;
+      
+  if (form.root_Network_Resolver_ObtainFromDHCP[1].checked)
+  {
+    if ((form.root_Network_DNSServer1.value == "") && (form.root_Network_DNSServer2.value != ""))
+    {
+      alert( langObjAdvTcpIp.getText("entPrimDnsAlert") );
+      form.root_Network_DNSServer1.select();
+      form.root_Network_DNSServer1.focus();
+      return false;
+    }
+    if (form.root_Network_DNSServer1.value != "")
+    {
+      if (!checkValidAddress(form.root_Network_DNSServer1.value, ADDR_IP_ONLY))
+      {
+        alert( langObjAdvTcpIp.getText("illPriDNSAdrAlert") );
+        form.root_Network_DNSServer1.focus();
+        form.root_Network_DNSServer1.select();
+        return false;
+      }
+    }
+    if (form.root_Network_DNSServer2.value != "")
+    {
+      if (!checkValidAddress(form.root_Network_DNSServer2.value, ADDR_IP_ONLY))
+      {
+        alert( langObjAdvTcpIp.getText("illSecDNSAdrAlert") );
+        form.root_Network_DNSServer2.focus();
+        form.root_Network_DNSServer2.select();
+        return false;
+      }
+    }
+    if (form.root_Network_DNSServer1.value != "" && form.root_Network_DNSServer1.value != "0.0.0.0")
+    {
+      if (form.root_Network_DNSServer1.value.substr(0,2) == "0.")
+      {
+        alert( langObjAdvTcpIp.getText("illPriDNSAdrAlert") );
+        form.root_Network_DNSServer1.focus();
+        form.root_Network_DNSServer1.select();
+        return false;
+      }
+    }
+    if (form.root_Network_DNSServer2.value != "" && form.root_Network_DNSServer2.value != "0.0.0.0")
+    {
+      if (form.root_Network_DNSServer2.value.substr(0,2) == "0.")
+      {
+        alert( langObjAdvTcpIp.getText("illSecDNSAdrAlert") );
+        form.root_Network_DNSServer2.focus();
+        form.root_Network_DNSServer2.select();
+        return false;
+      }
+    }
+  }
+
+  //NTP Configuration
+  if (form.root_Time_ObtainFromDHCP[1].checked)
+  {
+    <!--#if expr="$root_Time_SyncSource = NTP" -->
+    if (form.root_Time_NTP_Server.value == "")
+    {
+      alert( langObjAdvTcpIp.getText("ipDnsNtpAlert") );
+      form.root_Time_NTP_Server.focus();
+      return false;
+    }
+    <!--#endif -->
+    if (!checkValidAddress(form.root_Time_NTP_Server.value, ADDR_ALLOW_EMPTY))
+    {
+      alert( langObjAdvTcpIp.getText("illNetAdrAlert") );
+      form.root_Time_NTP_Server.focus();
+      form.root_Time_NTP_Server.select();
+      return false;
+    }
+  }
+
+  //Host Name Configuration
+  <!--#if expr="$showHostNameDHCP = yes" -->
+  if(form.hostName[1].checked)
+  {
+    if (checkHostName() == 0)
+      return false;
+  }
+  <!--#else -->
+  if (checkHostName() == 0)
+      return false;
+  <!--#endif -->
+    
+  if(form.Network_DNSUpdate_Enabled.checked)
+  {
+    if (!checkValidFQDN(form.root_Network_DNSUpdate_DNSName.value))
+    {
+      alert( langObjAdvTcpIp.getText("illDNSNameAdrAlert") );
+      try
+      {
+        form.root_Network_DNSUpdate_DNSName.focus();
+        form.root_Network_DNSUpdate_DNSName.select();
+      } catch (e) {}
+      return false;
+    }
+    
+    if (isNaN(form.root_Network_DNSUpdate_TTL.value) || form.root_Network_DNSUpdate_TTL.value < 0)
+    {
+      alert( langObjAdvTcpIp.getText("specValAlert") );
+      form.root_Network_DNSUpdate_TTL.focus();
+      form.root_Network_DNSUpdate_TTL.select();
+      return false;
+    }
+  }
+
+  //NAT traversal
+<!--#if expr="$showSetting = yes" -->
+ <!--#if expr="_$root_Network_UPnP_NATTraversal_Enabled != _" -->
+  if (form.edit_router.checked)
+  {
+    if (checkIPnumber(form.root_Network_UPnP_NATTraversal_Router, false) != 1) return 0
+    if (checkIPbounds(form.root_Network_UPnP_NATTraversal_Router) != 1) return 0 
+  }
+ <!--#endif -->
+<!--#endif -->
+
+  return 1
+}
+
+function disableStaticDNS()
+{
+  var form = document.WizardForm;
+  form.root_Network_Resolver_ObtainFromDHCP[0].checked = true;
+  form.root_Network_Resolver_ObtainFromDHCP[0].disabled = false;
+}
+
+function ableStaticHost()
+{
+  var form = document.WizardForm;
+  
+  <!--#if expr="$showHostNameDHCP = yes" -->
+
+  if (form.hostName[1].checked)
+  {
+  <!--#endif -->
+    form.root_Network_HostName.disabled = false;
+  <!--#if expr="$showHostNameDHCP = yes" -->
+  }
+  <!--#endif -->
+}
+
+function ableStaticHostClicked()
+{
+<!--#if expr="$showHostNameDHCP = yes" -->
+  if (document.getElementsByName("hostName")[0].disabled == false)
+  {
+    alert( langObjAdvTcpIp.getText("changeHostNameAlert") );
+    ableStaticHost();
+  }
+<!--#endif -->
+}
+
+function disableStaticHost()
+{
+  var form = document.WizardForm;
+  form.root_Network_HostName.disabled = true;
+}
+
+function ableStaticNTP()
+{
+  var form = document.WizardForm;
+  
+  var tmpVolatileServer = "<!--#echo var="root_Time_NTP_VolatileServer" option="encoding:javascript" -->";
+  var tmpServer = "<!--#echo var="root_Time_NTP_Server" option="encoding:javascript" -->";
+
+  form.root_Time_NTP_Server.disabled = false;
+  if (tmpServer != "0.0.0.0")
+    form.root_Time_NTP_Server.value = tmpServer;
+  else
+    form.root_Time_NTP_Server.value = (tmpVolatileServer.indexOf(" ") <= 0 ? tmpVolatileServer : tmpVolatileServer.substr(0, tmpVolatileServer.indexOf(" ")));
+}
+
+function disableStaticNTP()
+{
+  var form = document.WizardForm;
+  form.root_Time_NTP_Server.disabled = true;
+  form.root_Time_NTP_Server.value = "";
+}
+
+function ableStaticDNS()
+{
+  var form = document.WizardForm;
+
+  form.idDomainName.disabled = false;
+  form.root_Network_DNSServer1.disabled = false;
+  form.root_Network_DNSServer2.disabled = false;
+  form.root_Network_Resolver_ObtainFromDHCP[1].disabled = false;
+}
+
+function disableStaticDNSFields()
+{
+  var form = document.WizardForm
+
+  form.idDomainName.disabled = true;
+  form.root_Network_DNSServer1.disabled = true;
+  form.root_Network_DNSServer2.disabled = true;
+  
+<!--#if expr="$root_Network_VolatileHostName_ObtainFromDHCP = yes" -->
+  <!--#if expr="$showHostNameDHCP = yes" -->
+  if( form.hostName[0].disabled == false )
+  {
+    form.hostName[0].checked = true;
+    form.root_Network_HostName.disabled = true;
+  }
+  <!--#endif -->
+<!--#endif -->
+}
+
+function ableStaticDNSFields()
+{
+  var form = document.WizardForm
+
+  form.idDomainName.disabled = false;
+  form.root_Network_DNSServer1.disabled = false;
+  form.root_Network_DNSServer2.disabled = false;
+}
+
+function enableFill()
+{
+  fillenabled = true
+}
+
+function disableFill()
+{
+  fillenabled = false
+}
+
+function fillEmptyStaticDNSFields()
+{
+  var form = document.WizardForm
+  
+  if (form.idDomainName.value == "")
+    form.idDomainName.value = "<!--#echo var="root_Network_Resolver_Search" option="encoding:javascript" -->"
+  if (form.root_Network_DNSServer1.value == "")
+    form.root_Network_DNSServer1.value = "<!--#echo var="root_Network_Resolver_NameServer1" option="encoding:javascript" -->"
+  if (form.root_Network_DNSServer2.value == "")
+    form.root_Network_DNSServer2.value = "<!--#echo var="root_Network_Resolver_NameServer2" option="encoding:javascript" -->"
+}
+
+function ableDNSUpdate()
+{
+  var form = document.WizardForm
+
+  if (form.Network_DNSUpdate_Enabled.checked)
+  {
+    form.root_Network_DNSUpdate_DNSName.disabled = false
+    form.root_Network_DNSUpdate_TTL.disabled = false
+  }
+  else
+  {
+    form.root_Network_DNSUpdate_DNSName.disabled = true
+    form.root_Network_DNSUpdate_TTL.disabled = true
+  }
+}
+
+function setValues()
+{
+  var target = document.WizardForm;
+
+  setRadiobutton(target.root_Network_Resolver_ObtainFromDHCP, "<!--#echo var="root_Network_Resolver_ObtainFromDHCP" option="encoding:javascript" -->");
+
+  setRadiobutton(target.hostName, "<!--#echo var="root_Network_VolatileHostName_ObtainFromDHCP" option="encoding:javascript" -->");
+<!--#if expr="$showHostNameDHCP = yes" -->
+  if (target.hostName.disabled == true)
+  {
+    target.viewHostName.disabled = true;
+  }
+  else
+  {
+    target.viewHostName.disabled = false;
+  }
+<!--#endif -->
+
+<!--#if expr="$showSetting = yes" -->
+  setCheckbox(target.Network_ZeroConf_Enabled, target.root_Network_ZeroConf_Enabled.value);
+<!--#endif -->
+}
+
+function viewCurrentSettings()
+{
+  openPopUp('/admin/viewNetSettings.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->', 'view_Net_Settings', 420, 260);
+}
+
+function viewDHCPNTP()
+{
+  openPopUp('/admin/viewDHCPNTP.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->', 'view_DHCPNTP', 416, 130);
+}
+
+function viewDHCPHost()
+{
+  if ("<!--#echo var="root_Network_VolatileHostName_ObtainFromDHCP" option="encoding:javascript" -->" != "yes")
+    alert( langObjAdvTcpIp.getText("viewHostAlert") );
+  else 
+    openPopUp('/admin/viewDHCPHost.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->', 'view_DHCPHost', 416, 130);
+}
+
+function viewAutoIP()
+{
+  if ("<!--#echo var="root_Network_ZeroConf_Enabled" option="encoding:javascript" -->" != "yes")
+    alert( langObjAdvTcpIp.getText("enableAutoConfAlert") );
+  else
+    openPopUp('/admin/viewAutoIP.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->', 'view_autoIP', 416, 140);
+}
+
+
+var dispCurrNetSetStatTxt;
+var dispNtpBtnStatTxt;
+var dispHoBtnStatTxt;
+var dispLLBtnStatTxt;
+var DisableNATTxt;
+var EnableNATTxt;
+var AxisDynBtnStatTxt;
+var SaveBtnStatTxt;
+var ResBtnStatTxt;
+function globalLanguageVars()
+{
+<!--#if expr="$showSetting = yes" -->
+  var nATTravBtn = document.getElementById("tcpip_NATTravBtn");
+  <!--#if expr="$root_Network_UPnP_NATTraversal_Enabled = yes" -->
+  nATTravBtn.value = langObjAdvTcpIp.getText("disBtn");
+  <!--#else -->
+  nATTravBtn.value = langObjAdvTcpIp.getText("enbBtn");
+  <!--#endif -->
+<!--#endif -->
+
+  dispCurrNetSetStatTxt = langObjAdvTcpIp.getText("dispCurrNetSetStatTxt");
+  dispNtpBtnStatTxt = langObjAdvTcpIp.getText("dispNtpBtnStatTxt");
+  dispHoBtnStatTxt = langObjAdvTcpIp.getText("dispHoBtnStatTxt");
+  dispLLBtnStatTxt = langObjAdvTcpIp.getText("dispLLBtnStatTxt");
+  <!--#if expr="$root_Network_UPnP_NATTraversal_Enabled = yes" -->
+  DisableNATTxt = langObjAdvTcpIp.getText("disableNATTxt");
+  <!--#endif -->
+  EnableNATTxt = langObjAdvTcpIp.getText("enableNATTxt");
+  <!--#if expr="_$root_Network_AxisNS_Enabled != _" -->
+  AxisDynBtnStatTxt = langObjAdvTcpIp.getText("axisDynBtnStatTxt");
+  <!--#endif -->
+  SaveBtnStatTxt = langObjAdvTcpIp.getText("saveBtnStatTxt");
+  ResBtnStatTxt = langObjAdvTcpIp.getText("resBtnStatTxt");
+}
+// -->
+</script>
+
+</head>
+<body <!--#include virtual="/incl/bodytag.shtml" --> onload="onLoad()" onresize="parseDNS()">
+
+<!--#include virtual="/incl/top_incl2.shtml" -->
+<!--#if expr="$showSetting = yes" -->
+<input type="hidden" name="root_Network_ZeroConf_Enabled" value="<!--#echo var="root_Network_ZeroConf_Enabled" option="encoding:html" -->">
+<!--#endif -->
+<input type="hidden" name="root_Network_Broadcast" value="<!--#echo var="root_Network_Broadcast" option="encoding:html" -->">
+
+<table border="<!--#echo var="zero" option="encoding:html" -->" cellpadding="<!--#echo var="cellpadding3" option="encoding:html" -->" cellspacing="<!--#echo var="zero" option="encoding:html" -->" width="<!--#echo var="tableWidth3" option="encoding:html" -->">
+<tr>
+  <td colspan="3" valign="top" class="topTitle" nowrap>
+    <div align="left"><span id="advTcpIpSetTxt"></span></div>
+  </td>
+  <td class="topTitle">
+    <div align="right"><a href="<!--#echo var="helpURL" option="encoding:url" -->"><img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="hlpPic"></a></div>
+  </td>
+</tr>
+
+<tr>
+  <td colspan="4" class="subTitle">
+    <div align="left"><span id="dnsConfTxt"></span></div>
+  </td>
+</tr>
+<tr>
+  <td nowrap colspan="2" class="oddItem" width=250>
+    <input name="root_Network_Resolver_ObtainFromDHCP" TYPE="radio" value="yes" <!--#if expr="$root_Network_Resolver_ObtainFromDHCP = yes" -->checked<!--#endif --> onClick="disableStaticDNSFields();enableFill()">&nbsp;<span id="dhDNSTxt"></span>
+  </td>
+  <td colspan="2" class="oddItem" width=250>
+    <input type="button" class="btnNormal" width="75" value="" onClick="viewCurrentSettings()" onMouseOver="return showStatus(dispCurrNetSetStatTxt)" onMouseOut="return showStatus('')" id="tcpip_ViewDnsBtn">
+  </td>
+</tr>
+<tr>
+  <td nowrap colspan="4" class="evenItem">
+    <input name="root_Network_Resolver_ObtainFromDHCP" type="radio" value="no" <!--#if expr="$root_Network_Resolver_ObtainFromDHCP = no" -->checked<!--#endif --> onClick="ableStaticDNSFields();fillEmptyStaticDNSFields();disableFill()">&nbsp;<span id="statDNSTxt"></span>
+  </td>
+</tr>
+<tr>
+  <td nowrap class="evenItem"><!--Domain Name -->
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="doNaTxt"></span></td>
+  <td class="evenItem" colspan="3" nowrap>
+    <input type='text' id='idDomainName' size='18' maxlength='63' value='<!--#echo var="root_Network_DomainName" option="encoding:html" -->' onchange="javascript:trimLeadingTrailing(this)"><input type='hidden' name='root_Network_DomainName' value='<!--#echo var="root_Network_DomainName" option="encoding:html" -->'>
+    &nbsp;<span id="sepDoTxt"></span>
+  </td>
+</tr>
+
+<tr>
+  <td nowrap class="evenItem"><!--Primary DNS Server -->
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="primDnsSerTxt"></span></td>
+  <td class="evenItem" colspan="3"><input type='text' name='root_Network_DNSServer1' size='18' maxlength='50' value='<!--#echo var="root_Network_DNSServer1" option="encoding:html" -->' onchange="javascript:trimLeadingTrailing(this)">
+  </td>
+</tr>
+
+<tr>
+  <td nowrap class="evenItem"><!--Secondary DNS Server -->
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="secDnsSerTxt"></span></td>
+  <td class="evenItem" colspan="3"><input type='text' name='root_Network_DNSServer2' size='18' maxlength='50' value='<!--#echo var="root_Network_DNSServer2" option="encoding:html" -->' onchange="javascript:trimLeadingTrailing(this)">
+   </td>
+</tr>
+
+<tr>
+  <td colspan="4" class="subTitle">
+    <div align="left"><span id="ntpConfTxt"></span></div>
+  </td>
+</tr>
+<tr>
+  <td nowrap colspan="2" class="oddItem" width=250>
+    <input name="root_Time_ObtainFromDHCP" TYPE="radio" value="yes" <!--#if expr="$root_Time_ObtainFromDHCP = yes" -->checked<!--#endif --> onClick="disableStaticNTP()">&nbsp;<span id="ntpDhcpTxt"></span>
+  </td>
+  <td colspan="2" class="oddItem" width=250>
+    <input type="button" name="viewNTPButton" class="btnNormal" width="75" value="" onClick="viewDHCPNTP()" onMouseOver="return showStatus(dispNtpBtnStatTxt)" onMouseOut="return showStatus('')" id="tcpip_ViewNTPBtn">
+  </td>
+</tr>
+
+<tr>
+  <td nowrap colspan="4" class="evenItem">
+    <input name="root_Time_ObtainFromDHCP" type="radio" value="no" <!--#if expr="$root_Time_ObtainFromDHCP != yes" -->checked<!--#endif --> onClick="ableStaticNTP()">&nbsp;<span id="statNtpTxt"></span>
+  </td>
+</tr>
+
+<tr>
+  <td nowrap class="evenItem"><!--NTP Server IP Address -->
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="networkAddTxt"></span></td>
+  <td class="evenItem" colspan="3"><input type='text' name='root_Time_NTP_Server' size='18' maxlength='50' value='<!--#echo var="root_Time_NTP_Server" option="encoding:html" -->' onchange="javascript:trimLeadingTrailing(this)">&nbsp;&nbsp;<span id="hoNapTxt"></span></td>
+</tr>
+<tr>
+  <td colspan="4" class="subTitle">
+    <div align="left"><span id="hoNaConfTxt"></span></div>
+  </td>
+</tr>
+<!--#if expr="$showHostNameDHCP = yes" -->
+<tr>
+  <td nowrap colspan="2" class="oddItem" width=250>
+    <input name="hostName" type="radio" value="yes"<!--#if expr="$root_Network_VolatileHostName_ObtainFromDHCP = yes" --> checked<!--#endif --> onClick="disableStaticHost()">
+    <span id="dhHostIpV4Txt"></span>
+  </td>
+  <td colspan="2" class="oddItem" width=250>
+    <input type="button" class="btnNormal" width="75" name="viewHostName" value="" onClick="viewDHCPHost()" onMouseOver="return showStatus(dispHoBtnStatTxt)" onMouseOut="return showStatus('')" id="tcpip_ViewHostNameBtn">
+  </td>
+</tr>
+<!--#endif -->
+<tr>
+  <td nowrap class="evenItem">
+    <input type="hidden" name="root_Network_VolatileHostName_ObtainFromDHCP" value="<!--#if expr="$showHostNameDHCP = yes" --><!--#echo var="root_Network_VolatileHostName_ObtainFromDHCP" option="encoding:html" --><!--#else -->no<!--#endif -->">
+    <input name="hostName" type="radio" value="no"<!--#if expr="$root_Network_VolatileHostName_ObtainFromDHCP = no" --> checked<!--#endif --> onClick="ableStaticHostClicked()">&nbsp;<span id="statHostTxt"></span>
+  </td>
+  <td class="evenItem" colspan="3">
+    <input type='text' name='root_Network_HostName' size='34' maxlength='63' value='<!--#echo var="root_Network_HostName" option="encoding:html" -->' onchange="javascript:trimLeadingTrailing(this)">
+  </td>
+</tr>
+<tr>
+  <td colspan="4" class="oddItem">
+    <input type="checkbox" name="Network_DNSUpdate_Enabled" onClick="JavaScript:ableDNSUpdate(); CheckBoxClicked(this.form, this,'root_Network_DNSUpdate_Enabled', 'yes', 'no')">&nbsp;<span id="enblDynDnsTxt"></span>
+    <input type="hidden" name="OldEnabled" value="<!--#echo var="root_Network_DNSUpdate_Enabled" option="encoding:html" -->">
+    <input type="hidden" name="OldDNSName" value="<!--#echo var="root_Network_DNSUpdate_DNSName" option="encoding:html" -->">
+    <input type="hidden" name="OldTTL" value="<!--#echo var="root_Network_DNSUpdate_TTL" option="encoding:html" -->">
+    <input type="hidden" name="root_Network_DNSUpdate_Enabled" value="<!--#echo var="root_Network_DNSUpdate_Enabled" option="encoding:html" -->">
+  </td>
+</tr>
+<tr>
+  <td class="oddItem" width="25%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="regDnsTxt"></span></td>
+  <td colspan="3" class="oddItem" nowrap>
+    <input type="text" name="root_Network_DNSUpdate_DNSName" value="<!--#echo var="root_Network_DNSUpdate_DNSName" option="encoding:html" -->" maxlength="50" onchange="javascript:trimLeadingTrailing(this)">&nbsp;(<span id="exTxt"></span>)
+  </td>
+</tr>
+<tr>
+  <td class="oddItem">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="ttlTxt"></span></td>
+  <td colspan="3" class="oddItem"><input type="text" size="5" name="root_Network_DNSUpdate_TTL" value="<!--#echo var="root_Network_DNSUpdate_TTL" option="encoding:html" -->" maxlength="20" onchange="javascript:trimLeadingTrailing(this)">
+  </td>
+</tr>
+<!--#if expr="$showSetting = yes" -->
+<tr>
+  <td colspan="4" class="subTitle">
+    <div align="left">
+      <span id="lLAdIpV4Txt"></span>
+    </div>
+  </td>
+</tr>
+<tr>
+  <td nowrap colspan="2" class="oddItem" width=250>
+    <input name="Network_ZeroConf_Enabled" type="checkbox" onClick="JavaScript:CheckBoxClicked(this.form, this,'root_Network_ZeroConf_Enabled', 'yes', 'no')">&nbsp;<span id="autConfAdrTxt"></span>
+  </td>
+  <td class="oddItem" colspan="2">
+    <input type="button" class="btnNormal" width="75" value="" onClick="viewAutoIP()" onMouseOver="return showStatus(dispLLBtnStatTxt)" onMouseOut="return showStatus('')" id="tcpip_ViewLinkLocalBtn">
+  </td>
+</tr>
+<!--#endif -->
+<tr>
+  <td colspan="4" class="subTitle">
+    <div align="left"><span id="httpTxt"></span></div>
+  </td>
+</tr>
+<tr>
+  <td class="oddItem"><!--BoaPort Setting -->
+    <span id="httpPoTxt"></span></td>
+  <td colspan="3" class="oddItem"><input type='text' name='root_System_BoaPort' size='7' maxlength='5'  value='<!--#echo var="root_System_BoaPort" option="encoding:html" -->' onchange="javascript:trimLeadingTrailing(this)">
+  </td>
+</tr>
+
+<!--#if expr="$root_Properties_HTTPS_HTTPS = yes" -->
+<tr>
+  <td colspan="4" class="subTitle">
+    <div align="left"><span id="httpsTxt"></span></div>
+  </td>
+</tr>
+<tr>
+  <td class="oddItem"><!--HTTPS Port Setting -->
+    <span id="httpsPoTxt"></span></td>
+  <td colspan="3" class="oddItem"><input type='text' name='root_HTTPS_Port' size='7' maxlength='5'  value='<!--#echo var="root_HTTPS_Port" option="encoding:url" -->' onchange="javascript:trimLeadingTrailing(this)"> 
+  </td>
+</tr>
+<!--#endif -->
+<!--#if expr="$showSetting = yes" -->
+<!--#if expr="_$root_Network_UPnP_NATTraversal_Enabled != _" -->
+<tr>
+  <td colspan="4" class="subTitle">
+    <div align="left">
+      <span id="nATTravIpV4Txt"></span>
+    </div>
+  </td>
+</tr>
+
+<!--#if expr="$root_Network_UPnP_NATTraversal_Enabled = yes" -->
+  <tr>
+    <td nowrap colspan="2" class="oddItem">
+      <!--#if expr="$root_Network_UPnP_NATTraversal_Active = yes" -->
+        <span id="enbOKTxt"></span>
+      <!--#else -->
+        <span id="enbFailTxt"></span>
+      <!--#endif -->
+    </td>
+    <td colspan="2" class="oddItem"><input type="button" class="btnNormal" width="75" value="" onClick="ableNAT('disable')" onMouseOver="return showStatus(DisableNATTxt)" onMouseOut="return showStatus('')" id="tcpip_NATTravBtn">
+    </td>
+  </tr>
+  <tr>
+    <td colspan="4" class="oddItem">
+    <!--#if expr="$root_Network_UPnP_NATTraversal_Active = yes" -->
+      <span id="enbOKInf_1"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="enbOKInf_2"></span>
+      <!--#if expr="$root_System_AlternateBoaPort != 80" -->
+        <a href="http://<!--#echo var="root_Network_UPnP_NATTraversal_ExternalIPAddress" option="encoding:url" -->:<!--#echo var="root_System_AlternateBoaPort" option="encoding:url" -->" target="_blank">
+        http://<!--#echo var="root_Network_UPnP_NATTraversal_ExternalIPAddress" option="encoding:url" -->:<!--#echo var="root_System_AlternateBoaPort" option="encoding:url" --></a>
+      <!--#else -->
+        <a href="http://<!--#echo var="root_Network_UPnP_NATTraversal_ExternalIPAddress" option="encoding:url" -->" target="_blank">http://<!--#echo var="root_Network_UPnP_NATTraversal_ExternalIPAddress" option="encoding:url" --></a>
+      <!--#endif -->
+      <br><br>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap colspan="2" class="oddItem">
+      <!--#if expr="_$root_Network_AxisNS_Enabled != _" -->
+      <span id="axDynDnsTxt"></text"></td>
+    <td colspan="2" class="oddItem">
+      <input type="button" size="button" width="75" class="btnNormal" value=""  onClick="JavaScript:openPopUp('/admin/internetDyn_DNS.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->', 'Dynamic_DNS_Service', 428, 280)" onMouseOver="return showStatus(AxisDynBtnStatTxt)" onMouseOut="return showStatus('')" id="axDynDns_Btn">
+      <!--#endif -->
+    <!--#else -->
+      <span id="enbFailInf_1"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="enbFailInf_2"></span>
+      <br><br>
+    <!--#endif -->
+    </td>
+  </tr>
+<!--#else -->
+  <tr>
+    <td colspan="2" nowrap class="oddItem">
+      <span id="natDisTxt"></span>
+    </td>
+    <td colspan="2" class="oddItem"><input type="button" class="btnNormal" width="75" value="" onClick="ableNAT('enable')" onMouseOver="return showStatus(EnableNATTxt)" onMouseOut="return showStatus('')" id="tcpip_NATTravBtn"></td>
+  </tr>
+<!--#endif -->
+
+<tr>
+  <td nowrap class="evenItem" colspan="4">
+    <input type="checkbox" name="edit_router"<!--#if expr="_$root_Network_UPnP_NATTraversal_Router != _" --> checked<!--#endif -->> 
+      <span id="usMaRoTxt"></span>
+    <input type="text" class="fieldIP" name="root_Network_UPnP_NATTraversal_Router" value="<!--#echo var="root_Network_UPnP_NATTraversal_Router" option="encoding:html" -->" maxlength="50" 
+    onchange="javascript:trimLeadingTrailing(this)">
+    &nbsp;<span id="lanIpTxt"></span>
+  </td>
+</tr>
+
+<tr>
+  <td nowrap class="oddItem"><span id="altPortTxt"></span></td>
+  <td colspan="3" class="oddItem">
+    <input type="text" size="7" maxlength="5" name="root_System_AlternateBoaPort" value="<!--#echo var="root_System_AlternateBoaPort" option="encoding:html" -->" onchange="javascript:trimLeadingTrailing(this)"> <sup>*</sup>
+  </td>
+</tr>
+<tr>
+  <td colspan="4" class="oddItem" ><span id="portNoteTxt"></span></td>
+</tr>
+
+<!--#endif -->
+<!--#endif -->
+
+<tr>
+  <td colspan="4" class="subTitle">
+  <a name="ftp"></a>
+      <div align="left"><span id="ftpTxt"></span></div>
+  </td>
+</tr>
+<tr>
+  <td colspan="4" class="oddItem">
+    <input type="hidden" name="root_Network_FTP_Enabled" value="<!--#echo var="root_Network_FTP_Enabled" option="encoding:html" -->">
+    <input type="checkbox" name="Network_FTP_Enabled" onClick="CheckBoxClicked(this.form, this,'root_Network_FTP_Enabled', 'yes', 'no')" <!--#if expr="$root_Network_FTP_Enabled = yes" -->checked<!--#endif -->>&nbsp;<span id="fTPEnblTxt"></span>
+  </td>
+</tr>
+
+<!--#if expr="_$root_Network_RTSP_Port != _" -->
+<tr>
+  <td colspan="4" class="subTitle">
+    <a name="rtsp"></a>
+    <div align="left"><span id="rtspTxt"></span></div>
+  </td>
+</tr>
+<tr>
+  <td class="oddItem"><input type="checkbox" name="Network_RTSP_Enabled" <!--#if expr="$root_Network_RTSP_Enabled = yes" -->checked<!--#endif -->>&nbsp;<span id="enaRtspSrvTxt"></span><sup>*</sup>&nbsp;&nbsp;&nbsp;
+  </td>
+</tr>
+<tr>
+  <td class="evenItem"><span id="rtspPoTxt"></span></td>
+  <td colspan="3" class="evenItem">
+    <input type='text' name='root_Network_RTSP_Port' size='7' maxlength='5'  value='<!--#echo var="root_Network_RTSP_Port" option="encoding:html" -->' onchange="javascript:trimLeadingTrailing(this)">
+    <input type="hidden" name="root_Network_RTSP_Enabled" value="<!--#echo var="root_Network_RTSP_Enabled" option="encoding:html" -->">
+  </td>
+</tr>
+<tr>
+  <td colspan="4" class="oddItem" ><sup>*</sup>
+    <span id="disH264Txt"></span>
+  </td>
+</tr>
+<!--#endif -->
+
+<tr>
+<td class="topTitle" align="center" nowrap colspan="4">
+  <table border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <td class="button"><input type="button" width="75" value="" class="btnNormal" onClick="testPorts()" onMouseOver="return showStatus(SaveBtnStatTxt)" onMouseOut="return showStatus('')" id="tcpip_SaveBtn"></td>
+      <td class="button">&nbsp;</td>
+      <td class="button"><input type="button" width="75" value="" class="btnNormal" onClick="reloadPage()" onMouseOver="return showStatus(ResBtnStatTxt)" onMouseOut="return showStatus('')" id="tcpip_ResetBtn"></td>
+    </tr>
+  </table>
+</td>
+</tr>
+</table>
+
+<input type="hidden" name="return_page" value="/admin/advanced_tcpip.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->">
+<input type="hidden" name="action" value="modify">
+<input type="hidden" name="replyfirst" value="no">
+
+<script language="JavaScript">
+<!--
+
+function testPorts()
+{
+  var form = document.WizardForm
+
+  if (isNaN(form.root_System_BoaPort.value) || isNaN(parseInt(form.root_System_BoaPort.value)) || parseInt(form.root_System_BoaPort.value) <= 0 || 
+                   IntegerCheck(form.root_System_BoaPort.value,1,65535) == 0)
+  {
+    alert( langObjAdvTcpIp.getText("invHttpAlert") )
+    form.root_System_BoaPort.focus()
+    form.root_System_BoaPort.select()
+    return
+  }
+  else if (form.root_System_BoaPort.value != "<!--#echo var="root_System_BoaPort" option="encoding:javascript" -->" && IntegerCheck(form.root_System_BoaPort.value,1024,65535) == 0)
+  {
+    if (form.root_System_BoaPort.value != 80)
+    {
+      if (!confirm( langObjAdvTcpIp.getText("usHttpPortConfirm") ) )
+      {
+        form.root_System_BoaPort.focus()
+        form.root_System_BoaPort.select()
+        return
+      }
+    }
+  }
+  form.root_System_BoaPort.value = parseInt(form.root_System_BoaPort.value, 10);
+
+<!--#if expr="$root_Properties_HTTPS_HTTPS = yes" -->
+  if (isNaN(form.root_HTTPS_Port.value) || isNaN(parseInt(form.root_HTTPS_Port.value)) || parseInt(form.root_HTTPS_Port.value) <= 0 || 
+                  IntegerCheck(form.root_HTTPS_Port.value,1,65535) == 0)
+  {
+    alert( langObjAdvTcpIp.getText("invHttpAlert") )
+    form.root_HTTPS_Port.focus()
+    form.root_HTTPS_Port.select()
+    return
+  }
+  else if (form.root_HTTPS_Port.value != "<!--#echo var="root_HTTPS_Port" option="encoding:javascript" -->" && IntegerCheck(form.root_HTTPS_Port.value,1024,65535) == 0)
+  {
+    if (form.root_HTTPS_Port.value != 443)
+    {
+      if (!confirm( langObjAdvTcpIp.getText("usHttpPortConfirm") ) )
+      {
+        form.root_HTTPS_Port.focus()
+        form.root_HTTPS_Port.select()
+        return
+      }
+    }
+  }
+  form.root_HTTPS_Port.value = parseInt(form.root_HTTPS_Port.value, 10);
+<!--#endif -->
+
+<!--#if expr="$showSetting = yes" -->
+ <!--#if expr="_$root_Network_UPnP_NATTraversal_Enabled != _" -->
+  if (form.root_System_AlternateBoaPort.value != 0)
+  {
+    if (IntegerCheck(form.root_System_AlternateBoaPort.value,1,65535) == 0)
+    {
+      alert( langObjAdvTcpIp.getText("invHttpAlert") )
+      form.root_System_AlternateBoaPort.focus()
+      form.root_System_AlternateBoaPort.select()
+      return 1
+    }
+    else if (form.root_System_AlternateBoaPort.value != "<!--#echo var="root_System_AlternateBoaPort" option="encoding:javascript" -->" && IntegerCheck(form.root_System_AlternateBoaPort.value,1024,65535) == 0)
+    {
+      if (form.root_System_AlternateBoaPort.value != 80)
+      {
+        if (!confirm( langObjAdvTcpIp.getText("usHttpPortConfirm") ) )
+        {
+          form.root_System_AlternateBoaPort.focus()
+          form.root_System_AlternateBoaPort.select()
+          return 1
+        }
+      }
+    }
+  }
+  var parsedPort = parseInt(form.root_System_AlternateBoaPort.value, 10);
+  form.root_System_AlternateBoaPort.value = ( isNaN( parsedPort )?"":parsedPort );
+
+ <!--#endif -->
+<!--#endif -->
+
+<!--#if expr="_$root_Network_RTSP_Port != _" -->
+  if (form.Network_RTSP_Enabled.checked == false)
+  {
+    form.root_Network_RTSP_Enabled.value = "no";
+  }
+  else
+  {
+    if ((isNaN(form.root_Network_RTSP_Port.value) || isNaN(parseInt(form.root_Network_RTSP_Port.value)) || parseInt(form.root_Network_RTSP_Port.value) <= 0 || 
+                      IntegerCheck(form.root_Network_RTSP_Port.value,1024,65535) == 0) && (form.root_Network_RTSP_Port.value != 554))
+    {
+      alert( langObjAdvTcpIp.getText("rTSPportAlert") );
+      form.root_Network_RTSP_Port.focus();
+      form.root_Network_RTSP_Port.select();
+      return 1
+    }
+    form.root_Network_RTSP_Port.value = parseInt(form.root_Network_RTSP_Port.value, 10);
+    form.root_Network_RTSP_Enabled.value = "yes";
+  }
+<!--#endif -->
+
+  var porttestURL = '/admin/testPorts.shtml?proto=tcp&ports='
+  if (form.root_System_BoaPort.value != "<!--#echo var="root_System_BoaPort" option="encoding:url" -->")
+    porttestURL += form.root_System_BoaPort.value
+<!--#if expr="$root_Properties_HTTPS_HTTPS = yes" -->
+  if (form.root_HTTPS_Port.value != "<!--#echo var="root_HTTPS_Port" option="encoding:url" -->")
+  {
+    if (porttestURL.charAt(porttestURL.length - 1) != "=")
+      porttestURL += ","
+    porttestURL += form.root_HTTPS_Port.value
+  }
+<!--#endif -->
+<!--#if expr="$showSetting = yes" -->
+ <!--#if expr="_$root_Network_UPnP_NATTraversal_Enabled != _" -->
+  if (form.root_System_AlternateBoaPort.value != "<!--#echo var="root_System_AlternateBoaPort" option="encoding:url" -->")
+  {
+    if (porttestURL.charAt(porttestURL.length - 1) != "=")
+      porttestURL += ","
+    porttestURL += form.root_System_AlternateBoaPort.value
+  }
+ <!--#endif -->
+<!--#endif -->
+<!--#if expr="_$root_Network_RTSP_Port != _" -->
+  if (form.root_Network_RTSP_Port.value != "<!--#echo var="root_Network_RTSP_Port" option="encoding:url" -->")
+  {
+    if (porttestURL.charAt(porttestURL.length - 1) != "=")
+      porttestURL += ","
+    porttestURL += form.root_Network_RTSP_Port.value
+  }
+<!--#endif -->
+
+  if (porttestURL != '/admin/testPorts.shtml?proto=tcp&ports=')
+    openPopUp(porttestURL + '&id=<!--#echo var="ssi_request_id" option="encoding:url" -->', 'Test_Ports', 330, 50);
+  else
+    saveData()
+}
+
+function saveData()
+{
+  var form = document.WizardForm
+  var reloadByTimeout;
+
+  // If Primary server is not filled in - move Secondary to Primary, and clear Secondary 
+  if (form.root_Network_Resolver_ObtainFromDHCP[1].checked)
+  {
+    if ((form.root_Network_DNSServer1.value == "") && (form.root_Network_DNSServer2.value != ""))
+    {
+      form.root_Network_DNSServer1.value = form.root_Network_DNSServer2.value
+      form.root_Network_DNSServer2.value = ""
+    }
+  }
+  
+  if (ValidateParameters() == 0)
+    return;
+
+  if (form.root_Network_DNSUpdate_Enabled.value != form.OldEnabled.value)
+  {
+    if (form.root_Network_DNSUpdate_Enabled.value == "yes")
+      form.return_page.value += "&dnsupdate_add=" + form.root_Network_DNSUpdate_DNSName.value;
+    else
+      form.return_page.value += "&dnsupdate_delete=" + form.OldDNSName.value; 
+  }
+  else if (form.root_Network_DNSUpdate_DNSName.value != form.OldDNSName.value)
+  {
+    form.return_page.value += "&dnsupdate_delete=" + form.OldDNSName.value; 
+    form.return_page.value += "&dnsupdate_add=" + form.root_Network_DNSUpdate_DNSName.value; 
+  }
+  else if (form.root_Network_DNSUpdate_TTL.value != form.OldTTL.value)
+  {
+    form.return_page.value += "&dnsupdate_add=" + form.root_Network_DNSUpdate_DNSName.value; 
+  }
+
+  if ((form.Network_DNSUpdate_Enabled.checked) && (form.return_page.value.indexOf("&dnsupdate_add=") == -1))
+  {
+    if ((form.root_Network_DNSServer1.value != "<!--#echo var="root_Network_DNSServer1" option="encoding:javascript" -->") || (form.root_Network_DNSServer2.value != "<!--#echo var="root_Network_DNSServer2" option="encoding:javascript" -->"))
+    {
+      form.return_page.value += "&dnsupdate_add=" + form.root_Network_DNSUpdate_DNSName.value;
+    }
+  }
+
+  if (document.getElementsByName("root_Network_Resolver_ObtainFromDHCP")[1].value == "no")
+    form.root_Network_DomainName.value = document.getElementById("idDomainName").value.replace(/;/g," ");
+
+<!--#if expr="$showSetting = yes" -->
+ <!--#if expr="$showHostNameDHCP = yes" -->
+  if (form.hostName[0].checked)
+    form.root_Network_VolatileHostName_ObtainFromDHCP.value = "yes"
+
+  else
+    form.root_Network_VolatileHostName_ObtainFromDHCP.value = "no"
+ <!--#endif -->
+
+ <!--#if expr="_$root_Network_UPnP_NATTraversal_Enabled != _" -->
+  if (!(form.edit_router.checked))
+    form.root_Network_UPnP_NATTraversal_Router.value = "";
+
+  if (form.root_System_AlternateBoaPort.value == "")
+    form.root_System_AlternateBoaPort.value = "0";
+
+  <!--#if expr="$root_Network_UPnP_NATTraversal_Enabled = yes" -->
+    if ((form.root_Network_UPnP_NATTraversal_Router.value != "<!--#echo var="root_Network_UPnP_NATTraversal_Router" option="encoding:javascript" -->") || (form.root_System_AlternateBoaPort.value != "<!--#echo var="root_System_AlternateBoaPort" option="encoding:javascript" -->"))
+      openPopUp('/admin/handleNAT.shtml?action=wait&port=' + form.root_System_AlternateBoaPort.value + '&router=' + form.root_Network_UPnP_NATTraversal_Router.value + '&id=<!--#echo var="ssi_request_id" option="encoding:url" -->', 'handle_NAT', 430, 140);
+  <!--#endif -->
+ <!--#endif -->
+<!--#endif -->
+
+  if (document.location.protocol == 'http:')
+  {
+    if (document.WizardForm.root_System_BoaPort.value != "<!--#echo var="root_System_BoaPort" option="encoding:url" -->")
+    {
+      form.return_page.disabled = true;
+      form.replyfirst.value = "yes"
+      alert(langObjAdvTcpIp.getText("httpChTxt_1")+" <!--#echo var="glob_prodName" option="encoding:javascript" --> "+langObjAdvTcpIp.getText("httpChTxt_2"));
+    }
+  } 
+  else if (document.location.protocol == 'https:')
+  {
+    if (document.WizardForm.root_HTTPS_Port.value != "<!--#echo var="root_HTTPS_Port" option="encoding:url" -->") 
+    {
+      form.return_page.disabled = true;
+      form.replyfirst.value = "yes"
+      alert(langObjAdvTcpIp.getText("httpsChTxt_1")+" <!--#echo var="glob_prodName" option="encoding:javascript" --> "+langObjAdvTcpIp.getText("httpsChTxt_2"));
+    }
+    else if (form.root_System_BoaPort.value != "<!--#echo var="root_System_BoaPort" option="encoding:url" -->") {
+      form.return_page.disabled = true;
+      reloadByTimeout = true;
+    }
+  }
+
+  if (fillenabled == true)
+    form.return_page.value = form.return_page.value + "&fillenabled=true";
+  else
+    form.return_page.value = form.return_page.value + "&fillenabled=false";
+
+  form.submit();
+
+  if (reloadByTimeout)
+  {
+    setTimeout(function(){reloadPage(form.return_page.value);form.return_page.value = null;}, 2000);
+  }
+}
+
+function ableNAT(able)
+{
+<!--#if expr="$root_Network_UPnP_Enabled = yes" -->
+  var form = document.WizardForm
+  openPopUp('/admin/handleNAT.shtml?action=' + able + '&port=' + form.root_System_AlternateBoaPort.value + '&router=' + form.root_Network_UPnP_NATTraversal_Router.value + '&id=<!--#echo var="ssi_request_id" option="encoding:url" -->', 'handle_NAT', 430, 140);
+<!--#else -->
+  alert( langObjAdvTcpIp.getText("upnpAlrt") )
+<!--#endif -->
+}
+
+function reloadPage(url)
+{
+  if (url) {
+    window.location.href = url;
+  }
+  else {
+    window.location.href = "/admin/advanced_tcpip.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->"
+  }
+}
+
+//-->
+</script>
+
+<!--#include virtual="/incl/bottom_incl.shtml" -->
+

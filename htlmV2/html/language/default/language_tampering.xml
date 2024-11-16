@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+  <cameraTampering>
+    <pageTitle type="title" minor="0">Detectors/Camera Tampering</pageTitle>
+    <alternativePageTitle type="msg" minor="0">Detectors/Shock Detection</alternativePageTitle>
+    <inValAlert type="alert" minor="0">Invalid value.</inValAlert>
+    <invSecAlert type="alert" minor="0">The Minimum duration must be an integer between 10 and 3600 seconds</invSecAlert>
+    <invMinAlert type="alert" minor="0">The Minimum duration must be an integer between 10 seconds and 60 minutes</invMinAlert>
+    <saveBtnStatTxt type="msg" minor="0">Save the tampering settings</saveBtnStatTxt>
+    <resBtnStatTxt type="msg" minor="0">Revert to last saved settings</resBtnStatTxt>
+    <camTampTxt type="text" minor="0">Camera Tampering</camTampTxt>
+    <subSetTxt type="text" minor="0">Settings</subSetTxt>
+    <tamPerTxt type="text" minor="0">Tampering Period</tamPerTxt>
+    <darkImgTxt type="text" minor="0">Dark Images</darkImgTxt>
+    <darkImg0Txt type="text" minor="0">Dark Images</darkImg0Txt>
+    <darkImg1Txt type="text" minor="0">Dark Images</darkImg1Txt>
+    <darkImg2Txt type="text" minor="0">Dark Images</darkImg2Txt>
+    <darkImg3Txt type="text" minor="0">Dark Images</darkImg3Txt>
+    <shockDetTitleTxt type="text" minor="0">Shock Detection</shockDetTitleTxt>
+    <shockDetTxt type="text" minor="0">Shock Detection</shockDetTxt>
+    <hlpTxt type="image" minor="0" imageid="hlpPic">Click here for help on this page</hlpTxt>
+    <minDurInt0Txt type="text" minor="0">Minimum duration:</minDurInt0Txt>
+    <minDurInt1Txt type="text" minor="0">Minimum duration:</minDurInt1Txt>
+    <minDurInt2Txt type="text" minor="0">Minimum duration:</minDurInt2Txt>
+    <minDurInt3Txt type="text" minor="0">Minimum duration:</minDurInt3Txt>
+    <secTxt type="msgAsText" minor="0">seconds</secTxt>
+    <minTxt type="msgAsText" minor="0">minutes</minTxt>
+    <globEnableDark0Txt type="text" minor="0">Alarm for dark images.</globEnableDark0Txt>
+    <globEnableDark1Txt type="text" minor="0">Alarm for dark images.</globEnableDark1Txt>
+    <globEnableDark2Txt type="text" minor="0">Alarm for dark images.</globEnableDark2Txt>
+    <globEnableDark3Txt type="text" minor="0">Alarm for dark images.</globEnableDark3Txt>
+    <enableShockTxt type="text" minor="0">Enable shock detection.</enableShockTxt>
+    <shockSensitivityTxt type="text" minor="0">Shock sensitivity:</shockSensitivityTxt>
+    <shockDisableEventConfirm type="alert" minor="0">Shock detection is currently used as an event trigger.&#10;This event will no longer work if shock detection is disabled.&#10;&#10;Are you sure you want to disable shock detection?</shockDisableEventConfirm>
+    <saveBtn type="button" minor="0" buttonid="tamp_SaveBtn">Save</saveBtn>
+    <resetBtn type="button" minor="0" buttonid="tamp_ResetBtn">Reset</resetBtn>
+  </cameraTampering>
+</language_xml>

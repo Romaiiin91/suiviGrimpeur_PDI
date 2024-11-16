@@ -1,0 +1,411 @@
+
+<style type="text/css">
+table.ptzctrlbtn { cursor:pointer; table-layout:fixed }
+td.ptzctrlbtn_label { height:22px; vertical-align:middle; text-align:center; overflow:hidden; }
+</style>
+
+<script language="JavaScript" type="text/javascript">
+<!--
+var langObjPTZCtrPanelIncl = new Language("incl_platoon_ptz", "ptzctrlpanel_incl");
+langObjPTZCtrPanelIncl.init(true, true);
+
+<!--#include virtual="/incl/ptzctrlbtn_incl.shtml" -->
+
+// -->
+</script>
+
+<!-- If "$pcb_showall = yes" then all 16 buttons are displayed, else only Home and Ctrl panel are displayed --> 
+<!-- The 2 left cols contain static functions, the 2 right cols are reserved for driver specific use. -->
+<!-- Driver specific functions should be defined by driver parameters. (not yet supported by PTZ driver framework). -->
+
+<!-- Set default param values for buttons -->
+<!--#set var="pcb_width" val="70" -->
+<!--#set var="pcb_label" val="" -->
+<!--#set var="pcb_info" val="" -->
+<!--#set var="pcb_onclk" val="" -->
+
+<!--#if expr="_$nbr = _" -->
+  <!--#if expr="_$camnbr = _" -->
+    <!--#set var="camnbr" val="0" -->
+    <!--#set var="nbr" val="1" -->
+  <!--#elif expr="$camnbr = 0" -->
+    <!--#set var="nbr" val="1" -->
+  <!--#elif expr="$camnbr = 1" -->
+    <!--#set var="nbr" val="2" -->
+  <!--#elif expr="$camnbr = 2" -->
+    <!--#set var="nbr" val="3" -->
+  <!--#elif expr="$camnbr = 3" -->
+    <!--#set var="nbr" val="4" -->
+  <!--#endif -->
+<!--#endif -->
+
+
+<!--#set var="show_ptzctrlpanel_incl2" val="false" -->
+
+<!--#include virtual="/incl/ptzctrlpanel_incl2.shtml" -->
+
+<table cellpadding=0 cellspacing=2 border=0>
+<tr>
+<td id="backLightOrHome"></td>
+<script language="JavaScript">
+<!--
+  var text = "";
+  var alt = "";
+  var click = "";
+
+<!--#if expr="_$pcb_showall = _yes" -->
+  <!--#if expr="$(root_PTZ_Support_S$camnbr$_BackLight) = true" -->
+    <!--#if expr="$root_Layout_ShowBackLightButton != no" -->
+  text = langObjPTZCtrPanelIncl.getText("ptzCtrPnlBLOnTxt");
+  alt = langObjPTZCtrPanelIncl.getText("ptzCtrPnlBLOnInfoTxt");
+  click = "javascript:ptzctrlpanel(this, '/axis-cgi/com/ptz.cgi?camera=<!--#echo var="camnbr" option="encoding:javascript" -->&backlight=on')";
+    <!--#endif -->
+  <!--#endif -->
+<!--#else -->
+  <!--#if expr="$showHome = yes" -->
+  text = langObjPTZCtrPanelIncl.getText("ptzCtrPnlHome1Txt");
+  alt = langObjPTZCtrPanelIncl.getText("ptzCtrPnlHomeInfoTxt");
+  click = "javascript:ptzctrlpanel(this, '/axis-cgi/com/ptz.cgi?camera=<!--#echo var="camnbr" option="encoding:javascript" -->&move=home')";
+    <!--#endif -->
+<!--#endif -->
+
+  outputButton(100, "", text, alt, click, document.getElementById("backLightOrHome"));
+//-->
+</script>
+
+<!--#if expr="_$pcb_showall = _yes" -->
+
+<td id="irFiltBtnOn"></td>
+<script language="JavaScript">
+<!--
+  var text = "";
+  var alt = "";
+  var click = "";
+
+  <!--#if expr="$root_Layout_ShowIRFilterButton != no" -->
+    <!--#if expr="$(root_PTZ_Support_S$camnbr$_IrCutFilter) = true" -->
+  text = langObjPTZCtrPanelIncl.getText("ptzCtrPnlIrcOnTxt");
+  alt = langObjPTZCtrPanelIncl.getText("ptzCtrPnlIrcOnInfoTxt");
+  click = "javascript:ptzctrlpanel(this, '/axis-cgi/com/ptz.cgi?camera=<!--#echo var="camnbr" option="encoding:javascript" -->&ircutfilter=on')";
+    <!--#endif -->
+  <!--#endif -->
+  outputButton(70, "", text, alt, click, document.getElementById("irFiltBtnOn"));
+//-->
+</script>
+
+<td id="aux1"></td>
+<script language="JavaScript">
+<!--
+  <!--#if expr="$root_Brand_ProdNbr = 213" -->
+    <!--#if expr="$root_Layout_ShowIRLightButton = yes" -->
+      <!--#set var="aux_cmd_no" val="1" -->
+      <!--#include virtual="/incl/ptzctrlaux_incl.shtml" -->
+    <!--#endif -->
+  <!--#else -->
+    <!--#set var="aux_cmd_no" val="1" -->
+    <!--#include virtual="/incl/ptzctrlaux_incl.shtml" -->
+  <!--#endif -->
+  outputButton(70, "", "<!--#echo var="pcb_label" option="encoding:javascript" -->", "<!--#echo var="pcb_info" option="encoding:javascript" -->", "javascript:ptzctrlpanel(this, unescape('<!--#echo var="pcb_onclk" option="encoding:url" -->'))", document.getElementById("aux1"));
+//-->
+</script>
+
+  
+<td id="aux2"></td>
+<script language="JavaScript">
+<!--
+  <!--#set var="aux_cmd_no" val="2" -->
+  <!--#include virtual="/incl/ptzctrlaux_incl.shtml" -->
+  outputButton(70, "", "<!--#echo var="pcb_label" option="encoding:javascript" -->", "<!--#echo var="pcb_info" option="encoding:javascript" -->", "javascript:ptzctrlpanel(this, unescape('<!--#echo var="pcb_onclk" option="encoding:url" -->'))", document.getElementById("aux2"));
+//-->
+</script>
+    
+<!--#endif -->
+</tr>
+
+<tr>
+<td id="backLightOrPTZPnl"></td>   
+<script language="JavaScript">
+<!--
+  var text = "";
+  var alt = "";
+  var click = "";
+
+<!--#if expr="_$pcb_showall = _yes" -->
+  <!--#if expr="$(root_PTZ_Support_S$camnbr$_BackLight) = true" -->
+    <!--#if expr="$root_Layout_ShowBackLightButton != no" -->
+  text = langObjPTZCtrPanelIncl.getText("ptzCtrPnlBLOffTxt");
+  alt = langObjPTZCtrPanelIncl.getText("ptzCtrPnlBLOffInfoTxt");
+  click = "javascript:ptzctrlpanel(this, '/axis-cgi/com/ptz.cgi?camera=<!--#echo var="camnbr" option="encoding:javascript" -->&backlight=off')";
+    <!--#endif -->
+  <!--#endif -->
+<!--#else -->
+  <!--#if expr="$show_ptzctrlpanel_incl2 = true" -->
+  text = langObjPTZCtrPanelIncl.getText("ptzCtrPnlCtrlPnlTxt");
+  alt = langObjPTZCtrPanelIncl.getText("ptzCtrPnlCtrlPnInfoTxt");
+  click = "javascript:togglePTZpanel()";
+    <!--#endif -->
+<!--#endif -->
+
+  outputButton(100, "", text, alt, click, document.getElementById("backLightOrPTZPnl"));
+//-->
+</script>
+
+<!--#if expr="_$pcb_showall = _yes" -->
+
+<td id="irFiltBtnOff"></td>
+<script language="JavaScript">
+<!--
+  var text = "";
+  var alt = "";
+  var click = "";
+  <!--#if expr="$root_Layout_ShowIRFilterButton != no" -->
+    <!--#if expr="$(root_PTZ_Support_S$camnbr$_IrCutFilter) = true" -->
+  text = langObjPTZCtrPanelIncl.getText("ptzCtrPnlIrcOffTxt");
+  alt = langObjPTZCtrPanelIncl.getText("ptzCtrPnlIrcOffInfoTxt");
+  click = "javascript:ptzctrlpanel(this, '/axis-cgi/com/ptz.cgi?camera=<!--#echo var="camnbr" option="encoding:javascript" -->&ircutfilter=off')";
+    <!--#endif -->
+  <!--#endif -->
+  outputButton(70, "", text, alt, click, document.getElementById("irFiltBtnOff"));
+//-->
+</script>
+
+<td id="aux3"></td>
+<script language="JavaScript">
+<!--
+  <!--#if expr="$root_Brand_ProdNbr = 213" -->
+    <!--#if expr="$root_Layout_ShowIRLightButton = yes" -->
+      <!--#set var="aux_cmd_no" val="3" -->
+      <!--#include virtual="/incl/ptzctrlaux_incl.shtml" -->
+    <!--#endif -->
+  <!--#else -->
+    <!--#set var="aux_cmd_no" val="3" -->
+    <!--#include virtual="/incl/ptzctrlaux_incl.shtml" -->
+  <!--#endif -->
+  outputButton(70, "", "<!--#echo var="pcb_label" option="encoding:javascript" -->", "<!--#echo var="pcb_info" option="encoding:javascript" -->", "javascript:ptzctrlpanel(this, unescape('<!--#echo var="pcb_onclk" option="encoding:url" -->'))", document.getElementById("aux3"));
+//-->
+</script>
+
+<td id="aux4"></td>
+<script language="JavaScript">
+<!--
+  <!--#set var="aux_cmd_no" val="4" -->
+  <!--#include virtual="/incl/ptzctrlaux_incl.shtml" -->
+  outputButton(70, "", "<!--#echo var="pcb_label" option="encoding:javascript" -->", "<!--#echo var="pcb_info" option="encoding:javascript" -->", "javascript:ptzctrlpanel(this, unescape('<!--#echo var="pcb_onclk" option="encoding:url" -->'))", document.getElementById("aux4"));
+//-->
+</script>
+    
+<!--#endif -->
+</tr>
+
+<!--#if expr="$hideFocusComletely != yes" -->
+<tr>
+<td id="autoTrack"></td>
+<script language="JavaScript">
+<!--
+<!--#if expr="$root_Layout_ShowAutoTracking != no" -->
+var id = "idAutoTrackBtn";
+var alt = langObjPTZCtrPanelIncl.getText("ptzCtrPnlAutTrInfoTxt");
+var click = "javascript:toggleAutoTracking()";
+<!--#else -->
+var id = "";
+var alt = "";
+var click = "";
+<!--#endif -->
+outputButton(100, id, "", alt, click, document.getElementById("autoTrack"));
+//-->
+</script>
+
+<!--#if expr="$root_Layout_ShowAutoTracking != no" -->
+<script language="JavaScript">
+<!--
+var camnbr = '<!--#echo var="camnbr" option="encoding:javascript" -->';
+var isPanTiltDisabled = true;
+var isAutoTrackRunning = false;
+var pollAutoTracking_tick_timer = null;
+
+if (sendCtrlPRequest("/axis-cgi/view/param.cgi?action=list&group=AutoTracking.A0.Running&usergroup=viewer","GET") != null)
+{
+  setBtnClick("idAutoTrackBtn", "javascript:toggleAutoTracking()");
+}
+
+function toggleAutoTracking() {
+  try {
+    if (isPanTiltDisabled)
+      return;
+    var now = new Date();
+    var action = "/axis-cgi/operator/param.cgi?action=update&AutoTracking.A0.Running=" + (isAutoTrackRunning ? "no" : "yes") + "&timestamp=" + now.getTime();
+    delete now;
+    sendAction(action, "GET");
+  } catch (e) {}
+  clearTimeout(pollAutoTracking_tick_timer);
+  pollAutoTracking_tick();
+}
+
+function sendAction(action, method) {
+  var request = AxisConnectionFactory.createAjaxConnection();
+  AxisConnectionFactory.sendSync([method, action], null, request);
+  var status = request.getStatus();
+  delete request;
+  return status;
+}
+
+var requestCtrlPRequest;
+function sendCtrlPRequest(action, method) {
+  requestCtrlPRequest = AxisConnectionFactory.createAjaxConnection();
+  return AxisConnectionFactory.getResponseTextWith([method, action], null, requestCtrlPRequest);
+}
+
+function pollAutoTracking_tick() {
+  var now = new Date();
+  var autotrackstatus = sendCtrlPRequest("/axis-cgi/view/param.cgi?action=list&group=AutoTracking.A0.Running,PTZ.Various.V" + camnbr + ".PanEnabled,PTZ.Various.V" + camnbr + ".TiltEnabled&usergroup=viewer&timestamp=" + now.getTime(),"GET");
+  delete now;
+  if (autotrackstatus == null)
+    return;
+  isAutoTrackRunning = (autotrackstatus.indexOf("AutoTracking.A0.Running=yes") != -1);
+  isPanTiltDisabled = (autotrackstatus.indexOf("PTZ.Various.V" + camnbr + ".PanEnabled=false") != -1);
+  isPanTiltDisabled |= (autotrackstatus.indexOf("PTZ.Various.V" + camnbr + ".TiltEnabled=false") != -1);
+
+  updateButtonEnableStatus("idAutoTrackBtn", (isPanTiltDisabled==false));
+
+  document.getElementById("idAutoTrackBtn").innerHTML = (!isAutoTrackRunning ? langObjPTZCtrPanelIncl.getText("ptzCtrPnlStartAutTrTxt") : langObjPTZCtrPanelIncl.getText("ptzCtrPnlStopAutTrTxt"));
+  pollAutoTracking_tick_timer = setTimeout("pollAutoTracking_tick();", 10000);
+}
+
+pollAutoTracking_tick();
+-->
+</script>
+<!--#endif -->
+<!--#if expr="_$pcb_showall = _yes" -->
+    
+<td id="irFiltBtnAuto"></td>
+<script language="JavaScript">
+<!--
+  var text = "";
+  var alt = "";
+  var click = "";
+  <!--#if expr="$root_Layout_ShowIRFilterButton != no" -->
+    <!--#if expr="$(root_PTZ_Support_S$camnbr$_IrCutFilter) = true" -->
+  text = langObjPTZCtrPanelIncl.getText("ptzCtrPnlIrcAutTxt");
+  alt = langObjPTZCtrPanelIncl.getText("ptzCtrPnlIrcAutInfoTxt");
+  click = "javascript:ptzctrlpanel(this, '/axis-cgi/com/ptz.cgi?camera=<!--#echo var="camnbr" option="encoding:javascript" -->&ircutfilter=auto')";
+    <!--#endif -->
+  <!--#endif -->
+  outputButton(100, "", text, alt, click, document.getElementById("irFiltBtnAuto"));
+//-->
+</script>
+
+<td id="aux5"></td>
+<script language="JavaScript">
+<!--
+  <!--#set var="aux_cmd_no" val="5" -->
+  <!--#include virtual="/incl/ptzctrlaux_incl.shtml" -->
+  outputButton(70, "", "<!--#echo var="pcb_label" option="encoding:javascript" -->", "<!--#echo var="pcb_info" option="encoding:javascript" -->", "javascript:ptzctrlpanel(this, unescape('<!--#echo var="pcb_onclk" option="encoding:url" -->'))", document.getElementById("aux5"));
+//-->
+</script>
+
+<td id="aux6"></td>
+<script language="JavaScript">
+<!--
+  <!--#set var="aux_cmd_no" val="6" -->
+  <!--#include virtual="/incl/ptzctrlaux_incl.shtml" -->
+  outputButton(70, "", "<!--#echo var="pcb_label" option="encoding:javascript" -->", "<!--#echo var="pcb_info" option="encoding:javascript" -->", "javascript:ptzctrlpanel(this, unescape('<!--#echo var="pcb_onclk" option="encoding:url" -->'))", document.getElementById("aux6"));
+//-->
+</script>
+    
+<!--#endif -->
+</tr>
+<!--#endif -->
+<!--#if expr="$hideIrisComletely != yes" -->
+<tr>
+<td id="hideIris"></td>
+<script language="JavaScript">
+<!--
+  outputButton(100, "", "", "", "", document.getElementById("hideIris"));
+//-->
+</script>
+
+<!--#if expr="_$pcb_showall = _yes" -->
+
+<td id="homeBtn"></td>
+<script language="JavaScript">
+<!--
+  var text = "";
+  var alt = "";
+  var click = "";
+
+  <!--#if expr="$showHome = yes" -->
+  text = langObjPTZCtrPanelIncl.getText("ptzCtrPnlHome2Txt");
+  alt = langObjPTZCtrPanelIncl.getText("ptzCtrPnlHomeInfoTxt");
+  click = "javascript:ptzctrlpanel(this, '/axis-cgi/com/ptz.cgi?camera=<!--#echo var="camnbr" option="encoding:javascript" -->&move=home')";
+  <!--#endif -->
+
+  outputButton(100, "", text, alt, click, document.getElementById("homeBtn"));
+//-->
+</script>
+
+<td id="aux7"></td>
+<script language="JavaScript">
+<!--
+  <!--#set var="aux_cmd_no" val="7" -->
+  <!--#include virtual="/incl/ptzctrlaux_incl.shtml" -->
+  outputButton(70, "", "<!--#echo var="pcb_label" option="encoding:javascript" -->", "<!--#echo var="pcb_info" option="encoding:javascript" -->", "javascript:ptzctrlpanel(this, unescape('<!--#echo var="pcb_onclk" option="encoding:url" -->'))", document.getElementById("aux7"));
+//-->
+</script>
+
+<td id="aux8"></td>
+<script language="JavaScript">
+<!--
+  <!--#set var="aux_cmd_no" val="8" -->
+  <!--#include virtual="/incl/ptzctrlaux_incl.shtml" -->
+  outputButton(70, "", "<!--#echo var="pcb_label" option="encoding:javascript" -->", "<!--#echo var="pcb_info" option="encoding:javascript" -->", "javascript:ptzctrlpanel(this, unescape('<!--#echo var="pcb_onclk" option="encoding:url" -->'))", document.getElementById("aux8"));
+//-->
+</script>
+    
+<!--#endif -->
+</tr>
+<!--#endif -->
+</table>
+
+
+<script language="JavaScript" type="text/javascript">
+<!--
+var langObjPTZCtrPanelIncl = new Language("incl_platoon_ptz", "ptzctrlpanel_incl");
+langObjPTZCtrPanelIncl.init(true, true);
+
+var langObjPTZButtonIncl = new Language("incl_platoon_ptz", "ptzctrlbtn_incl");
+langObjPTZButtonIncl.init(true, true);
+
+var requestDA;
+function sendDomainAction(action, method)
+{
+  try{
+    if( typeof( XDomainRequest ) == "function" && action.charAt(0) != "/" )
+    {
+      requestDA = new XDomainRequest();
+    }
+    else
+    {
+      requestDA = AxisConnectionFactory.createAjaxConnection();
+    }
+    AxisConnectionFactory.sendAsync([method, action], "", null, requestDA);
+  }
+  catch(e) {
+    delete e;
+  }
+}
+
+function ptzctrlpanel(obj, url)
+{
+  if (url.indexOf("link:") == 0) {
+    url = url.replace(/link:/,'');
+    document.open(url);
+  } else {
+    if (url.indexOf("auxiliary:") == 0) {
+      url = url.replace(/auxiliary:/,'/axis-cgi/com/ptz.cgi?camera=<!--#echo var="camnbr" option="encoding:javascript" -->&auxiliary=');
+    }
+    sendDomainAction(url, "GET");
+  }
+}
+
+// -->
+</script>

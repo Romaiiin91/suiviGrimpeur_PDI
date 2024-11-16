@@ -1,0 +1,150 @@
+
+<script language="JavaScript">
+<!--
+
+var langObjJsTcpip = new Language("network", "JS_tcpIp");
+langObjJsTcpip.init(false, true);
+
+function parseDNS()
+{
+  var form = document.WizardForm
+
+  if (form.root_Network_DNSServer1.value == "0.0.0.0") {
+    form.root_Network_DNSServer1.value = ""
+  }
+  if (form.root_Network_DNSServer2.value == "0.0.0.0") {
+    form.root_Network_DNSServer2.value = ""
+  }
+}
+
+function formatDNS()
+{
+  var form = document.WizardForm
+
+  if (form.root_Network_DNSServer1.value == "") {
+    form.root_Network_DNSServer1.value = "0.0.0.0"
+  }
+  if (form.root_Network_DNSServer2.value == "") {
+    form.root_Network_DNSServer2.value = "0.0.0.0"
+  }
+}
+
+function checkHostName()
+{
+  var form = document.WizardForm
+  var value = form.root_Network_HostName.value
+  var skipUC = false;
+
+   if (form.hostName<!--#if expr="$showSetting = yes" --><!--#if expr="$showHostNameDHCP = yes" -->[1]<!--#endif --><!--#endif -->.checked && value.length <= 1) {
+    alert( langObjJsTcpip.getText("enHoNaAlrt") )
+    try {
+      form.root_Network_HostName.focus()
+      form.root_Network_HostName.select()
+    } catch (e) {}
+    return 0
+  }
+
+  if (value.charAt(value.length - 1) == '-' || value.charAt(0) == '-') {
+    alert( langObjJsTcpip.getText("inHoNaAlrt") );
+    try {
+      form.root_Network_HostName.focus()
+      form.root_Network_HostName.select()
+    } catch (e) {}
+    return 0
+  }
+
+  for (var i = 0; i < value.length; i++) {
+    var c = value.charAt(i)
+
+    if (!(c>='A' && c<='Z' ||c>='a' && c<='z' || c>='0' && c<='9' || c=='-')) {
+      alert( langObjJsTcpip.getText("onThChAlrt1") );
+      try {
+        form.root_Network_HostName.focus()
+        form.root_Network_HostName.select()
+      } catch (e) {}
+      return 0
+    }
+  }
+
+  return 1;
+}
+
+function checkDomainName()
+{
+  var form = document.WizardForm
+  form.root_Network_DomainName.value = form.root_Network_DomainName.value.replace(/^\s+|\s+$/gi, "");
+  form.root_Network_DomainName.value = form.root_Network_DomainName.value.replace(/( +)/gi, ";");
+  var value = form.root_Network_DomainName.value
+  var skipUC = false;
+
+  if (value.charAt(value.length - 1) == '-' || value.charAt(0) == '-' || value.charAt(value.length - 1) == '.' || value.charAt(0) == '.') {
+    alert( langObjJsTcpip.getText("inDoNaStartEndAlrt") );
+    try {
+      form.idDomainName.focus()
+      form.idDomainName.select()
+    } catch (e) {}
+    return 0
+  }
+
+  for (var i = 0; i < value.length; i++) {
+    var c = value.charAt(i)
+
+    if (value.charAt(i)=='-' && value.charAt(i+1)=='.' || value.charAt(i)=='.' && value.charAt(i+1)=='-') {
+      alert( langObjJsTcpip.getText("inDoNaAlrt") );
+      try {
+        form.idDomainName.focus()
+        form.idDomainName.select()
+      } catch (e) {}
+      return 0
+    } else if (!(c>='A' && c<='Z' || c>='a' && c<='z' || c>='0' && c<='9' || c=='-' || c=='.' || c==';')) {
+      alert( langObjJsTcpip.getText("onThChAlrt2") );
+      try {
+        form.idDomainName.focus()
+        form.idDomainName.select()
+      } catch (e) {}
+      return 0
+    }
+  }
+  form.root_Network_DomainName.value = form.root_Network_DomainName.value.replace(/;/gi, " ");
+  formatDNS();
+  return 1
+}
+
+
+function FloatCheck(value, low, high)
+{
+  if (value.length == 0)
+    return 0
+
+  if (((value.charAt(0)<'0') || (value.charAt(0)>'9')) && value.charAt(0) != '-') 
+    return 0
+	var foundDot = 0
+  for (var i=1; i<value.length; i++) {
+    if ((value.charAt(i) == '.') && (foundDot == 0))
+      foundDot = 1
+    else if ((value.charAt(i)<'0') || (value.charAt(i)>'9'))
+      return 0
+  }
+  var integerValue = parseFloat(value, 10)
+  if ((integerValue<low) || (integerValue>high))
+    return 0
+
+  return 1
+}
+
+function checkValidFQDN(value)
+{
+  if (value.charAt(value.length - 1) == '-' || value.charAt(0) == '-' || value.charAt(value.length - 1) == '.' || value.charAt(0) == '.')
+    return false;
+
+  for (var i = 0; i < value.length; i++) {
+    var c = value.charAt(i)
+
+    if (value.charAt(i)=='-' && value.charAt(i+1)=='.' || value.charAt(i)=='.' && value.charAt(i+1)=='-' || !(c>='A' && c<='Z' || c>='a' && c<='z' || c>='0' && c<='9' || c=='-' || c=='.' || c==';'))
+      return false;
+  }
+  return true;
+}
+
+// -->
+</script>

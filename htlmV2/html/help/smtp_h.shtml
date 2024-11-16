@@ -1,0 +1,122 @@
+<!--#include virtual="/sm/sm.srv?action=get&group=SMTP" -->
+<!--#set var="backButton" val="yes" -->
+<!--#set var="forwardButton" val="yes" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<script language="JavaScript">
+<!--
+var langObjSMTPSMTPH = new Language("smtp_h", "smtp_h");
+
+function globalLanguageVars()
+{
+	document.getElementById("titleId").innerHTML = langObjSMTPSMTPH.getText("titleTxt");
+}
+// -->
+</script>
+
+</head>
+<script language="JavaScript">
+<!--
+  function listOptions(parstr, pre, middle, end) {
+    opts = new Array();
+    optstr = "</option>";
+    parstr = parstr.toLowerCase();
+    offset = parstr.indexOf(optstr, 0);
+    while (offset >= 0) {
+      start = parstr.lastIndexOf(">", offset);
+      if (start < 0)
+        return;
+      opt = parstr.substring(start + 1, offset);
+      opts.push(opt);
+      offset = parstr.indexOf(optstr, offset + optstr.length);
+    }
+    document.write(pre);
+    document.write(opts.join(middle));
+    document.write(end);
+  }
+//-->
+</script>
+<body onload="langObjSMTPSMTPH.init()">
+<!--#include virtual="/incl/helpTop_incl2.shtml" -->
+<!--#set var="events" val="yes" -->
+<!--#if expr="_$root_Brand_ProdNbr >< 206" -->
+	<!--#set var="events" val="no" -->
+<!--#endif -->
+<table class="alternateRows" border="0" cellpadding="3" cellspacing="0" width="440" bgcolor="white">
+<!--#include virtual="/incl/helpTop_incl3.shtml" -->
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="general_subTitle_smtp_Txt"></span>
+		</div>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="introTxt"></span>
+<!--#if expr="$events = yes" -->
+		<span id="events_yesTxt"></span>
+<!--#else -->
+		<span id="events_noTxt"></span>
+<!--#endif -->
+		<br/><br/>
+		<span id="serversTxt"></span><br/><br/>
+		<span id="portsTxt"></span><br/><br/>
+<!--#if expr="$root_SMTP_Authentication_A1_Enabled != " -->
+		<span id="authenticationTxt"></span>
+		<ul>
+			<li>
+				<span id="userpassTxt"></span><br/><br/>
+			</li>
+			<li>
+				<span id="auth_methodTxt"></span>
+			</li>
+		</ul>
+		<div style="display: none;" id="divAuthMethods"><!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.SMTP.Authentication.A1.WeakestMethod&format=htmlvalue&pre_format=&middle_format=&end_format=" --></div>
+<script language="JavaScript">
+<!--
+  var divAuthMethods = document.getElementById("divAuthMethods");
+  listOptions(divAuthMethods.innerHTML, '<ul><ul><li><b>', '</b></li><li><b>', '</b></li></ul></ul>');
+//-->
+</script> 
+  <!--#if expr="$root_SMTP_Authentication_A1_UsePOP != " -->
+  	<ul>	    
+  		<li>
+  			<span id="usePOPTxt"></span>
+  		</li>
+		</ul>
+  <!--#endif -->
+<!--#endif -->         
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="noteTxt"></span><br/><br/>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="senderTxt"></span><br/><br/>
+	</td>
+</tr>
+
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="general_subTitle_smtp_test_Txt"></span>
+		</div>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="testTxt"></span><br/><br/>
+	</td>
+</tr>
+</table>
+<!--#include virtual="/incl/helpBottom_incl.shtml" -->
+</html>
+</body>

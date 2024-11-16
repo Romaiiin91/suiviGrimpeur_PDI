@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+  <firewall_blocked>
+    <pageTitle type="title" minor="0">Confirm IP restriction</pageTitle>
+    <yoArAt1Txt type="text" minor="0">You are attempting to access the server from the following IP address:</yoArAt1Txt>
+    <yoArAt2Txt type="text" minor="0">&#x3C;br&#x3E;&#x3C;br&#x3E;This address was not found in the list of allowed IP addresses, or it could not be added. If you continue, you will no longer be able to access the server from this address. Do you wish to continue updating your firewall settings?&#x3C;br&#x3E;&#x3C;br&#x3E;Note: If the above IP address is not the address of the workstation you are using, it is probably the address of a proxy server. In this case the proxy server's IP address must also be added.&#x3C;br&#x3E;&#x3C;br&#x3E;</yoArAt2Txt>
+    <yoArAt1ErrMsgTxt type="text" minor="0">Firewall settings are saved.&#x3C;br&#x3E;&#x3C;br&#x3E;You are attempting to access the server from the following IP address:</yoArAt1ErrMsgTxt>
+    <yoArAt2ErrMsgTxt type="text" minor="0">&#x3C;br&#x3E;&#x3C;br&#x3E;From this host, you will not be able to access this device anymore. &#x3C;br&#x3E;&#x3C;br&#x3E;</yoArAt2ErrMsgTxt>
+    <contBtn type="button" minor="0" buttonid="continueBtn">Continue</contBtn>
+    <cancelBtn type="button" minor="0" buttonid="cancelBtn">Cancel</cancelBtn>
+    <okBtn type="button" minor="0" buttonid="okBtn">Ok</okBtn>
+  </firewall_blocked>
+  
+  <restrictIP>
+    <pageTitle type="title" minor="0">System Options/IP Address Filtering</pageTitle>
+    <ipAddrsTxt type="msgAsText" minor="0">IP Addresses</ipAddrsTxt>
+    <noEnabAlrtTxt type="alert" minor="0">It is not possible to enable IP address filtering&#10;while the list of IP addresses is empty.</noEnabAlrtTxt>
+    <disabAlrtTxt type="alert" minor="0">Disable IP address filtering before&#10;emptying the list of allowed IP addresses.</disabAlrtTxt>
+    <selIPTxt type="alert" minor="0">Select an IP address first.</selIPTxt>
+    <remIPConfirm type="alert" minor="0">Are you sure you want to remove the selected IP address(es) from the list?</remIPConfirm>
+    <maxAddrAlert type="alert" minor="0">It is not possible to add any more addresses because the&#10;maximum number of Allowed IP Addresses has been reached.</maxAddrAlert>
+    <addIpAdrStatTxt type="msg" minor="0">Add IP address to list</addIpAdrStatTxt>
+    <remIpAdrStatTxt type="msg" minor="0">Remove the selected IP address from the list</remIpAdrStatTxt>
+    <applyStatTxt type="msg" minor="0">Apply change</applyStatTxt>
+    <ipFiltTxt type="text" minor="0">IP Address Filtering</ipFiltTxt>
+    <hlpTxt type="image" minor="0" imageid="hlpPic">Click here for help on this page</hlpTxt>
+    <genTxt type="text" minor="0">General</genTxt>
+    <ipAdrFilTxt type="text" minor="0">Enable IP address filtering.</ipAdrFilTxt>
+    <allTxt type="msgAsText" minor="0">Allow</allTxt>
+    <denTxt type="msgAsText" minor="0">Deny</denTxt>
+    <theFolTxt type="text" minor="0">the following IP addresses</theFolTxt>
+    <applyBtn type="button" minor="0" buttonid="restIP_applyBtn">Apply</applyBtn>
+    <filtIpAdrTxt type="text" minor="0">Filtered IP Addresses</filtIpAdrTxt>
+    <addBtn type="button" minor="0" buttonid="restIP_addBtn">Add...</addBtn>
+    <removeBtn type="button" minor="0" buttonid="restIP_removeBtn">Remove</removeBtn>
+  </restrictIP>
+  
+  <restrictIP_setup>
+    <pageTitle type="title" minor="0">System Options/Filtered IP Address Setup</pageTitle>
+		<setMaxAddrAlert type="alert" minor="0">It's not possible to add this address because the&#10;maximum number of Filtered IP Addresses has been reached.</setMaxAddrAlert>
+		<setIpExistAlert type="alert" minor="0">This IP address already exists in the list of Filtered IP Addresses.</setIpExistAlert>
+		<invalidAlert type="alert" minor="0">This is an invalid IP address</invalidAlert>
+		<msgV4Alert type="alert" minor="0">The value after '/' has to be an integer between 0 and 32.</msgV4Alert>
+		<msgV6Alert type="alert" minor="0">The value after '/' has to be an integer between 0 and 128.</msgV6Alert>
+		<allwIPsetTxt type="text" minor="0">Filtered IP Address Setup</allwIPsetTxt>
+		<hlpTxt type="image" minor="0" imageid="hlpPic">Click here for help on this page</hlpTxt>
+		<ipAdrText type="text" minor="0">IP address:</ipAdrText>
+		<okBtn type="button" minor="0" buttonid="okBtn">OK</okBtn>
+		<cancelBtn type="button" minor="0" buttonid="cancelBtn">Cancel</cancelBtn>
+	</restrictIP_setup>
+</language_xml>

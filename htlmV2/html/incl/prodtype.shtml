@@ -1,0 +1,55 @@
+<!--#if expr="$root_Brand_ProdType = Video Server" -->
+  <!--#if expr="$root_Brand_ProdFullName >< Blade" -->
+    <!--#set var="glob_prodName" val="$root_Brand_Brand$ $root_Brand_prodNbr$ Blade Video Server" -->
+  <!--#elif expr="$root_Brand_ProdFullName >< Intelligent Video Platform" -->
+    <!--#set var="glob_prodName" val="$root_Brand_ProdShortName$ Intelligent Video Platform" -->
+  <!--#else -->
+    <!--#set var="glob_prodName" val="$root_Brand_ProdShortName$ Video Server" -->
+  <!--#endif -->
+  <!--#set var="glob_prodType" val="video server" -->
+<!--#endif -->
+
+<!--#if expr="$root_Brand_ProdType = Network Video Encoder" -->
+  <!--#set var="glob_prodName" val="$root_Brand_ProdShortName$ Video Encoder" -->
+  <!--#set var="glob_prodType" val="video server" -->
+<!--#endif -->
+<!--#if expr="$root_Brand_ProdType = Network Video Decoder" -->
+  <!--#set var="glob_prodName" val="$root_Brand_ProdShortName$ Video Decoder" -->
+  <!--#set var="glob_prodType" val="video server" -->
+<!--#endif -->
+
+<!--#if expr="$root_Brand_ProdType = Network Camera" -->
+  <!--#set var="glob_prodName" val="$root_Brand_Brand$ $root_Brand_prodNbr$ Network Camera" -->
+  <!--#if expr="$root_Brand_ProdFullName >< PTZ" -->
+    <!--#if expr="$root_Brand_ProdShortName >< PTZ" --><!--#else -->
+      <!--#set var="glob_prodName" val="$root_Brand_ProdShortName$ PTZ Network Camera" -->
+    <!--#endif -->
+  <!--#endif -->
+  <!--#set var="glob_prodType" val="network camera" -->
+<!--#endif -->
+
+
+<!--#if expr="$root_Brand_ProdType = Network Dome Camera" -->
+  <!--#set var="glob_prodName" val="$root_Brand_ProdShortName$ Network Dome Camera" -->
+  <!--#set var="glob_prodType" val="network camera" -->
+<!--#endif -->
+
+<!--#if expr="$root_Brand_ProdType = PTZ Dome Network Camera" -->
+  <!--#set var="glob_prodName" val="$root_Brand_ProdShortName$ Network Camera" -->
+  <!--#set var="glob_prodType" val="network camera" -->
+  <!--#set var="glob_PTZCamera" val="yes" -->
+<!--#endif -->
+
+
+
+<!--#if expr="$root_Brand_ProdFullName >< PTZ Network Camera" -->
+  <!--#if expr="$root_Brand_ProdShortName >< PTZ" --><!--#else -->
+    <!--#set var="glob_prodName" val="$root_Brand_ProdShortName$ PTZ Network Camera" -->
+  <!--#endif -->
+  <!--#set var="glob_prodType" val="network camera" -->
+  <!--#set var="glob_PTZCamera" val="yes" -->
+<!--#endif -->
+
+
+
+

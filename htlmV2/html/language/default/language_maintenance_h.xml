@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+	<maintenance_h>
+		<pageTitle type="title" minor="0">Help/Server Maintenance</pageTitle>
+		<titleTxt type="msgAsText" minor="0">Server Maintenance</titleTxt>
+		<help1Txt1a type="text" minor="0">The</help1Txt1a>
+		<help1Txt1b type="text" minor="0">provides several different maintenance functions, for use in various situations.</help1Txt1b>
+		<subTitle1Txt type="text" minor="0">Maintain Server</subTitle1Txt>
+		<presetTxt1a type="text" minor="0">The &#x3C;b&#x3E;Restart&#x3C;/b&#x3E; button should be used to perform a correct restart of the</presetTxt1a>
+		<presetTxt1b type="text" minor="0">if it is not behaving as expected. This will not affect any of the current settings.</presetTxt1b>
+		<presetTxt2 type="text" minor="0">Pressing the &#x3C;b&#x3E;Restore&#x3C;/b&#x3E; button will return most settings to the factory default values, meaning that the unit must be reconfigured and any event types and PTZ presets must be recreated. The only settings saved are:</presetTxt2>
+		<help3Txt1a type="text" minor="0">The &#x3C;b&#x3E;Restart&#x3C;/b&#x3E; button should be used to perform a correct restart of the</help3Txt1a>
+		<help3Txt1b type="text" minor="0">if it is not behaving as expected. This will not affect any of the current settings.</help3Txt1b>
+		<help3Txt2 type="text" minor="0">Pressing the &#x3C;b&#x3E;Restore&#x3C;/b&#x3E; button will return most settings to the factory default values, meaning that the unit must be reconfigured and any event types must be recreated. The only settings saved are:</help3Txt2>
+		<focusTxt type="text" minor="0">the focus settings</focusTxt>
+		<bootTxt1 type="text" minor="0">the boot protocol (DHCP or static)</bootTxt1>
+		<bootTxt2 type="text" minor="0">the static IP address</bootTxt2>
+		<bootTxt3 type="text" minor="0">the default router</bootTxt3>
+		<bootTxt4 type="text" minor="0">the subnet mask</bootTxt4>
+		<bootTxt5 type="text" minor="0">the product interface language</bootTxt5>
+		<help56Txt type="text" minor="0">the system time</help56Txt>
+		<help57Txt type="text" minor="0">the 802.1X settings</help57Txt>
+		<defaultTxt1 type="text" minor="0">The &#x3C;b&#x3E;Default &#x3C;/b&#x3E; button should be &#x3C;b&#x3E;used with caution&#x3C;/b&#x3E;. Pressing this will return &#x3C;b&#x3E;all&#x3C;/b&#x3E; settings to the factory default values, which also means that the IP address will need to be reset to make the unit accessible.</defaultTxt1>
+		<defaultTxt2a type="text" minor="0">It is also possible to reset the</defaultTxt2a>
+		<defaultTxt2b type="text" minor="0">using the &#x3C;b&#x3E;Control button&#x3C;/b&#x3E; located in the product casing. This has the same effect as the default button described here.</defaultTxt2b>
+		<twoContrButtons type="text" minor="0">using the &#x3C;b&#x3E;Control button (button 1)&#x3C;/b&#x3E; located in the product casing. This has the same effect as the default button described here.</twoContrButtons>
+		<subTitle2bTxt type="text" minor="0">PTZ Status</subTitle2bTxt>
+		<help7bTxt type="text" minor="0">Click the &#x3C;b&#x3E;Test&#x3C;/b&#x3E; button to check the PTZ's status.</help7bTxt>
+		<subTitle2aTxt type="text" minor="0">Dome Status</subTitle2aTxt>
+		<help7aTxt type="text" minor="0">Click the &#x3C;b&#x3E;Test&#x3C;/b&#x3E; button to check the dome's status.</help7aTxt>
+		<subTitleCalibrateTxt type="text" minor="0">Optics</subTitleCalibrateTxt>
+		<calibrateTxt type="text" minor="1">The &#x3C;b&#x3E;Calibrate&#x3C;/b&#x3E; button is used to reset the optics to the factory default position. This may be necessary in situations where the optics has lost its calibration during transport or has been exposed to extreme vibrations. &#x3C;b&#x3E;Focus and Zoom&#x3C;/b&#x3E; will also be reset to default positions and need to be reconfigured. Go to &#x3C;b&#x3E;Video &#x26; Audio &#x3E; Focus &#x26; Zoom&#x3C;/b&#x3E;.</calibrateTxt>
+		<calOpticZoomTxt type="text" minor="0">The &#x3C;b&#x3E;Calibrate&#x3C;/b&#x3E; button is  used to reset the optics. This may be necessary in situations where the optics has lost its calibration during transport or has been exposed to extreme vibrations.</calOpticZoomTxt>
+		<calOpticZoom2Txt type="text" minor="0">The optics will go back to latest known position when the &#x3C;b&#x3E;Optical zoom for installation&#x3C;/b&#x3E; mode has been selected. The optics will go to max wide and infinity position when the &#x3C;b&#x3E;Optical zoom for monitoring&#x3C;/b&#x3E; mode has been selected.</calOpticZoom2Txt>
+		<subTitle2Txt type="text" minor="0">Upgrade Server</subTitle2Txt>
+		<help7Txt1a type="text" minor="0">From time to time, Axis releases new firmware for the</help7Txt1a>
+		<help7Txt1b type="text" minor="0">. These new releases can contain improved functionality, bug fixes and occasionally, completely new features.</help7Txt1b>
+		<help9Txt type="text" minor="0">Always running the latest release is recommended practice. The latest firmware release can be obtained from the Axis support web at &#x3C;a href='http://www.axis.com/techsup/' target='_blank'&#x3E;www.axis.com/techsup/&#x3C;/a&#x3E;</help9Txt>
+		<help10Txt1a type="text" minor="0">To upgrade the firmware for the</help10Txt1a>
+		<help10Txt1b type="text" minor="0">, click the &#x3C;b&#x3E;Browse&#x3C;/b&#x3E; button to find the firmware file and then click the &#x3C;b&#x3E;Upgrade&#x3C;/b&#x3E; button. For more information, please see the release notes supplied with the firmware.</help10Txt1b>
+		<subTitleLEDTxt type="text" minor="0">Identify</subTitleLEDTxt>
+		<blinkLEDTxt type="text" minor="0">To help identify the physical channel of the IP address for maintenance purposes, a LED can be set to flash. Enter the number and choose the unit of time from the drop-down list. The LED can be set to flash for a number of seconds, minutes or even hours. Click &#x3C;b&#x3E;Flash LED&#x3C;/b&#x3E; to initiate flashing.</blinkLEDTxt>
+    <blinkLEDcamTxt type="text" minor="0">To help identify the Axis product, the Status LED can be set to flash. The LED can be set to flash for a number of seconds, minutes or hours. Click &#x3C;b&#x3E;Flash LED&#x3C;/b&#x3E; to initiate flashing.</blinkLEDcamTxt>
+		<rackOverTxt type="text" minor="0">Click &#x3C;b&#x3E;Rack Overview&#x3C;/b&#x3E; to see a graphical representation and other information of where the blade is situated in the rack.</rackOverTxt>
+		<subTitle3Txt type="text" minor="0">Backup</subTitle3Txt>
+		<help12Txt type="text" minor="0">To take a backup of all of the parameters</help12Txt>
+		<help53Txt type="text" minor="0">, event types</help53Txt>
+		<help54Txt1a type="text" minor="0">and user-defined scripts in the</help54Txt1a>
+		<help54Txt1b type="text" minor="0">, click the &#x3C;b&#x3E;Backup&#x3C;/b&#x3E; button. You will then be asked to specify a name for the backup file and a location to save it in.</help54Txt1b>
+		<help14Txt type="text" minor="0">As there is no limit to the number of backup files that can be saved, it is possible to, for example, take a backup every time major changes are made. Naming files according to the date they were created will also assist in quickly finding the correct backup file.</help14Txt>
+		<subTitle4Txt type="text" minor="0">Restore</subTitle4Txt>
+		<help16Txt1a type="text" minor="0">Should it become necessary to return the</help16Txt1a>
+		<help16Txt1b type="text" minor="0">to a previous configuration, click the &#x3C;b&#x3E;Browse&#x3C;/b&#x3E; button to locate the saved backup file and then click the &#x3C;b&#x3E;Restore&#x3C;/b&#x3E; button.&#x3C;blockquote&#x3E;&#x3C;b&#x3E;Note&#x3C;/b&#x3E; - It is not possible to restore the unit from a backup file that was created in a previous firmware version.&#x3C;/blockquote&#x3E;</help16Txt1b>
+	</maintenance_h>
+
+
+
+
+
+	<rackOverview_h>
+		<pageTitle type="title" minor="0">Help/Rack Overview</pageTitle>
+		<titleTxt type="msgAsText" minor="0">Rack Overview</titleTxt>
+		<introTxt type="text" minor="0">Rack overview can show where the blade is located in the Axis video rack. Depending on the rack the encoder blade is placed in information will show automatically here and the fields cannot be edited. Otherwise, in those cases where no information is given, click &#x3C;b&#x3E;Edit&#x3C;/b&#x3E;. Additional information appears about video, status, phantom power and audio.</introTxt>
+		<subTitle2_Txt type="text" minor="0">Edit rack and blade information</subTitle2_Txt>
+		<editTxt1 type="text" minor="0">Click &#x3C;b&#x3E;Edit&#x3C;/b&#x3E; to enter a description of the rack, encoder blade and its location.</editTxt1>
+		<editTxt2 type="text" minor="0">&#x3C;b&#x3E;Description&#x3C;/b&#x3E; - Enter a name or description of the rack.</editTxt2>
+		<editTxt3 type="text" minor="0">&#x3C;b&#x3E;Rack ID&#x3C;/b&#x3E; - Enter an ID for your rack.</editTxt3>
+		<editTxt4 type="text" minor="0">&#x3C;b&#x3E;Rack model&#x3C;/b&#x3E; - Enter the model of your rack, for example AXIS 291 1U.</editTxt4>
+		<editTxt5 type="text" minor="0">&#x3C;b&#x3E;Slot number&#x3C;/b&#x3E; - Select the slot number where the encoder blade is placed.</editTxt5>
+	</rackOverview_h>
+</language_xml>

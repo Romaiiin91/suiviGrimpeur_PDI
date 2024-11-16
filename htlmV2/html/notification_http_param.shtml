@@ -1,0 +1,69 @@
+<!--#set var="WizardFormAction" val="noAction" -->
+
+<!--#include virtual="/incl/popup_header.shtml" -->
+  <link rel="stylesheet" href="/css/event_dialogs.css" type="text/css" />
+
+  <script type="text/javascript" language="javascript">
+  <!--
+    var langObjEvTyNotfyHttpPar = new Language("event_types", "notification_http_param");
+
+    function onInit()
+    {
+      langObjEvTyNotfyHttpPar.init();
+    }
+
+    function closeWindow()
+    {
+      window.close();
+    }
+
+    function returnData()
+    {
+      var paramNameEl = document.getElementById("paramName");
+      var paramValueEl = document.getElementById("paramValue");
+      var nameRegEx = /^[a-z]{1}[a-z0-9-_:.]*$/i;
+      if( !nameRegEx.test( paramNameEl.value ) )
+      {
+        alert( langObjEvTyNotfyHttpPar.getText("invalidParamNameAlert") );
+        paramNameEl.focus();
+        paramNameEl.select();
+        return;
+      }
+      else
+      {
+        //try
+        {
+          window.opener.updateHTTPParameterList( paramNameEl.value, paramValueEl.value, "<!--#echo var="listIndex" option="encoding:javascript" -->", "<!--#echo var="actionTypeId" option="encoding:javascript" -->" );
+        }
+        //catch( e )
+        {
+        }
+        closeWindow();
+      }
+    }
+  // -->
+  </script>
+
+</head>
+
+<body onload="onInit()">
+  <!--#include virtual="/incl/popup_top.shtml" -->
+
+  <h1><span id="custHttpTxt"></span></h1>
+
+  <div class="normal_text alternateRows">
+    <div class="row">
+      <label for="paramName"><span id="nameTxt"></span></label>
+      <input class="medium" type="text" id="paramName" name="paramName" maxlength="128" value="<!--#if expr="$listIndex != -1" --><!--#echo var="paramName" option="encoding:html" --><!--#endif -->" />
+    </div>
+    <div class="row">
+      <label for="paramValue"><span id="valueTxt"></span></label>
+      <input class="medium" type="text" id="paramValue" name="paramValue" maxlength="128" value="<!--#if expr="$listIndex != -1" --><!--#echo var="paramValue" option="encoding:html" --><!--#endif -->" />
+    </div>
+    <div class="formButtons">
+      <input type="button" value="" class="btnNormal" onclick="javascript:returnData()" id="btnOK" />
+      <input type="button" value="" class="btnNormal" onclick="javascript:closeWindow()" id="btnCancel" />
+    </div>
+  </div>
+
+<!--#include virtual="/incl/popup_footer.shtml" -->

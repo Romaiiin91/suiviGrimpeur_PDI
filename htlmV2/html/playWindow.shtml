@@ -1,0 +1,740 @@
+<!--#set var="helpURL" val="javascript:launch('/help/playWindow_h.shtml')" -->
+<!--#set var="WizardFormAction" val="noAction" -->
+
+<!--#set var="param" val="System.BoaPort,Layout.ViewerIE,Layout.H264InstallationEnabled,Layout.MPEGInstallationEnabled,Layout.AACInstallationEnabled,Properties.LocalStorage.LocalStorage,Recording.Continuous" -->
+
+<!--#set var="UseAudio" val="no" -->
+
+<!--#include virtual="/sm/sm.srv?action=get&group=$param$" -->
+
+<!--#if expr="_$videocodec = _" -->
+  <!--#if expr="$imagepath >< mpeg4" -->
+    <!--#set var="videocodec" val="mpeg4" -->
+  <!--#elif expr="$imagepath >< h264" -->
+    <!--#set var="videocodec" val="h264" -->
+  <!--#else -->
+    <!--#set var="videocodec" val="jpeg" -->
+  <!--#endif -->
+<!--#endif -->
+
+<!--#include virtual="/incl/popup_header.shtml" -->
+
+<script language="javascript" type="text/javascript">
+<!--
+
+  <!--#set var="recording" val="yes" -->
+
+  <!--#if expr="$root_Properties_LocalStorage_LocalStorage = yes" -->
+    <!--#set var="root_Layout_ShowAMCToolbar" val="yes" -->
+  <!--#endif -->
+  
+  //GLOBAL PARAMS
+  var currentOffset = "<!--#echo var="timeoffset" option="encoding:javascript" -->";
+  var langObjPlayWin = new Language("recordingList", "playWindow");
+  
+  <!--#include virtual="/incl/video.shtml" -->
+
+  function onInit()
+  {
+    langObjPlayWin.init();
+  
+    <!--#if expr="$root_Properties_LocalStorage_LocalStorage = yes" -->
+      <!--#if expr="$resize = yes" -->
+        var popWin_width = 400;
+        var popWin_height = 230;
+        if ( <!--#echo var="img_width" option="encoding:javascript" --> >= 350 && popWin_width < <!--#echo var="img_width" option="encoding:javascript" --> + 50 )
+        {
+          popWin_width = <!--#echo var="img_width" option="encoding:javascript" --> + 50;
+        }
+        if( popWin_height < <!--#echo var="img_height" option="encoding:javascript" --> + 230 )
+        {
+          popWin_height = <!--#echo var="img_height" option="encoding:javascript" --> + 230;
+        }
+        window.resizeTo( popWin_width, popWin_height );
+      <!--#endif -->
+      
+      <!--#if expr="_$timeoffset != _" -->
+      var timeOffset = secondsToTimeString(<!--#echo var="timeoffset" option="encoding:javascript" -->);
+      document.getElementById("startTime").value = timeOffset;
+      <!--#endif -->
+      
+      <!--#if expr="_$duration != _" -->
+      var duration = secondsToTimeString(<!--#echo var="duration" option="encoding:javascript" -->);
+      if(duration != "<!--#echo var="length" option="encoding:javascript" -->")
+        document.getElementById("duration").innerHTML = duration+" of ";
+      else
+        document.getElementById("duration").innerHTML = "";
+      <!--#endif -->
+
+      if( use_activex != 1 && use_spush != 1)
+      {
+        hidePlayStopBtn();
+        document.getElementById("startTimeSpan").style.display = 'none';
+      }
+
+      document.getElementById("btnRow").style.display = "";
+      var w = <!--#echo var="img_width" option="encoding:javascript" -->;
+      if (w < 300)
+      {
+        w = 300;
+        document.getElementById("btnRow").style.width = w + "px";
+      }
+
+      initNavLinks();
+      
+      var lengthInput = "<!--#echo var="length" option="encoding:javascript" -->";
+      if(lengthInput.toLowerCase() == "ongoing")
+      {
+        document.getElementById("stopTime").innerHTML = langObjPlayWin.getText("notDefTxt");
+      }
+  
+      if( use_activex == 1 )
+      {
+        if (Player && typeof(Player.Play) != "undefined")
+        {
+          var config = "-play,+snapshot,+fullscreen,-ptz,+rec";
+          
+          document.Player.ToolbarConfiguration = config;
+          
+
+        }
+  
+      }
+      else if( use_spush == 1 )
+      {
+        checkImgComplete( true );
+      }
+    <!--#endif -->
+    window.focus();
+  }
+  
+  function secondsToTimeString(seconds)
+  {
+    var diff_sec = seconds;
+
+    var lengthH = parseInt(diff_sec/3600,10);
+    diff_sec = diff_sec - ( lengthH*3600 );
+    
+    var lengthM = parseInt(diff_sec/60,10);
+    diff_sec = diff_sec - ( lengthM*60 );
+
+    var lengthS = parseInt(diff_sec,10);
+    
+    var result = (( lengthH < 10)?"0"+lengthH:lengthH )+":"+(( lengthM < 10)?"0"+lengthM:lengthM )+":"+(( lengthS < 10)?"0"+lengthS:lengthS );
+    return result;
+  }
+  
+  function timeStringToSeconds(timeString)
+  {
+    var seconds = 0;
+  
+    var startTimeArray = timeString.split(":") // Make an array with h,m,s
+    if (startTimeArray.length != 3)
+      return false;
+      
+    startTimeArray.reverse() // Array order s,m,h
+    for (i=0; i<startTimeArray.length; i++)
+    {
+      startTimeArray[i] = parseInt(startTimeArray[i],10)
+      if (isNaN(startTimeArray[i]) )
+        return false;
+      else if ( i < 2 && startTimeArray[i] > 59 )
+        return false;
+      else
+        seconds += startTimeArray[i] * Math.pow(60, i) // sec*1 + minutes*60 + hours*3600;
+    }
+    return seconds;
+  }
+  
+  <!--#if expr="$root_Properties_LocalStorage_LocalStorage = yes" -->
+    var imgCheckTimer;
+
+    function checkImgComplete( startUp )
+    {
+      if( imgCheckTimer )
+      {
+        window.clearTimeout( imgCheckTimer );
+      }
+
+      if( startUp )
+      {
+        imgCheckTimer = window.setTimeout( checkImgComplete, 1000 );
+      }
+      else
+      {
+        var img = document.getElementById("stream");
+        if( img.complete )
+        {
+          showPlayBtn();
+        }
+        else
+        {
+          imgCheckTimer = window.setTimeout( checkImgComplete, 1000 );
+        }
+      }
+    }
+
+
+    var href;
+    var prevLinkId = "";
+    var nextLinkId = "";
+
+    var currentRecId = "";
+  
+    function initNavLinks()
+    {
+      href = String( document.location.href );
+      var qs = href.substr( href.indexOf("?") );
+      var image_qs = qs.substr(0,qs.indexOf("&"));
+      image_qs = unescape(image_qs);
+      var reRecId = /\?recordingid=([^&]*)/g;
+      var result = reRecId.exec( image_qs );
+      currentRecId = ( result != null)?result[1]:"";
+
+      var qsArr = qs.split("&");
+      var len = qsArr.length;
+      var tmpArr;
+      var reId = /^id[0-9]*$/;
+      var tmpLinkId = "";
+      var found = false;
+  
+      for( var i = 0; i < len && !found; i++ )
+      {
+        tmpArr = (qsArr[i]).split("=");
+        if( tmpArr.length == 2 )
+        {
+          if( reId.test( tmpArr[0] ) )
+          {
+            if( tmpArr[1] == currentRecId )
+            {
+              if( tmpLinkId != "" )
+              {
+                prevLinkId = tmpLinkId;
+              }
+            }
+            else if( tmpLinkId == currentRecId )
+            {
+              nextLinkId = tmpArr[1];
+              found = true;
+            }
+  
+            tmpLinkId = tmpArr[1];
+          }
+        }
+      }
+  
+      if( prevLinkId != "" )
+      {
+        document.getElementById( "prevLink" ).style.display = "inline";
+        document.getElementById( "prevLinkImg" ).style.display = "inline";
+      }
+  
+      if( nextLinkId != "" )
+      {
+        document.getElementById( "nextLink" ).style.display = "inline";
+        document.getElementById( "nextLinkImg" ).style.display = "inline";
+      }
+    }
+  
+    function getNextRecording( direction )
+    {
+        var id = ( direction == 'forward' )?nextLinkId:prevLinkId;
+        var recordingInfo = AxisConnectionFactory.createAjaxConnection();
+        var now = new Date();
+
+        var newHref = href;
+        var responseXML = AxisConnectionFactory.getResponseXmlWith(["GET", "/axis-cgi/record/list.cgi?recordingid=" + id + "&timestamp=" + now.getTime(), false], "", recordingInfo);
+        if (!responseXML)
+          return;
+
+        var recs = responseXML.selectNodes("/root/recordings/recording");
+        var rec;
+        if( recs.length > 0 )
+        {
+          rec = recs[0];
+          var videoNode = rec.selectSingleNode("video");
+
+          var imagepath;
+          var mimeType = videoNode.getAttribute("mimetype");
+          if( (mimeType == "video/MP4V-ES") || ( mimeType == "video/mpeg"))
+          {
+            imagepath = "/axis-media/media.amp?recordingid=" + id + "&videocodec=mpeg4"
+          }
+          else if ((mimeType == "video/H264") || (mimeType == "video/x-h264"))
+          {
+            imagepath = "/axis-media/media.amp?recordingid=" + id + "&videocodec=h264"
+          }
+          else
+          {
+            imagepath = "/axis-cgi/record/play.cgi?recordingid=" + id + "&videocodec=jpeg"
+          }
+          newHref = newHref.replace(/\?imagepath=[^&]*/, "?imagepath="+escape(imagepath) );
+
+          var resolution = videoNode.getAttribute("resolution");
+          if( !resolution )
+          {
+            var w = videoNode.getAttribute("width");
+            var h = videoNode.getAttribute("height");
+            if( w && h )
+            {
+              resolution = w+"x"+h;
+            }
+          }
+          var img_width = parseInt(resolution.substring(0, resolution.indexOf('x')), 10);
+          var img_height = parseInt(resolution.slice((resolution.indexOf('x') + 1)), 10);
+          
+          var audioNode = rec.selectSingleNode("audio");
+          if( audioNode )
+          {
+            newHref = newHref.replace(/&audio=[^&]*/, "&audio=yes" );
+            newHref = newHref.replace(/&samplerate=[^&]*/, "&samplerate="+audioNode.getAttribute("samplerate") );
+            newHref = newHref.replace(/&bitrate=[^&]*/, "&bitrate="+audioNode.getAttribute("bitrate") );
+          }
+          else
+          {
+            newHref = newHref.replace(/&audio=[^&]*/, "&audio=no" );
+            newHref = newHref.replace(/&samplerate=[^&]*/, "" );
+            newHref = newHref.replace(/&bitrate=[^&]*/, "" );
+          }
+
+          newHref = newHref.replace(/&img_width=[^&]*/, "&img_width="+img_width );
+          newHref = newHref.replace(/&img_height=[^&]*/, "&img_height="+img_height );
+
+          newHref = newHref.replace(/&startTimeLocal=[^&]*/, "&startTimeLocal="+formatTimeString(rec.getAttribute("starttimelocal")) );
+          newHref = newHref.replace(/&stopTimeLocal=[^&]*/, "&stopTimeLocal="+formatTimeString(rec.getAttribute("stoptimelocal")) );
+          var length = calcLength(rec.getAttribute("starttime"),rec.getAttribute("stoptime"),rec.getAttribute("recordingstatus"));
+          newHref = newHref.replace(/&length=[^&]*/, "&length="+length );
+
+          var now = new Date();
+          newHref = newHref.replace(/&timestamp=[^&]*/, "&timestamp="+now.getTime() );
+
+          newHref = newHref.replace(/&resize=yes*/, "" );
+          if( img_width != <!--#echo var="img_width" option="encoding:javascript" --> || img_height != <!--#echo var="img_height" option="encoding:javascript" -->)
+          {
+            newHref +="&resize=yes";
+          }
+
+          document.location.href = newHref;
+        }
+    }
+  <!--#endif -->
+
+  function formatTimeString(theTime,zoneType)
+  {
+    if (zoneType == "utc")
+      theTime = theTime.slice(0,-1);
+    else
+      theTime = theTime.slice(0,-5);
+    theTime = theTime.replace(/T/, " ");
+    theTime = theTime.substring( 0, theTime.lastIndexOf(".") );
+    return theTime;
+  }
+
+  function calcLength(start,stop,status)
+  {
+    var reclength;
+    if( status == "unknown" || ( status == "inactive" && stop == "" ) )
+    {
+      reclength = langObjPlayWin.getText("unkTxt");
+    }
+    else if( status == "recording" || ( status == "active" && stop == "" ) )
+    {
+      reclength = langObjPlayWin.getText("ongTxt");
+    }
+    else if( stop == "" )
+    {
+      reclength = langObjPlayWin.getText("unkTxt");
+    }
+    else {
+      var startYear = parseInt(start.substring(0,4),10);
+      var startMonth = parseInt(start.substring(5,7),10)-1;
+      var startObj = new Date(Date.UTC( startYear, startMonth, parseInt(start.substring(8,10),10), parseInt(start.substring(11,13),10), parseInt(start.substring(14,16),10), parseInt(start.substring(17,19),10))); // yy,mm,dd,hh,mm,ss
+      var start_ms = Date.parse(startObj.toString());
+
+      var stopYear = parseInt(stop.substring(0,4),10);
+      var stopMonth = parseInt(stop.substring(5,7),10)-1;
+      var stopObj  = new Date(Date.UTC(stopYear, stopMonth, parseInt(stop.substring(8,10),10), parseInt(stop.substring(11,13),10), parseInt(stop.substring(14,16),10), parseInt(stop.substring(17,19),10)));
+      var stop_ms  = Date.parse(stopObj.toString());
+
+      var diff_sec = (stop_ms - start_ms)/1000; // Time difference in seconds
+      var lengthH = parseInt(diff_sec/3600,10)
+      var lengthM = parseInt(diff_sec/60,10) - lengthH*60
+      var lengthS = diff_sec - lengthM*60 - lengthH*3600
+      lengthH = lengthH + ""; lengthM = lengthM + ""; lengthS = lengthS + "";
+      if (lengthH.length == 1) lengthH = "0" + lengthH
+      if (lengthM.length == 1) lengthM = "0" + lengthM
+      if (lengthS.length == 1) lengthS = "0" + lengthS
+      reclength = lengthH + ":" + lengthM + ":" + lengthS
+    }
+    return reclength;
+  }
+  
+  function dateToStr( dateObj)
+  {
+    var month = Number( dateObj.getMonth() )+1;
+    var date = dateObj.getDate();
+    var dateStr = dateObj.getFullYear()+"-"+(( month < 10 )?"0"+month:month)+"-"+(( date < 10 )?"0"+date:date);
+
+    var hour = dateObj.getHours();
+    var min = dateObj.getMinutes();
+    var sec = dateObj.getSeconds();
+    dateStr += " "+(( hour < 10 )?"0"+hour:hour )+":"+(( min < 10 )?"0"+min:min )+":"+(( sec < 10 )?"0"+sec:sec );
+
+    return dateStr;
+  }
+  
+  function getCurrentDate()
+  {
+    var date, dateStr;
+    var now = new Date();
+    var result = AxisConnectionFactory.getResponseTextWith(["GET", "/axis-cgi/admin/date.cgi?action=get&timestamp=" + now.getTime(), false], "");
+    delete now;
+    
+    if(result != null)
+    {
+      date = new Date(result);
+      dateStr = dateToStr( date);
+    }
+    
+    return dateStr;
+  }
+
+  function startPlayback()
+  {
+    <!--#if expr="$root_Properties_LocalStorage_LocalStorage != yes" -->
+      <!--#if expr="$videocodec != jpeg" -->
+        document.location.reload(true);
+        return;
+      <!--#endif -->
+    <!--#endif -->
+    theDate = new Date();
+    var startTime = 0;
+    var i = 0;
+  
+    var startTimeString = document.getElementById("startTime").value
+    if (startTimeString != "00:00:00") {
+      var offsetSeconds = timeStringToSeconds(startTimeString);
+      if(!offsetSeconds )
+      {
+        document.getElementById("startTime").select();
+        document.getElementById("startTime").focus();
+        alert( langObjPlayWin.getText("maStTiAlert") );
+        return;
+      }
+      else
+        startTime = offsetSeconds;
+    }
+    
+    var LengthInSec = 0;
+    var lengthInput = "<!--#echo var="length" option="encoding:javascript" -->";
+    if(lengthInput.toLowerCase() == "ongoing")
+    {
+      var currDate = getCurrentDate();
+      LengthInSec = timeStringToSeconds( calcLength("<!--#echo var="startTimeLocal" option="encoding:javascript" -->",currDate) );
+    }  
+    else
+      LengthInSec = timeStringToSeconds("<!--#echo var="length" option="encoding:javascript" -->");
+    
+    if(LengthInSec >= 0)
+    {
+      if (startTime > LengthInSec) {
+        document.getElementById("startTime").select()
+        document.getElementById("startTime").focus()
+        if(lengthInput.toLowerCase() == "ongoing")
+          alert( langObjPlayWin.getText("noRecBlockAlert") );
+        else
+          alert( langObjPlayWin.getText("stTiAftAlert") );
+        return;
+      }
+    }
+
+    <!--#if expr="$root_Properties_LocalStorage_LocalStorage = yes" -->
+      var newPath = (use_spush)?document.getElementById("stream").src:((use_activex)?document.Player.MediaURL:"<!--#echo var="imagepath" option="encoding:url" -->");
+
+      <!--#if expr="_$duration != _" -->
+        if( currentOffset != startTime )
+        {
+          //replace duration
+          var newDuration = ( parseInt(LengthInSec, 10) - startTime );
+          
+          if(newDuration != LengthInSec)
+            document.getElementById("duration").innerHTML = secondsToTimeString(newDuration)+" of ";
+          else
+            document.getElementById("duration").innerHTML = "";
+          newPath = newPath.replace(/&duration=[^&]*/, "&duration="+newDuration );
+        }
+      <!--#else -->
+        //remove duration
+        newPath = newPath.replace(/&duration=[^&]*/, "" );
+      <!--#endif -->
+  
+      //update timeoffset
+      currentOffset = startTime;
+      if( newPath.indexOf("&timeoffset=") == -1 )
+      {
+        newPath = newPath+"&timeoffset=" + startTime;
+      }
+      else
+      {
+        newPath = newPath.replace(/&timeoffset=[^&]*/, "&timeoffset="+startTime );
+      }
+  
+      //remove old timestamp
+      newPath = newPath.replace(/&timestamp=[^&]*/, "" );
+
+    <!--#else -->
+      var newPath = "<!--#echo var="imagepath" option="encoding:url" -->&timeoffset=" + startTime;
+    <!--#endif -->
+    startStream( newPath );
+
+  }
+
+  function startStream( path )
+  {
+    try {
+      var orgPath = path;
+      theDate = new Date();
+      if (path.indexOf("?") != -1)
+        path += "&"
+      else
+        path += "?"
+      path += "timestamp=" + theDate.getTime()
+      if (use_spush)
+      {
+        document.getElementById("stream").src = path;
+      }
+      else if (use_activex)
+      {
+        document.Player.MediaURL = path;
+        try
+        {
+          Player.Play();
+        }
+        catch(e) {}
+      }
+    }
+    catch(e) {}
+    
+    <!--#if expr="$root_Properties_LocalStorage_LocalStorage = yes" -->
+      showStopBtn();
+      if( use_spush )
+      {
+        checkImgComplete( true );
+      }
+    <!--#endif -->
+  }
+
+  <!--#if expr="$root_Properties_LocalStorage_LocalStorage = yes" -->
+
+    function stopStream()
+    {
+      try
+      {
+        if (use_spush)
+        {
+          var path = "<!--#echo var="imagepath" option="encoding:url" -->&duration=0&timestamp=" + (new Date()).getTime();
+          document.getElementById("stream").src = path;
+        }
+        else if (use_activex)
+        {
+          Player.Stop();
+        }
+        showPlayBtn();
+      }
+      catch(e) {}
+    }
+
+    function showPlayBtn()
+    {
+      document.getElementById("stopBtn").style.display = 'none';
+      document.getElementById("playBtn").style.display = 'inline';
+    }
+
+    function showStopBtn()
+    {
+      document.getElementById("stopBtn").style.display = 'inline';
+      document.getElementById("playBtn").style.display = 'none';
+    }
+
+    function hidePlayStopBtn()
+    {
+      document.getElementById("stopBtn").style.display = 'none';
+      document.getElementById("playBtn").style.display = 'none';
+      document.getElementById("noPlayStopBtn").style.display = 'inline';
+    }
+
+    var ajaxRequest = AxisConnectionFactory.createAjaxConnection();
+  
+    function downloadRec()
+    {
+      var url = "/axis-cgi/record/download.cgi?recordingid="+currentRecId;
+
+      <!--#if expr="$recordingid = continuous" -->
+        <!--#if expr="_$diskid != _" -->
+          url += "&diskid=<!--#echo var="diskid" option="encoding:javascript" -->";
+        <!--#else -->
+          url += "&diskid=<!--#echo var="root_Recording_Continuous_DiskId" option="encoding:javascript" -->";
+        <!--#endif -->
+        <!--#if expr="_$duration != _" -->
+          url += "&duration=<!--#echo var="duration" option="encoding:javascript" -->";
+        <!--#endif -->
+        <!--#if expr="_$timeoffset != _" -->
+          url += "&timeoffset=<!--#echo var="timeoffset" option="encoding:javascript" -->";
+        <!--#endif -->
+      <!--#endif -->
+  
+      var now = new Date();
+      var timestamp = now.getTime();
+  
+      document.location.href = url+"&timestamp=" + timestamp;
+    }
+  
+  <!--#endif -->
+  
+  var playBtnStatTxt;
+  var closeBtnStatTxt;
+  function globalLanguageVars()
+  {
+    playBtnStatTxt = langObjPlayWin.getText("playBtnStatTxt");
+    closeBtnStatTxt = langObjPlayWin.getText("closeBtnStatTxt");
+    if ("<!--#echo var="length" option="encoding:html" -->" == "ongoing") {
+      document.getElementById("recDuration").innerHTML = langObjPlayWin.getText("ongTxt");
+    } else {
+      document.getElementById("recDuration").innerHTML = "<!--#echo var="length" option="encoding:html" -->";
+    }
+  }
+// -->
+</script>
+
+</head>
+<body class="bodyBg" topmargin="5" leftmargin="5" marginwidth="5" marginheight="5" bgcolor="white" onload="onInit();">
+
+  <form name="contentForm" method="post" action="" onsubmit="return false">
+    <div class="cornerBox">
+      <div class="content">
+
+        <table border="0" cellpadding="3" cellspacing="0" width="356" class="alternateRows">
+          <colgroup>
+             <col width="200px" />
+             <col width="*" />
+             <col width="30px" />
+           </cols>
+          <tr class="topTitle">
+            <td align="left" nowrap><span id="plaRecTxt"></span></td>
+            <!--#if expr="$root_Properties_LocalStorage_LocalStorage = yes" -->
+            <td>&nbsp;</td>
+            <td class="topTitle">
+              <div align="right"><a href="<!--#echo var="helpURL" option="encoding:url" -->"><img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="hlpPic "/></a></div>
+            </td>
+          <!--#else -->
+            <td colspan="2">&nbsp;</td>
+          <!--#endif -->
+          </tr>
+          <tr>
+            <td colspan="3" align="center" class="oddItem">
+              <div id="filterinstallocation"></div>
+
+              <script src="/incl/activeX.js?id=<!--#echo var="ssi_request_id" option="encoding:url" -->"></script>
+
+              <script language="javascript" type="text/javascript">
+              <!--
+                var imgPath = "<!--#echo var="imagepath" option="encoding:url" -->";
+                var filePath = imgPath + "<!--#if expr="_$diskid != _" -->&diskid=<!--#echo var="diskid" option="encoding:url" --><!--#elif expr="$recordingid = continuous" -->&diskid=<!--#echo var="root_Recording_Continuous_DiskId" option="encoding:url" --><!--#endif -->&resolution=<!--#echo var="img_width" option="encoding:url" -->x<!--#echo var="img_height" option="encoding:url" --><!--#if expr="_$duration != _" -->&duration=<!--#echo var="duration" option="encoding:url" --><!--#endif --><!--#if expr="_$timeoffset != _" -->&timeoffset=<!--#echo var="timeoffset" option="encoding:url" --><!--#endif -->";
+                video(filePath);
+
+              // -->
+              </script>
+          <!--#if expr="$root_Properties_LocalStorage_LocalStorage = yes" -->
+              <script language="JavaScript" for="Player" event="OnStatusChange(theNewStatus, theOldStatus)">
+              <!--
+                {
+                  if( (theOldStatus & 0x000002) == 2 && (theNewStatus & 0x000002) == 0 )
+                  {
+                    showPlayBtn();
+                  }
+                  else if( (theOldStatus & 0x000002) == 0 && (theNewStatus & 0x000002) == 2 )
+                  {
+                    showStopBtn();
+                  }
+                }
+              //-->
+              </script>
+
+                <div class="cornerBox" id="btnRow" style="width:<!--#echo var="img_width" option="encoding:javascript" -->px;display:none;margin:3px 0px;">
+                  <div class="content" style="padding:4px 5px 0px 5px">
+                    <table border="0" cellpadding="0" cellspacing="0" width="98%" id="btnInner">
+                      <tr>
+                        <td nowrap class="oddItem" width="45" style="padding-left:15px">
+                          <img name="play" id="playBtn" alt="" src="/pics/play_blue_button_27x27px.gif" style="vertical-align:bottom;cursor:pointer;display:none;" onclick="javascript:startPlayback();" />
+                          <img name="stop" id="stopBtn" alt="" src="/pics/stop_blue_button_27x27px.gif" style="vertical-align:bottom;cursor:pointer;display:inline;"  onclick="javascript:stopStream();" />
+                          <img id="noPlayStopBtn" src="/pics/blank.gif" style="vertical-align:bottom;display:none;" width="27" height="27" />
+                        </td>
+                        <td nowrap class="oddItem" align="center">
+                          <span id="startTimeSpan"><span id="playTxt"></span>&nbsp;<input type="text" size="10" id="startTime" name="startTime" value="00:00:00" onchange="javascript:startPlayback();" />&nbsp;<span id="frStTxt"></span></span>
+                        </td>
+                        <td nowrap class="oddItem" width="45" style="padding-right:15px" align="right">
+                          <img name="download" id="downloadBtn" alt="" src="/pics/download.gif" onclick="javascript:downloadRec();" style="vertical-align:bottom;cursor:pointer;"  />
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                  <div class="footerLeft"><div class="footerRight"></div></div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="oddItem" colspan="3">
+                <table width="100%">
+                  <tr>
+                    <td class="oddItem" align="left">
+                      <img src="/pics/arrowPrev.gif" alt="" style="display:none;vertical-align:bottom;cursor:pointer;" id="prevLinkImg"  onclick="javascript:getNextRecording('backward');" />&nbsp;<a href="javascript:getNextRecording('backward');" id="prevLink" style="display:none;"><span id="recPrevLink"></span></a>
+                    </td>
+                    <td class="oddItem" align="right">
+                      <a href="javascript:getNextRecording('forward');" id="nextLink" style="display:none;"><span id="recNextLink"></span></a><img src="/pics/arrowNext.gif" alt="" style="display:none;vertical-align:bottom;cursor:pointer;" id="nextLinkImg" onclick="javascript:getNextRecording('forward');" />
+                    </td>
+                  </tr>
+                </table>
+              </td>
+          <!--#else -->
+            </tr>
+            <tr>
+              <td colspan="3" nowrap class="oddItem" id="startTime">
+                <input type="button" name="play" id="playBtn" value="" width="75" class="btnNormal" onClick="startPlayback()" onMouseOver="return showStatus(playBtnStatTxt)" onMouseOut="return showStatus('')">
+              <!--#if expr="$videocodec = jpeg" -->
+                <input type="text" size="10" id="startTime" value="00:00:00" /> <span id="startTimeSpan"><span id="hMSTxt"></span></span>
+              <!--#endif -->
+              </td>
+          <!--#endif -->
+          </tr>
+          <tr class="subTitle">
+            <td align="left" colspan="3" nowrap><span id="recInfTxt"></span></td>
+          </tr>
+          <tr>
+            <td class="oddItem"><span id="staTiTxt"></span></td>
+            <td class="oddItem" colspan="2"><!--#echo var="startTimeLocal" option="encoding:html" --></td>
+          </tr>
+          <tr>
+            <td class="evenItem"><span id="stoTiTxt"></span></td>
+            <td class="evenItem" colspan="2" id="stopTime"><!--#echo var="stopTimeLocal" option="encoding:html" --></td>
+          </tr>
+          <tr>
+            <td class="oddItem"><span id="durationTxt"></span></td>
+            <td class="oddItem" colspan="2"><span id="duration"></span><span id=recDuration></span></td>
+          </tr>
+          <tr>
+            <td class="topTitle" align="center" colspan="3">
+              <table border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td class="button"><input type="button" value="" width="75" class="btnNormal" onclick="javascript:window.close()" onMouseOver="return showStatus(closeBtnStatTxt)" onMouseOut="return showStatus('')" id="playWi_closeBtn"></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="footerLeft"><div class="footerRight"></div></div>
+    </div>
+  </form>
+  <!--#include virtual="/incl/alternate_rows.shtml" -->
+</body>
+</html>

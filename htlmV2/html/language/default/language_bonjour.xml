@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+  <bonjour>
+    <pageTitle type="title" minor="0">System Options/Bonjour Settings</pageTitle>
+    <firstCharAlrt type="text" minor="0">First character cannot be #. Please change it</firstCharAlrt>
+    <charAlrt type="text" minor="0">Only ASCII (7 bit) characters can be used in the Friendly Name.</charAlrt>
+    <saveBtnStatTxt type="msg" minor="0">Save the Bonjour settings</saveBtnStatTxt>
+    <resBtnStatTxt type="msg" minor="0">Revert to last saved settings</resBtnStatTxt>
+    <bonjSetTxt type="text" minor="0">Bonjour Settings</bonjSetTxt>
+    <hlpTxt type="image" minor="0" imageid="hlpPic">Click here for help on this page</hlpTxt>
+    <enBonjTxt type="text" minor="0">Enable Bonjour</enBonjTxt>
+    <frNaTxt type="text" minor="0">Friendly name:</frNaTxt>
+    <saveBtn type="button" minor="0" buttonid="Bonjour_SaveBtn">Save</saveBtn>
+    <resetBtn type="button" minor="0" buttonid="Bonjour_ResetBtn">Reset</resetBtn>
+  </bonjour>
+</language_xml>

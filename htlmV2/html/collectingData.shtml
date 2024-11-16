@@ -1,0 +1,28 @@
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#include virtual="/incl/top_incl_popup.shtml" -->
+
+<script language="JavaScript">
+var langObjCollData = new Language("support", "collectingData");
+
+function timeOutClose()
+{
+  window.setTimeout("window.close()", 2500);  
+}
+
+
+</script>
+
+</head>
+<body onLoad="langObjCollData.init();timeOutClose()">
+  <div class="cornerBox">
+    <div class="content">
+      <table border="<!--#echo var="zero" option="encoding:html" -->" cellpadding="<!--#echo var="cellpadding2" option="encoding:html" -->" cellspacing="<!--#echo var="zero" option="encoding:html" -->" class="evenItem" width="250" height="100">
+        <tr>
+          <td class="oddItem" align="center"><span id="collDataTxt"></span></td>
+        </tr>
+      </table>
+    </div>
+    <div class="footerLeft"><div class="footerRight"></div></div>
+  </div>
+</body>
+</html>

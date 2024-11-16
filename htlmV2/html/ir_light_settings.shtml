@@ -1,0 +1,423 @@
+<!--#set var="helpURL" val="javascript:launch('/help/ir_light_settings_h.shtml')" -->
+<!--#include virtual="/sm/sm.srv?action=get&group=Brand,Properties.Firmware.Version" -->
+<!--#include virtual="/incl/prodtype.shtml" -->
+
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#include virtual="/incl/top_incl_popup.shtml" -->
+
+<script language="JavaScript" type="text/javascript"><!--
+
+function launch(url) {
+  var w = 480, h = 340;
+
+  if (document.all) {
+    /* the following is only available after onLoad */
+    w = document.body.clientWidth;
+    h = document.body.clientHeight;
+  } else if (document.layers) {
+    w = window.innerWidth;
+    h = window.innerHeight;
+  }
+
+  var popW = 475, popH = 590;
+
+  var leftPos = (w-popW)/2, topPos = (h-popH)/2;
+
+  self.name = "opener";
+  remote = open(url, 'helpWin', "resizable,scrollbars,status,width=" + popW + ",height="+popH+",left="+leftPos+",top="+topPos+"");
+
+  //Fix for IE6 to solve problem with video stopping when opening help
+  try {
+    if ((typeof(useAMC) != "undefined")&&(useAMC == "yes") &&(navigator.appVersion.indexOf("MSIE 6") != -1) && (typeof(stopStartStream) == "function") && (typeof(imagepath) == "string"))
+      stopStartStream(imagepath);
+  } catch (e) {}
+}
+
+function showStatus(msg)
+{
+  window.status = msg
+  return true
+}
+// -->
+</script>
+<!--#include virtual="/java/css.shtml" -->
+<script language="JavaScript" type="text/javascript"><!--
+CSS ();
+// -->
+</script>
+
+<script type="text/javascript" src="/incl/pos.js"></script>
+<script type="text/javascript" src="/incl/slider.js"></script>
+<script src="/incl/soapclient.js" language="javascript" type="text/javascript"></script>
+<script src="/incl/zxml.js" language="javascript" type="text/javascript" ></script>
+<script src="/incl/xmlPrototypes.js" language="javascript" type="text/javascript"></script>
+<script src="/incl/language_incl.js" language="javascript" type="text/javascript"></script>
+<script src="/incl/ir_light_settings.js" language="javascript" type="text/javascript"></script>
+<script src="/incl/ir_light_settings_set.js" language="javascript" type="text/javascript"></script>
+
+<style>
+  #cameraCanvas { border: 1px solid #9C9898; }
+</style>
+
+<script language="javascript">
+<!--
+var langObjVidImgHaiAdv = new Language("videoImage_advanced_haiti", "ir_light_settings");
+
+var zoomPos = 0;
+var zoomValue = new XMLHttpRequest();
+
+function getZoomPosition()
+{
+  zoomPos= 0.5;
+  init();
+}
+
+
+function parseOpticsInfo(opticsXmlDom, tag)
+{
+  var startindex = opticsXmlDom.indexOf(tag) + tag.length + 2;
+  var stopindex  = opticsXmlDom.indexOf('"', startindex);
+  var theValue   = opticsXmlDom.substring(startindex, stopindex);
+
+  return theValue;
+}
+
+var ir;
+var ir_LightID;
+function init()
+{
+  initIrIllustration();
+  placeNumbers();
+  ir = new Array();
+
+  setTimeout(function()
+  {
+    getLightParams( "GetLightInformation", false, "info", ["LightInfo", "LightInformation"], true, function()
+    {
+      ir_LightID = ir["info"].LightID;
+
+      setTimeout(function()
+      {
+        getLightParams( "GetValidAngleOfIllumination", ir_LightID, "valid_angles", ["RangeList", "IntRange"], true, set_irangleSlider );
+      }, 0);
+      setTimeout(getManualAngle, 150);
+      setTimeout(function()
+      {
+        getLightParams( "GetCurrentAngleOfIllumination", ir_LightID, "current_angle", ["AngleOfIllumination"], true, set_irangleSlider );
+      }, 300);
+    });
+  }, 0);
+
+  setTimeout(function()
+  {
+    getLightParams( "GetServiceCapabilities", false, "capabilities", ["Capabilities"], true, function()
+    {
+      setTimeout(getManualAngle, 0);
+    });
+  }, 150);
+}
+
+function getManualAngle()
+{
+  if (typeof ir["manual_angle"] != 'undefined' ||
+      typeof ir_LightID == 'undefined' ||
+      typeof ir["capabilities"] == 'undefined') {
+    return;
+  }
+
+  if (ir["capabilities"].ManualAngleOfIlluminationSupport == "true") {
+    getLightParams( "GetManualAngleOfIllumination", ir_LightID, "manual_angle", ["AngleOfIllumination"], true, set_irangleSlider);
+  }
+}
+
+
+var canvaspos;
+var canvasdiv;
+
+function initIrIllustration()
+{
+  try {
+    document.getElementById("irlatr").style.display = "";
+    document.getElementById("infotxt").style.display = "";
+
+    var canvas = document.getElementById("cameraCanvas");
+    var context = canvas.getContext("2d");
+
+    // Place camera icon
+    var x1 = 20;
+    var y1 = 141;
+
+    var cameraIcon = new Image();
+    cameraIcon.onload = function() {
+      context.drawImage(cameraIcon, x1, y1);
+    };
+    cameraIcon.src = "/pics/camera_icon_49x27px.gif";
+
+
+    context.fillStyle    = '#000';
+    context.font         = '20px sans-serif';
+    context.textBaseline = 'middle';
+    context.textAlign    = 'center';
+    context.fillText (langObjVidImgHaiAdv.getText("illAreaTxt"), 530, 155);
+
+
+    // Create IR canvas
+    var theCanvasArea = document.getElementById("cameraCanvas");
+    canvaspos = getPos(theCanvasArea)
+
+    canvasdiv = document.createElement("DIV");
+    canvasdiv.style.backgroundColor = "transparent";
+    canvasdiv.style.position = "absolute";
+    canvasdiv.style.left = canvaspos.x+"px";
+    canvasdiv.style.top = canvaspos.y+"px";
+    canvasdiv.style.zIndex = 500;
+    canvasdiv.innerHTML = '<canvas id="irlightCanvas" width="700" height="310"></canvas>';
+    document.body.appendChild(canvasdiv);
+
+  }
+  catch(e) {
+    document.getElementById("irlatr").style.display = "none";
+    document.getElementById("infotxt").style.display = "none";
+    alert(langObjVidImgHaiAdv.getText("oldBrowAlrt"));
+  }
+}
+
+
+function drawIrBeam()
+{
+  try {
+    var value;
+    value = document.irSettingsForm.theIrAngle.value;
+
+    var canvas = document.getElementById("irlightCanvas");
+    var context = canvas.getContext("2d");
+
+    // Erase any previous content
+    context.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Circle
+    var centerX = 530;
+    var centerY = 155;
+
+    // Modify so current camera value looks good in web page
+    var angle = 0.8 * value + 20;
+    var radius = 1.5*angle;
+
+    context.beginPath();
+    context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+
+    // Calculate cone
+    var val_y1 = centerY - 1.5*angle;
+    var val_y2 = centerY + 1.5*angle;
+
+    // Line up
+    context.moveTo(70, centerY);
+    context.lineTo(centerX, val_y1);
+    context.lineWidth = 2;
+    context.strokeStyle = "#3366CC"; // line color
+    context.stroke();
+
+    context.lineWidth = 2;
+    context.strokeStyle = "#3366CC";
+    context.stroke();
+
+    // Line down
+    context.moveTo(70, centerY);
+    context.lineTo(centerX, val_y2);
+    context.lineWidth = 2;
+    context.strokeStyle = "#3366CC"; // line color
+    context.stroke();
+  }
+  catch(e) {}
+};
+
+var irangleSlider = null;
+function set_irangleSlider()
+{
+  if (typeof ir["valid_angles"] == 'undefined') {
+    return;
+  }
+
+  var min = 0;
+  var max = ir["valid_angles"].High;
+  var manual = ir["manual_angle"];
+  var enabled;
+
+  if ( ir["manual_angle"] ) {
+    document.getElementById("irangle-handle").style.display = "inline";
+    enabled = true;
+  } else {
+    ir["manual_angle"] = min;
+    enabled = false;
+  }
+
+  irangleSlider = new Slider('irangle', min, max, manual, function(){}, "horizontal", enabled);
+
+  if ( ir["current_angle"] ) {
+    irangleSlider.setActual(ir["current_angle"]);
+  }
+
+  drawIrBeam();
+}
+
+var sliderpos;
+function placeNumbers()
+{
+  var iranglebg = document.getElementById("irangle-bg");
+  sliderpos = getPos(iranglebg);
+
+  document.getElementById("one").style.position = "absolute";
+  document.getElementById("one").style.left = sliderpos.x+"px";
+  document.getElementById("one").style.top = (sliderpos.y-12)+"px";
+
+  document.getElementById("two").style.position = "absolute";
+  document.getElementById("two").style.left = (sliderpos.x+47)+"px";
+  document.getElementById("two").style.top = (sliderpos.y-12)+"px";
+
+  document.getElementById("three").style.position = "absolute";
+  document.getElementById("three").style.left = (sliderpos.x+95)+"px";
+  document.getElementById("three").style.top = (sliderpos.y-12)+"px";
+
+  document.getElementById("four").style.position = "absolute";
+  document.getElementById("four").style.left = (sliderpos.x+143)+"px";
+  document.getElementById("four").style.top = (sliderpos.y-12)+"px";
+}
+
+function saveData()
+{
+  var LightID = ir["info"]["LightID"];
+  var isError = false;
+
+  var isAutomaticAngleOfIlluminationMode = false;
+  if ( ir["info"]["AutomaticAngleOfIlluminationMode"] == "false" && isAutomaticAngleOfIlluminationMode ||
+       ir["info"]["AutomaticAngleOfIlluminationMode"] == "true" && !isAutomaticAngleOfIlluminationMode ) {
+    isError |= setLightParam("SetAutomaticAngleOfIlluminationMode", LightID, "Automatic", (isAutomaticAngleOfIlluminationMode ? "true" : "false"), false );
+  }
+
+  var manual_angle = document.getElementById("irangle").value;
+  if ( !isAutomaticAngleOfIlluminationMode && manual_angle != ir["manual_angle"] ) {
+    isError |= setLightParam("SetManualAngleOfIllumination", LightID, "AngleOfIllumination", manual_angle, false );
+  }
+
+  if( !isError )
+    pageclose();
+}
+
+function pageclose()
+{
+  // The user pressed the OK button, so close the window (parameters are already saved).
+  window.close();
+}
+
+function opticssetup_display_error_message(msg)
+{
+  var error_500_org          = "The server encountered an internal error and could not complete the request";
+  var error_500_disp         = langObjVidImgHaiAdv.getText("optsetErr500Txt");
+  var error_503_generic_org  = "Cannot perform the request because of camera temperature. The temperature is being adjusted. Please try again later.";
+  var error_503_generic_disp = langObjVidImgHaiAdv.getText("optsetErr503GenTxt");
+  var error_503_monitor_org  = "The maximum number of clients are already connected";
+  var error_503_monitor_disp = langObjVidImgHaiAdv.getText("optsetErr503MonTxt");
+  var error_unknown          = langObjVidImgHaiAdv.getText("optsetErrUnknTxt");
+
+  if (msg.indexOf(error_500_org) >= 0) {
+    alert(error_500_disp);
+  } else if (msg.indexOf(error_503_generic_org) >= 0) {
+    alert(error_503_generic_disp);
+  } else if (msg.indexOf(error_503_monitor_org) >= 0) {
+    alert(error_503_monitor_disp);
+  } else {
+    var error_msg = error_unknown;
+    if (msg && msg.length > 0)
+      error_msg += langObjVidImgHaiAdv.getText("optsetErrUnknRespAlrt")+" "+msg;
+    alert(error_msg);
+  }
+}
+
+-->
+</script>
+</head>
+
+<body <!--#include virtual="/incl/bodytag.shtml" --> onLoad="langObjVidImgHaiAdv.init();getZoomPosition();">
+
+<form name="irSettingsForm">
+<div class="cornerBox">
+  <div class="content">
+
+  <table border="0" cellpadding="3" cellspacing="0" width="100" class="alternateRows">
+    <tr class="topTitle">
+      <td align="left" colspan="2" nowrap>
+        <span id="irIllTitleTxt"></span>
+      </td>
+      <td class="topTitle">
+        <div align="right"><a href="<!--#echo var="helpURL" option="encoding:url" -->"><img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="irLight_help"></a></div>
+      </td>
+    </tr>
+    <tr class="subTitle" id="irlatr" style="display:none">
+      <td align="left" colspan="3" nowrap>
+        <span id="irIllAreaTxt"></span>
+      </td>
+    </tr>
+
+    <tr id="infotxt" style="display:none">
+      <td colspan="3">
+        <canvas id="cameraCanvas" width="700" height="310"></canvas>
+      </td>
+    </tr>
+
+
+    <tr class="subTitle">
+      <td align="left" colspan="3" nowrap>
+        <span id="irIllSetTxt"></span>
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan="3">
+        &nbsp;<span id="one">1</span><span id="two">2</span><span id="three">3</span><span id="four">4</span>
+      </td>
+    </tr>
+    <tr class="reuseLast">
+      <td nowrap><span id="angOfIllTxt"></span></td>
+      <td nowrap colspan="2" valign="middle">
+        <sup><span id="teleTxt"></span></sup> 
+        <img src="/pics/slider_left.gif" width="14" height="14" id="irangle-left"><img src="/pics/slider_bg_151x14px.gif" width="151" height="14" id="irangle-bg"><img src="/pics/slider_handle.gif" width="5" height="14" id="irangle-handle" style="display: none"><img src="/pics/slider_right.gif" width="14" height="14" id="irangle-right"> <sup><span id="wideTxt"></span></sup>
+        <input type="hidden" value="50" name="theIrAngle" id="irangle" >
+      </td>
+    </tr>
+    <tr>
+      <td class="button" colspan="3" align="center">
+        <br />
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td align="right" colspan="2" class="button"><input type="button" value="" id="irLight_OkBtn" name="save" onClick="saveData()" class="btnNormal" width="75"></td>
+            <td class="button"><br></td>
+            <td align="right" colspan="2" class="button"><input type="button" value="" id="irLight_CloseBtn" name="undo" class="btnNormal" width="75" onclick="pageclose();"></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+  </table>
+
+  </div>
+  <div class="footerLeft"><div class="footerRight"></div></div>
+</div>
+
+<script language="JavaScript" type="text/javascript">
+<!--
+
+function slider_onChange(theGroup)
+{
+  if (theGroup == "irangle") {
+    drawIrBeam();
+  }
+}
+
+-->
+</script>
+
+</form>
+
+<!--#include virtual="/incl/alternate_rows.shtml" -->
+</body>
+</html>

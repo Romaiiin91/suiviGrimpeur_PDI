@@ -1,0 +1,23 @@
+<language_xml>
+	<ledSettings>
+	  <pageTitle type="title" minor="0">System Options/LED Settings</pageTitle>
+		<saveLEDBtnStatTxt type="msg" minor="0">Save the LED settings</saveLEDBtnStatTxt>
+		<resBtnStatTxt type="msg" minor="0">Revert to last saved settings</resBtnStatTxt>
+		<ledSetTxt type="text" minor="0">LED Settings</ledSetTxt>
+		<hlpTxt type="image" minor="0" imageid="hlpPic">Click here for help on this page</hlpTxt>
+		<subTPowTxt type="text" minor="0">Power LED</subTPowTxt>
+		<powSetBeTxt type="text" minor="0">Set the behavior of the Power Indicator LED.</powSetBeTxt>
+		<normalPowTxt type="text" minor="0">Normal - The LED shows green for normal operation.</normalPowTxt>
+		<offPowTxt type="text" minor="0">Off - The LED is off during normal operation.</offPowTxt>
+		<subTNetTxt type="text" minor="0">Network LED</subTNetTxt>
+		<netwSetBeTxt type="text" minor="0">Set the behavior of the Network Indicator LED.</netwSetBeTxt>
+		<netwEnableTxt type="text" minor="0">Enabled - The LED is enabled and flashes when there is network traffic.</netwEnableTxt>
+		<netwDisableTxt type="text" minor="0">Disabled - The LED is disabled and is not lit.</netwDisableTxt>
+		<subTStatTxt type="text" minor="0">Status LED</subTStatTxt>
+		<setBeTxt type="text" minor="0">Set the behavior of the Status Indicator LED.</setBeTxt>
+		<normalStatTxt type="text" minor="0">Normal - The LED shows green for normal operation.</normalStatTxt>
+		<offStatTxt type="text" minor="0">Off - The LED is off during normal operation.</offStatTxt>
+		<saveBtn type="button" minor="0" buttonid="leds_SaveBtn">Save</saveBtn>
+		<resetBtn type="button" minor="0" buttonid="leds_ResetBtn">Reset</resetBtn>
+	</ledSettings>
+</language_xml>

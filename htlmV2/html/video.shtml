@@ -1,0 +1,540 @@
+<!--#set var="helpURL" val="javascript:launch('/help/video_settings_h.shtml')" -->
+<!--#set var="WizardFormAction" val="/sm/sm.srv" -->
+<!--#set var="selection" val="video" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<!--#if expr="$nbr = 1" -->
+  <!--#set var="camnbr" val="2" -->
+<!--#elif expr="$nbr = 2" -->
+  <!--#set var="camnbr" val="3" -->
+<!--#elif expr="$nbr = 3" -->
+  <!--#set var="camnbr" val="4" -->
+<!--#elif expr="$nbr = 4" -->
+  <!--#set var="camnbr" val="quad" -->
+<!--#else -->
+  <!--#set var="nbr" val="0" -->
+  <!--#set var="camnbr" val="1" -->
+<!--#endif -->
+
+<!--#if expr="$basic = yes" -->
+  <!--#set var="activeMenu" val="basic" -->
+  <!--#set var="activePage" val="videoImage_basic" -->
+<!--#else -->
+  <!--#set var="activeMenu" val="videoImage" -->
+  <!--#set var="activeMenu1" val="videoImageStream$nbr$" -->
+  <!--#set var="activePage" val="video$nbr$" -->
+<!--#endif -->
+
+<!--#include virtual="/java/chkbox.shtml" -->
+<!--#include virtual="/java/integer.shtml" -->
+
+<!--#include virtual="/sm/sm.srv?action=get&group=VIDEO,ImageSource,Image.I$nbr$.Appearance" -->
+
+<script type="text/javascript" src="/incl/slider.js"></script>
+
+<script language="JavaScript">
+<!--
+var langObjVidImgVid = new Language("videoImage", "video");
+
+<!--#include virtual="/incl/functions.shtml" -->
+
+function searchIllegal(txt)
+{
+  var textScript=new Array(5)
+
+  textScript[0]="<SCRIPT"
+  textScript[1]="<OBJECT"
+  textScript[2]="<APPLET"
+  textScript[3]="<EMBED"
+  textScript[4]="<FORM"
+  txt=txt.toUpperCase()
+  for (i=0;i<=4;i++){
+    if (txt.indexOf(textScript[i])!=-1)
+        return 1
+  }
+  return 0
+}
+
+function saveData()
+{
+  var form = document.WizardForm;
+  var errorMessage = langObjVidImgVid.getText("inValAlrt");
+
+  <!--#if expr="$root_ImageSource_NbrOfSources != 1" -->
+    if (searchIllegal(form.videoName.value) == 1) {
+      alert(errorMessage);
+      form.videoName.focus()
+      form.videoName.select()
+      return 0
+    }
+    getVideoName();
+  <!--#endif -->
+  getOffset();
+
+  <!--#if expr="$(root_ImageSource_I$nbr$_Video_Saturation) != " -->
+    if(!validateSaturation()) {
+      alert(errorMessage);
+      saturationSlider.text.focus();
+      saturationSlider.text.select();
+      return false;
+    }
+  <!--#endif -->
+  <!--#if expr="$(root_ImageSource_$nbr$_Video_Brightness) != " -->
+    if(!validateBrightness()) {
+      alert(errorMessage);
+      brightnessSlider.text.focus();
+      brightnessSlider.text.select();
+      return false;
+    }
+  <!--#endif -->
+  <!--#if expr="$(root_ImageSource_I$nbr$_Video_Contrast) != " -->
+    if(!validateContrast()) {
+      alert(errorMessage);
+      contrastSlider.text.focus();
+      contrastSlider.text.select();
+      return false;
+    }
+  <!--#endif -->
+  <!--#if expr="$(root_ImageSource_I$nbr$_Video_Sharpness) != " -->
+    if(!validateSharpness()) {
+      alert(errorMessage);
+      sharpnessSlider.text.focus();
+      sharpnessSlider.text.select();
+      return false;
+    }
+  <!--#endif -->
+
+  if (IntegerCheck(form.root_ImageSource_I<!--#echo var="nbr" option="encoding:javascript" -->_Video_XOffset.value, xOffset_Min, xOffset_Max) == 0) {
+      alert(errorMessage);
+      form.root_ImageSource_I<!--#echo var="nbr" option="encoding:javascript" -->_Video_XOffset.focus();
+      form.root_ImageSource_I<!--#echo var="nbr" option="encoding:javascript" -->_Video_XOffset.select();
+      return false;
+  }
+  if (IntegerCheck(form.root_ImageSource_I<!--#echo var="nbr" option="encoding:javascript" -->_Video_YOffset.value, yOffset_Min, yOffset_Max) == 0) {
+      alert(errorMessage);
+      form.root_ImageSource_I<!--#echo var="nbr" option="encoding:javascript" -->_Video_YOffset.focus();
+      form.root_ImageSource_I<!--#echo var="nbr" option="encoding:javascript" -->_Video_YOffset.select();
+      return false;
+  }
+
+<!--#if expr="$(root_ImageSource_I$nbr$_Video_Saturation) != " -->
+  saturationSaved = parseInt(document.getElementById("saturation").value,10);
+  <!--#endif -->
+  <!--#if expr="$(root_ImageSource_I$nbr$_Video_Brightness) != " -->
+  brightnessSaved = parseInt(document.getElementById("brightness").value,10);
+  <!--#endif -->
+  <!--#if expr="$(root_ImageSource_I$nbr$_Video_Contrast) != " -->
+  contrastSaved = parseInt(document.getElementById("contrast").value,10);
+  <!--#endif -->
+  <!--#if expr="$(root_ImageSource_I$nbr$_Video_Sharpness) != " -->
+  sharpnessSaved = parseInt(document.getElementById("sharpness").value,10);
+  <!--#endif -->
+  form.submit();
+}
+
+function getVideoName()
+{
+  var form = document.WizardForm
+
+  form.root_ImageSource_I<!--#echo var="nbr" option="encoding:javascript" -->_Name.value = form.videoName.value
+}
+
+function getOffset()
+
+{
+  var form = document.WizardForm
+
+  form.root_ImageSource_I<!--#echo var="nbr" option="encoding:javascript" -->_Video_XOffset.value = form.root_ImageSource_I<!--#echo var="nbr" option="encoding:javascript" -->_Video_XOffset.value;
+  form.root_ImageSource_I<!--#echo var="nbr" option="encoding:javascript" -->_Video_YOffset.value = form.root_ImageSource_I<!--#echo var="nbr" option="encoding:javascript" -->_Video_YOffset.value;
+}
+
+function setVideoName()
+{
+  var form = document.WizardForm
+  var tempName = "<!--#echo var="root_ImageSource_I$nbr$_Name" option="encoding:javascript" -->"
+  form.videoName.value = tempName.replace(/&#34;/, "\"")
+  form.videoName.focus();
+}
+
+function setOffset()
+{
+//  var form = document.WizardForm
+//  form.root_ImageSource_I<!--#echo var="nbr" option="encoding:javascript" -->_Video_XOffset.value = "<!--#echo var="root_ImageSource_I$nbr$_Video_XOffset" option="encoding:javascript" -->";
+//  form.root_ImageSource_I<!--#echo var="nbr" option="encoding:javascript" -->_Video_YOffset.value = "<!--#echo var="root_ImageSource_I$nbr$_Video_YOffset" option="encoding:javascript" -->"; 
+}
+
+<!--#if expr="$(root_ImageSource_I$nbr$_Video_Saturation) != " -->
+var saturationSaved = <!--#echo var="root_ImageSource_I$nbr$_Video_Saturation" option="encoding:javascript" -->;
+<!--#endif -->
+<!--#if expr="$(root_ImageSource_I$nbr$_Video_Brightness) != " -->
+var brightnessSaved = <!--#echo var="root_ImageSource_I$nbr$_Video_Brightness" option="encoding:javascript" -->;
+<!--#endif -->
+<!--#if expr="$(root_ImageSource_I$nbr$_Video_Contrast) != " -->
+var contrastSaved = <!--#echo var="root_ImageSource_I$nbr$_Video_Contrast" option="encoding:javascript" -->;
+<!--#endif -->
+<!--#if expr="$(root_ImageSource_I$nbr$_Video_Sharpness) != " -->
+var sharpnessSaved = <!--#echo var="root_ImageSource_I$nbr$_Video_Sharpness" option="encoding:javascript" -->;
+<!--#endif -->
+
+function setFields()
+{
+ <!--#if expr="$root_ImageSource_NbrOfSources != 1" -->
+   setVideoName();
+ <!--#endif -->
+ setOffset();
+
+  <!--#if expr="$(root_ImageSource_I$nbr$_Video_Saturation) != " -->
+          saturationSlider = new Slider('saturation', 0, 100, saturationSaved, validateSaturation);
+  <!--#endif -->
+  <!--#if expr="$(root_ImageSource_I$nbr$_Video_Brightness) != " -->
+          brightnessSlider = new Slider('brightness', 0, 100, brightnessSaved, validateBrightness);
+  <!--#endif -->
+  <!--#if expr="$(root_ImageSource_I$nbr$_Video_Contrast) != " -->
+          contrastSlider = new Slider('contrast', 0, 100, contrastSaved, validateContrast);
+  <!--#endif -->
+  <!--#if expr="$(root_ImageSource_I$nbr$_Video_Sharpness) != " -->
+          sharpnessSlider = new Slider('sharpness', 0, 100, sharpnessSaved, validateSharpness);
+  <!--#endif -->
+  <!--#if expr="$(root_ImageSource_I$nbr$_Video_VideoTermination) != " -->
+    setSelectlist(document.getElementsByName("root_ImageSource_I<!--#echo var="nbr" option="encoding:javascript" -->_Video_VideoTermination")[0], "<!--#echo var="root_ImageSource_I$nbr$_Video_VideoTermination" option="encoding:javascript" -->", "yes");
+  <!--#endif -->
+  <!--#if expr="$(root_ImageSource_I$nbr$_Video_NoiseReduction) != " -->
+    setSelectlist(document.getElementsByName("root_ImageSource_I<!--#echo var="nbr" option="encoding:url" -->_Video_NoiseReduction")[0], "<!--#echo var="root_ImageSource_I$nbr$_Video_NoiseReduction" option="encoding:javascript" -->", "yes");
+  <!--#endif -->
+}
+
+function reloadPage()
+{
+  window.location.href = "/operator/video.shtml?nbr=<!--#echo var="nbr" option="encoding:url" -->&id=<!--#echo var="ssi_request_id" option="encoding:url" -->"
+}
+function updateSliders()
+{
+  <!--#if expr="$(root_ImageSource_I$nbr$_Video_Saturation) != " -->
+          saturationSlider.moveTo();
+  <!--#endif -->
+  <!--#if expr="$(root_ImageSource_I$nbr$_Video_Brightness) != " -->
+          brightnessSlider.moveTo();
+  <!--#endif -->
+  <!--#if expr="$(root_ImageSource_I$nbr$_Video_Contrast) != " -->
+          contrastSlider.moveTo();
+  <!--#endif -->
+  <!--#if expr="$(root_ImageSource_I$nbr$_Video_Sharpness) != " -->
+          sharpnessSlider.moveTo();
+  <!--#endif -->
+}
+
+<!--#if expr="$(root_ImageSource_I$nbr$_Video_Saturation) != " -->
+function validateSaturation() {
+  var o = document.getElementById("saturation");
+  var value = parseInt(o.value, 10);
+  if (value < 0)
+    o.value = "0";
+  else if (value > 100)
+    o.value = "100";
+  else if (isNaN(value))
+    o.value = saturationSaved;
+  return true;
+}
+<!--#endif -->
+<!--#if expr="$(root_ImageSource_I$nbr$_Video_Brightness) != " -->
+function validateBrightness() {
+  var o = document.getElementById("brightness");
+  var value = parseInt(o.value, 10);
+  if (value < 0)
+    o.value = "0";
+  else if (value > 100)
+    o.value = "100";
+  else if (isNaN(value))
+    o.value = brightnessSaved;
+  return true;
+}
+<!--#endif -->
+<!--#if expr="$(root_ImageSource_I$nbr$_Video_Contrast) != " -->
+function validateContrast() {
+  var o = document.getElementById("contrast");
+  var value = parseInt(o.value, 10);
+  if (value < 0)
+    o.value = "0";
+  else if (value > 100)
+    o.value = "100";
+  else if (isNaN(value))
+    o.value = contrastSaved;
+  return true;
+}
+<!--#endif -->
+<!--#if expr="$(root_ImageSource_I$nbr$_Video_Sharpness) != " -->
+function validateSharpness() {
+  var o = document.getElementById("sharpness");
+  var value = parseInt(o.value, 10);
+  if (value < 0)
+    o.value = "0";
+  else if (value > 100)
+    o.value = "100";
+  else if (isNaN(value))
+    o.value = sharpnessSaved;
+  return true;
+}
+<!--#endif -->
+
+
+function getTypeMin(ssidParStr, error)
+{
+  var min = error;
+  var pos1 = ssidParStr.lastIndexOf("[");
+  var pos2 = ssidParStr.lastIndexOf("..");
+  if ((pos1 != -1) && (pos2 != -1 )) {
+    min = ssidParStr.substring(pos1 + 1, pos2);
+  }
+  return min;
+}
+
+function getTypeMax(ssidParStr, error)
+{
+  var max = error;
+  var pos1 = ssidParStr.lastIndexOf("..");
+  var pos2 = ssidParStr.lastIndexOf("]");
+  if ((pos1 != -1) && (pos2 != -1 )) {
+    max = ssidParStr.substring(pos1 + 2, pos2);
+  }
+  return max;
+}
+
+
+<!--#set var="ssi_dbus" val="-99" -->
+<!--#include virtual="/sm/sm.srv?action=dbus&args=--system --dest=com.axis.VideoControl /com/axis/VideoControl/$camnbr$ org.freedesktop.DBus.Properties.Get string:com.axis.VideoControl string:MinXOffset" -->
+var xOffset_Min = '<!--#echo var="ssi_dbus" option="encoding:none" -->';
+
+<!--#set var="ssi_dbus" val="-99" -->
+<!--#include virtual="/sm/sm.srv?action=dbus&args=--system --dest=com.axis.VideoControl /com/axis/VideoControl/$camnbr$ org.freedesktop.DBus.Properties.Get string:com.axis.VideoControl string:MaxXOffset" -->
+var xOffset_Max = '<!--#echo var="ssi_dbus" option="encoding:none" -->';
+if ((xOffset_Min == -99) || (xOffset_Max == -99))
+{
+  var min_max = '<!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.ImageSource.I$nbr$.Video.XOffset&name=dummyXO&format=htmlvalue" -->';
+  xOffset_Min = getTypeMin(min_max, -99);
+  xOffset_Max = getTypeMax(min_max, -99);
+  if ((xOffset_Min == -99) || (xOffset_Max == -99))
+  {
+    xOffset_Min = -4;
+    xOffset_Max = 5;
+  }
+}
+
+var min_max = '<!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.ImageSource.I$nbr$.Video.YOffset&name=dummyXO&format=htmlvalue" -->';
+var yOffset_Min = getTypeMin(min_max, -99);
+var yOffset_Max = getTypeMax(min_max, -99);
+if ((yOffset_Min == -99) || (yOffset_Max == -99))
+{
+  yOffset_Min = -8;
+  yOffset_Max = 8;
+}
+
+var SaveBtnStatTxt;
+var ResetBtnStatTxt;
+function globalLanguageVars()
+{
+<!--#if expr="$(root_ImageSource_I$nbr$_Video_DeinterlaceMode) != " -->
+  var deinterlaceModeHiddenDiv = document.getElementById("deinterlaceModeHidden");
+  var deinterlaceModeHiddenSelect = deinterlaceModeHiddenDiv.getElementsByTagName("select")[0];
+  
+  var deIntrlModeArr = langObjVidImgVid.createOptionArrayFromList(deinterlaceModeHiddenSelect);
+  
+  langObjVidImgVid.addOptionsToList(document.getElementById("root_ImageSource_I<!--#echo var="nbr" option="encoding:javascript" -->_Video_DeinterlaceMode"), deIntrlModeArr);
+<!--#endif -->
+
+<!--#if expr="$(root_ImageSource_I$nbr$_Video_VideoTermination) != " -->
+  var videoTermArr = new Array();
+  videoTermArr[0] = {val: "off", text: langObjVidImgVid.getText("offTxt")};
+  videoTermArr[1] = {val: "75ohm", text: langObjVidImgVid.getText("onTxt")};
+  langObjVidImgVid.addOptionsToList(document.getElementsByName("root_ImageSource_I<!--#echo var="nbr" option="encoding:javascript" -->_Video_VideoTermination")[0], videoTermArr);
+<!--#endif -->
+
+<!--#if expr="$(root_ImageSource_I$nbr$_Video_NoiseReduction) != " -->
+  var noiseReducArr = new Array();
+  noiseReducArr[0] = {val: "0", text: langObjVidImgVid.getText("offTxt")};
+  noiseReducArr[1] = {val: "50", text: langObjVidImgVid.getText("onTxt")};
+  langObjVidImgVid.addOptionsToList(document.getElementById("root_ImageSource_I<!--#echo var="nbr" option="encoding:javascript" -->_Video_NoiseReduction"), noiseReducArr);
+<!--#endif -->
+
+  SaveBtnStatTxt = langObjVidImgVid.getText("saveBtnStatTxt");
+  ResetBtnStatTxt = langObjVidImgVid.getText("resBtnStatTxt");
+}
+
+//-->
+</script>
+</head>
+<body <!--#include virtual="/incl/bodytag.shtml" --> onLoad="langObjVidImgVid.init();setFields();">
+
+<!--#if expr="$(root_ImageSource_I$nbr$_Video_DeinterlaceMode) != " -->
+<form>
+  <DIV STYLE="display: none" ID="deinterlaceModeHidden"><!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.ImageSource.I$nbr$.Video.DeinterlaceMode&format=htmlvalue" --></DIV>
+</form>
+<!--#endif -->
+
+<!--#include virtual="/incl/top_incl2.shtml" -->
+
+<input type="hidden" name="root_ImageSource_I<!--#echo var="nbr" option="encoding:html" -->_Name" value="<!--#echo var="root_ImageSource_I$nbr$_Name" option="encoding:html" -->">
+
+<table border="0" cellpadding="3" cellspacing="0" width="100%" valign="top">
+<tr>
+<td>
+<table border="<!--#echo var="zero" option="encoding:html" -->" cellpadding="<!--#echo var="cellpadding3" option="encoding:html" -->" cellspacing="<!--#echo var="zero" option="encoding:html" -->" width="100%" class="alternateRows">
+  <tr class="topTitle">
+    <td colspan="4" valign="top" width="80%"><div align="left"><span id="camSetTxt"></span></div></td>
+    <td align="right" width="20%"><a href="<!--#echo var="helpURL" option="encoding:url" -->"><img height="27" width="27" src="/pics/help.gif" border="0" id="hlpPic"></a></td>
+  </tr>
+
+  <tr class="subTitle">
+    <td align="left" colspan="5"><span id="imgAppTxt"></span></td>
+  </tr>
+
+  <!--#if expr="_$(root_ImageSource_I$nbr$_Sensor_ColorLevel) != _" -->
+    <tr>
+      <td width="20%"><span id="colLev1Txt"></span></td>
+      <td colspan="4" width="80%">
+        <!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.ImageSource.I$nbr$.Sensor.ColorLevel&format=htmlvalue" -->
+      </td>
+    </tr>
+  <!--#endif -->
+
+  <!--#if expr="$(root_ImageSource_I$nbr$_Video_Hue) != " -->
+    <tr>
+      <td width="20%"><span id="hueTxt"></span></td>
+      <td colspan="4" width="80%">
+      <!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.ImageSource.I$nbr$.Video.Hue&format=htmlvalue" -->
+      </td>
+    </tr>
+  <!--#endif -->
+
+  <!--#if expr="$(root_ImageSource_I$nbr$_Video_Saturation) != " -->
+    <tr>
+      <td width="20%"><span id="colLev2Txt"></span></td>
+      <td colspan="4" width="80%">
+        <img src="/pics/slider_left.gif" width="14" height="14" id="saturation-left"><img src="/pics/slider_bg_151x14px.gif" width="151" height="14" id="saturation-bg"><img src="/pics/slider_handle.gif" width="5" height="14" id="saturation-handle"><img src="/pics/slider_right.gif" width="14" height="14" id="saturation-right">&nbsp;<!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.ImageSource.I$nbr$.Video.Saturation&format=htmlvalue&input_format=id%3D%22saturation%22%20size%3D5%20maxlength%3D3" -->
+      </td>
+    </tr>
+  <!--#endif -->
+
+  <!--#if expr="$(root_ImageSource_I$nbr$_Video_Brightness) != " -->
+    <tr>
+      <td width="20%"><span id="briTxt"></span></td>
+      <td colspan="4" width="80%">
+        <img src="/pics/slider_left.gif" width="14" height="14" id="brightness-left"><img src="/pics/slider_bg_151x14px.gif" width="151" height="14" id="brightness-bg"><img src="/pics/slider_handle.gif" width="5" height="14" id="brightness-handle"><img src="/pics/slider_right.gif" width="14" height="14" id="brightness-right">&nbsp;<!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.ImageSource.I$nbr$.Video.Brightness&format=htmlvalue&input_format=id%3D%22brightness%22%20size%3D5%20maxlength%3D3" -->
+      </td>
+    </tr>
+  <!--#endif -->
+
+  <!--#if expr="$(root_ImageSource_I$nbr$_Video_Contrast) != " -->
+    <tr>
+      <td width="20%"><span id="contrTxt"></span></td>
+      <td colspan="4" width="80%">
+        <img src="/pics/slider_left.gif" width="14" height="14" id="contrast-left"><img src="/pics/slider_bg_151x14px.gif" width="151" height="14" id="contrast-bg"><img src="/pics/slider_handle.gif" width="5" height="14" id="contrast-handle"><img src="/pics/slider_right.gif" width="14" height="14" id="contrast-right">&nbsp;<!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.ImageSource.I$nbr$.Video.Contrast&format=htmlvalue&input_format=id%3D%22contrast%22%20size%3D5%20maxlength%3D3" -->
+      </td>
+    </tr>
+  <!--#endif -->
+
+  <!--#if expr="$(root_ImageSource_I$nbr$_Video_Sharpness) != " -->
+    <tr>
+      <td width="20%"><span id="sharpTxt"></span></td>
+      <td colspan="4" width="80%">
+        <img src="/pics/slider_left.gif" width="14" height="14" id="sharpness-left"><img src="/pics/slider_bg_151x14px.gif" width="151" height="14" id="sharpness-bg"><img src="/pics/slider_handle.gif" width="5" height="14" id="sharpness-handle"><img src="/pics/slider_right.gif" width="14" height="14" id="sharpness-right">&nbsp;<!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.ImageSource.I$nbr$.Video.Sharpness&format=htmlvalue&input_format=id%3D%22sharpness%22%20size%3D5%20maxlength%3D3" -->
+      </td>
+    </tr>
+  <!--#endif -->
+
+
+  <tr class="subTitle">
+    <td colspan="5" align="left"><span id="vidSetTxt"></span></td>
+  </tr>
+<!--#if expr="$root_ImageSource_NbrOfSources != 1" -->
+  <tr>
+    <td nowrap><span id="vidSoNaTxt"></span></td>
+    <td colspan="4"><input type="text" name="videoName" value="" maxlength="50"></td>
+  </tr>
+<!--#elif expr="$(root_ImageSource_I$nbr$_Video_Connector) != " -->
+  <tr>
+    <td nowrap width="20%"><span id="phyConTxt"></span></td>
+    <td colspan="4" width="80%">
+      <!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.ImageSource.I$nbr$.Video.Connector&format=htmlvalue" -->
+    </td>
+  </tr>
+<!--#endif -->
+
+  <tr>
+    <td nowrap width="20%"><span id="offAdjTxt"></span></td>
+    <td colspan="4" width="80%">
+      <span id="xOffTxt"></span>&nbsp;<input type="text" size="5" name="root_ImageSource_I<!--#echo var="nbr" option="encoding:html" -->_Video_XOffset" value="<!--#echo var="root_ImageSource_I$nbr$_Video_XOffset" option="encoding:html" -->">&nbsp;<script language="javascript">document.write('[' + xOffset_Min + '..' + xOffset_Max + ']');</script>&nbsp;&nbsp;&nbsp;
+      <span id="yOffTxt"></span>&nbsp;<input type="text" size="5" name="root_ImageSource_I<!--#echo var="nbr" option="encoding:html" -->_Video_YOffset" value="<!--#echo var="root_ImageSource_I$nbr$_Video_YOffset" option="encoding:html" -->">&nbsp;<script language="javascript">document.write('[' + yOffset_Min + '..' + yOffset_Max + ']');</script>
+    </td>
+  </tr>
+<!--#if expr="$(root_ImageSource_I$nbr$_Video_DeinterlaceMode) != " -->
+  <tr>
+    <td nowrap width="20%"><span id="deintTxt"></span></td>
+    <td colspan="4" width="80%">
+      <select name="root_ImageSource_I<!--#echo var="nbr" option="encoding:html" -->_Video_DeinterlaceMode" id="root_ImageSource_I<!--#echo var="nbr" option="encoding:html" -->_Video_DeinterlaceMode"></select>
+    </td>
+  </tr>
+<!--#endif -->
+
+<!--#if expr="$root_ImageSource_AntialiasingEnabled != " -->
+  <tr>
+    <td nowrap width="20%"><span id="antialTxt"></span></td>
+    <td><!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.ImageSource.AntialiasingEnabled&format=htmlvalue" --></td>
+    <td colspan="2">
+        <br />
+    </td>
+    <td><br /></td>
+  </tr>
+<!--#endif -->
+
+<!--#if expr="$(root_ImageSource_I$nbr$_Video_VideoTermination) != " -->
+  <tr>
+    <td nowrap width="20%"><span id="vidTerTxt"></span></td>
+    <td colspan="4" width="80%">
+      <select name="root_ImageSource_I<!--#echo var="nbr" option="encoding:html" -->_Video_VideoTermination"></select>
+    </td>
+  </tr>
+<!--#endif -->
+
+  <tr>
+    <td colspan="5">
+      <span id="noPreDescTxt"></span>
+    </td>
+  </tr>
+
+<!--#set var="showImageSettings" val="no" -->
+<!--#if expr="$(root_ImageSource_I$nbr$_Video_NoiseReduction) != " -->
+  <!--#set var="showImageSettings" val="yes" -->
+<!--#endif -->
+<!--#if expr="$showImageSettings = yes" -->
+<tr class="subTitle">
+  <td colspan="5" align="left"><span id="imgSettTxt"></span></td>
+</tr>
+<!--#endif -->
+<!--#if expr="$(root_ImageSource_I$nbr$_Video_NoiseReduction) != " -->
+<tr>
+  <td nowrap><span id="noiseReducTxt"></span></td>
+  <td colspan="4">
+    <select name="root_ImageSource_I<!--#echo var="nbr" option="encoding:html" -->_Video_NoiseReduction" id="root_ImageSource_I<!--#echo var="nbr" option="encoding:html" -->_Video_NoiseReduction"></select>
+  </td>
+</tr>
+<!--#endif -->
+
+<tr>
+  <td colspan="5" align="center" class="button">
+    <table border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td class="button"><input type="button" value="" class="btnNormal" width="75" onClick="JavaScript:saveData()" id="video_SaveBtn" onMouseOver="return showStatus(SaveBtnStatTxt)" onMouseOut="return showStatus('')"></td>
+         <td class="button">&nbsp;</td>
+         <td class="button"><input type="button" value="" class="btnNormal" width="75" onClick="reloadPage()" id="video_ResetBtn" onMouseOver="return showStatus(ResetBtnStatTxt)" onMouseOut="return showStatus('')">
+           <input type="hidden" name="return_page" value="/operator/video.shtml?nbr=<!--#echo var="nbr" option="encoding:url" -->&id=<!--#echo var="ssi_request_id" option="encoding:url" -->">
+           <input type="hidden" name="action" value="modify">
+         </td>
+      </tr>
+    </table>
+    </td>
+</table>
+</td>
+</tr>
+</table>
+
+<!--#include virtual="/incl/bottom_incl.shtml" -->

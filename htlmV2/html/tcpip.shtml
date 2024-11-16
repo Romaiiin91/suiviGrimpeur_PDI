@@ -1,0 +1,576 @@
+<!--#set var="helpURL" val="javascript:launch('/help/tcpip_h.shtml')" -->
+<!--#set var="WizardFormAction" val="/sm/sm.srv" -->
+<!--#if expr="$basic = yes" -->
+  <!--#set var="activeMenu" val="basic" -->
+  <!--#set var="activePage" val="tcpip_basic" -->
+<!--#else -->
+  <!--#set var="activeMenu" val="system" -->
+  <!--#set var="activeMenu1" val="network" -->
+  <!--#set var="activeMenu2" val="tcpip" -->
+  <!--#set var="activePage" val="tcpip" -->
+<!--#endif -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+
+<!--#include virtual="/sm/sm.srv?action=get&group=Network,Time.ObtainFromDHCP,RemoteService" -->
+
+<!--#include virtual="/java/chkbox.shtml" -->
+<!--#include virtual="/java/integer.shtml" -->
+<!--#include virtual="/java/ip.shtml" -->
+
+<script language="javascript" type="text/javascript">
+<!--
+<!--#include virtual="/incl/functions.shtml" -->
+
+var langObjTcpIp = new Language("network", "tcpip");
+
+function onLoad()
+{
+  langObjTcpIp.init();
+  var form = document.WizardForm;
+
+  setValues();
+
+  var interfaces = 1;
+
+
+  if(interfaces == 2)
+  {
+    for(var i=0; i < interfaces; i++)
+      ableIPv4(i);
+  }
+  else
+  {
+    ableIPv4();
+  }
+
+}
+
+
+function ableIPv4(interfaceId)
+{
+  var checkStr = "Network_Enabled";
+  var addStr = "";
+  if(interfaceId == 0 || interfaceId == 1)
+  {
+    checkStr = "Network_Interface_I"+interfaceId+"_Link_IPv4Enabled";
+    addStr = "Interface_I"+interfaceId+"_Link_";
+  }
+  
+  var form = document.WizardForm;
+
+  if (form[checkStr].checked)
+  {
+    form["root_Network_"+addStr+"BootProto"][0].disabled = false;
+    form["root_Network_"+addStr+"BootProto"][1].disabled = false;
+    setStaticIPDisabled(form["root_Network_"+addStr+"BootProto"][0].checked == true, interfaceId);
+  } 
+  else 
+  {
+    form["root_Network_"+addStr+"BootProto"][0].disabled = true;
+    form["root_Network_"+addStr+"BootProto"][1].disabled = true;
+    setStaticIPDisabled(true, interfaceId);
+  }
+}
+
+function setStaticIPDisabled(value, interfaceId)
+{
+  var addStr = "";
+  if(interfaceId != 0 && interfaceId != 1)
+    interfaceId = "";
+  else
+    addStr = "Interface_I"+interfaceId+"_Manual_";
+
+  var form = document.WizardForm;
+  
+  var tst = document.getElementsByName("tcpip_Test" + interfaceId);
+  if( tst && tst[0] )
+    tst[0].disabled = value;
+  form["root_Network_"+addStr+"IPAddress"].disabled = value;
+  form["root_Network_"+addStr+"SubnetMask"].disabled = value;
+  form["root_Network_"+addStr+"DefaultRouter"].disabled = value;
+}
+
+var axajRequestTestIP = AxisConnectionFactory.createAjaxConnection();
+
+function testTCPIP( btn, interfaceId )
+{
+  btn.disabled = true;
+
+  var form = document.WizardForm
+  var addStr = "";
+  if(interfaceId == 0 || interfaceId == 1)
+     addStr = "Interface_I"+interfaceId+"_Manual_";
+  var ip = form["root_Network_"+addStr+"IPAddress"].value;
+
+  if ((checkIPnumber(form["root_Network_"+addStr+"IPAddress"], false) == 1) && 
+      (checkIPbounds(form["root_Network_"+addStr+"DefaultRouter"]) == 1) )
+  {
+    var url = "/axis-cgi/operator/pingtest.cgi?ip="+ip;
+    AxisConnectionFactory.sendSync(["GET", url], null, axajRequestTestIP);
+
+    var response = langObjTcpIp.getText("tstIpAlrt1");
+
+    var result =  ( ( axajRequestTestIP.getStatus() == 200 ) ? axajRequestTestIP.getResponseText(): "");
+    result = result.replace("\r\n", "");
+    if (result == "no response") {
+      response = langObjTcpIp.getText("tstIpAlrt2");
+    } else if (result == "got response") {
+      response = langObjTcpIp.getText("tstIpAlrt3");
+    }
+    alert(response);
+  }
+  btn.disabled = false;
+}
+
+function dhcp(interfaceId)
+{
+  var addStr = "";
+  if(interfaceId == 0 || interfaceId == 1)
+    addStr = "Interface_I"+interfaceId+"_Link_";
+
+  var form = document.WizardForm;
+
+  if (confirm( langObjTcpIp.getText("enbleDHCPConfirm") ))
+  {
+    setStaticIPDisabled(true, interfaceId);
+  } 
+  else 
+    form["root_Network_"+addStr+"BootProto"][1].checked = true;
+}
+
+function ValidateParameters()
+{
+  var addStr = "";
+  var checkStr = "";  
+
+  var form = document.WizardForm
+
+  // Don't care about manual IP settings if it is going to be handled by DHCP anyway
+    if (form["root_Network_"+checkStr+"BootProto"][0].checked == false) {
+      if (checkIPnumber(form["root_Network_"+addStr+"IPAddress"], false) != 1) return 0;
+      if (checkIPbounds(form["root_Network_"+addStr+"IPAddress"]) != 1) return 0;
+      if (checkSubnetMask(form["root_Network_"+addStr+"SubnetMask"], false) != 1) return 0;
+      if (checkIPnumber(form["root_Network_"+addStr+"DefaultRouter"], true) != 1) return 0;
+      if (checkIPbounds(form["root_Network_"+addStr+"DefaultRouter"]) != 1) return 0;
+      if (checkDefaultRouter(form["root_Network_"+addStr+"IPAddress"], form["root_Network_"+addStr+"SubnetMask"], form["root_Network_"+addStr+"DefaultRouter"]) != 1) return 0;
+      if (checkIPbounds(form["root_Network_"+addStr+"IPAddress"], form["root_Network_"+addStr+"SubnetMask"]) != 1) return 0;
+    }
+  return 1
+}
+
+function calcBroadcastAddress(interfaceId)
+{
+  var addStr = "";
+  if(interfaceId === 0 || interfaceId === 1)
+    addStr = "Interface_I"+interfaceId+"_Manual_";
+
+  var form = document.WizardForm;
+  var ip =  form["root_Network_"+addStr+"IPAddress"].value + ".";
+  var mask =  form["root_Network_"+addStr+"SubnetMask"].value + ".";
+  var ba = "";
+
+  for (i=0; i<4; i++) {
+    i_index = ip.indexOf(".");
+    m_index = mask.indexOf(".");
+    partOfIP = parseInt(ip.substr(0, i_index));
+    partOfMask = parseInt(mask.substr(0, m_index));
+    var networkPart = eval(partOfMask & partOfIP);
+    ba += ((networkPart) ^ (~ partOfMask) & 255) + ".";
+    ip = ip.slice(i_index + 1);
+    mask = mask.slice(m_index + 1);
+  }
+
+  ba = ba.substring(0, ba.length-1);
+  form["root_Network_"+addStr+"Broadcast"].value = ba;
+}
+
+function setValues()
+{
+  var target = document.WizardForm;
+
+  setRadiobutton(target.root_Network_BootProto, "<!--#echo var="root_Network_BootProto" option="encoding:javascript" -->");
+}
+
+function viewCurrentSettings()
+
+{
+  openPopUp('/admin/viewNetSettings.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->', 'view_Net_Settings', 420, 260);
+}
+
+function ValidateIPInput( address ) 
+{
+  address.value = address.value.replace(/[^0-9.]/g,"");
+}
+
+function checkDefaultRouter(IpAddressObj, SubnetMaskObj, DefaultRouterObj)
+{
+  var ipaddress = IpAddressObj.value;
+  var ipaddress_val = calculateIpValue(ipaddress);
+
+  var defaultrouter = DefaultRouterObj.value;
+  var defaultrouter_val = calculateIpValue(defaultrouter);
+
+  var subnet = SubnetMaskObj.value;
+  var subnet_val = calculateIpValue(subnet);
+
+  var inverted_subnet = invertIp(subnet)
+  var inverted_subnet_val = calculateIpValue(inverted_subnet);
+
+  var ip_net_first = (ipaddress_val & subnet_val);
+  var router_net_first = (defaultrouter_val & subnet_val);
+
+  if (defaultrouter.length == 0) return 1;
+  if (defaultrouter == "0.0.0.0") return 1;
+
+  // Check if IpAddress and DefaultRouter in the same subnet?
+  if (ip_net_first != router_net_first ||
+      ip_net_first == ipaddress_val ||
+      ip_net_first + inverted_subnet_val == ipaddress_val ||
+      ip_net_first == defaultrouter_val ||
+      ip_net_first + inverted_subnet_val == defaultrouter_val)
+  {
+    alert( langObjTcpIp.getText("incRouterAlert") );
+    DefaultRouterObj.focus();
+    DefaultRouterObj.select();
+    return 0;
+  }
+
+  return 1;
+}
+
+function calculateIpValue(ip)
+{
+  var ipArr = ip.split(".");
+  var val = 0;
+  for( var i = 0; i < 4; i++ )
+  {
+    val = val*256 + parseInt(ipArr[i], 10);
+  }
+  return val;
+}
+
+function invertIp(ip)
+{
+  var ipArr = ip.split(".");
+  var val = new Array();
+  for( var i = 0; i < 4; i++ )
+  {
+    val.push( 255 - parseInt(ipArr[i], 10) );
+  }
+  return val.join(".");
+}
+
+function toggleRemoteService( el )
+{
+  document.getElementById('remoteServiceTR').style.display=(el.checked?'':'none');
+  document.getElementById('remoteServiceProxyServer').style.display=(el.checked?'':'none');
+  document.getElementById('remoteServiceProxyPort').style.display=(el.checked?'':'none');
+  document.getElementById('remoteServiceProxyLogin').style.display=(el.checked?'':'none');
+  document.getElementById('remoteServiceProxyPassword').style.display=(el.checked?'':'none');
+  document.getElementById('remoteServiceProxyAuth').style.display=(el.checked?'':'none');
+}
+
+function saveData()
+{
+  var form = document.WizardForm
+
+  <!--#if expr="_$IP != _" -->
+    if (!IPNumberOK)
+      form.root_Network_IPAddress.value = "<!--#echo var="root_Network_IPAddress" option="encoding:javascript" -->"
+  <!--#endif -->
+
+  if (ValidateParameters() == 0) {
+    return
+  }
+
+//contains the echos from SSI
+var bootProtoArr = new Array();
+var ipAddrArr = new Array();
+var v4Arr = new Array();
+var v6Arr = new Array();
+
+var i=0;
+
+var addStrLink = "";
+var addStrManual = "";
+var v4Str = "Network_Enabled";
+var v6Str = "Network_IPv6_Enabled";
+var interfaceId = "";
+
+bootProtoArr[0] = "<!--#echo var="root_Network_BootProto" option="encoding:javascript" -->";
+ipAddrArr[0] = "<!--#echo var="root_Network_IPAddress" option="encoding:javascript" -->";
+v4Arr[0] = "<!--#echo var="Network_Enabled" option="encoding:javascript" -->";
+v6Arr[0] = "<!--#echo var="Network_IPv6_Enabled" option="encoding:javascript" -->";
+
+
+  var selectedBootproto;
+
+  for (count = 0 ; count < form["root_Network_"+addStrLink+"BootProto"].length ; count++) {
+    if (form["root_Network_"+addStrLink+"BootProto"][count].checked) {
+      selectedBootproto = form["root_Network_"+addStrLink+"BootProto"][count].value;
+      break;
+    }
+  }
+  
+  if (selectedBootproto != bootProtoArr[i]) {
+    if (!confirm( langObjTcpIp.getText("changedAutoIpConfirm") )) {
+      return;
+    }
+  }
+  if (form[v6Str].checked == false && form[v4Str].checked == false) {
+    alert( langObjTcpIp.getText("disbleBothAlert") );
+    return;
+  }
+
+  if (!form[v4Str].checked && v4Arr[i] == 'yes') {
+    if (!confirm( langObjTcpIp.getText("changedIpv4Confirm") )) {
+      return
+    } else {
+      form.return_page.disabled = true;
+      form.replyfirst.value = "yes"
+    }
+  }
+
+  if (!form[v6Str].checked && v6Arr[i] == 'yes') {
+    if (!confirm( langObjTcpIp.getText("changedIpv6Confirm") )) {
+      return
+    } else {
+      form.return_page.disabled = true;
+      form.replyfirst.value = "yes"
+    }
+  }
+  if (form["root_Network_"+addStrManual+"IPAddress"].value != ipAddrArr[i]) {
+    form.return_page.disabled = true;
+    form.replyfirst.value = "yes"
+  }
+
+  if (selectedBootproto != bootProtoArr[i]) {
+    form.return_page.disabled = true;
+    form.replyfirst.value = "yes"
+  }
+
+  calcBroadcastAddress(interfaceId);
+
+  if (form.RemoteService_Enabled.checked) { 
+     if (form.RemoteService_Enabled_value[0].checked) {
+        form.root_RemoteService_Enabled.value = "oneclick";
+     } else {
+        form.root_RemoteService_Enabled.value = "yes";
+     }
+     if (form.RemoteService_ProxyAuth_value[0].checked) {
+        form.root_RemoteService_ProxyAuth.value = "basic";
+     } else if (form.RemoteService_ProxyAuth_value[1].checked) {
+        form.root_RemoteService_ProxyAuth.value = "digest";
+     } else {
+        form.root_RemoteService_ProxyAuth.value = "auto";
+     }
+  } else {
+     form.root_RemoteService_Enabled.value = "no";
+  }
+
+  if (form.return_page.disabled) {
+     alert( langObjTcpIp.getText("ipChTxt_1")+" <!--#echo var="glob_prodName" option="encoding:javascript" --> "+langObjTcpIp.getText("ipChTxt_2"));
+  }
+
+  form.submit();
+}
+
+function reloadPage()
+{
+  window.location.href = "/admin/tcpip.shtml?<!--#if expr="$basic = yes" -->basic=yes&<!--#endif -->id=<!--#echo var="ssi_request_id" option="encoding:url" -->"
+}
+
+var dispCurrNetSetStatTxt;
+var testIPBtnStatTxt;
+var notBtnStatTxt;
+var AxisDynBtnStatTxt;
+var SaveBtnStatTxt;
+var ResBtnStatTxt;
+var ViewIPv6BtnStatTxt;
+function globalLanguageVars()
+{
+  dispCurrNetSetStatTxt = langObjTcpIp.getText("dispCurrNetSetStatTxt");
+  testIPBtnStatTxt = langObjTcpIp.getText("testIPBtnStatTxt");
+  notBtnStatTxt = langObjTcpIp.getText("notBtnStatTxt");
+<!--#if expr="_$root_Network_AxisNS_Enabled != _" -->
+  AxisDynBtnStatTxt = langObjTcpIp.getText("axisDynBtnStatTxt");
+<!--#endif -->
+  SaveBtnStatTxt = langObjTcpIp.getText("saveBtnStatTxt");
+  ResBtnStatTxt = langObjTcpIp.getText("resBtnStatTxt");
+  ViewIPv6BtnStatTxt = langObjTcpIp.getText("viewIPv6BtnStatTxt");
+}
+
+// -->
+</script>
+
+</head>
+<body <!--#include virtual="/incl/bodytag.shtml" --> onload="onLoad()">
+
+<!--#include virtual="/incl/top_incl2.shtml" -->
+<input type="hidden" name="root_Network_ZeroConf_Enabled" value="<!--#echo var="root_Network_ZeroConf_Enabled" option="encoding:html" -->">
+<input type="hidden" name="root_Network_Broadcast" value="<!--#echo var="root_Network_Broadcast" option="encoding:html" -->">
+<input type="hidden" name="root_Network_Enabled" value="<!--#echo var="root_Network_Enabled" option="encoding:html" -->">
+<input type="hidden" name="root_Network_IPv6_Enabled" value="<!--#echo var="root_Network_IPv6_Enabled" option="encoding:html" -->">
+
+<table border="<!--#echo var="zero" option="encoding:html" -->" cellpadding="<!--#echo var="cellpadding3" option="encoding:html" -->" cellspacing="<!--#echo var="zero" option="encoding:html" -->" width="<!--#echo var="tableWidth3" option="encoding:html" -->"  class="alternateRows">
+<tr class="topTitle">
+<td colspan="3" width="1%" valign="top" nowrap>
+
+<div align="left"><span id="tcpIpSetTxt"></span></div>
+</td>
+<td>
+<div align="right"><a href="<!--#echo var="helpURL" option="encoding:url" -->"><img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="hlpPic"></a></div></td>
+</tr>
+<tr class="subTitle">
+<td colspan="4"><span id="netSetTxt"></span></td>
+</tr>
+<tr>
+  <td nowrap colspan="2"><span id="viewCurrTxt"></span></td>
+  <td colspan="2"><input type="button" class="btnNormal" width="75" value="" onClick="viewCurrentSettings()" onMouseOver="return showStatus(dispCurrNetSetStatTxt)" onMouseOut="return showStatus('')" id="tcpip_ViewBtn"></td>
+</tr>
+<tr class="subTitle">
+<td colspan="4">
+<div align="left"><span id="ipV4ConfTxt"></span></div>
+</td>
+</tr>
+<tr>
+  <td colspan="4"><input type="checkbox" name="Network_Enabled" onClick="JavaScript:CheckBoxClicked(this.form, this,'root_Network_Enabled', 'yes', 'no');ableIPv4()" <!--#if expr="$root_Network_Enabled = yes" -->checked<!--#endif -->>&nbsp;<span id="enblIPv4Txt"></span></td>
+  </tr>
+
+<tr>
+  <td nowrap colspan="4">
+   <input name="root_Network_BootProto" TYPE="radio" value="dhcp" <!--#if expr="$root_Network_BootProto = dhcp" -->checked<!--#endif --> onClick="dhcp()">&nbsp;<span id="dhIpTxt"></span>
+  </td>
+</tr>
+<tr class="evenItem">
+  <td nowrap colspan="4">
+    <input name="root_Network_BootProto" type="radio" value="none" <!--#if expr="$root_Network_BootProto = none" -->checked<!--#endif --> onClick="setStaticIPDisabled(false)">&nbsp;<span id="statIpTxt"></span>
+  </td>
+</tr>
+<tr class="reuseLast">
+  <td nowrap colspan="2"><!--IP Address -->
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="ipAdrTxt"></span></td>
+  <td colspan="2">
+    <input type='text' name='root_Network_IPAddress' id='root_Network_IPAddress' size='18' maxlength='15' value='<!--#if expr="_$IP != _" --><!--#echo var="IP" option="encoding:html" --><!--#else --><!--#echo var="root_Network_IPAddress" option="encoding:html" --><!--#endif -->' onchange="ValidateIPInput(this)">&nbsp;
+    <input type="button" width="75" name="tcpip_Test" value="" class="btnNormal" onclick="testTCPIP(this)" onmouseover="return showStatus(testIPBtnStatTxt)" onmouseout="return showStatus('')" id="tcpip_Test0" />
+  </td>
+</tr>
+<tr class="reuseLast">
+  <td nowrap colspan="2"><!--Subnet Mask -->
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="submasTxt"></span></td>
+  <td colspan="2"><input type='text' name='root_Network_SubnetMask' size='18' maxlength='15' value='<!--#if expr="_$Mask != _" --><!--#echo var="Mask" option="encoding:html" --><!--#else --><!--#echo var="root_Network_SubnetMask" option="encoding:html" --><!--#endif -->' onchange="ValidateIPInput(this)"></td>
+</tr>
+<tr class="reuseLast">
+  <td colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="defRouTxt"></span></td>
+  <td colspan="2">
+    <input type='text' name='root_Network_DefaultRouter' size='18' maxlength='15'  value='<!--#if expr="_$Router != _" --><!--#echo var="Router" option="encoding:html" --><!--#else --><!--#echo var="root_Network_DefaultRouter" option="encoding:html" --><!--#endif -->' onchange="ValidateIPInput(this)">
+  </td>
+ </tr>
+ <tr class="subTitle">
+  <td colspan="4">
+    <div align="left"><span id="ipV6ConfTxt"></span></div>
+  </td>
+ </tr>
+ <tr>
+  <td colspan="4">
+    <input type="checkbox" name="Network_IPv6_Enabled" onClick="JavaScript:CheckBoxClicked(this.form, this,'root_Network_IPv6_Enabled', 'yes', 'no')" <!--#if expr="$root_Network_IPv6_Enabled = yes" -->checked<!--#endif -->>&nbsp;<span id="enblIPv6"></span>
+  </td>
+ </tr>
+
+
+<tr class="subTitle">
+  <td colspan="4">
+    <div align="left"><span id="servTxt"></span></div>
+  </td>
+</tr>
+<tr>
+  <td colspan="4">
+    <input type="hidden" name="root_Network_ARPPingIPAddress_Enabled" value="<!--#echo var="root_Network_ARPPingIPAddress_Enabled" option="encoding:html" -->">
+   <input type="checkbox" name="Network_ARPPingIPAddress_Enabled" onClick="CheckBoxClicked(this.form, this,'root_Network_ARPPingIPAddress_Enabled', 'yes', 'no')" <!--#if expr="$root_Network_ARPPingIPAddress_Enabled = yes" -->checked<!--#endif -->>&nbsp;<span id="arpPingEnblTxt"></span>
+  </td>
+</tr>
+<tr>
+  <td colspan="4">
+   <input type="hidden" name="root_RemoteService_Enabled" value="<!--#echo var="root_RemoteService_Enabled" option="encoding:html" -->">
+   <input type="checkbox" name="RemoteService_Enabled" <!--#if expr="$root_RemoteService_Enabled != no" -->checked<!--#endif --> onclick="javascript:toggleRemoteService( this )">&nbsp;<span id="aVHSEnblTxt"></span>
+  </td>
+</tr>
+<tr class="reuseLast" id="remoteServiceTR" <!--#if expr="$root_RemoteService_Enabled = no" -->style="display:none"<!--#endif -->>
+  <td colspan="4">
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <input name="RemoteService_Enabled_value" TYPE="radio" value="oneclick" <!--#if expr="$root_RemoteService_Enabled = oneclick" -->checked<!--#endif --> >&nbsp;<span id="aVHSOneClickTxt"></span>
+    <input name="RemoteService_Enabled_value" TYPE="radio" value="yes" <!--#if expr="$root_RemoteService_Enabled = yes" -->checked<!--#endif -->>&nbsp;<span id="aVHSAlwaysTxt"></span>&nbsp;
+  </td>
+</tr>
+<tr class="reuseLast" id="remoteServiceProxyServer" <!--#if expr="$root_RemoteService_Enabled = no" -->style="display:none"<!--#endif -->>
+  <td colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="aVHSProxyTxt"></span></td>
+  <td colspan="2">
+    <input type="text" name="root_RemoteService_ProxyServer" size="18" maxlength="50"  value='<!--#echo var="root_RemoteService_ProxyServer" option="encoding:html" -->'>
+  </td>
+</tr>
+<tr class="reuseLast" id="remoteServiceProxyPort" <!--#if expr="$root_RemoteService_Enabled = no" -->style="display:none"<!--#endif -->>
+  <td colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="aVHSProxyPortTxt"></span></td>
+  <td colspan="2">
+    <input type="text" name="root_RemoteService_ProxyPort" size="18" maxlength="15"  value='<!--#echo var="root_RemoteService_ProxyPort" option="encoding:html" -->'>
+  </td>
+</tr>
+<tr class="reuseLast" id="remoteServiceProxyLogin" <!--#if expr="$root_RemoteService_Enabled = no" -->style="display:none"<!--#endif -->>
+  <td colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="aVHSProxyLoginTxt"></span></td>
+  <td colspan="2">
+    <input type="text" name="root_RemoteService_ProxyLogin" size="18" maxlength="15"  value='<!--#echo var="root_RemoteService_ProxyLogin" option="encoding:html" -->'>
+  </td>
+</tr>
+<tr class="reuseLast" id="remoteServiceProxyPassword" id="" <!--#if expr="$root_RemoteService_Enabled = no" -->style="display:none"<!--#endif -->>
+  <td colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="aVHSProxyPasswordTxt"></span></td>
+  <td colspan="2">
+    <input type="text" name="root_RemoteService_ProxyPassword" size="18" maxlength="15"  value='<!--#echo var="root_RemoteService_ProxyPassword" option="encoding:html" -->'>
+  </td>
+</tr>
+<tr class="reuseLast" id="remoteServiceProxyAuth" <!--#if expr="$root_RemoteService_Enabled = no" -->style="display:none"<!--#endif -->>
+<td colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="aVHSProxyAuthenticationTxt"></span></td>
+ <td colspan="2">
+    <input name="RemoteService_ProxyAuth_value" type="radio" value="basic" <!--#if expr="$root_RemoteService_ProxyAuth = basic" -->checked<!--#endif --> >&nbsp;<span id="aVHSproxyauthbasicTxt"></span>
+    <input name="RemoteService_ProxyAuth_value" type="radio" value="digest" <!--#if expr="$root_RemoteService_ProxyAuth = digest" -->checked<!--#endif --> >&nbsp;<span id="aVHSproxyauthdigestTxt"></span>
+    <input name="RemoteService_ProxyAuth_value" type="radio" value="auto" <!--#if expr="$root_RemoteService_ProxyAuth = auto" -->checked<!--#endif --> >&nbsp;<span id="aVHSproxyauthautoTxt"></span>
+    <input name="root_RemoteService_ProxyAuth" id="root_RemoteService_ProxyAuth" type="hidden">
+  </td>
+</tr>
+
+<!--#if expr="_$root_Network_AxisNS_Enabled != _" -->
+<tr>
+  <td nowrap colspan="2">
+    <span id="axDynDnsTxt"></span></td>
+  <td colspan="2">
+    <input type="button" width="75" class="btnNormal" value=""  onClick="JavaScript:openPopUp('/admin/internetDyn_DNS.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->', 'Dynamic_DNS_Service', 528, 280)" onMouseOver="return showStatus(AxisDynBtnStatTxt)" onMouseOut="return showStatus('')" id="tcpip_DDNSSettingsBtn">
+  </td>
+</tr>
+<!--#endif -->
+
+<tr class="topTitle">
+  <td align="center" nowrap colspan="4">
+    <table border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td class="button"><input type="button" width="75" value="" class="btnNormal" onClick="saveData()" onMouseOver="return showStatus(SaveBtnStatTxt)" onMouseOut="return showStatus('')" id="tcpip_SaveBtn"></td>
+        <td class="button">&nbsp;</td>
+        <td class="button"><input type="button" width="75" value="" class="btnNormal" onClick="reloadPage()" onMouseOver="return showStatus(ResBtnStatTxt)" onMouseOut="return showStatus('')" id="tcpip_ResetBtn"></td>
+      </tr>
+      <tr><td colspan="3">&nbsp;</td></tr>
+    </table>
+  </td>
+</tr>
+
+<!--#if expr="$basic = yes" -->
+  <tr>
+    <td colspan="4" class="evenItem">
+      <span id="seAlTxt"></span>&nbsp;<a href='/admin/advanced_tcpip.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->'><span id="advTcpIpTxt"></span></a>
+    </td>
+  </tr>
+<!--#endif -->
+</table>
+
+<input type="hidden" name="return_page" value="/admin/tcpip.shtml?<!--#if expr="$basic = yes" -->basic=yes&<!--#endif -->id=<!--#echo var="ssi_request_id" option="encoding:url" -->">
+<input type="hidden" name="action" value="modify">
+<input type="hidden" name="replyfirst" value="no">
+
+<!--#include virtual="/incl/bottom_incl.shtml" -->

@@ -1,0 +1,335 @@
+<!--#set var="helpURL" val="javascript:launch('/help/snmp_h.shtml')" -->
+<!--#set var="WizardFormAction" val="/sm/sm.srv" -->
+<!--#set var="activeMenu" val="system" -->
+<!--#set var="activeMenu1" val="network" -->
+<!--#set var="activePage" val="snmp" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<!--#include virtual="/sm/sm.srv?action=get&group=SNMP,HTTPS.Enabled,System.BoaGroupPolicy.admin" -->
+
+<!--#include virtual="/java/chkbox.shtml" -->
+<!--#include virtual="/java/ip.shtml" -->
+
+<script language="JavaScript" type="text/javascript">
+<!--
+var langObjSnmp = new Language("snmp", "snmp");
+
+function onInit()
+{
+  langObjSnmp.init();
+  toggleTraps();
+}
+
+function saveData()
+{
+  var form = document.WizardForm
+
+  <!--#if expr="$root_SNMP_InitialUserPasswdSet = no" -->
+    <!--#if expr="$root_System_BoaGroupPolicy_admin = both" -->
+      if (form.SNMP_V3.checked) {
+        if (form.root_SNMP_InitialUserPasswd.value.length < 8) {
+          alert( langObjSnmp.getText("iupwAlrtTxt") )
+          form.root_SNMP_InitialUserPasswd.focus();
+          form.root_SNMP_InitialUserPasswd.select();
+          return
+        } else {
+          form.root_SNMP_InitialUserPasswdSet.value = "yes"
+        }
+      } else {
+        form.root_SNMP_InitialUserPasswd.value = ""
+      }
+    <!--#elif expr="$root_System_BoaGroupPolicy_admin = https" -->
+      if (form.SNMP_V3.checked) {
+        if (form.root_SNMP_InitialUserPasswd.value.length < 8) {
+          alert( langObjSnmp.getText("iupwAlrtTxt") )
+          form.root_SNMP_InitialUserPasswd.focus();
+          form.root_SNMP_InitialUserPasswd.select();
+          return
+        } else {
+          form.root_SNMP_InitialUserPasswdSet.value = "yes"
+        }
+      } else {
+        form.root_SNMP_InitialUserPasswd.value = ""
+      }
+    <!--#else -->
+      if (form.SNMP_V3.checked) {
+        alert( langObjSnmp.getText("httpssnmpv3AlrtTxt") )
+        form.SNMP_V3.checked = false
+        form.root_SNMP_V3.value = "no"
+      }
+    <!--#endif -->
+  <!--#endif -->
+
+  if (form.SNMP_V1.checked || form.SNMP_V2c.checked || form.SNMP_V3.checked) {
+    form.root_SNMP_Enabled.value = "yes"
+  } else {
+    form.root_SNMP_Enabled.value = "no"
+  }
+
+  if (document.getElementById("Trap_Enabled").checked) {
+    if (!form.SNMP_V1.checked && !form.SNMP_V2c.checked) {
+      alert( langObjSnmp.getText("saveTrapNotsnmpv1v2Alrt") );
+      return false;
+    }
+
+    var ip = document.getElementById("Trap_T0_Address");
+    if (ip) {
+      if (ip.value.length <= 0) {
+        alert( langObjSnmp.getText("saveTrapIpLengthAlrt") );
+        ip.focus();
+        ip.select();
+        return false;
+      }
+
+      var address_type = checkValidAddress(ip.value, ADDR_IP_ONLY);
+      if (!(address_type == 4 || address_type == 6)) {
+        alert( langObjSnmp.getText("saveTrapIpIpv6Alrt") );
+        ip.focus();
+        ip.select();
+        return false;
+      }
+    }
+  }
+  form.submit()
+}
+
+function traps_snmp3_clicked()
+{
+  var oTE = document.getElementById("Trap_Enabled");
+  var oSNMP3 = document.getElementsByName("SNMP_V3")[0];
+  var trapEnabled = oTE.checked;
+  var snmpv3Enabled = oSNMP3.checked;
+
+  if (trapEnabled && snmpv3Enabled)
+  {
+    alert( langObjSnmp.getText("trapsSnmpV3Alrt") );
+    return false;
+  }
+
+  CheckBoxClicked(document.WizardForm, oTE, 'root_SNMP_Trap_Enabled', 'yes', 'no');
+  CheckBoxClicked(document.WizardForm, oSNMP3, 'root_SNMP_V3', 'yes', 'no');
+
+  toggleTraps();
+
+  return true;
+}
+
+function toggleTraps()
+{
+  var oTE = document.getElementById("Trap_Enabled");
+  var oSNMP3 = document.getElementsByName("SNMP_V3")[0];
+  var trapEnabled = oTE.checked;
+  var snmpv3Enabled = oSNMP3.checked;
+
+  oTE.disabled = snmpv3Enabled;
+  oSNMP3.disabled = trapEnabled;
+
+  document.getElementById("Trap_T0_Address").disabled = !trapEnabled;
+  document.getElementById("Trap_T0_Community").disabled = !trapEnabled;
+  document.getElementById("Trap_T0_ColdStart_Enabled").disabled = !trapEnabled;
+  document.getElementById("Trap_T0_WarmStart_Enabled").disabled = !trapEnabled;
+  document.getElementById("Trap_T0_LinkUp_Enabled").disabled = !trapEnabled;
+  document.getElementById("Trap_T0_AuthFail_Enabled").disabled = !trapEnabled;
+}
+
+function toggleCheckbox(chkbox,hiddenVal)
+{
+  if(chkbox.checked)
+    document.getElementsByName(hiddenVal)[0].value = "yes";
+  else
+    document.getElementsByName(hiddenVal)[0].value = "no";
+}
+
+function reloadPage()
+{
+  window.location.reload(true);
+}
+
+var SaveBtnStatTxt;
+var RevertStatTxt;
+function globalLanguageVars()
+{ 
+  SaveBtnStatTxt = langObjSnmp.getText("saveBtnStatTxt");
+  RevertStatTxt = langObjSnmp.getText("revertStatTxt");
+  
+  document.getElementById("trapColdStartTxt").title = langObjSnmp.getText("trapColdStartExplTxt");
+  document.getElementById("trapWarmStartTxt").title = langObjSnmp.getText("trapWarmStartExplTxt");
+  document.getElementById("trapLinkUpTxt").title = langObjSnmp.getText("trapLinkUpExplTxt");
+  document.getElementById("trapAuthFailTxt").title = langObjSnmp.getText("trapAuthFailExplTxt");
+}
+// -->
+</script>
+
+</head>
+<body <!--#include virtual="/incl/bodytag.shtml" --> onload="onInit();">
+<!--#include virtual="/incl/top_incl2.shtml" -->
+
+<table border="<!--#echo var="zero" option="encoding:html" -->" cellpadding="<!--#echo var="cellpadding3" option="encoding:html" -->" cellspacing="<!--#echo var="zero" option="encoding:html" -->" width="<!--#echo var="tableWidth3" option="encoding:html" -->"  class="oddItem">
+<tr>
+  <td colspan="2" valign="top" class="topTitle" nowrap><div align="left"><span id="snmpSetTxt"></span></div></td>
+  <td class="topTitle"><div align="right"><a href="<!--#echo var="helpURL" option="encoding:url" -->"><img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="hlpPic"></a></div></td>
+</tr>
+
+<tr>
+  <td colspan="3" class="subTitle"><span id="sNMPv1v2Txt"></span></td>
+</tr>
+<tr>
+  <td class="oddItem">
+    <span id="enSNMP1Txt"></span>
+    <input type="hidden" name="root_SNMP_V1" value="<!--#echo var="root_SNMP_V1" option="encoding:html" -->">
+  </td>
+  <td class="oddItem" colspan="2">
+    <input type="checkbox" name="SNMP_V1" onClick="JavaScript:CheckBoxClicked(this.form, this,'root_SNMP_V1', 'yes', 'no')"<!--#if expr="$root_SNMP_V1 = yes" --> checked<!--#endif -->>
+  </td>
+</tr>
+<tr>
+  <td class="evenItem">
+    <span id="enSNMP2Txt"></span>
+    <input type="hidden" name="root_SNMP_V2c" value="<!--#echo var="root_SNMP_V2c" option="encoding:html" -->">
+  </td>
+  <td class="evenItem" colspan="2">
+    <input type="checkbox" name="SNMP_V2c" onClick="JavaScript:CheckBoxClicked(this.form, this,'root_SNMP_V2c', 'yes', 'no')"<!--#if expr="$root_SNMP_V2c = yes" --> checked<!--#endif -->>
+  </td>
+</tr>
+<tr>
+  <td class="oddItem">
+  <span id="readComTxt"></span>
+  </td>
+  <td colspan="2" class="oddItem">
+    <input type="text" name="root_SNMP_V1ReadCommunity" value="<!--#echo var="root_SNMP_V1ReadCommunity" option="encoding:html" -->" maxlength="32">
+  </td>
+</tr>
+<tr>
+  <td class="evenItem">
+  <span id="writeComTxt"></span>
+  </td>
+  <td colspan="2" class="evenItem">
+    <input type="text" name="root_SNMP_V1WriteCommunity" value="<!--#echo var="root_SNMP_V1WriteCommunity" option="encoding:html" -->" maxlength="32">
+  </td>
+</tr>
+<tr><td><br></td></tr>
+<tr>
+  <td colspan="3" class="subTitle"><span id="trapsTxt"></span></td>
+</tr>
+<tr>
+  <td class="oddItem">
+  <span id="trapsEnblTxt"></span>
+  </td>
+  <td class="oddItem" colspan="2">
+    <input type="checkbox" id="Trap_Enabled"<!--#if expr="$root_SNMP_Trap_Enabled = yes" --> checked<!--#endif --> onclick="javascript: return traps_snmp3_clicked();">
+    <input type="hidden" name="root_SNMP_Trap_Enabled" value="<!--#echo var="root_SNMP_Trap_Enabled" option="encoding:html" -->">
+  </td>
+</tr>
+<tr>
+  <td class="evenItem">
+  <span id="trapAddrTxt"></span>
+  </td>
+  <td colspan="2" class="evenItem">
+    <input type="text" id="Trap_T0_Address" name="root_SNMP_Trap_T0_Address" value="<!--#echo var="root_SNMP_Trap_T0_Address" option="encoding:html" -->" maxlength="256">
+  </td>
+</tr>
+<tr>
+  <td class="oddItem">
+  <span id="trapCommTxt"></span>
+  </td>
+  <td colspan="2" class="oddItem">
+    <input type="text" id="Trap_T0_Community" name="root_SNMP_Trap_T0_Community" value="<!--#echo var="root_SNMP_Trap_T0_Community" option="encoding:html" -->" maxlength="32">
+  </td>
+</tr>
+
+
+
+<tr><td colspan="3" class="evenItem"><b><span id="avaTraTxt"></span></b></td></tr>
+
+
+<tr>
+  <td class="oddItem" style="padding-left: 10px;">
+  <span id="trapColdStartTxt"></span>
+  </td>
+  <td class="oddItem" colspan="2">
+    <input type="checkbox" id="Trap_T0_ColdStart_Enabled"<!--#if expr="$root_SNMP_Trap_T0_ColdStart_Enabled = yes" --> checked<!--#endif --> ONCLICK="javascript: toggleCheckbox(this,'root_SNMP_Trap_T0_ColdStart_Enabled');">
+    <input type="hidden" name="root_SNMP_Trap_T0_ColdStart_Enabled" value="<!--#echo var="root_SNMP_Trap_T0_ColdStart_Enabled" option="encoding:html" -->">
+  </td>
+</tr>
+<tr>
+  <td class="evenItem" style="padding-left: 10px;">
+  <span id="trapWarmStartTxt"></span>
+  </td>
+  <td class="evenItem" colspan="2">
+    <input type="checkbox" id="Trap_T0_WarmStart_Enabled"<!--#if expr="$root_SNMP_Trap_T0_WarmStart_Enabled = yes" --> checked<!--#endif --> ONCLICK="javascript: toggleCheckbox(this,'root_SNMP_Trap_T0_WarmStart_Enabled');">
+    <input type="hidden" name="root_SNMP_Trap_T0_WarmStart_Enabled" value="<!--#echo var="root_SNMP_Trap_T0_WarmStart_Enabled" option="encoding:html" -->">
+  </td>
+</tr>
+<tr>
+  <td class="oddItem" style="padding-left: 10px;">
+  <span id="trapLinkUpTxt"></span>
+  </td>
+  <td class="oddItem" colspan="2">
+    <input type="checkbox" id="Trap_T0_LinkUp_Enabled"<!--#if expr="$root_SNMP_Trap_T0_LinkUp_Enabled = yes" --> checked<!--#endif --> onclick="javascript: toggleCheckbox(this,'root_SNMP_Trap_T0_LinkUp_Enabled');">
+    <input type="hidden" name="root_SNMP_Trap_T0_LinkUp_Enabled" value="<!--#echo var="root_SNMP_Trap_T0_LinkUp_Enabled" option="encoding:html" -->">
+  </td>
+</tr>
+<tr>
+  <td class="evenItem" style="padding-left: 10px;">
+  <span id="trapAuthFailTxt"></span>
+  </td>
+  <td class="evenItem" colspan="2">
+    <input type="checkbox" id="Trap_T0_AuthFail_Enabled"<!--#if expr="$root_SNMP_Trap_T0_AuthFail_Enabled = yes" --> checked<!--#endif --> onclick="javascript: toggleCheckbox(this,'root_SNMP_Trap_T0_AuthFail_Enabled');">
+    <input type="hidden" name="root_SNMP_Trap_T0_AuthFail_Enabled" value="<!--#echo var="root_SNMP_Trap_T0_AuthFail_Enabled" option="encoding:html" -->">
+  </td>
+</tr>
+
+
+<tr><td><br></td></tr>
+
+<tr>
+  <td colspan="3" class="subTitle"><span id="sNMPv3Txt"></span></td>
+</tr>
+<tr>
+  <td colspan="3" class="oddItem">
+    <input type="checkbox" name="SNMP_V3" onClick="JavaScript:return traps_snmp3_clicked();;"<!--#if expr="$root_SNMP_V3 = yes" --> checked<!--#endif -->>
+    &nbsp;<span id="enSNMP3Txt"></span>
+    <input type="hidden" name="root_SNMP_V3" value="<!--#echo var="root_SNMP_V3" option="encoding:html" -->">
+  </td>
+</tr>
+<tr>
+  <td colspan="3" class="oddItem">
+    <!--#if expr="$root_SNMP_InitialUserPasswdSet = no" -->
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="iniPwTxt"></span>&nbsp;
+      <input type="password" <!--#if expr="$root_HTTPS_Enabled = yes" -->name="root_SNMP_InitialUserPasswd"<!--#else -->disabled<!--#endif --> size="25" maxlength="30" value="">
+      <input type="hidden" name="root_SNMP_InitialUserPasswdSet" value="no">
+    <!--#else -->
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="iniPwSetTxt"></span>
+    <!--#endif -->
+  </td>
+</tr>
+
+<tr>
+  <td colspan="3" class="evenItem">
+    <span id="noteTxt"></span>
+    <!--#if expr="$root_SNMP_InitialUserPasswdSet = no" -->
+      <span id="note2Txt"></span>
+    <br>
+    <!--#endif -->
+    <span id="note3Txt"></span>
+  </td>
+</tr>
+
+  <tr>
+    <td class="topTitle" align="center" colspan="4"><br>
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td class="button"><input type="button" value="" width="75" class="btnNormal" onClick="saveData()" onMouseOver="return showStatus(SaveBtnStatTxt)" onMouseOut="return showStatus('')" id="snmp_SaveBtn"></td>
+          <td class="button">&nbsp;</td>
+          <td class="button"><input type="button" value=""  width="75" class="btnNormal" onClick="reloadPage()" onMouseOver="return showStatus(RevertStatTxt)" onMouseOut="return showStatus('')" id="snmp_ResetBtn"></td>
+        </tr>
+      </table>
+      <input type="hidden" name="root_SNMP_Enabled" value="<!--#echo var="root_SNMP_Enabled" option="encoding:html" -->">
+      <input type="hidden" name="return_page" value="/admin/snmp.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->">
+      <input type="hidden" name="action" value="modify">
+    </td>
+  </tr>
+
+</table>
+
+<!--#include virtual="/incl/bottom_incl.shtml" -->

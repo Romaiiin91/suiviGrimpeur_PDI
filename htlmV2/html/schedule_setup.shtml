@@ -1,0 +1,225 @@
+<!--#set var="helpURL" val="javascript:launch('/help/schedule_setup_h.shtml')" -->
+<!--#include virtual="/incl/popup_header.shtml" -->
+  <link rel="stylesheet" href="/css/event_dialogs.css" type="text/css" />
+
+  <script language="javascript" type="text/javascript" src="/incl/list_functions.js"></script>
+  <script src="/incl/soapclient.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->" language="javascript" type="text/javascript"></script>
+
+  <script type="text/javascript" language="javascript">
+  <!--
+    var langObjSchedSchedSet = new Language("config_schedules", "schedule_setup");
+    addLoadEvent( function() { langObjSchedSchedSet.init(); } );
+
+    function globalLanguageVars()
+    {
+      var typeArr = new Array();
+      typeArr[0] = {val: "daily", text: langObjSchedSchedSet.getText("dailyTxt")};
+      typeArr[1] = {val: "weekly", text: langObjSchedSchedSet.getText("weeklyTxt")};
+      typeArr[2] = {val: "monthly", text: langObjSchedSchedSet.getText("monthlyTxt")};
+      typeArr[3] = {val: "yearly", text: langObjSchedSchedSet.getText("yearlyTxt")};
+      langObjSchedSchedSet.addOptionsToList(document.getElementById("type"), typeArr);
+      
+      var weekArr = new Array();
+      weekArr[0] = {val: "0", text: langObjSchedSchedSet.getText("sunOpTxt")};
+      weekArr[1] = {val: "1", text: langObjSchedSchedSet.getText("monOpTxt")};
+      weekArr[2] = {val: "2", text: langObjSchedSchedSet.getText("tueOpTxt")};
+      weekArr[3] = {val: "3", text: langObjSchedSchedSet.getText("wedOpTxt")};
+      weekArr[4] = {val: "4", text: langObjSchedSchedSet.getText("thuOpTxt")};
+      weekArr[5] = {val: "5", text: langObjSchedSchedSet.getText("friOpTxt")};
+      weekArr[6] = {val: "6", text: langObjSchedSchedSet.getText("satOpTxt")};
+      langObjSchedSchedSet.addOptionsToList(document.getElementById("weekly_start_day"), weekArr);
+      langObjSchedSchedSet.addOptionsToList(document.getElementById("weekly_end_day"), weekArr);
+      
+      var monthArr = new Array();
+      monthArr[0] = {val: "1", text: langObjSchedSchedSet.getText("januaryTxt")};
+      monthArr[1] = {val: "2", text: langObjSchedSchedSet.getText("februaryTxt")};
+      monthArr[2] = {val: "3", text: langObjSchedSchedSet.getText("marchTxt")};
+      monthArr[3] = {val: "4", text: langObjSchedSchedSet.getText("aprilTxt")};
+      monthArr[4] = {val: "5", text: langObjSchedSchedSet.getText("may1Txt")};
+      monthArr[5] = {val: "6", text: langObjSchedSchedSet.getText("juneTxt")};
+      monthArr[6] = {val: "7", text: langObjSchedSchedSet.getText("julyTxt")};
+      monthArr[7] = {val: "8", text: langObjSchedSchedSet.getText("augustTxt")};
+      monthArr[8] = {val: "9", text: langObjSchedSchedSet.getText("septemberTxt")};
+      monthArr[9] = {val: "10", text: langObjSchedSchedSet.getText("octoberTxt")};
+      monthArr[10] = {val: "11", text: langObjSchedSchedSet.getText("novemberTxt")};
+      monthArr[11] = {val: "12", text: langObjSchedSchedSet.getText("decemberTxt")};
+      langObjSchedSchedSet.addOptionsToList(document.getElementById("yearly_start_month"), monthArr);
+      langObjSchedSchedSet.addOptionsToList(document.getElementById("yearly_end_month"), monthArr);
+      
+    }
+  // -->
+  </script>
+  
+  <!--#include virtual="/incl/schedule_setup.shtml" -->
+</head>
+
+<body>
+  <!--#include virtual="/incl/popup_top.shtml" -->
+  <h1><span id="schedSetTxt"></span></h1>
+
+  <a href="<!--#echo var="helpURL" option="encoding:url" -->" id="helpLink"><img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="hlpPic" /></a>
+  
+  <div class="normal_text alternateRows">
+    <div class="row">
+      <label for="name" class="small"><span id="nameTxt"></span></label>
+      <input class="medium" type="text" id="name" name="name" maxlength="20" value="" />
+    </div>
+    <div class="row">
+      <label for="type" class="small"><span id="typeTxt"></span></label>
+      <select name="type" id="type" onchange="javascript:toggleSchType( this )">
+      </select>
+    </div>
+    <div id="div_daily">
+      <div class="row">
+        <label for="daily_start" class="small"><span id="starttime1Txt"></span></label>
+        <input class="small" type="text" id="daily_start" name="daily_start" maxlength="5" value="" />
+        <span id="hM1Txt"></span>
+      </div>
+      <div class="row">
+        <label for="daily_end" class="small"><span id="endtime1Txt"></span></label>
+        <input class="small" type="text" id="daily_end" name="daily_end" maxlength="5" value="" />
+        <span id="hM2Txt"></span>
+      </div>
+      
+      <div class="row">
+        <label class="small"><span id="daysTxt"></span></label>
+        <div class="btnGroup">
+          
+          <input class="checkbox" type="checkbox" id="daily_1" name="daily_1" value="MO" />
+          <label for="daily_1"><span id="monTxt"></span></label>
+
+          <input class="checkbox" type="checkbox" id="daily_2" name="daily_2" value="TU" />
+          <label for="daily_2"><span id="tueTxt"></span></label>
+
+          <input class="checkbox" type="checkbox" id="daily_3" name="daily_3" value="WE" />
+          <label for="daily_3"><span id="wedTxt"></span></label>
+
+          <input class="checkbox" type="checkbox" id="daily_4" name="daily_4" value="TH" />
+          <label for="daily_4"><span id="thuTxt"></span></label>
+
+          <input class="checkbox" type="checkbox" id="daily_5" name="daily_5" value="FR" />
+          <label for="daily_5"><span id="friTxt"></span></label>
+
+          <input class="checkbox" type="checkbox" id="daily_6" name="daily_6" value="SA" />
+          <label for="daily_6"><span id="satTxt"></span></label>
+
+          <input class="checkbox" type="checkbox" id="daily_0" name="daily_0" value="SU" />
+          <label for="daily_0"><span id="sunTxt"></span></label>
+        </div>
+        <br />
+      </div>
+    </div>
+    <div id="div_weekly" style="display:none;">
+      <div class="row">
+        <label for="weekly_start_day" class="small"><span id="starttime2Txt"></span></label>
+        <select name="weekly_start_day" id="weekly_start_day">
+        </select>
+        <span id="atHMS1Txt"></span>
+        <input class="small" type="text" id="weekly_start" name="weekly_start" maxlength="5" value="" />
+        <span id="hM3Txt"></span>
+      </div>
+      <div class="row">
+        <label for="weekly_end_day" class="small"><span id="endtime2Txt"></span></label>
+        <select name="weekly_end_day" id="weekly_end_day">
+        </select>
+        <span id="atHMS2Txt"></span>
+        <input class="small" type="text" id="weekly_end" name="weekly_end" maxlength="5" value="" />
+        <span id="hM4Txt"></span>
+      </div>
+    </div>
+    <div id="div_monthly" style="display:none;">
+      <div class="row">
+        <label for="monthly_start_day" class="small"><span id="starttime3Txt"></span></label>
+        <select class="tiny" name="monthly_start_day" id="monthly_start_day">
+          <option value=""></option>
+        </select>
+        <span id="dayAt1Txt"></span>
+        <input class="small" type="text" id="monthly_start" name="monthly_start" maxlength="5" value="" />
+        <span id="hM5Txt"></span>
+      </div>
+      <div class="row">
+        <label for="monthly_end_day" class="small"><span id="endtime3Txt"></span></label>
+        <select class="tiny" name="monthly_end_day" id="monthly_end_day">
+          <option value=""></option>
+        </select>
+        <span id="dayAt2Txt"></span>
+        <input class="small" type="text" id="monthly_end" name="monthly_end" maxlength="5" value="" />
+        <span id="hM6Txt"></span>
+      </div>
+      
+      <div class="row">
+        <label class="small"><span id="monthsTxt"></span></label>
+        <div class="btnGroup">
+          <input class="checkbox" type="checkbox" id="monthly_0" name="monthly_0" value="1" />
+          <label for="monthly_0"><span id="janTxt"></span></label>
+          
+          <input class="checkbox" type="checkbox" id="monthly_1" name="monthly_1" value="2" />
+          <label for="monthly_1"><span id="febTxt"></span></label>
+
+          <input class="checkbox" type="checkbox" id="monthly_2" name="monthly_2" value="3" />
+          <label for="monthly_2"><span id="marTxt"></span></label>
+
+          <input class="checkbox" type="checkbox" id="monthly_3" name="monthly_3" value="4" />
+          <label for="monthly_3"><span id="aprTxt"></span></label>
+
+          <input class="checkbox" type="checkbox" id="monthly_4" name="monthly_4" value="5" />
+          <label for="monthly_4"><span id="may2Txt"></span></label>
+
+          <input class="checkbox" type="checkbox" id="monthly_5" name="monthly_5" value="6" />
+          <label for="monthly_5"><span id="junTxt"></span></label>
+          
+          <br />
+
+          <input class="checkbox" type="checkbox" id="monthly_6" name="monthly_6" value="7" />
+          <label for="monthly_6"><span id="julTxt"></span></label>
+
+          <input class="checkbox" type="checkbox" id="monthly_7" name="monthly_7" value="8" />
+          <label for="monthly_7"><span id="augTxt"></span></label>
+
+          <input class="checkbox" type="checkbox" id="monthly_8" name="monthly_8" value="9" />
+          <label for="monthly_8"><span id="sepTxt"></span></label>
+
+          <input class="checkbox" type="checkbox" id="monthly_9" name="monthly_9" value="10" />
+          <label for="monthly_9"><span id="octTxt"></span></label>
+
+          <input class="checkbox" type="checkbox" id="monthly_10" name="monthly_10" value="11" />
+          <label for="monthly_9"><span id="novTxt"></span></label>
+
+          <input class="checkbox" type="checkbox" id="monthly_11" name="monthly_11" value="12" />
+          <label for="monthly_9"><span id="decTxt"></span></label>
+        </div>
+        <br />
+      </div>
+    </div>
+    <div id="div_yearly" style="display:none;">
+      <div class="row">
+        <label for="yearly_start_month" class="small"><span id="starttime4Txt"></span></label>
+        <select name="yearly_start_month" id="yearly_start_month">
+        </select>
+        <select class="tiny" name="yearly_start_day" id="yearly_start_day">
+          <option value=""></option>
+        </select>
+        <span id="atHMS3Txt"></span>
+        <input class="small" type="text" id="yearly_start" name="yearly_start" maxlength="5" value="" />
+        <span id="hM7Txt"></span>
+      </div>
+      <div class="row">
+        <label for="yearly_end_month" class="small"><span id="endtime4Txt"></span></label>
+        <select name="yearly_end_month" id="yearly_end_month">
+        </select>
+        <select class="tiny" name="yearly_end_day" id="yearly_end_day">
+          <option value=""></option>
+        </select>
+        <span id="atHMS4Txt"></span>
+        <input class="small" type="text" id="yearly_end" name="yearly_end" maxlength="5" value="" />
+        <span id="hM8Txt"></span>
+      </div>
+    </div>
+    <div class="formButtons">
+      <input type="button" value="" class="btnNormal" onclick="javascript:saveData()" id="btnOK" />
+      <input type="button" value="" class="btnNormal" onclick="javascript:window.close()" id="btnCancel" />
+    </div>
+  </div>
+<!--#include virtual="/incl/popup_footer.shtml" -->
+
+

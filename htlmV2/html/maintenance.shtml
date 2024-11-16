@@ -1,0 +1,375 @@
+<!--#set var="helpURL" val="javascript:launch('/help/maintenance_h.shtml')" -->
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#set var="activeMenu" val="system" -->
+<!--#set var="activeMenu1" val="maintenance" -->
+<!--#set var="activePage" val="maintenance" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+<!--#include virtual="/sm/sm.srv?action=get&group=Properties.System.Language,Information" -->
+
+<!--#include virtual="/java/integer.shtml" -->
+
+<script language="JavaScript" type="text/javascript">
+<!--
+var langObjMaint = new Language("maintenance", "maintenance");
+
+function doRestart()
+{
+  var form = document.RestartForm
+  if (confirm( langObjMaint.getText("restart1Alert")+" <!--#echo var="glob_prodName" option="encoding:javascript" --> "+langObjMaint.getText("restart2Alert") )) {
+    form.submit()
+  }
+}
+
+function doRestore()
+{
+  var form = document.FactoryDefaultForm
+
+  if (confirm( langObjMaint.getText("restore2Alert")+langObjMaint.getText("sureCont") )) {
+    form.submit()
+  }
+}
+
+function doFactoryDefault()
+{
+  var form = document.HardFactoryDefaultForm
+
+  if (confirm( langObjMaint.getText("hardFactDefAlert")+langObjMaint.getText("sureCont") )) {
+    form.submit()
+  }
+}
+
+<!--#include virtual="/sm/sm.srv?action=get&group=PTZ.UserAdv.U1" -->
+var allres;
+var lastTest = "<!--#echo var="root_PTZ_UserAdv_U1_LastTestDate" option="encoding:javascript" -->";
+var testDone = false;
+var animate  = "no";
+var dot      = 0;
+
+var selfTest = AxisConnectionFactory.createAjaxConnection();
+
+function doSelfTest()
+{
+  var now = new Date();
+  var url = "/axis-cgi/com/ptz.cgi?auxiliary=reset&timestamp=" + now.getTime();
+
+  AxisConnectionFactory.sendAsync(["GET", url], null, null, selfTest);
+
+  document.getElementById("panspan").innerHTML  = "--";
+  document.getElementById("tiltspan").innerHTML = "--";
+  document.getElementById("camspan").innerHTML  = "--";
+  document.getElementById("lastTestTime").innerHTML = langObjMaint.getText("tePlWaTxt");
+  document.getElementById("lastTestTime").style.fontWeight = "bold";
+  document.getElementById("maint_testBtn").disabled = true;
+
+  animate = "yes";
+  animateDots();
+
+  getTestTime();
+}
+
+var theTestTime = AxisConnectionFactory.createAjaxConnection();
+
+function getTestTime()
+{
+  var now = new Date();
+  var url = "/axis-cgi/param.cgi?action=list&group=PTZ.UserAdv.U1.LastTestDate&timestamp=" + now.getTime();
+  AxisConnectionFactory.sendAsync(["GET", url], null, getNewTestTime, theTestTime);
+}
+
+function getNewTestTime()
+{
+  if (theTestTime.getReadyState() == 4) {
+    if (theTestTime.getStatus() == 200) {
+      var responseText = theTestTime.getResponseText();
+      newTestTime = escape(responseText.substr(responseText.indexOf("=")+1));
+      newTestTime = unescape(newTestTime.replace(/%0A/g, ""));
+      if (testDone) {
+        lastTest = newTestTime;
+        animate = "no";
+        document.getElementById("lastTestTime").style.fontWeight = "normal";
+        document.getElementById("lastTestTime").innerHTML = lastTest;
+        testDone = false;
+      } else {
+        if (newTestTime != lastTest) {
+          getTestResults();
+        } else {
+          setTimeout(getTestTime, 100);
+        }
+      }
+    }
+  }
+}
+
+var theTestResult = AxisConnectionFactory.createAjaxConnection();
+
+function getTestResults()
+{
+  var now = new Date();
+  var url = "/axis-cgi/param.cgi?action=list&group=PTZ.UserAdv.U1.DeviceStatus&timestamp=" + now.getTime();
+  AxisConnectionFactory.sendAsync(["GET", url], null, getNewTestResult, theTestResult);
+}
+
+function getNewTestResult()
+{
+  if (theTestResult.getReadyState() == 4) {
+    if (theTestResult.getStatus() == 200) {
+      var responseText = theTestResult.getResponseText();
+      if (responseText.indexOf("cam") != -1 && responseText.indexOf("pan") != -1 && responseText.indexOf("tilt") != -1) {
+        allres = escape(responseText.substr(responseText.indexOf("=")+1));
+        allres = unescape(allres.replace(/%0A/g, ""));
+        document.getElementById("panspan").innerHTML  = writeTestRes("pan");
+        document.getElementById("tiltspan").innerHTML = writeTestRes("tilt");
+        document.getElementById("camspan").innerHTML  = writeTestRes("cam");
+        document.getElementById("maint_testBtn").disabled = false;
+        testDone = true;
+        getTestTime();
+      } else {
+        setTimeout(getTestResults, 500);
+      }
+    }
+  }
+}
+
+function writeTestRes(category)
+{
+  splitted = allres.split(',');
+  var cat_reg = new RegExp('^' + category + '=', "gi");
+  var err_reg = new RegExp('^ok$', "gi");
+  var theResult = "";
+
+  for (var i=0; i<splitted.length; i++) {
+    if (splitted[i].search(cat_reg) != -1) {
+      res = splitted[i].replace(cat_reg, "");
+      if (res.search(err_reg) == -1)
+        theResult += '<font color="red">';
+      theResult += res;
+      if (res.search(err_reg) == -1)
+        theResult += '</font>';
+      return theResult;
+    }
+  }
+  theResult = '<font color="red">n/a</font>';
+  return theResult;
+}
+
+
+function checkUpgrade()
+{
+  var form = document.UpgradeForm
+
+  if (form.fimage.value == "") {
+    alert( langObjMaint.getText("noFirAlert") )
+    return
+  }
+
+  var uploadedlang = "";
+  <!--#include virtual="/axis-cgi/admin/language.cgi?action=info" -->
+
+  if (uploadedlang != "") {
+    if (!confirm( langObjMaint.getText("langAlert") ))
+      return;
+  }
+
+  openPopUp('/admin/upgradeMessage.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->', 'uppgrade_message', 370, 110);
+
+  window.setTimeout("document.UpgradeForm.submit()", 1000);
+}
+
+<!--#set var="events" value="yes" -->
+<!--#if expr="$root_Brand_ProdNbr >< 206" -->
+  <!--#set var="events" value="no" -->
+<!--#endif -->
+
+
+      var text = langObjMaint.getText("tePlWaTxt");
+    function animateDots() {
+      if (animate == "yes") {
+        try {
+          document.getElementById("lastTestTime").innerHTML += ".";
+          dot++;
+          if (dot == 10) {
+            document.getElementById("lastTestTime").innerHTML = text;
+            dot = 0;
+          }
+          setTimeout(animateDots, 400)
+        } catch(e) {}
+      }
+    }
+
+var LEDflash = AxisConnectionFactory.createAjaxConnection();
+
+function flashLED()
+{
+  var duration = document.getElementById("LedFlashDuration").value;
+  if (IntegerCheck(duration,1,60) == 0) {
+    document.getElementById("LedFlashDuration").focus();
+    document.getElementById("LedFlashDuration").select();
+    alert( langObjMaint.getText("ledFlDurAlrt") );
+  } else {
+    var now = new Date();
+    var ledFlashDurationUnit=document.getElementById("LedFlashDurationUnit").value;
+    if(ledFlashDurationUnit=="m")
+    {
+     duration=duration*60;
+    }
+    else if(ledFlashDurationUnit=="h")
+    {
+     duration=duration*3600;
+    }
+    var url = "/axis-cgi/ledcontrol/set.cgi?name=STATUSLED&color=GREEN,RED&schemaversion=1&interval=150&duration=" + duration + "&timestamp=" + now.getTime();
+    AxisConnectionFactory.sendAsync(["GET", url], null, null, LEDflash);
+  }
+}
+
+var RestBtnStatTxt;
+var ResBtnStatTxt;
+var DefBtnStatTxt;
+var DomeBtnStatTxt;
+var FirmBtnStatTxt;
+var UpBtnStatTxt;
+var CalBtnStatTxt;
+function globalLanguageVars()
+{
+  var ledFlDurArr = new Array();
+  ledFlDurArr[0] = {val: "s", text: langObjMaint.getText("secTxt")};
+  ledFlDurArr[1] = {val: "m", text: langObjMaint.getText("minTxt")};
+  ledFlDurArr[2] = {val: "h", text: langObjMaint.getText("houTxt")};
+  langObjMaint.addOptionsToList(document.getElementById("LedFlashDurationUnit"), ledFlDurArr);
+
+  RestBtnStatTxt = langObjMaint.getText("restBtnStatTxt");
+  ResBtnStatTxt = langObjMaint.getText("resBtnStatTxt");
+  DefBtnStatTxt = langObjMaint.getText("defBtnStatTxt");
+  DomeBtnStatTxt = langObjMaint.getText("domeBtnStatTxt");
+  FirmBtnStatTxt = langObjMaint.getText("firmBtnStatTxt");
+  UpBtnStatTxt = langObjMaint.getText("upBtnStatTxt");
+}
+// -->
+</script>
+
+</head>
+<body <!--#include virtual="/incl/bodytag.shtml" --> onload="langObjMaint.init()">
+<!--#include virtual="/incl/top_incl2.shtml" -->
+
+<table border="<!--#echo var="zero" option="encoding:html" -->" cellpadding="<!--#echo var="cellpadding3" option="encoding:html" -->" cellspacing="<!--#echo var="zero" option="encoding:html" -->" width="<!--#echo var="tableWidth3" option="encoding:html" -->"  class="oddItem">
+  <tr>
+    <td colspan="2" valign="top" class="topTitle" nowrap><div align="left"><span id="maintSerTitleTxt"></span></div></td>
+    <td class="topTitle"><div align="right"><a href="<!--#echo var="helpURL" option="encoding:url" -->"><img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="hlpPic"></a></div></td>
+  </tr>
+  <tr><td colspan="3" class="subTitle" nowrap><div align="left"><span id="maintserTxt"></span></div></td></tr>
+  <tr>
+    <td height="35" colspan="3" class="oddItem">
+      <form name="RestartForm" action="/axis-cgi/admin/restart.cgi" enctype="multipart/form-data" method="get">
+      <input type="button" class="btnNormal" width="75" value="" onClick="JavaScript:doRestart()" onMouseOver="return showStatus(RestBtnStatTxt)" onMouseOut="return showStatus('')" id="maint_restartBtn">
+      &nbsp;<span id="restTheTxt"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->.
+      </form>
+    </td>
+  </tr>
+  <tr>
+    <td height="35" colspan="3" class="oddItem">
+      <form name="FactoryDefaultForm" action="/axis-cgi/admin/factorydefault.cgi" enctype="multipart/form-data" method="get">
+      <input type="button" class="btnNormal" width="75" value="" onClick="JavaScript:doRestore()" onMouseOver="return showStatus(ResBtnStatTxt)" onMouseOut="return showStatus('')" id="maint_restoreFacBtn">
+      &nbsp;<span id="resetAllParamBTxt"></span>
+      </form>
+    </td>
+  </tr>
+  <tr>
+    <td height="35" colspan="3" class="oddItem">
+      <form name="HardFactoryDefaultForm" action="/axis-cgi/admin/hardfactorydefault.cgi" enctype="multipart/form-data" method="get">
+      <input type="button" class="btnNormal" width="75" value="" onClick="JavaScript:doFactoryDefault()" onMouseOver="return showStatus(DefBtnStatTxt)" onMouseOut="return showStatus('')" id="maint_factdefBtn">
+      &nbsp;<span id="factDefAllParamTxt"></span>
+      </form>
+    </td>
+  </tr>
+
+
+  <tr>
+    <td colspan="3" class="subTitle" nowrap><div align="left">PTZ&nbsp;<span id="statusCapitalTxt"></span></div></td>
+  </tr>
+  <tr>
+    <td height="35" colspan="3" nowrap class="oddItem">
+      <form name="SelfTestForm" action="xxxxx" enctype="multipart/form-data" method="post">
+      <table border=0 cellpadding="2" cellspacing="2" width="100%">
+        <tr class="evenItem">
+          <td align="right" width="150" valign="top">
+            <span id="currentTxt"></span>&nbsp;PTZ&nbsp;<span id="statusColTxt"></span>&nbsp;
+          </td>
+          <td>
+            <span id="panTxt"></span>&nbsp;<span id="panspan"></span>
+          </td>
+        </tr>
+        <tr class="oddItem">
+         <td>&nbsp;</td>
+         <td>
+            <span id="tiltTxt"></span>&nbsp;<span id="tiltspan"></span>
+          </td>
+        </tr>
+        <tr class="evenItem">
+          <td>&nbsp;</td>
+          <td>
+            <span id="camTxt"></span>&nbsp;<span id="camspan"></span>
+          </td>
+        </tr>
+        <tr class="oddItem">
+          <td align="right" width="150"><span id="lstTestTimeTxt"></span>&nbsp;</td>
+          <td><span id="lastTestTime"><!--#echo var="root_PTZ_UserAdv_U1_LastTestDate" option="encoding:html" --></span></td>
+        </tr>
+      </table>
+      </form>
+    </td>
+  </tr>
+  <tr>
+    <td height="35" colspan="3" nowrap class="oddItem">
+      <input type="button" class="btnNormal" width="75" value="" onClick="JavaScript:doSelfTest()" onMouseOver="return showStatus(DomeBtnStatTxt)" onMouseOut="return showStatus('')" id="maint_testBtn">
+      &nbsp;<span id="testMecCam1Txt"></span>&nbsp;PTZ&nbsp;<span id="testMecCam2Txt"></span>
+    </td>
+  </tr>
+  <script language="JavaScript">getTestResults();</script>
+
+
+<tr><td colspan="3" class="subTitle" nowrap><div align="left"><span id="upgrSerTxt"></span></div></td></tr>
+<tr>
+  <td colspan="3" nowrap class="oddItem"><span id="upgrt1Txt"></span>&nbsp;<!--#echo var="root_Brand_ProdShortName" option="encoding:html" -->&nbsp;<span id="upgrt2Txt"></span></td></tr>
+<tr>
+  <td height="35" colspan="2" nowrap  class="oddItem">
+    <form name="UpgradeForm" action="/axis-cgi/admin/flash?-t+flash+-m+HTTP_POST" enctype="multipart/form-data" method="post">
+      <span id="specFrimTxt"></span>&nbsp;<input type="file" name="fimage" onMouseOver="return showStatus(FirmBtnStatTxt)" onMouseOut="return showStatus('')" id="maint_SpecFrim">&nbsp;<span id="andCl1Txt"></span>
+    </form>
+  </td>
+  <td height="35" colspan="1" nowrap  class="button" align="left">
+    <input type="button" class="btnNormal" name="Upgrade" width="75" value="" onClick="checkUpgrade()" onMouseOver="return showStatus(UpBtnStatTxt)" onMouseOut="return showStatus('')" id="maint_upgradeBtn">
+  </td>
+</tr>
+<tr>
+  <td colspan=3>
+    <span id="noteTxt"></span>
+  </td>
+</tr>
+  <tr>
+    <td colspan="3" class="subTitle" nowrap><div align="left"><span id="ideTxt"></span></div></td>
+  </tr>
+  <tr>
+    <td height="35" colspan="3" class="oddItem">
+      <input type="button" class="btnNormal" width="75" value="" onClick="JavaScript:flashLED()" id="maint_FlLedBtn">
+      &nbsp;<span id="forTxt"></span>
+      <input type="text" size="4" maxlength="2" value="10" id="LedFlashDuration">
+      <select id="LedFlashDurationUnit"></select> [1..60]
+      &nbsp;<span id="flashledinfo"></span>
+    </td>
+  </tr>
+<!--#if expr="_$root_Information_Rack_AutoDetected != _" -->
+  <tr>
+    <td height="35" colspan="3" class="oddItem">
+      <input type="button" class="btnLarge" width="75" value="" onClick="JavaScript:openPopUp('/admin/rackOverview.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->', 'rack_overview', 1120, <!--#if expr="$root_Information_Rack_NbrOfSlots = 3" -->4<!--#else -->6<!--#endif -->50)" id="maint_RaOvBtn">
+    </td>
+  </tr>
+<!--#endif -->
+
+<tr>
+  <td class="topTitle" align="right" colspan="3">
+    &nbsp;
+  </td>
+</tr>
+</table>
+
+<!--#include virtual="/incl/bottom_incl.shtml" -->
+

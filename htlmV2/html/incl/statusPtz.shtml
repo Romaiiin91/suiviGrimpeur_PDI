@@ -1,0 +1,270 @@
+<!--#include virtual="/sm/sm.srv?action=get&group=PTZ.Various" -->
+
+var statusPtz_count_id;
+
+var statusPtz_periodicRequest;
+var statusPtz_periodicRequest_timeout;
+var statusPtz_periodicRequest_interval;
+
+var statusPtz_request;
+var statusPtz_request_control = "request";
+var statusPtz_request_timeout;
+
+
+var statusPtz_update_id;
+var statusPtz_update_response;
+<!--#if expr="_$(root_PTZ_Various_V$camnbr$_CtlQueuePollTime) = _" -->
+  var statusPtz_update_min_period = 15;
+<!--#else -->
+  var statusPtz_update_min_period = parseInt(<!--#echo var="root_PTZ_Various_V$camnbr$_CtlQueuePollTime" option="encoding:javascript" -->*0.75); //(seconds)
+<!--#endif -->
+var statusPtz_update_seconds = 0; //(seconds left)
+var statusPtz_update_position = 0;
+var statusPtz_update_error = "";
+
+function setStatusParams(response)
+{
+  var re = /\"\-{0,1}\d*\"/g;
+  var a = response.match(re);
+  var reF = /\"/g;
+  if (a != null) {
+    statusPtz_update_position   = parseInt(a[0].replace(reF, ""), 10);
+    statusPtz_update_seconds    = parseInt(a[1].replace(reF, ""), 10);
+    statusPtz_update_min_period = parseInt(a[2].replace(reF, ""), 10);
+    statusPtz_update_error      = "";
+  } else {
+    response = response.replace(/<.*?>|\n|\r/ig, " ").trim();
+    response = response.replace(/\s+/ig, " ");
+    setStatusParams_error(response);
+  }
+}
+
+function setStatusParams_error(error)
+{
+  statusPtz_update_error = error;
+  <!--#if expr="_$(root_PTZ_Various_V$camnbr$_CtlQueuePollTime) = _" -->
+    statusPtz_update_min_period = 15;
+  <!--#else -->
+    statusPtz_update_min_period    = parseInt(<!--#echo var="root_PTZ_Various_V$camnbr$_CtlQueuePollTime" option="encoding:javascript" -->*0.75);
+  <!--#endif -->
+  statusPtz_update_position      = 0;
+  statusPtz_update_seconds       = 0;
+}
+
+function updateStatus()
+{
+  var lbl = document.getElementsByName("ptzqlabel")[0];
+  var tleft = document.getElementsByName("ptzqtleft")[0];
+  var pos = document.getElementsByName("ptzqpos")[0];
+  var status = document.getElementsByName("ptzqstatus")[0]
+  if (statusPtz_update_error.length == 0) {
+    tleft.value = ((statusPtz_update_seconds == -1) ? "<!--#language id="statusPtz_unlimTxt" text="Unlimited" -->" : statusPtz_update_seconds);
+    if (statusPtz_update_position == "0") {
+      lbl.value = "<!--#language id="statusPtz_reqCtrlTxt" text="Request control" -->";
+      statusPtz_request_control = "request";
+      pos.value = "";
+      if (statusPtz_update_seconds == "0") {
+        status.value = "<!--#language id="statusPtz_noHigherQueTxt" text="No entry in queue with higher priority than yours." -->";
+        //Restarts poll for position
+        if (typeof(getPtzPositions) == "function" && !ptzPosInterval)
+          getPtzPositions();
+      } else {
+        status.value = "<!--#language id="statusPtz_higherQueTxt" text="Queue contains entry(s) with higher priority than yours." -->";
+      }
+    } else {
+      pos.value = statusPtz_update_position;
+      statusPtz_request_control = "drop";
+      if (statusPtz_update_position == "1") {
+        status.value = "<!--#language id="statusPtz_possessingTxt" text="You are possessing the control." -->";
+        lbl.value = "<!--#language id="statusPtz_releaseTxt" text="Release control" -->";
+        //Restarts poll for position
+        if (typeof(getPtzPositions) == "function" && !ptzPosInterval)
+          getPtzPositions();
+      } else {
+        status.value = "<!--#language id="statusPtz_quedTxt" text="You are in queue, please wait for your turn." -->";
+        lbl.value = "<!--#language id="statusPtz_leaveQueTxt" text="Leave queue" -->";
+      }
+    }
+  }
+  else
+  {
+    // some error has occurred
+    if(status)
+    {
+      status.value = statusPtz_update_error;
+      pos.value = "";
+      tleft.value = "";
+    }
+    ctlStop();
+  }
+}
+
+
+function ctlReq()
+{
+  switch(statusPtz_request_control)
+  {
+    case "request":
+      sendStatusRequest("request")
+      break;
+    case "drop":
+      sendStatusRequest("drop")
+      break;
+  }
+}
+
+function sendStatusRequest(action)
+{
+  if (!statusPtz_request)
+    ctlStart();
+ 
+  var now = new Date();
+  AxisConnectionFactory.sendAsync(["GET", "/axis-cgi/com/ptzqueue.cgi?control=" + action + "&tagresponse=yes&camera=<!--#echo var="camnbr" option="encoding:javascript" -->&timestamp=" + now.getTime()], "", statusPtz_request_stateChange, statusPtz_request);
+  delete now;
+  statusPtz_request_timeout = window.setTimeout(statusPtz_request_timedout, 10000);
+}
+
+function statusPtz_request_stateChange()
+{
+  window.clearTimeout(statusPtz_request_timeout);
+  var readyState = statusPtz_request.getReadyState();
+  if (readyState == 4) {
+    var status = statusPtz_request.getStatus();
+    if (status == 200) {
+      setStatusParams(statusPtz_request.getResponseText());
+    } else if (status != 204 && status != 1223) {
+      setStatusParams_error(status + " - " + statusPtz_request.getStatusText())
+    }
+    if (status != 401) {
+      statusPtz_periodicRequest_start();
+    }
+  } else if (readyState == 0) {
+    setStatusParams_error("<!--#language id="statusPtz_abortedTxt" text="Aborted" -->");
+    statusPtz_periodicRequest_start();
+  }
+}
+
+function statusPtz_request_timedout()
+{
+  statusPtz_request.abort();
+}
+
+function sendPeriodicRequest()
+{
+  var readyState = statusPtz_periodicRequest.getReadyState();
+  if (readyState != 0 && readyState != 4)
+    return;
+  var now = new Date();
+  AxisConnectionFactory.sendAsync(["GET", "/axis-cgi/com/ptzqueue.cgi?control=query&tagresponse=yes&camera=<!--#echo var="camnbr" option="encoding:javascript" -->&timestamp=" + now.getTime()], "", statusPtz_periodicRequest_stateChange, statusPtz_periodicRequest);
+  delete now;
+  statusPtz_periodicRequest_timeout = window.setTimeout(statusPtz_periodicRequest_timedOut, 10000);
+}
+
+function statusPtz_periodicRequest_stateChange()
+{
+  window.clearTimeout(statusPtz_periodicRequest_timeout);
+  var readyState = statusPtz_periodicRequest.getReadyState();
+  if (readyState == 4) {
+    var status = statusPtz_periodicRequest.getStatus();
+    if (status == 200) {
+      setStatusParams(statusPtz_periodicRequest.getResponseText());
+    } else if (status != 204 && status != 1223) {
+      setStatusParams_error(status + " - " + statusPtz_periodicRequest.getStatusText())
+    }
+    updateStatus();
+  } else if (readyState == 0) {
+    setStatusParams_error("<!--#language id="statusPtz_abortedTxt" text="Aborted" -->");
+    updateStatus();
+  }
+}
+
+function statusPtz_periodicRequest_timedOut()
+{
+  statusPtz_periodicRequest.abort();
+}
+
+function statusPtz_periodicRequest_start()
+{
+  if (statusPtz_periodicRequest_interval)
+    window.clearInterval(statusPtz_periodicRequest_interval);
+  if (statusPtz_periodicRequest_timeout)
+    window.clearTimeout(statusPtz_periodicRequest_timeout);
+
+  sendPeriodicRequest();
+  statusPtz_periodicRequest_interval = window.setInterval(sendPeriodicRequest, statusPtz_update_min_period * 1000);
+}
+
+function handleCtlReq()
+{
+  window.clearTimeout(statusPtz_update_id);
+  sendStatusRequest("request");
+  // restart timeout to be sure update will be done in time.
+  statusPtz_update_id = window.setTimeout(updateStatus, 2000);
+}
+
+function handleCtlDrop(form)
+{
+  window.clearInterval(statusPtz_count_id);
+  window.clearTimeout(statusPtz_update_id);
+  sendStatusRequest("drop");
+  // restart - but wait a while to be sure the above form is sent.
+  statusPtz_update_id = window.setTimeout(ctlStart, 500);
+}
+
+function ctlStart()
+{
+
+  if (typeof AxisConnectionFactory == "undefined" || typeof AxisConnection == "undefined") {
+     window.setTimeout(ctlStart, 500);
+     return;
+   }
+
+  if (!statusPtz_periodicRequest)
+  {
+    statusPtz_periodicRequest = AxisConnectionFactory.createAjaxConnection();
+    statusPtz_periodicRequest.setOverrideMimeType( 'text/plain' );
+  }
+  if (!statusPtz_request)
+  {
+    statusPtz_request = AxisConnectionFactory.createAjaxConnection();
+    statusPtz_request.setOverrideMimeType( 'text/plain' );
+  }
+  statusPtz_periodicRequest_start();
+
+  startCountDown();
+}
+
+function ctlRepeat()
+{
+  statusPtz_periodicRequest_start();
+}
+
+function ctlStop()
+{
+  // reset label + action
+  var lbl = document.getElementsByName("label")[0];
+  if(lbl)
+    lbl.value = "<!--#language id="statusPtz_reqCtrlTxt" text="Request control" -->";
+  statusPtz_request_control = "request";
+  // stop timers
+  window.clearInterval(statusPtz_count_id);
+  window.clearTimeout(statusPtz_update_id);
+}
+
+function startCountDown()
+{
+  statusPtz_count_id = window.setInterval(countDown, 1000);
+}
+
+function countDown()
+{
+  if (document.getElementsByName("ptzqtleft")[0] && 
+    document.getElementsByName("ptzqtleft")[0].value != "")
+  {
+    var t = parseInt(document.getElementsByName("ptzqtleft")[0].value, 10);
+    if (t > 0)
+    {
+      document.getElementsByName("ptzqtleft")[0].value = t - 1;
+    }
+  }
+}

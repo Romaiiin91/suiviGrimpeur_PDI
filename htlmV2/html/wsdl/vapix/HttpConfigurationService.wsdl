@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="wsdl-viewer.xsl"?>
+<wsdl:definitions
+      xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+      xmlns:aweb="http://www.axis.com/vapix/ws/webserver"
+      xmlns:acert="http://www.axis.com/vapix/ws/cert"
+      xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap12/"
+      xmlns:xs="http://www.w3.org/2001/XMLSchema"
+      targetNamespace="http://www.axis.com/vapix/ws/webserver">
+    <wsdl:documentation xmlns="http://www.w3.org/1999/xhtml">
+<div class="indent">
+	<div class="value">
+This web service implements two operations to read and update the web
+server HTTPS configuration of an AXIS product. Parameters that can be read or
+updated are:<br/>
+<ul>
+<li>Https on/off</li>
+<li>Access policy on a system user group basis, where user groups
+are: Admin, Operator and Viewer</li>
+<li>Optional TLS server certificate<br/>
+</li>
+<li>Allowed list of TLS cipher suites</li>
+</ul>
+</div>
+</div>
+</wsdl:documentation>
+  <wsdl:types>
+    <xs:schema
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://www.axis.com/vapix/ws/webserver"
+        elementFormDefault="qualified">
+
+      <xs:import namespace="http://www.axis.com/vapix/ws/cert" schemaLocation="cert.xsd"/>
+
+      <xs:simpleType name="ConnectionPolicy">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="Http"/>
+          <xs:enumeration value="HttpAndHttps"/>
+          <xs:enumeration value="Https"/>
+        </xs:restriction>
+      </xs:simpleType>
+
+      <xs:complexType name="ConnectionPolicies">
+        <xs:sequence>
+          <xs:element name="Admin" type="aweb:ConnectionPolicy">
+            <xs:annotation>
+              <xs:documentation>Connection policy for the Admin group.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Operator" type="aweb:ConnectionPolicy">
+            <xs:annotation>
+              <xs:documentation>Connection policy for the Operator group.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Viewer" type="aweb:ConnectionPolicy">
+            <xs:annotation>
+              <xs:documentation>Connection policy for the Viewer group.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      
+      <xs:complexType name="Configuration">
+        <xs:sequence>
+          <xs:element name="Tls" type="xs:boolean">
+            <xs:annotation>
+              <xs:documentation>TLS on/off (true/false). This parameter switches HTTPS on and off.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="ConnectionPolicies" type="aweb:ConnectionPolicies">
+            <xs:annotation>
+              <xs:documentation>Connection policy parameters for the Admin, Operator and Viewer groups.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="Ciphers" type="acert:Ciphers">
+            <xs:annotation>
+              <xs:documentation>A list of abbreviations that indicates what cipher(s) the web server is allowed to use in a TLS connection. Which suite is chosen is settled in the TLS handshake.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="CertificateSet" type="acert:CertificateSet">
+            <xs:annotation>
+              <xs:documentation>Server certificate if any.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string" fixed="WebServer" use="required">
+          <xs:annotation>
+            <xs:documentation>
+              Configuration name, always WebServer.                  
+            </xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:complexType>
+
+      <xs:element name="SetWebServerTlsConfiguration">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Configuration" type="aweb:Configuration">
+              <xs:annotation>
+                <xs:documentation>
+                  Web server TLS configuration.                  
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="SetWebServerTlsConfigurationResponse">
+        <xs:complexType>
+          <xs:sequence>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="GetWebServerTlsConfiguration">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Name" type="xs:string" fixed="WebServer" minOccurs="0">
+              <xs:annotation>
+                <xs:documentation>
+                  Name of web server TLS configuration. At this point, exactly one configuration will 
+                  always exist and its name is always WebServer. If no Name element is present all web server TLS 
+                  configurations and their names are returned (currently exactly one; available for future extension).                  
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="GetWebServerTlsConfigurationResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Configuration" type="aweb:Configuration">
+              <xs:annotation>
+                <xs:documentation>
+                  Web server TLS configuration.                  
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      
+      <xs:element name="UnknownCertificateIdFault">
+        <xs:complexType/>
+      </xs:element>
+
+      <xs:element name="InvalidCertificateConfigurationFault">
+        <xs:complexType/>
+      </xs:element>
+    </xs:schema>
+  </wsdl:types>
+
+  <wsdl:message name="SetWebServerTlsConfigurationRequest">
+    <wsdl:part name="parameters" element="aweb:SetWebServerTlsConfiguration"/>
+  </wsdl:message>
+  <wsdl:message name="SetWebServerTlsConfigurationResponse">
+    <wsdl:part name="parameters" element="aweb:SetWebServerTlsConfigurationResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetWebServerTlsConfigurationRequest">
+    <wsdl:part name="parameters" element="aweb:GetWebServerTlsConfiguration"/>
+  </wsdl:message>
+  <wsdl:message name="GetWebServerTlsConfigurationResponse">
+    <wsdl:part name="parameters" element="aweb:GetWebServerTlsConfigurationResponse"/>
+  </wsdl:message>
+  <wsdl:message name="UnknownCertificateIdFaultMessage">
+    <wsdl:part name="parameters" element="aweb:UnknownCertificateIdFault"/>
+  </wsdl:message>
+  <wsdl:message name="InvalidCertificateConfigurationFaultMessage">
+    <wsdl:part name="parameters" element="aweb:InvalidCertificateConfigurationFault"/>
+  </wsdl:message>
+
+
+  <wsdl:portType name="WebServerConfigurationPort">
+
+    <wsdl:operation name="SetWebServerTlsConfiguration">
+      <wsdl:input message="aweb:SetWebServerTlsConfigurationRequest"/>
+      <wsdl:output message="aweb:SetWebServerTlsConfigurationResponse"/>
+      <wsdl:fault name="UnknownCertificateIdFault" message="aweb:UnknownCertificateIdFaultMessage"/>
+      <wsdl:fault name="InvalidCertificateConfigurationFault" message="aweb:InvalidCertificateConfigurationFaultMessage"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetWebServerTlsConfiguration">
+      <wsdl:input message="aweb:GetWebServerTlsConfigurationRequest"/>
+      <wsdl:output message="aweb:GetWebServerTlsConfigurationResponse"/>
+    </wsdl:operation>
+
+  </wsdl:portType>
+
+  <wsdl:binding name="WebServerConfigurationBinding" type="aweb:WebServerConfigurationPort">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+    <wsdl:operation name="SetWebServerTlsConfiguration">
+      <soap:operation soapAction="http://www.axis.com/vapix/ws/webserver/SetWebServerTlsConfiguration"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="UnknownCertificateIdFault">
+        <soap:fault name="UnknownCertificateIdFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="InvalidCertificateConfigurationFault">
+        <soap:fault name="InvalidCertificateConfigurationFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetWebServerTlsConfiguration">
+      <soap:operation soapAction="http://www.axis.com/vapix/ws/webserver/GetWebServerTlsConfiguration"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+  </wsdl:binding>
+
+
+</wsdl:definitions>

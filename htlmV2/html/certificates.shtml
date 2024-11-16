@@ -1,0 +1,582 @@
+<!--#set var="helpURL" val="javascript:launch('/help/certificates_h.shtml')" -->
+
+<!--#set var="WizardFormAction" val="noAction" -->
+
+<!--#set var="activeMenu" val="system" -->
+<!--#set var="activeMenu1" val="security" -->
+<!--#set var="activePage" val="certificates" -->
+
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<script src="/incl/soapclient.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->" language="javascript" type="text/javascript"></script>
+<script src="/incl/select_input_class.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->" language="javascript" type="text/javascript"></script>
+
+
+<!--#include virtual="/incl/wait.shtml" -->
+
+<script LANGUAGE="JavaScript">
+<!--
+<!--#include virtual="/incl/functions.shtml" -->
+//global params
+var langObjCert = new Language("certificates", "certificates");
+var certResponse;
+var caResponse;
+var certArr;
+var tmpCertArr;
+var caArr;
+var tmpCaArr;
+var datesArr = new Array();
+var selectedElements;
+reloadPageType = "";
+
+var _list_cert;
+var certArray = new Array();
+var _list_cacert;
+var cacertArray = new Array();
+
+//Web Service
+var nameSpaces = new SOAPClientNS();
+nameSpaces.add("tt", "http://www.onvif.org/ver10/schema" );
+nameSpaces.add("tds", "http://www.onvif.org/ver10/device/wsdl" );
+nameSpaces.add("tev", "http://www.onvif.org/ver10/event/wsdl" );
+nameSpaces.add("ter", "http://www.onvif.org/ver10/error" );
+nameSpaces.add("wsnt", "http://docs.oasis-open.org/wsn/b-2" );
+var wsdlUrl = "/wsdl/onvif/devicemgmt.wsdl";
+
+var selOne;
+var sel;
+var selMinOne;
+var CreateSelfBtnStatTxt;
+var CreateReqBtnStatTxt;
+var InstCertBtnStatTxt;
+var InstCABtnStatTxt;
+var PropCertBtnStatTxt;
+var PropCABtnStatTxt;
+var DelCertBtnStatTxt;
+var DelCABtnStatTxt;
+function globalLanguageVars()
+{
+  //Alert texts
+  selOne = langObjCert.getText("mustSelOnlOneAlert");
+  sel = langObjCert.getText("mustSelOneAlert");
+  selMinOne = langObjCert.getText("mustSelAtLeOneDelAlert");
+  
+  //Button stat-texts
+  CreateSelfBtnStatTxt = langObjCert.getText("createSelfBtnStatTxt");
+  CreateReqBtnStatTxt = langObjCert.getText("createReqBtnStatTxt");
+  InstCertBtnStatTxt = langObjCert.getText("instCertBtnStatTxt");
+  InstCABtnStatTxt = langObjCert.getText("instCABtnStatTxt");
+  PropCertBtnStatTxt = langObjCert.getText("propCertBtnStatTxt");
+  PropCABtnStatTxt = langObjCert.getText("propCABtnStatTxt");
+  DelCertBtnStatTxt = langObjCert.getText("delCertBtnStatTxt");
+  DelCABtnStatTxt = langObjCert.getText("delCABtnStatTxt");
+}
+
+function reloadPageWithResponseObj( responseObj )
+{
+  if(responseObj)
+  {
+    if(responseObj.name == "Error")
+    {
+      var errorMsg = ( ( responseObj.description )?responseObj.description:(responseObj.fileName)?responseObj.fileName:responseObj.message );
+      alert( errorMsg );
+      return;
+    }
+  }
+  
+  init();
+  //document.location.href ="/admin/certificates.shtml?<!--#if expr="$basic = yes" -->basic=yes&<!--#endif -->id=<!--#echo var="ssi_request_id" option="encoding:url" -->";
+}
+
+function reloadPage(type)
+{
+  if(type)
+  {
+    if(type == "ca" || type == "cert")
+      reloadPageType = type;
+    else
+      reloadPageType = "";
+  }
+  
+  init();
+}
+
+function init()
+{
+  langObjCert.init();
+
+  if (!_list_cert && !_list_cacert)
+  {
+    createSelect();
+  }
+    getCertListStep1();
+
+}
+
+function createSelect()
+{
+  var headers = [ langObjCert.getText("certIdTxt"),
+                  langObjCert.getText("issuedTxt"),
+                  langObjCert.getText("expiresTxt") ];
+  var columnWidths = ["285px", "75px", "75px"];
+  var sortColumn = 0;
+
+  var list_cert_container = document.getElementById("idCertListContainer");
+  _list_cert = new select_input_class(list_cert_container, headers);
+  _list_cert.setColumnWidths(columnWidths);
+  _list_cert.setSortByColumn(sortColumn, false);
+  _list_cert.multiselect = true;
+  _list_cert.ondblclick = function(){ propertiesCert('cert'); };
+  _list_cert.drawTable();
+
+  var list_cacert_container = document.getElementById("idCACertListContainer");
+  _list_cacert = new select_input_class(list_cacert_container, headers);
+  _list_cacert.setColumnWidths(columnWidths);
+  _list_cacert.setSortByColumn(sortColumn, false);
+  _list_cacert.multiselect = true;
+  _list_cacert.ondblclick = function(){ propertiesCert('ca'); };
+  _list_cacert.drawTable();
+}
+
+function getCertListStep1()
+{ 
+  if(reloadPageType == "ca")
+    getCertListStep2();
+  else
+  {
+    //Getting cert:s
+    var params = new SOAPClientParameters();
+    
+    var now = new Date();
+    var timestamp = "?timestamp="+now.getTime();
+    
+    var url = "/vapix/services"+timestamp;
+    
+    var method = "tds:GetCertificates";
+    SOAPClient.invoke( wsdlUrl, url, nameSpaces, method, params, true, getCertListStep2 );
+  }
+}
+
+function getCertListStep2( responseObj )
+{
+  if(responseObj)
+    certResponse = responseObj; //Saving cert:s
+  else
+    certResponse = null;
+  
+  if(reloadPageType == "cert")
+    getCertListStep3();
+  else
+  {
+    //getting CA:s
+    var params = new SOAPClientParameters();
+    
+    var now = new Date();
+    var timestamp = "?timestamp="+now.getTime();
+    
+    var url = "/vapix/services"+timestamp;
+    
+    var method = "tds:GetCACertificates";
+    SOAPClient.invoke( wsdlUrl, url, nameSpaces, method, params, true, getCertListStep3 );
+  }
+}
+
+function getCertListStep3( responseObj )
+{
+  certArr = new Array();
+  tmpCertArr = new Array();
+  caArr = new Array();
+  tmpCaArr = new Array();
+
+  if(responseObj)
+    caResponse = responseObj;
+  else
+    caResponse = null;
+  
+  if(certResponse)
+  {
+    if(certResponse.name != "Error")
+    {
+      if(!certResponse.NvtCertificate.length) //Meaning undefined, then its not an array (only one or no element), SOAP does that...
+        certArr.push(certResponse.NvtCertificate);
+      else
+        certArr = certResponse.NvtCertificate;
+    }
+    else
+       alert( langObjCert.getText("errFetchCertAlert") );
+  }
+  
+  if(caResponse)
+  {
+    if(caResponse.name != "Error")
+    {
+      if(!caResponse.CACertificate.length) //Meaning undefined, then its not an array (only one or no element), SOAP does that...
+        caArr.push(caResponse.CACertificate);
+      else
+        caArr = caResponse.CACertificate;
+    }
+    else
+      alert( langObjCert.getText("errFetchCaAlert") );
+  }
+  
+  var msg = langObjCert.getText("loadingTxt");
+  delayWaitTimer = window.setTimeout( 'showWaitMsg( "' + msg + '" )', 100 );
+  
+  if(certArr.length > 0)
+  {
+    certArr = certArr.sort(sortById);
+    tmpCertArr = certArr.slice(0);
+  }
+  
+  if(caArr.length > 0)
+  {
+    caArr = caArr.sort(sortById);
+    tmpCaArr = caArr.slice(0);
+  }
+  
+  getFirstCertInArray();
+}
+
+function showWaitMsg( msg )
+{
+  wait_start( msg );
+}
+
+function sortById(a, b)
+{
+  var x = a.CertificateID.toLowerCase();
+  var y = b.CertificateID.toLowerCase();
+  return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+}
+
+function getFirstCertInArray()
+{
+  var params = new SOAPClientParameters();
+  var now = new Date();
+  var timestamp = "?timestamp="+now.getTime();
+  
+  var url = "/vapix/services"+timestamp;
+  var method = "tds:GetCertificateInformation";
+
+  if(tmpCertArr.length > 0)
+  {
+    params.add( "CertificateID", tmpCertArr[0].CertificateID );
+    tmpCertArr.splice(0, 1);
+    SOAPClient.invoke( wsdlUrl, url, nameSpaces, method, params, true, setCertDates );
+  }
+  else if(tmpCaArr.length > 0)
+  {
+    params.add( "CertificateID", tmpCaArr[0].CertificateID );
+    tmpCaArr.splice(0, 1);
+    SOAPClient.invoke( wsdlUrl, url, nameSpaces, method, params, true, setCertDates );
+  }
+  else
+  {
+    wait_stop();
+
+    if( delayWaitTimer )
+      window.clearTimeout( delayWaitTimer );
+
+    populateLists();
+  }
+}
+
+function setCertDates( responseObj )
+{
+  if(responseObj)
+  { 
+    if(responseObj.name != "Error")
+    {
+      var dateObj = new Object();
+      var certInfo = responseObj.CertificateInformation;
+
+      dateObj.from = (certInfo.Validity.From).substr(0,10);
+      dateObj.until = (certInfo.Validity.Until).substr(0,10);
+      datesArr[certInfo.CertificateID] = dateObj;
+    }
+    else
+      alert( langObjCert.getText("errFetchCertInfoAlert") );
+  }
+  
+  if(!dateObj.from || !dateObj.until)
+  {
+    dateObj.from = "---";
+    dateObj.until = "---";
+    datesArr[certInfo.certificateId] = dateObj;
+  }
+  
+  getFirstCertInArray();
+}
+
+function populateLists()
+{
+  if(reloadPageType == "" || reloadPageType == "cert") {
+    createList(_list_cert, certArr);
+  }
+  if(reloadPageType == "" || reloadPageType == "ca") {
+    createList(_list_cacert, caArr);
+  }
+}
+
+function createList(list, arr)
+{
+  // Remove existing options, if any
+  list.clear();
+
+  // Add the new options, if any
+  for( var i=0; i < arr.length; i++)
+  {
+    str = getPaddedString(arr[i].CertificateID, 26, true, true, "\u00a0" ) + '\u00a0\u00a0'
+      + getPaddedString(datesArr[arr[i].CertificateID].from, 17, true, true, "\u00a0" ) + '\u00a0\u00a0'
+      + getPaddedString(datesArr[arr[i].CertificateID].until, 17, true, true, "\u00a0" );
+
+    var rowArr = [ arr[i].CertificateID,
+                   datesArr[arr[i].CertificateID].from,
+                   datesArr[arr[i].CertificateID].until ];
+
+    list.addRow(rowArr, arr[i].CertificateID, "");
+  }
+  list.drawTable();
+}
+
+function createCert(type)
+{
+  var width = 365;
+  var height = 290;
+  var certId = "";
+  
+  if(type == "req")
+  {
+    width = 515;
+      
+    selectedElements = [].concat(_list_cert.selectedValue);
+    
+    if(_list_cert.selectedIndex == -1)
+    {
+      alert(sel);
+      return;
+    }
+    else if(selectedElements.length > 1)
+    {
+      alert(selOne);
+      return;
+    }
+    
+    certId = "&certId="+selectedElements[0];
+  }
+  else if(type == "self")
+  {
+    if(maxNbrOfCertificatesReached(_list_cert) )
+    {
+      return;
+    }
+  }
+  openPopUp('/admin/certificates_create.shtml?type='+type+certId+'&id=<!--#echo var="ssi_request_id" option="encoding:url" -->', '', width, height );
+}
+
+function propertiesCert(type)
+{
+  var width = 510;
+  var height = 600;
+  var certId = "";
+  var selectList;
+
+  if(type == "cert")
+  {
+    selectList = _list_cert;
+  }
+  else
+  {
+    selectList = _list_cacert;
+  }  
+    
+  selectedElements = [].concat(selectList.selectedValue);
+
+  if(selectList.selectedIndex == -1)
+  {
+    alert(sel);
+  }
+  else if(selectedElements.length > 1)
+  {
+    alert(selOne);
+  }
+  else
+  {
+    openPopUp('/admin/certificates_properties.shtml?type='+type+'&id=<!--#echo var="ssi_request_id" option="encoding:url" -->', '', width, height );
+  }
+}
+
+function getFirstSelectedCertId()
+{
+  return selectedElements[0];
+}
+
+function installCert(type)
+{
+  var width = 365;
+  var height = 260;
+  if(type == "ca")
+  {
+    height = 135;
+    selectList = _list_cert;
+  }
+  else
+  {
+    selectList = _list_cacert;
+  }
+  
+  if(maxNbrOfCertificatesReached(selectList) )
+    return;
+  
+  openPopUp('/admin/certificates_install.shtml?type='+type+'&id=<!--#echo var="ssi_request_id" option="encoding:url" -->', '', width, height );
+}
+
+function deleteCert(type)
+{
+  var selectList;
+
+  if(type == "cert")
+  {
+    selectList = _list_cert;
+  }
+  else
+  {
+    selectList = _list_cacert;
+  }
+    
+  selectedElements = [].concat(selectList.selectedValue);
+  
+  if(selectList.selectedIndex == -1)
+  {
+    alert(selMinOne);
+    return;
+  }
+    
+  if( confirm( langObjCert.getText("sureToDelConfrm") ) )
+  {
+    reloadPageType = type;
+  
+    var params = new SOAPClientParameters();
+    
+    var now = new Date();
+    var timestamp = "?timestamp="+now.getTime();
+    
+    var url = "/vapix/services"+timestamp;
+    var method = "tds:DeleteCertificates";
+    
+    var idObj = new Array();
+    var tmpArray;
+    for(var i=0; i < selectedElements.length; i++)
+    {
+      tmpArray = new Array();
+      tmpArray["CertificateID"] = selectedElements[i];
+      idObj.push(tmpArray);
+    }
+    
+    params.add( "_", idObj );
+    
+    SOAPClient.invoke( wsdlUrl, url, nameSpaces, method, params, true, reloadPageWithResponseObj );
+  }
+  else
+    return;
+}
+
+function maxNbrOfCertificatesReached(list)
+{
+  var retVal = false;  
+  
+  if(list.length >= 100)
+  {
+    retVal = true;
+    alert( langObjCert.getText("tooManyCertsAlert") );
+  }
+  
+  return retVal;
+}
+
+//-->
+</script>
+
+</head>
+<body <!--#include virtual="/incl/bodytag.shtml" --> onLoad="init()">
+
+<!--#include virtual="/incl/top_incl2.shtml" -->
+    
+    <table border="0" cellpadding="3" cellspacing="0" width="100%" valign="top">
+      <tr>
+        <td class="topTitle" align="left">
+          <span id="certificatesTxt"></span>
+        </td>
+        <td class="topTitle">
+          <div align="right">
+            <a href="<!--#echo var="helpURL" option="encoding:url" -->">
+              <img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="hlpPic">
+            </a>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="subTitle" align="left" colspan="2">
+          <span id="listCertTxt"></span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap colspan="2">
+          <div id="idCertListContainer" class="selectList"></div>
+        </td>
+      </tr>
+      <tr class="topTitle">
+        <td align="left" nowrap colspan="2">
+          <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <td class="button"><img src="/pics/space.gif" border="0" width="1" height="20"><input type="button" value="" width="75" onClick="JavaScript:createCert('self')" onMouseOver="return showStatus(CreateSelfBtnStatTxt)" onMouseOut="return showStatus('')" id="cert_createCertBtn"></td>
+              <td class="button">&nbsp;</td>
+              <td class="button"><img src="/pics/space.gif" border="0" width="1" height="20"><input type="button" value="" width="75" onClick="JavaScript:propertiesCert('cert')" onMouseOver="return showStatus(PropCertBtnStatTxt)" onMouseOut="return showStatus('')" id="cert_propCertBtn"></td>
+              <td class="button">&nbsp;</td>
+              <td class="button"><img src="/pics/space.gif" border="0" width="1" height="20"><input type="button" value="" class="btnNormal" onClick="JavaScript:deleteCert('cert')" onMouseOver="return showStatus(DelCertBtnStatTxt)" onMouseOut="return showStatus('')" id="cert_delCertBtn"></td>
+            </tr>
+            <tr>
+              <td colspan="5">
+                <table border="0" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td class="button"><img src="/pics/space.gif" border="0" width="1" height="20"><input type="button" value="" width="75" onClick="JavaScript:createCert('req')" onMouseOver="return showStatus(CreateReqBtnStatTxt)" onMouseOut="return showStatus('')" id="cert_createReqBtn"></td>
+                    <td class="button">&nbsp;</td>
+                    <td class="button"><img src="/pics/space.gif" border="0" width="1" height="20"><input type="button" value="" width="100" onClick="JavaScript:installCert('cert')" onMouseOver="return showStatus(InstCertBtnStatTxt)" onMouseOut="return showStatus('')" id="cert_instCertBtn"></td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          &nbsp;
+        </td>
+      </tr>
+      <tr>
+        <td class="subTitle" align="left" colspan="2">
+          <span id="listCATxt"></span>
+        </td>
+      </tr>
+      <tr>
+        <td nowrap colspan="2">
+          <div id="idCACertListContainer" class="selectList"></div>
+        </td>
+      </tr>
+      <tr class="topTitle">
+        <td align="left" nowrap colspan="2">
+          <table border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <td class="button"><img src="/pics/space.gif" border="0" width="1" height="20"><input type="button" value="" width="100" onClick="JavaScript:installCert('ca')" onMouseOver="return showStatus(InstCABtnStatTxt)" onMouseOut="return showStatus('')" id="cert_instCABtn"></td>
+              <td class="button">&nbsp;</td>
+              <td class="button"><img src="/pics/space.gif" border="0" width="1" height="20"><input type="button" value="" width="75" onClick="JavaScript:propertiesCert('ca')" onMouseOver="return showStatus(PropCABtnStatTxt)" onMouseOut="return showStatus('')" id="cert_propCABtn"></td>
+              <td class="button">&nbsp;</td>
+              <td class="button"><img src="/pics/space.gif" border="0" width="1" height="20"><input type="button" value="" class="btnNormal" onClick="JavaScript:deleteCert('ca')" onMouseOver="return showStatus(DelCABtnStatTxt)" onMouseOut="return showStatus('')" id="cert_delCABtn"></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+<!--#include virtual="/incl/bottom_incl.shtml" -->

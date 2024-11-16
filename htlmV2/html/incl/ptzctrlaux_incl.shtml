@@ -1,0 +1,3 @@
+<!--#set var="pcb_onclk" val="$(root_PTZ_Auxiliary_A$camnbr$_Button_B$aux_cmd_no$_URL)" -->
+<!--#set var="pcb_label" val="$(root_PTZ_Auxiliary_A$camnbr$_Button_B$aux_cmd_no$_Name)" -->
+<!--#set var="pcb_info" val="$(root_PTZ_Auxiliary_A$camnbr$_Button_B$aux_cmd_no$_Info)" -->

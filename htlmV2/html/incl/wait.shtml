@@ -1,0 +1,134 @@
+<script language="javascript">
+<!--
+var langObjWait = new Language("common", "wait");
+
+if ((navigator.appName == "Microsoft Internet Explorer") && (navigator.platform.substr(0,3) != "Mac")) {
+	var isIE = true;
+} else {
+	var isIE = false;
+}
+
+var waitDiv1 = null;
+var waitDiv2 = null;
+var waitDiv3 = null;
+var waitDiv4 = null;
+
+//Wait_top and wait_width are OPTIONAL
+function wait_init(wait_text, wait_top, wait_width)
+{
+  var top = 200;
+  if(wait_top && wait_top >= 0)
+    top = wait_top;
+  var width = 400;
+  if(wait_width && wait_width > 0)
+    width = wait_width;
+  var padding = 40;
+  var left = parseInt((document.body.clientWidth - width - 2 * padding)/2, 10);
+  var default_message = langObjWait.getText("processing");
+
+  waitDiv1 = document.createElement("DIV");
+  waitDiv1.style.display = "none";
+  waitDiv1.align = "center";
+  waitDiv1.style.backgroundColor = "transparent";
+  waitDiv1.style.position = "absolute";
+  waitDiv1.style.left = 0;
+  waitDiv1.style.top = 0;
+  waitDiv1.style.zIndex = "500";
+  waitDiv1.style.width = "100%";
+  waitDiv1.style.height = "100%";
+  waitDiv1.innerHTML = "<br>";
+  document.body.appendChild(waitDiv1);
+
+  waitDiv2 = document.createElement("DIV");
+  waitDiv2.style.top = top+"px";
+  waitDiv2.style.left = left+"px";
+  waitDiv2.style.width = width+"px";
+  waitDiv2.style.position = "absolute";
+  waitDiv2.style.backgroundColor = "#3366cc";
+  waitDiv2.style.border = "black solid 1px";
+  waitDiv2.style.margin = "0";
+  waitDiv2.style.padding = padding+"px";
+  waitDiv2.style.zIndex = "501";
+  waitDiv2.style.opacity = 0.6;
+  waitDiv2.style.filter = "alpha(opacity=60)";
+  waitDiv2.innerHTML = (typeof(wait_text) != "undefined" ? wait_text : default_message);
+  waitDiv1.appendChild(waitDiv2);
+
+  waitDiv3 = document.createElement("DIV");
+  waitDiv3.style.top = top+"px";
+  waitDiv3.style.left = left+"px";
+  waitDiv3.style.width = width+"px";
+  waitDiv3.style.position = "absolute";
+  waitDiv3.style.backgroundColor = "transparent";
+  waitDiv3.style.border = "black solid 1px";
+  waitDiv3.style.margin = "0";
+  waitDiv3.style.padding = padding+"px";
+  waitDiv3.style.zIndex = "502";
+  waitDiv3.innerHTML = (typeof(wait_text) != "undefined" ? wait_text : default_message);
+  waitDiv1.appendChild(waitDiv3);
+
+  waitDiv4 = document.createElement("DIV");
+  waitDiv4.style.display = "none";
+  waitDiv4.align = "center";
+  waitDiv4.style.backgroundColor = "white";
+  waitDiv4.style.position = "absolute";
+  waitDiv4.style.left = 0;
+  waitDiv4.style.top = 0;
+  waitDiv4.style.zIndex = "499";
+  waitDiv4.style.width = "100%";
+  waitDiv4.style.height = "100%";
+  waitDiv4.style.opacity = 0.1;
+  waitDiv4.style.filter = "alpha(opacity=10)";
+  waitDiv4.innerHTML = "<br>";
+  document.body.appendChild(waitDiv4);
+}
+//Wait_top and wait_width are OPTIONAL
+function wait_start(wait_text, wait_top, wait_width)
+{
+  if (waitDiv1 == null)
+    wait_init(wait_text, wait_top, wait_width);
+
+  if ( document.Player ) {
+    document.Player.style.visibility = "hidden";
+  }
+  waitDiv1.style.display = "block";
+  waitDiv4.style.display = "block";
+}
+function wait_stop()
+{
+  if (waitDiv1 != null) {
+    waitDiv1.style.display = "none";
+    waitDiv4.style.display = "none";
+  }
+
+  if ( document.Player ) {
+    document.Player.style.visibility = "visible";
+  }
+}
+function wait_disableInput(typeToDisable)
+{
+  var inputs = document.getElementsByTagName("INPUT");
+  if (typeToDisable == null)
+    typeToDisable = "";
+  typeToDisable = typeToDisable.toLowerCase();
+  for (var i = 0; i < inputs.length; i++) {
+    if (typeToDisable == inputs[i].type.toLowerCase() || typeToDisable == "") {
+      inputs[i].oldDisabled = inputs[i].disabled;
+      inputs[i].disabled = true;
+    }
+  }
+}
+function wait_enableInput(typeToEnable)
+{
+  var inputs = document.getElementsByTagName("INPUT");
+  if (typeToEnable == null)
+    typeToEnable = "";
+  typeToEnable = typeToEnable.toLowerCase();
+  for (var i = 0; i < inputs.length; i++) {
+    if (typeToEnable == inputs[i].type.toLowerCase() || typeToEnable == "") {
+      inputs[i].disabled = inputs[i].oldDisabled;
+    }
+  }
+}
+-->
+</script>

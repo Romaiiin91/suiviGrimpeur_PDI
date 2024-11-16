@@ -1,0 +1,213 @@
+<!--#set var="helpURL" val="javascript:launch('/help/qos_h.shtml')" -->
+<!--#set var="WizardFormAction" val="/sm/sm.srv" -->
+
+<!--#set var="activeMenu" val="system" -->
+<!--#set var="activeMenu1" val="network" -->
+<!--#set var="activePage" val="qos" -->
+
+<!--#include virtual="/sm/sm.srv?action=get&group=Network" -->
+
+<!--#include virtual="/incl/top_incl.shtml" -->
+<!--#include virtual="/java/integer.shtml" -->
+<!--#include virtual="/java/chkbox.shtml" -->
+
+<!--#set var="excludeClass" val="0" -->
+
+<script language="JavaScript">
+<!--
+var langObjQos = new Language("qos", "qos");
+
+<!--#include virtual="/incl/functions.shtml" -->
+function setFields()
+{
+ var form = document.WizardForm;
+ 
+  form.root_Network_QoS_Class1_DSCP.focus();
+ 
+}
+
+function saveData()
+{
+  var form = document.WizardForm;
+  var o;
+  for( var i = 0; i < form.elements.length; i++ )
+  {
+    o = form.elements[i];
+    if( o && o.disabled == false && o.type == "text" )
+    {
+      if (IntegerCheck(o.value, 0, 63) == 0)
+      {
+        alert( langObjQos.getText("valAlert") );
+        o.focus();
+        o.select();
+        return 0;
+      }
+    }
+  }
+  form.submit()
+}
+
+var SaveBtnStatTxt;
+var ResBtnStatTxt;
+function globalLanguageVars()
+{
+  var excludeDesc = new Array();
+  var txtLiveVideo = langObjQos.getText("liveVideoTxt");
+  var txtLiveAudio = langObjQos.getText("liveAudioTxt");
+  var txtEventAlarm = langObjQos.getText("eventAlarmTxt");
+  var txtManagment = langObjQos.getText("mgmtTxt");
+  var txtMetaData = langObjQos.getText("metaDataTxt");
+
+  var descriptions = document.getElementsByName("descriptions")[0].children;
+  var tr, txt, isShown, dscp;
+  var isOdd = true;
+  for( var i = 0; i < descriptions.length; i++ )
+  {
+    txt = document.getElementById("dscpTxt" + (i+1));
+    isShown = false;
+    switch( descriptions[i].value )
+    {
+    case "AxisLiveVideo":
+      txt.innerHTML = txtLiveVideo;
+      isShown = true;
+      break;
+    case "AxisLiveAudio":
+      <!--#if expr="$excludeClass = 0" -->
+        txt.innerHTML = txtLiveAudio;
+        isShown = true;
+      <!--#endif -->
+      break;
+    case "AxisEventAlarm":
+        txt.innerHTML = txtEventAlarm;
+        isShown = true;
+      break;
+    case "AxisManagement":
+      txt.innerHTML = txtManagment;
+      isShown = true;
+      break;
+    case "AxisMetaData":
+      txt.innerHTML = txtMetaData;
+      isShown = true;
+      break;
+    }
+    if( isShown )
+    {
+      tr = document.getElementById("dscpTR" + (i+1));
+      tr.style.display = "";
+      tr.className = ( isOdd ? "oddItem" : "evenItem" );
+      isOdd = !isOdd;
+      dscp = document.getElementsByName("root_Network_QoS_Class" + (i+1) + "_DSCP")[0].disabled = false;
+    }
+  }
+  SaveBtnStatTxt = langObjQos.getText("saveBtnStatTxt")
+  ResBtnStatTxt = langObjQos.getText("resBtnStatTxt")
+}
+
+// -->
+</script>
+<body <!--#include virtual="/incl/bodytag.shtml" --> onLoad="langObjQos.init();setFields()">
+
+<form name="form2" action="/sm/sm.srv" method="POST">
+<input type="hidden" name="return_page" value="/admin/qos.shtml?parametersChanged=false&id=<!--#echo var="ssi_request_id" option="encoding:url" -->">
+<input type="hidden" name="action" value="modify">
+</form>
+<form name="descriptions">
+  <!--#include virtual="/sm/sm.srv?action=get_htmlform&getgroup=root.Network.QoS&format=hiddenhtmlform&param=Desc" -->
+</form>
+
+<!--#include virtual="/incl/top_incl2.shtml" -->
+<table border="<!--#echo var="zero" option="encoding:html" -->" cellpadding="<!--#echo var="cellpadding3" option="encoding:html" -->" cellspacing="<!--#echo var="zero" option="encoding:html" -->" width="<!--#echo var="tableWidth3" option="encoding:html" -->">
+  <tr class="topTitle">
+    <td align="left" colspan="2"><div align="left"><span id="qosTxt"></span></div></td>
+    <td>
+      <div align="right"><a href="<!--#echo var="helpURL" option="encoding:url" -->"><img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="hlpPic"></a></div>
+    </td>
+  </tr>
+  <tr class="subTitle">
+    <td align="left" colspan="3"><span id="soSetTxt"></span></td>
+  </tr>
+  <tr id="dscpTR1" style="display: none">
+    <td>
+      <span id="dscpTxt1"></span>
+    </td>
+    <td><input type="text" size="15" name="root_Network_QoS_Class1_DSCP" value="<!--#echo var="root_Network_QoS_Class1_DSCP" option="encoding:html" -->" maxlength="2" disabled="disabled">&nbsp;[0..63]</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr id="dscpTR2" style="display: none">
+    <td>
+      <span id="dscpTxt2"></span>
+    </td>
+    <td><input type="text" size="15" name="root_Network_QoS_Class2_DSCP" value="<!--#echo var="root_Network_QoS_Class2_DSCP" option="encoding:html" -->" maxlength="2" disabled="disabled">&nbsp;[0..63]</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr id="dscpTR3" style="display: none">
+    <td>
+      <span id="dscpTxt3"></span>
+    </td>
+    <td><input type="text" size="15" name="root_Network_QoS_Class3_DSCP" value="<!--#echo var="root_Network_QoS_Class3_DSCP" option="encoding:html" -->" maxlength="2" disabled="disabled">&nbsp;[0..63]</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr id="dscpTR4" style="display: none">
+    <td>
+      <span id="dscpTxt4"></span>
+    </td>
+    <td><input type="text" size="15" name="root_Network_QoS_Class4_DSCP" value="<!--#echo var="root_Network_QoS_Class4_DSCP" option="encoding:html" -->" maxlength="2" disabled="disabled">&nbsp;[0..63]</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr id="dscpTR5" style="display: none">
+    <td>
+      <span id="dscpTxt5"></span>
+    </td>
+    <td><input type="text" size="15" name="root_Network_QoS_Class5_DSCP" value="<!--#echo var="root_Network_QoS_Class5_DSCP" option="encoding:html" -->" maxlength="2" disabled="disabled">&nbsp;[0..63]</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr id="dscpTR6" style="display: none">
+    <td>
+      <span id="dscpTxt6"></span>
+    </td>
+    <td><input type="text" size="15" name="root_Network_QoS_Class6_DSCP" value="<!--#echo var="root_Network_QoS_Class6_DSCP" option="encoding:html" -->" maxlength="2" disabled="disabled">&nbsp;[0..63]</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="center" colspan="3">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td class="button"><input type="button" width="75" value="" class="btnNormal" onClick="saveData()" onMouseOver="return showStatus(SaveBtnStatTxt)" onMouseOut="return showStatus('')" id="qos_saveBtn"></td>
+          <td class="button">&nbsp;</td>
+          <td class="button"><input type="button" width="75" value="" class="btnNormal" onClick="reloadPage()" onMouseOver="return showStatus(ResBtnStatTxt)" onMouseOut="return showStatus('')" id="qos_resetBtn"></td>
+        </tr>
+      </table>
+      <input type="hidden" name="return_page" value="/admin/qos.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->">
+      <input type="hidden" name="action" value="modify">
+    </td>
+  </tr>
+</table>
+
+<script language="JavaScript">
+<!--
+
+function reloadPage()
+{
+  window.location.href = "/admin/qos.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->"
+}
+
+function checkIllegalChar(field)
+{
+  var form = document.WizardForm
+  var value = field.value
+
+  for (var i = 0; i < value.length; i++) {
+    if (((value.charAt(i)=='-') && (value.charAt(i+1)=='.')) || ((value.charAt(i)=='.') && (value.charAt(i+1)=='-')) || ((value.charAt(i)=='-') && (value.charAt(i+1)=='')) || ((value.charAt(0)=='-'))) {
+      alert( langObjQos.getText(illMaNaAlert) );
+      field.focus()
+      field.select()
+      return false
+    }
+  }
+  return true
+}
+
+
+//-->
+</script>
+<!--#include virtual="/incl/bottom_incl.shtml" -->

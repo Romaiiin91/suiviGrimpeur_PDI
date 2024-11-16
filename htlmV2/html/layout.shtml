@@ -1,0 +1,720 @@
+<!--#set var="helpURL" val="javascript:launch('/help/layout_h.shtml')" -->
+<!--#set var="WizardFormAction" val="/sm/sm.srv" -->
+<!--#set var="activeMenu" val="layout" -->
+<!--#set var="activePage" val="layout" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+<!--#include virtual="/java/chkbox.shtml" -->
+
+<!--#include virtual="/sm/sm.srv?action=get&group=Layout,IOPort,Output,Input,ImageSource.NbrOfSources,Properties.PTZ.PTZ,Properties.Image,PTZ,Properties.Audio.Format,Properties.TemperatureSensor,StreamCache,TemperatureControl,PTZ.Support" -->
+<!--#include virtual="/java/integer.shtml" -->
+
+
+
+<!--#if expr="_$root_ImageSource_NbrOfSources = _" -->
+  <!--#set var="root_ImageSource_NbrOfSources" val="0" -->
+<!--#endif -->
+<!--#if expr="_$root_Output_NbrOfOutputs = _" -->
+  <!--#set var="root_Output_NbrOfOutputs" val="0" -->
+<!--#endif -->
+<!--#if expr="_$camnbr = _" -->
+  <!--#set var="camnbr" val="1" -->
+<!--#endif -->
+
+
+<script LANGUAGE="JavaScript">
+<!--
+var langObjLay = new Language("layout", "layout");
+
+<!--#include virtual="/incl/functions.shtml" -->
+
+function setFields()
+{
+  var form = document.WizardForm;
+  form.root_Layout_CustomLink_C0_URL.value=unescape(form.root_Layout_CustomLink_C0_URL.value);
+  form.root_Layout_CustomLink_C1_URL.value=unescape(form.root_Layout_CustomLink_C1_URL.value);
+  form.root_Layout_CustomLink_C2_URL.value=unescape(form.root_Layout_CustomLink_C2_URL.value);
+  form.root_Layout_CustomLink_C3_URL.value=unescape(form.root_Layout_CustomLink_C3_URL.value);
+<!--#if expr="$root_Output_NbrOfOutputs != 0" -->
+  setOutputButtons();
+  setPulseTime();
+  toggleList();
+<!--#endif -->
+  <!--#if expr="$root_Properties_TemperatureSensor_Fan = yes" -->
+    setFanTime()
+  <!--#endif -->
+  <!--#if expr="$root_Properties_TemperatureSensor_Heater = yes" -->
+    setHeaterTime()
+  <!--#endif -->
+
+}
+
+<!--#if expr="$root_Properties_TemperatureSensor_Fan = yes" -->
+function setFanTime()
+{
+  var form = document.WizardForm;
+    if (form.TemperatureControl_Fan_F0_ManualControlDuration)
+      form.TemperatureControl_Fan_F0_ManualControlDuration.value = Math.round(<!--#echo var="root_TemperatureControl_Fan_F0_ManualControlDuration" option="encoding:javascript" -->/60);
+    if (form.TemperatureControl_Fan_F1_ManualControlDuration)
+      form.TemperatureControl_Fan_F1_ManualControlDuration.value = Math.round(<!--#echo var="root_TemperatureControl_Fan_F1_ManualControlDuration" option="encoding:javascript" -->/60);
+    if (form.TemperatureControl_Fan_F2_ManualControlDuration)
+      form.TemperatureControl_Fan_F2_ManualControlDuration.value = Math.round(<!--#echo var="root_TemperatureControl_Fan_F2_ManualControlDuration" option="encoding:javascript" -->/60);
+}
+<!--#endif -->
+
+<!--#if expr="$root_Properties_TemperatureSensor_Heater = yes" -->
+function setHeaterTime()
+{
+  var form = document.WizardForm;
+    if (form.TemperatureControl_Heater_H0_ManualControlDuration)
+      form.TemperatureControl_Heater_H0_ManualControlDuration.value = Math.round(<!--#echo var="root_TemperatureControl_Heater_H0_ManualControlDuration" option="encoding:javascript" -->/60);
+}
+<!--#endif -->
+
+
+
+
+function searchIllegal(txt)
+{
+  var textScript=new Array(5);
+
+  textScript[0]="<SCRIPT";
+  textScript[1]="<OBJECT";
+  textScript[2]="<APPLET";
+  textScript[3]="<EMBED";
+  textScript[4]="<FORM";
+  txt=txt.toUpperCase();
+  for (i=0;i<=4;i++) {
+    if (txt.indexOf(textScript[i])!=-1) {
+      return 1;
+    }
+  }
+  return 0;
+}
+
+function ValidateParameters()
+{
+
+  var addStr = "";
+  var customlinkScriptAlert = langObjLay.getText("customlinkScriptAlrt");
+  var customlinkAlert = langObjLay.getText("customlinknameAlrt");
+  var form = document.WizardForm;
+
+  for(var i=0; i < 4; i++)
+  {
+    addStr = "CustomLink_C"+i;
+
+    if (searchIllegal(form["root_Layout_"+addStr+"_Name"].value) == 1) {
+      alert(customlinkScriptAlert);
+       form["root_Layout_"+addStr+"_Name"].focus();
+       return 0;
+    }
+
+    if (searchIllegal(form["root_Layout_"+addStr+"_URL"].value) == 1) {
+      alert(customlinkScriptAlert);
+       form["root_Layout_"+addStr+"_URL"].focus();
+       return 0;
+    }
+
+    if(form["root_Layout_"+addStr+"_Name"].value == "" &&
+        form["root_Layout_"+addStr+"_Enabled"].value == "yes" )
+    {
+       alert(customlinkAlert);
+       form["root_Layout_"+addStr+"_Name"].focus();
+       return 0;
+    }
+  }
+
+  return 1
+}
+
+
+
+function saveData()
+{
+  var form = document.WizardForm;
+
+   if (ValidateParameters() == 0) {
+    return;
+  }
+
+  <!--#if expr="$root_Output_NbrOfOutputs != 0" -->
+    getOutputButtons();
+    if (getPulseTime() < 0)
+      return -1;
+  <!--#endif -->
+    form.root_Layout_DefaultStreamProfile.value = "";
+    var selValue = form.streamprofile[form.streamprofile.selectedIndex].value;
+    if (selValue == "mjpeg"
+        || selValue == "h264"
+       ) {
+      form.root_Layout_DefaultVideoFormat.value = selValue
+    } else {
+      form.root_Layout_DefaultVideoFormat.value = profileParseOption(document.profileList["root_StreamProfile_S" + selValue + "_Parameters"].value,"videocodec");
+      form.root_Layout_DefaultStreamProfile.value = form.streamprofile[form.streamprofile.selectedIndex].text;
+    }
+
+
+
+<!--#if expr="$root_Properties_TemperatureSensor_Fan = yes" -->
+    if (form.TemperatureControl_Fan_F0_ManualControlDuration &&
+        form.root_TemperatureControl_Fan_F0_ManualControlDuration &&
+        !processDuration(form.TemperatureControl_Fan_F0_ManualControlDuration, form.root_TemperatureControl_Fan_F0_ManualControlDuration))
+      return;
+    if (form.TemperatureControl_Fan_F1_ManualControlDuration &&
+        form.root_TemperatureControl_Fan_F1_ManualControlDuration &&
+        !processDuration(form.TemperatureControl_Fan_F1_ManualControlDuration, form.root_TemperatureControl_Fan_F1_ManualControlDuration))
+      return;
+    if (form.TemperatureControl_Fan_F2_ManualControlDuration &&
+        form.root_TemperatureControl_Fan_F2_ManualControlDuration &&
+        !processDuration(form.TemperatureControl_Fan_F2_ManualControlDuration, form.root_TemperatureControl_Fan_F2_ManualControlDuration))
+      return;
+<!--#endif -->
+
+<!--#if expr="$root_Properties_TemperatureSensor_Heater = yes" -->
+    if (form.TemperatureControl_Heater_H0_ManualControlDuration &&
+        form.root_TemperatureControl_Heater_H0_ManualControlDuration &&
+        !processDuration(form.TemperatureControl_Heater_H0_ManualControlDuration, form.root_TemperatureControl_Heater_H0_ManualControlDuration))
+      return;
+<!--#endif -->
+
+  form.submit()
+}
+
+function processDuration(displayElement, saveElement)
+{
+  var timeAlert = langObjLay.getText("invTimSpanAlrt");
+  var v = displayElement.value.trim();
+  if (IntegerCheck(v,0,60) == 0) {
+    alert(timeAlert)
+    displayElement.focus()
+    displayElement.select()
+    return false;
+  } else {
+    saveElement.value = v*60;
+    return true;
+  }
+}
+
+function getPulseTime()
+{
+<!--#if expr="$root_Output_NbrOfOutputs != 0" -->
+  var form = document.WizardForm;
+
+
+  for (i=0; i< (<!--#echo var="root_Output_NbrOfOutputs" option="encoding:javascript" -->+<!--#echo var="root_Input_NbrOfInputs" option="encoding:javascript" -->); i++) {
+    try {
+      if (!form["pulseSelect" + i]) {
+      } else if (form["pulseSelect" + i].selectedIndex == 1) {
+        var field = form["Time" + i];
+        var message = langObjLay.getText("invPulseAlert");
+        if (form["pulseTime" + i].selectedIndex == 0) {
+          if (isNaN(field.value) || field.value > (60*100) || field.value < 1) {
+            field.focus();
+            field.select();
+            alert(message);
+            return -1;
+          }
+          form["root_IOPort_I" + i + "_Output_PulseTime"].value = field.value + "h"
+        } else if (form["pulseTime" + i].selectedIndex == 1) {
+          if (isNaN(field.value) || field.value > (60) || field.value < 1) {
+            field.focus();
+            field.select();
+            alert(message);
+            return -1;
+          }
+          form["root_IOPort_I" + i + "_Output_PulseTime"].value = field.value + "s"
+        }
+      } else {
+        form["root_IOPort_I" + i + "_Output_PulseTime"].value = "0"
+      }
+    }
+    catch(e) {}
+  }
+<!--#endif -->
+}
+
+function setPulseTime()
+{
+<!--#if expr="$root_Output_NbrOfOutputs != 0" -->
+  var form = document.WizardForm;
+
+  for (i=0; i< (<!--#echo var="root_Output_NbrOfOutputs" option="encoding:javascript" -->+<!--#echo var="root_Input_NbrOfInputs" option="encoding:javascript" -->); i++) {
+    try {
+      if (!form["root_IOPort_I" + i + "_Output_PulseTime"]) {
+      } else if (form["root_IOPort_I" + i + "_Output_PulseTime"].value != "0") {
+        document.getElementById("Pulse" + i).className = "shownItems";
+        var unit = form["root_IOPort_I" + i + "_Output_PulseTime"].value
+
+        for (j=unit.length-1; j >= 0; j--) {
+          if (unit.charAt(j) == "h") { 
+            form["pulseTime" + i].selectedIndex = 0;
+            form["Time" + i].value = parseInt(unit, 10);
+            break;
+          } else if (unit.charAt(j) == "s") {
+            form["pulseTime" + i].selectedIndex = 1;
+            form["Time" + i].value = parseInt(unit, 10);
+            break;
+          }
+        }
+      }
+    }
+    catch(e) {}
+  }
+<!--#endif -->
+}
+
+function getOutputButtons()
+{
+<!--#if expr="$root_Output_NbrOfOutputs != 0" -->
+  var form = document.WizardForm;
+  for (i=0; i< (<!--#echo var="root_Output_NbrOfOutputs" option="encoding:javascript" -->+<!--#echo var="root_Input_NbrOfInputs" option="encoding:javascript" -->); i++) {
+    try {
+      if (!form["pulseSelect" + i]) {
+      } else if (form["pulseSelect" + i].selectedIndex == 0) {
+         form["root_IOPort_I" + i + "_Output_Button"].value = "none";
+      } else if (form["pulseSelect" + i].selectedIndex == 1) {
+        form["root_IOPort_I" + i + "_Output_Button"].value = "pulse";
+      } else {
+        form["root_IOPort_I" + i + "_Output_Button"].value = "actinact";
+      }
+    }
+    catch(e) {}
+  }
+<!--#endif -->
+}
+
+function setOutputButtons()
+{
+  var form = document.WizardForm
+
+}
+
+function toggleList() {
+  var form = document.WizardForm
+
+}
+
+
+<!--#include virtual="/incl/profile_funcs.shtml" -->
+
+function reloadPage()
+{
+  document.location.href = "/operator/layout.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->";
+}
+
+var ConBtnStatTxt;
+var SaveBtnStatTxt;
+var ResBtnStatTxt;
+function globalLanguageVars()
+{
+  ConBtnStatTxt = langObjLay.getText("conBtnStatTxt");
+  SaveBtnStatTxt = langObjLay.getText("saveBtnStatTxt");
+  ResBtnStatTxt = langObjLay.getText("resBtnStatTxt");
+
+  var strmProfArr = new Array();
+  var defVidArr = new Array();
+  <!--#set var="selOption" val="" --><!--#if expr="_$root_Layout_DefaultStreamProfile = _" --><!--#set var="selOption" val="$root_Layout_DefaultVideoFormat" --><!--#endif -->
+  defVidArr.push( {val: "mjpeg", text: "MJPEG", selected: <!--#if expr="$selOption = mjpeg" -->true<!--#else -->false<!--#endif -->} );
+  defVidArr.push( {val: "h264", text: "H.264", selected: <!--#if expr="$selOption = h264" -->true<!--#else -->false<!--#endif -->} );
+  strmProfArr = defVidArr.concat( getProfileOptionsArray(document.profileList,"<!--#echo var="root_Layout_DefaultStreamProfile" option="encoding:html" -->") );
+  langObjLay.addOptionsToList(document.getElementById("streamprofile"), strmProfArr, true);
+
+  var viewIEArr = new Array();
+  viewIEArr[0] = {val: "activex", text: langObjLay.getText("actXSelTxt"), selected: <!--#if expr="$root_Layout_ViewerIE = activex" -->true<!--#else -->false<!--#endif -->};
+  viewIEArr[1] = {val: "quicktime", text: langObjLay.getText("qTTxt"), selected: <!--#if expr="$root_Layout_ViewerIE = quicktime" -->true<!--#else -->false<!--#endif -->};
+  viewIEArr[2] = {val: "java", text: langObjLay.getText("jaApTxt"), selected: <!--#if expr="$root_Layout_ViewerIE = java" -->true<!--#else -->false<!--#endif -->};
+  viewIEArr[3] = {val: "still", text: langObjLay.getText("stImgTxt"), selected: <!--#if expr="$root_Layout_ViewerIE = still" -->true<!--#else -->false<!--#endif -->};
+  langObjLay.addOptionsToList(document.getElementById("viewerIE"), viewIEArr);
+  
+  var viewOtherArr = new Array();
+  viewOtherArr[0] = {val: "spush", text: langObjLay.getText("serPuSelTxt"), selected: <!--#if expr="$root_Layout_ViewerOther = spush" -->true<!--#else -->false<!--#endif -->};
+  viewOtherArr[1] = {val: "quicktime", text: langObjLay.getText("qTTxt"), selected: <!--#if expr="$root_Layout_ViewerOther = quicktime" -->true<!--#else -->false<!--#endif -->};
+  viewOtherArr[2] = {val: "java", text: langObjLay.getText("jaApTxt"), selected: <!--#if expr="$root_Layout_ViewerOther = java" -->true<!--#else -->false<!--#endif -->};
+  viewOtherArr[3] = {val: "still", text: langObjLay.getText("stImgTxt"), selected: <!--#if expr="$root_Layout_ViewerOther = still" -->true<!--#else -->false<!--#endif -->};
+  langObjLay.addOptionsToList(document.getElementById("viewerOther"), viewOtherArr);
+  
+  var pulseLightArr = new Array();
+  pulseLightArr[0] = {val: "pulse", text: langObjLay.getText("plsTxt")};
+  pulseLightArr[1] = {val: "actinact", text: langObjLay.getText("actInvTxt")};
+  pulseLightArr[2] = {val: "slider", text: langObjLay.getText("sliderTxt")};
+  
+  var actvLightArr = new Array();
+  actvLightArr[0] = {val: "100", text: langObjLay.getText("onTxt")};
+  actvLightArr[1] = {val: "-100", text: langObjLay.getText("fadeToTxt")+" 100%"};
+  actvLightArr[2] = {val: "-90", text: langObjLay.getText("fadeToTxt")+" 90%"};
+  actvLightArr[3] = {val: "-80", text: langObjLay.getText("fadeToTxt")+" 80%"};
+  actvLightArr[4] = {val: "-70", text: langObjLay.getText("fadeToTxt")+" 70%"};
+  actvLightArr[5] = {val: "-60", text: langObjLay.getText("fadeToTxt")+" 60%"};
+  actvLightArr[6] = {val: "-50", text: langObjLay.getText("fadeToTxt")+" 50%"};
+  actvLightArr[7] = {val: "-40", text: langObjLay.getText("fadeToTxt")+" 40%"};
+  actvLightArr[8] = {val: "-30", text: langObjLay.getText("fadeToTxt")+" 30%"};
+  actvLightArr[9] = {val: "-20", text: langObjLay.getText("fadeToTxt")+" 20%"};
+  actvLightArr[10] = {val: "-10", text: langObjLay.getText("fadeToTxt")+" 10%"};
+  actvLightArr[11] = {val: "-5", text: langObjLay.getText("fadeToTxt")+" 5%"};
+  actvLightArr[12] = {val: "-1", text: langObjLay.getText("fadeToTxt")+" 1%"};
+  
+  var inactvLightArr = new Array();
+  inactvLightArr[0] = {val: "-0", text: langObjLay.getText("fadeOffTxt")};
+  inactvLightArr[1] = {val: "0", text: langObjLay.getText("offTxt")};
+  
+  var lightTimeArr = new Array();
+  lightTimeArr[0] = {val: "h", text: "1/100 "+langObjLay.getText("secsTxt")};
+  lightTimeArr[1] = {val: "s", text: langObjLay.getText("secsTxt"), selected: true};
+  
+
+  var pulseIOArr = new Array();
+  pulseIOArr[0] = {val: "pulse", text: langObjLay.getText("plsTxt")};
+  pulseIOArr[1] = {val: "actinact", text: langObjLay.getText("actInvTxt")};
+
+  var pulseTimeArr = new Array();
+  pulseTimeArr[0] = {val: "ms", text: "1/100 "+langObjLay.getText("secsTxt")};
+  pulseTimeArr[1] = {val: "s", text: langObjLay.getText("secsTxt")};
+
+<!--#if expr="$root_Output_NbrOfOutputs != 0" -->
+<!--#endif -->
+
+
+
+}
+
+//-->
+</script>
+</head>
+<body <!--#include virtual="/incl/bodytag.shtml" --> onLoad="langObjLay.init();setFields();">
+<form name="profileList">
+<!--#include virtual="/sm/sm.srv?action=get_htmlform&getgroup=root.StreamProfile&format=hiddenhtmlform" -->
+</form>
+<!--#include virtual="/incl/top_incl2.shtml" -->
+
+
+<input type="hidden" name="root_Layout_DefaultVideoFormat" value="<!--#echo var="root_Layout_DefaultVideoFormat" option="encoding:html" -->">
+<input type="hidden" name="root_Layout_DefaultStreamProfile" value="<!--#echo var="root_Layout_DefaultStreamProfile" option="encoding:html" -->">
+  <table border="0" cellpadding="3" cellspacing="0" width="100%" valign="top" class="alternateRows">
+    <tr class="topTitle">
+      <td  align="left" colspan="3"><span id="lVLayTxt"></span></td>
+      <td>
+        <div align="right"><a href="javascript:launch('/help/layout_h.shtml')"><img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="hlpPic"></a></div>
+      </td>
+    </tr>
+
+<!--#if expr="$root_ImageSource_NbrOfSources = 4" -->
+    <tr class="subTitle" ><td align="left" colspan="4"><span id="deLiVieVidTxt"></span></td></tr>
+    <tr>
+      <td  colspan="4"><span id="selDefLiVieVidTxt"></span></td>
+    </tr>
+    <tr>
+      <td colspan="4">
+        <input type="radio" name="root_Layout_LiveViewVideo" value="1"<!--#if expr="$root_Layout_LiveViewVideo = 1" --> checked<!--#endif -->> <!--#echo var="root_ImageSource_I0_Name" option="encoding:html" -->&nbsp;&nbsp;&nbsp;
+        <input type="radio" name="root_Layout_LiveViewVideo" value="2"<!--#if expr="$root_Layout_LiveViewVideo = 2" --> checked<!--#endif -->> <!--#echo var="root_ImageSource_I1_Name" option="encoding:html" -->&nbsp;&nbsp;&nbsp;
+        <input type="radio" name="root_Layout_LiveViewVideo" value="3"<!--#if expr="$root_Layout_LiveViewVideo = 3" --> checked<!--#endif -->> <!--#echo var="root_ImageSource_I2_Name" option="encoding:html" -->&nbsp;&nbsp;&nbsp;
+        <input type="radio" name="root_Layout_LiveViewVideo" value="4"<!--#if expr="$root_Layout_LiveViewVideo = 4" --> checked<!--#endif -->> <!--#echo var="root_ImageSource_I3_Name" option="encoding:html" -->&nbsp;&nbsp;&nbsp;
+      </td>
+    </tr>
+<!--#endif -->
+
+    <tr class="subTitle" ><td align="left" colspan="4"><span id="defStrProTxt"></span></td></tr>
+    <tr>
+      <td colspan="2">
+        <span id="useProfTxt"></span>&nbsp;
+        <select name="streamprofile" id="streamprofile">
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4">
+        <input type="hidden" name="root_Layout_ShowVideoFormatDropDown" value="<!--#echo var="root_Layout_ShowVideoFormatDropDown" option="encoding:html" -->">
+        <input name="Layout_ShowVideoFormatDropDown" type="checkbox"<!--#if expr="$root_Layout_ShowVideoFormatDropDown = yes" --> checked<!--#endif --> onClick="JavaScript:CheckBoxClicked(this.form, this, 'root_Layout_ShowVideoFormatDropDown', 'yes', 'no')">&nbsp;<span id="shStPoSelTxt"></span>
+      </td>
+    </tr>
+
+  
+
+
+    <tr class="subTitle"><td align="left" colspan="4"><span id="deViTxt"></span></td></tr>
+    <tr>
+      <td  nowrap><span id="winIETxt"></span></td>
+      <td colspan=3 >
+        <select name="root_Layout_ViewerIE" id="viewerIE">
+        </select>
+      </td>
+    </tr>
+
+    <tr>
+      <td><span id="otBrTxt"></span></td>
+      <td colspan=3>
+        <select name="root_Layout_ViewerOther" id="viewerOther">
+        </select>
+      </td>
+    </tr>
+
+    <tr>
+      <td  colspan="4">
+        <span id="qTNote2Txt"></span>
+      </td>
+    </tr>
+
+    <tr class="subTitle"><td align="left" colspan="4"><span id="viewSetTxt_1"></span></td></tr>
+    <tr>
+      <td  colspan="4"><input type="hidden" name="root_Layout_ShowAMCToolbar" value="<!--#echo var="root_Layout_ShowAMCToolbar" option="encoding:html" -->">
+        <input name="Layout_ShowAMCToolbar" type="checkbox"<!--#if expr="$root_Layout_ShowAMCToolbar = yes" --> checked<!--#endif --> onClick="JavaScript:CheckBoxClicked(this.form, this, 'root_Layout_ShowAMCToolbar', 'yes', 'no')">&nbsp;<span id="shViToTxt_1"></span>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4">
+        <input type="hidden" name="root_Layout_H264InstallationEnabled" value="<!--#echo var="root_Layout_H264InstallationEnabled" option="encoding:html" -->">
+        <input name="Layout_H264InstallationEnabled" type="checkbox"<!--#if expr="$root_Layout_H264InstallationEnabled = yes" --> checked<!--#endif --> onClick="JavaScript:CheckBoxClicked(this.form, this, 'root_Layout_H264InstallationEnabled', 'yes', 'no')">&nbsp;<span id="enaH264InsTxt_1"></span>
+      </td>
+    </tr>
+  <!--#if expr="$root_Properties_PTZ_PTZ = yes" -->
+   <!--#if expr="$(root_PTZ_Support_S$camnbr$_JoyStickEmulation) != false" -->
+    <tr>
+      <td colspan="4" >
+        <input type="hidden" name="root_Layout_ShowRelCrossEnabled" value="<!--#echo var="root_Layout_ShowRelCrossEnabled" option="encoding:html" -->">
+        <input name="Layout_ShowRelCrossEnabled" type="checkbox"<!--#if expr="$root_Layout_ShowRelCrossEnabled = yes" --> checked<!--#endif --> onClick="JavaScript:CheckBoxClicked(this.form, this, 'root_Layout_ShowRelCrossEnabled', 'yes', 'no')">&nbsp;<span id="shoCroJoyModeTxt"></span><sup>*</sup>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4" >
+        <input type="hidden" name="root_Layout_DefaultJoystickMode" value="<!--#echo var="root_Layout_DefaultJoystickMode" option="encoding:html" -->">
+        <input name="Layout_DefaultJoystickMode" type="checkbox"<!--#if expr="$root_Layout_DefaultJoystickMode = yes" --> checked<!--#endif --> onClick="JavaScript:CheckBoxClicked(this.form, this, 'root_Layout_DefaultJoystickMode', 'yes', 'no')">&nbsp;<span id="defaultJoyTxt"></span><sup>*</sup>
+      </td>
+    </tr>
+   <!--#endif -->
+  <!--#endif -->
+    <tr>
+      <td colspan="4" >
+        <input type="hidden" name="root_Layout_AMCRecordMedia" value="<!--#echo var="root_Layout_AMCRecordMedia" option="encoding:html" -->">
+        <input name="Layout_AMCRecordMedia" type="checkbox"<!--#if expr="$root_Layout_AMCRecordMedia = 1" --> checked<!--#endif --> onClick="JavaScript:CheckBoxClicked(this.form, this, 'root_Layout_AMCRecordMedia', '1', '0')">&nbsp;<span id="enaRecButTxt_1"></span>
+      </td>
+    </tr>
+
+  <!--#if expr="$root_Properties_PTZ_PTZ = yes" -->
+   <!--#if expr="$(root_PTZ_Support_S$camnbr$_JoyStickEmulation) != false" -->
+    <tr>
+      <td  colspan="4"><sup>*</sup><span id="notePtzTxt"></span>
+      </td>
+    </tr>
+   <!--#endif -->
+  <!--#endif -->
+    <tr class="subTitle" ><td align="left" colspan="4"><span id="acBtnTxt"></span></td></tr>
+    <!--#if expr="_$root_Layout_Trigger_T0_Enabled != _" -->
+        <tr>
+          <td colspan="4" >
+            <input type="hidden" name="root_Layout_Trigger_T0_Enabled" value="<!--#echo var="root_Layout_Trigger_T0_Enabled" option="encoding:html" -->">
+            <input name="Layout_Trigger_T0_Enabled" type="checkbox"<!--#if expr="$root_Layout_Trigger_T0_Enabled = yes" --> checked<!--#endif --> onClick="JavaScript:CheckBoxClicked(this.form, this, 'root_Layout_Trigger_T0_Enabled', 'yes', 'no')">
+            <span id="shMaTr1Txt"></span>
+            <!--#if expr="$root_ImageSource_NbrOfSources != 1" -->
+              <span id="foViTxt"></span> 1
+            <!--#endif -->
+          </td>
+        </tr>
+        <!--#if expr="$root_ImageSource_NbrOfSources = 4" -->
+        <tr>
+          <td colspan="4">
+            <input type="hidden" name="root_Layout_Trigger_T1_Enabled" value="<!--#echo var="root_Layout_Trigger_T1_Enabled" option="encoding:html" -->">
+            <input name="Layout_Trigger_T1_Enabled" type="checkbox"<!--#if expr="$root_Layout_Trigger_T1_Enabled = yes" --> checked<!--#endif --> onClick="JavaScript:CheckBoxClicked(this.form, this, 'root_Layout_Trigger_T1_Enabled', 'yes', 'no')">
+            <span id="shMaTr2Txt"></span>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="4" >
+            <input type="hidden" name="root_Layout_Trigger_T2_Enabled" value="<!--#echo var="root_Layout_Trigger_T2_Enabled" option="encoding:html" -->">
+            <input name="Layout_Trigger_T2_Enabled" type="checkbox"<!--#if expr="$root_Layout_Trigger_T2_Enabled = yes" --> checked<!--#endif --> onClick="JavaScript:CheckBoxClicked(this.form, this, 'root_Layout_Trigger_T2_Enabled', 'yes', 'no')">
+            <span id="shMaTr3Txt"></span>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="4">
+            <input type="hidden" name="root_Layout_Trigger_T3_Enabled" value="<!--#echo var="root_Layout_Trigger_T3_Enabled" option="encoding:html" -->">
+            <input name="Layout_Trigger_T3_Enabled" type="checkbox"<!--#if expr="$root_Layout_Trigger_T3_Enabled = yes" --> checked<!--#endif --> onClick="JavaScript:CheckBoxClicked(this.form, this, 'root_Layout_Trigger_T3_Enabled', 'yes', 'no')">
+            <span id="shMaTr4Txt"></span>
+          </td>
+        </tr>
+        <!--#endif -->
+    <!--#endif -->
+    <tr>
+      <td colspan="4">
+        <input type="hidden" name="root_Layout_SnapshotEnabled" value="<!--#echo var="root_Layout_SnapshotEnabled" option="encoding:html" -->">
+        <input name="Layout_SnapshotEnabled" type="checkbox"<!--#if expr="$root_Layout_SnapshotEnabled = yes" --> checked<!--#endif --> onClick="JavaScript:CheckBoxClicked(this.form, this, 'root_Layout_SnapshotEnabled', 'yes', 'no')">&nbsp;<span id="shSnBtn"></span>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4">
+        <input type="hidden" name="root_Layout_ShowAutoTracking" value="<!--#echo var="root_Layout_ShowAutoTracking" option="encoding:html" -->">
+        <input name="Layout_ShowAutoTracking" type="checkbox"<!--#if expr="$root_Layout_ShowAutoTracking = yes" --> checked<!--#endif --> onClick="JavaScript:CheckBoxClicked(this.form, this, 'root_Layout_ShowAutoTracking', 'yes', 'no')">&nbsp;<span id="shATBtn"></span>
+      </td>
+    </tr>
+
+
+
+  <!--#if expr="$root_Properties_TemperatureSensor_Fan = yes" -->
+    <!--#set var="hasUserContollableFans" val="no" -->
+    <!--#if expr="$root_TemperatureControl_Fan_F0_UserControlSupport != no" -->
+      <!--#set var="hasUserContollableFans" val="yes" -->
+    <!--#endif -->
+      <!--#if expr="$root_TemperatureControl_Fan_F1_UserControlSupport != no" -->
+        <!--#set var="hasUserContollableFans" val="yes" -->
+      <!--#endif -->
+      <!--#if expr="$root_TemperatureControl_Fan_F2_UserControlSupport != no" -->
+        <!--#set var="hasUserContollableFans" val="yes" -->
+      <!--#endif -->
+    <!--#if expr="$hasUserContollableFans = yes" -->
+    <tr>
+      <td colspan="2">
+        <input type="hidden" name="root_Layout_FanEnabled" value="<!--#echo var="root_Layout_FanEnabled" option="encoding:html" -->">
+        <input name="Layout_FanEnabled" type="checkbox"<!--#if expr="$root_Layout_FanEnabled = yes" --> checked<!--#endif --> onClick="JavaScript:CheckBoxClicked(this.form, this, 'root_Layout_FanEnabled', 'yes', 'no')">&nbsp;<span id="shFanBtn"></span>
+      </td>
+      <td colspan="2">
+        <!--#if expr="$root_TemperatureControl_Fan_F0_UserControlSupport != no" -->
+            <span id="shFan0ActiveTxt1"></span>&nbsp;<input type="text" name="TemperatureControl_Fan_F0_ManualControlDuration" size="3" maxlength="2" value="">&nbsp;<span id="shFan0ActiveTxt2"></span>
+          <input type="hidden" name="root_TemperatureControl_Fan_F0_ManualControlDuration" value=""><br>
+        <!--#endif -->
+          <!--#if expr="$root_TemperatureControl_Fan_F1_UserControlSupport != no" -->
+            <span id="shFan1ActiveTxt1"></span>&nbsp;<input type="text" name="TemperatureControl_Fan_F1_ManualControlDuration" size="3" maxlength="2" value="">&nbsp;<span id="shFan1ActiveTxt2"></span>
+            <input type="hidden" name="root_TemperatureControl_Fan_F1_ManualControlDuration" value=""><br>
+          <!--#endif -->
+          <!--#if expr="$root_TemperatureControl_Fan_F2_UserControlSupport != no" -->
+           <span id="shFan2ActiveTxt1"></span>&nbsp;<input type="text" name="TemperatureControl_Fan_F2_ManualControlDuration" size="3" maxlength="2" value="">&nbsp;<span id="shFan2ActiveTxt2"></span>
+            <input type="hidden" name="root_TemperatureControl_Fan_F2_ManualControlDuration" value=""><br>
+          <!--#endif -->
+      </td>
+    </tr>
+    <!--#endif -->
+  <!--#endif -->
+  <!--#if expr="$root_Properties_TemperatureSensor_Heater = yes" -->
+    <!--#set var="hasUserContollableHeaters" val="no" -->
+    <!--#if expr="$root_TemperatureControl_Heater_H0_UserControlSupport != no" -->
+      <!--#set var="hasUserContollableHeaters" val="yes" -->
+    <!--#endif -->
+    <!--#if expr="$hasUserContollableHeaters = yes" -->
+    <tr>
+      <td colspan="2">
+        <input type="hidden" name="root_Layout_HeaterEnabled" value="<!--#echo var="root_Layout_HeaterEnabled" option="encoding:html" -->">
+        <input name="Layout_HeaterEnabled" type="checkbox"<!--#if expr="$root_Layout_HeaterEnabled = yes" --> checked<!--#endif --> onClick="JavaScript:CheckBoxClicked(this.form, this, 'root_Layout_HeaterEnabled', 'yes', 'no')">&nbsp;<span id="shHeatBtn"></span>
+      </td>
+      <td colspan="2">
+        <!--#if expr="$root_TemperatureControl_Heater_H0_UserControlSupport != no" -->
+            <span id="shHeatActiveTxt1"></span>&nbsp;<input type="text" name="TemperatureControl_Heater_H0_ManualControlDuration" size="3" maxlength="2" value="">&nbsp;<span id="shHeatActiveTxt2"></span>
+          <input type="hidden" name="root_TemperatureControl_Heater_H0_ManualControlDuration" value=""><br>
+        <!--#endif -->
+      </td>
+    </tr>
+    <!--#endif -->
+  <!--#endif -->
+
+  <!--#if expr="_$root_Layout_CustomLink_C0_Enabled != _" -->
+    <tr class="subTitle"><td align="left" colspan="4"><span id="useDefLiTxt"></span></td></tr>
+    <tr>
+      <td colspan="2">
+        <input type="hidden" name="root_Layout_CustomLink_C0_Enabled" value="<!--#echo var="root_Layout_CustomLink_C0_Enabled" option="encoding:html" -->">
+        <input name="Layout_CustomLink_C0_Enabled" type="checkbox"<!--#if expr="$root_Layout_CustomLink_C0_Enabled = yes" --> checked<!--#endif --> onClick="JavaScript:CheckBoxClicked(this.form, this, 'root_Layout_CustomLink_C0_Enabled', 'yes', 'no')">&nbsp;<span id="shCuLi1Txt"></span>
+      </td>
+      <td colspan="2" nowrap>
+        <span id="useAs1Txt"></span>
+        &nbsp;&nbsp; <input type="radio" name="root_Layout_CustomLink_C0_Usage" value="cgi"<!--#if expr="$root_Layout_CustomLink_C0_Usage = cgi" --> checked<!--#endif -->> 
+        <span id="cgi1Txt"></span>
+        &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="root_Layout_CustomLink_C0_Usage" value="web"<!--#if expr="$root_Layout_CustomLink_C0_Usage = web" --> checked<!--#endif -->> 
+        <span id="web1Txt"></span>
+      </td>
+    </tr>
+    <tr class="reuseLast">
+      <td colspan="2" nowrap>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="name1Txt"></span>
+        <input type="text" maxLength="25" name="root_Layout_CustomLink_C0_Name" value="<!--#echo var="root_Layout_CustomLink_C0_Name" option="encoding:html" -->">
+      </td>
+      <td colspan="2" nowrap>
+        <span id="uRL1Txt"></span>&nbsp;<input type="text" name="root_Layout_CustomLink_C0_URL" value="<!--#echo var="root_Layout_CustomLink_C0_URL" option="encoding:url" -->" maxlength="200">
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <input type="hidden" name="root_Layout_CustomLink_C1_Enabled" value="<!--#echo var="root_Layout_CustomLink_C1_Enabled" option="encoding:html" -->">
+        <input name="Layout_CustomLink_C1_Enabled" type="checkbox"<!--#if expr="$root_Layout_CustomLink_C1_Enabled = yes" --> checked<!--#endif --> onClick="JavaScript:CheckBoxClicked(this.form, this, 'root_Layout_CustomLink_C1_Enabled', 'yes', 'no')">&nbsp;<span id="shCuLi2Txt"></span>
+      </td>
+      <td colspan="2">
+        <span id="useAs2Txt"></span>
+        &nbsp;&nbsp; <input type="radio" name="root_Layout_CustomLink_C1_Usage" value="cgi"<!--#if expr="$root_Layout_CustomLink_C1_Usage = cgi" --> checked<!--#endif -->> 
+        <span id="cgi2Txt"></span>
+        &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="root_Layout_CustomLink_C1_Usage" value="web"<!--#if expr="$root_Layout_CustomLink_C1_Usage = web" --> checked<!--#endif -->> 
+        <span id="web2Txt"></span>
+      </td>
+    </tr>
+    <tr class="reuseLast">
+      <td colspan="2" nowrap>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="name2Txt"></span>
+        <input type="text" maxLength="25" name="root_Layout_CustomLink_C1_Name" value="<!--#echo var="root_Layout_CustomLink_C1_Name" option="encoding:html" -->">
+      </td>
+      <td colspan="2" nowrap>
+        <span id="uRL2Txt"></span>&nbsp;<input type="text" name="root_Layout_CustomLink_C1_URL" value="<!--#echo var="root_Layout_CustomLink_C1_URL" option="encoding:url" -->" maxlength="200">
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" >
+        <input type="hidden" name="root_Layout_CustomLink_C2_Enabled" value="<!--#echo var="root_Layout_CustomLink_C2_Enabled" option="encoding:html" -->">
+        <input name="Layout_CustomLink_C2_Enabled" type="checkbox"<!--#if expr="$root_Layout_CustomLink_C2_Enabled = yes" --> checked<!--#endif --> onClick="JavaScript:CheckBoxClicked(this.form, this, 'root_Layout_CustomLink_C2_Enabled', 'yes', 'no')">&nbsp;<span id="shCuLi3Txt"></span>
+      </td>
+      <td colspan="2" >
+        <span id="useAs3Txt"></span>
+        &nbsp;&nbsp; <input type="radio" name="root_Layout_CustomLink_C2_Usage" value="cgi"<!--#if expr="$root_Layout_CustomLink_C2_Usage = cgi" --> checked<!--#endif -->> 
+        <span id="cgi3Txt"></span>
+        &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="root_Layout_CustomLink_C2_Usage" value="web"<!--#if expr="$root_Layout_CustomLink_C2_Usage = web" --> checked<!--#endif -->> 
+        <span id="web3Txt"></span>
+      </td>
+    </tr>
+    <tr class="reuseLast">
+      <td colspan="2" nowrap>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="name3Txt"></span>
+        <input type="text" maxLength="25" name="root_Layout_CustomLink_C2_Name" value="<!--#echo var="root_Layout_CustomLink_C2_Name" option="encoding:html" -->">
+      </td>
+      <td colspan="2" nowrap>
+        <span id="uRL3Txt"></span>&nbsp;<input type="text" name="root_Layout_CustomLink_C2_URL" value="<!--#echo var="root_Layout_CustomLink_C2_URL" option="encoding:url" -->" maxlength="200">
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <input type="hidden" name="root_Layout_CustomLink_C3_Enabled" value="<!--#echo var="root_Layout_CustomLink_C3_Enabled" option="encoding:html" -->">
+        <input name="Layout_CustomLink_C3_Enabled" type="checkbox"<!--#if expr="$root_Layout_CustomLink_C3_Enabled = yes" --> checked<!--#endif --> onClick="JavaScript:CheckBoxClicked(this.form, this, 'root_Layout_CustomLink_C3_Enabled', 'yes', 'no')">&nbsp;<span id="shCuLi4Txt"></span>
+      </td>
+      <td colspan="2">
+        <span id="useAs4Txt"></span>
+        &nbsp;&nbsp; <input type="radio" name="root_Layout_CustomLink_C3_Usage" value="cgi"<!--#if expr="$root_Layout_CustomLink_C3_Usage = cgi" --> checked<!--#endif -->> 
+        <span id="cgi4Txt"></span>
+        &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="root_Layout_CustomLink_C3_Usage" value="web"<!--#if expr="$root_Layout_CustomLink_C3_Usage = web" --> checked<!--#endif -->> 
+        <span id="web4Txt"></span>
+      </td>
+    </tr>
+    <tr class="reuseLast">
+      <td colspan="2" nowrap>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span id="name4Txt"></span>
+        <input type="text" maxLength="25" name="root_Layout_CustomLink_C3_Name" value="<!--#echo var="root_Layout_CustomLink_C3_Name" option="encoding:html" -->">
+      </td>
+      <td colspan="2" nowrap>
+        <span id="uRL4Txt"></span>&nbsp;<input type="text" name="root_Layout_CustomLink_C3_URL" value="<!--#echo var="root_Layout_CustomLink_C3_URL" option="encoding:url" -->" maxlength="200">
+      </td>
+    </tr>
+  <!--#endif -->
+
+
+<!--#set var="showOutputHeading" val="no" -->
+<!--#if expr="$showOutputHeading = yes" -->
+    <tr class="subTitle" >
+      <td align="left" colspan="4"><span id="outBtnTxt"></span></td>
+    </tr>
+<!--#endif -->
+
+    <tr class="topTitle">
+      <td align="center" colspan="4">  
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td class="button"><input type="button" value="" width="75" class="btnNormal" onClick="saveData()" onMouseOver="return showStatus(SaveBtnStatTxt)" onMouseOut="return showStatus('')" id="layout_saveBtn"></td>
+            <td class="button">&nbsp;</td>
+            <td class="button"><input type="button" value=""  width="75" onclick="javascript:reloadPage()" class="btnNormal" onmouseover="return showStatus(ResBtnStatTxt)" onmouseout="return showStatus('')" id="layout_resetBtn" /></td>
+          </tr>
+        </table>
+        <input type="hidden" name="return_page" value="/operator/layout.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->">
+        <input type="hidden" name="action" value="modify">
+      </td>
+    </tr>
+  </table>
+
+<!--#include virtual="/incl/bottom_incl.shtml" -->

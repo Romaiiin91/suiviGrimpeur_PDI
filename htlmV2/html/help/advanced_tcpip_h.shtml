@@ -1,0 +1,224 @@
+<!--#include virtual="/sm/sm.srv?action=get&group=Bandwidth.Limit,Network.Media,Network.RTSP,Network.UPnP.NATTraversal.Enabled," -->	
+<!--#set var="backButton" val="yes" -->
+<!--#set var="forwardButton" val="yes" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<script language="JavaScript">
+<!--
+var langObjNATH = new Language("network_h", "advanced_tcpip_h");
+
+function globalLanguageVars()
+{
+	document.getElementById("titleId").innerHTML = langObjNATH.getText("titleTxt");
+}
+// -->
+</script>
+
+</head>
+
+<body onload="langObjNATH.init()">
+<!--#include virtual="/incl/helpTop_incl2.shtml" -->
+<table class="alternateRows" border="0" cellpadding="3" cellspacing="0" width="440" bgcolor="white">
+<!--#include virtual="/incl/helpTop_incl3.shtml" -->
+<tr>
+	<td colspan="2">
+		<span id="intro_Txt"></span><br/><br/>
+	</td>
+</tr>
+
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="subTitle_DNS_Txt"></span>
+		</div>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="obtainDNS_Txt1a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="obtainDNS_Txt1b"></span><br/><br/>
+	</td>
+</tr>
+
+<tr>
+  <td colspan="2">
+		<span id="manDNS_Txt1"></span>
+		<ul>
+			<li>
+				<span id="manDNS_Txt2a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="manDNS_Txt2b"></span>
+			</li>
+			<li>
+				<span id="manDNS_Txt3"></span>
+			</li>
+			<li>
+				<span id="manDNS_Txt4"></span>
+			</li>
+		</ul>
+		<span id="manDNS_Txt5a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="manDNS_Txt5b"></span><br/><br/>
+	</td>
+</tr>
+
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="subTitle_NTP_Txt"></span>
+		</div>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="obtainNTP_Txt1a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="obtainNTP_Txt1b"></span><br/><br/>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="nTPmanNTP_Txt"></span><br/><br/>
+	</td>
+</tr>
+
+<tr class="subTitle">
+  <td colspan="2">
+		<div align="left">
+			<span id="subTitle_Host_Txt"></span>
+		</div>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="hostname_Txt1a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="hostname_Txt1b"></span><br/><br/>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="hostname_DHCP1_Txt1a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="hostname_DHCP1_Txt1b"></span><br/><br/>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="usehostname_Txt"></span><br/><br/>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="enabledynamic_Txt1a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="enabledynamic_Txt1b"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="enabledynamic_Txt1c"></span>
+		<blockquote><span id="enabledynamic_Txt2"></span></blockquote>
+		<span id="enabledynamic_Txt3a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="enabledynamic_Txt3b"></span><br/><br/>
+		<span id="tTL_Txt"></span><br/><br/>
+	</td>
+</tr>
+
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="subTitle_Link_IPv6_Txt"></span>
+		</div>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="link_Txt1a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="link_Txt1b"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="link_Txt1c"></span><br/><br/>
+		<span id="link_Txt2"></span><br/><br/>
+	</td>
+</tr>
+
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="subTitle_HTTP_Txt"></span>
+		</div>
+	</td>
+</tr>
+
+<tr>
+  <td colspan="2">
+		<span id="httpport_Txt1a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="httpport_Txt1b"></span><br/><br/>
+	</td>
+</tr>
+
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="subTitle_HTTPS_Txt"></span>
+		</div>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="httpsport_Txt1a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="httpsport_Txt1b"></span><br/><br/>
+	</td>
+</tr>
+
+<!--#if expr="_$root_Network_UPnP_NATTraversal_Enabled != _" -->
+	<tr class="subTitle">
+		<td colspan="2">
+			<div align="left" id="nat">
+				<span id="subTitle_NATv4_Txt"></span>
+			</div>
+		</td>
+	</tr>
+<!--#endif -->	
+
+<tr>
+	<td colspan="2">
+		<span id="nattrav_Txt1a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="nattrav_Txt1b"></span>&nbsp;<!--#echo var="glob_prodType" option="encoding:html" --><span id="nattrav_Txt1c"></span><br/><br/>
+		<span id="nattrav_Txt2a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="nattrav_Txt2b"></span><br/><br/>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="nattrav_man_Txt1a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="nattrav_man_Txt1b"></span><br/><br/>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="alt_http_port_Txt"></span><br/><br/>
+	</td>
+</tr>
+
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="subTitle_FTP_Txt"></span>
+		</div>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="fTPport_Txt1a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="fTPport_Txt1b"></span><br/><br/>
+		<span id="fTP_upload_Txt"></span><br/><br/>
+	</td>
+</tr>
+
+<!--#if expr="_$root_Network_RTSP_Port != _" -->
+	<tr class="subTitle">
+		<td colspan="2">
+			<div align="left">
+				<span id="subTitle_RTSP_Txt"></span>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<td colspan="2">
+			<span id="rTSPportH264_Txt1"></span><br/><br/>
+			<span id="rTSPportH264_Txt2a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="rTSPportH264_Txt2b"></span><br/><br/>
+		</td>
+	</tr>
+<!--#endif -->
+
+
+</table>
+<!--#include virtual="/incl/helpBottom_incl.shtml" -->
+</body>
+</html>

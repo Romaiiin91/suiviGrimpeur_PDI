@@ -1,0 +1,208 @@
+<!--#include virtual="/sm/sm.srv?action=get&group=Bandwidth.Limit,Network.Media,Network.AxisNS.Enabled,Network.Wireless,Network.IPv6.Enabled" -->
+<!--#set var="backButton" val="yes" -->
+<!--#set var="forwardButton" val="yes" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<script language="JavaScript">
+<!--
+var langObjNTH = new Language("network_h", "tcpip_h");
+
+function globalLanguageVars()
+{
+	document.getElementById("titleId").innerHTML = langObjNTH.getText("titleTxt");
+}
+// -->
+</script>
+
+</head>
+<body onload="langObjNTH.init()">
+<!--#include virtual="/incl/helpTop_incl2.shtml" -->
+<table class="alternateRows" border="0" cellpadding="3" cellspacing="0" width="440" bgcolor="white">
+<!--#include virtual="/incl/helpTop_incl3.shtml" -->
+<tr>
+	<td colspan="2">
+<!--#if expr="_$root_Network_IPv6_Enabled != _" -->
+		<span id="intro1_Txt1a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="intro1_Txt1b"></span><br/><br/>
+		<span id="intro1_Txt2a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="intro1_Txt2b"></span><br/><br/>
+		<span id="intro1_Txt3a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="intro1_Txt3b"></span><br/><br/>
+
+<!--#else -->
+		<span id="intro2_Txt1a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="intro2_Txt1b"></span><br/><br/>
+	<br/><br/>
+		<span id="introNote_Txt1"></span><br/><br/>
+		<span id="introNote_Txt2"></span><br/><br/>
+<!--#endif -->
+	</td>
+</tr>
+
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="subTitle_interface_view_current_Txt"></span>
+		</div>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="select_current_Txt"></span><br/><br/>
+	</td>
+</tr>
+
+<!--#if expr="_$root_Network_Wireless_Mode != _" -->
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="interface_mode_Txt"></span>
+		</div>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="select_mode_Txt1a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="select_mode_Txt1b"></span><br/><br/>
+	</td>
+</tr>
+<!--#endif -->
+
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+		<!--#if expr="_$root_Network_IPv6_Enabled != _" -->
+			<span id="subTitle_IPaddress_both_Txt"></span>
+		<!--#else -->
+			<span id="subTitle_IPaddress_Txt"></span>
+		<!--#endif -->
+		</div>
+	</td>
+</tr>
+
+<!--#if expr="_$root_Network_IPv6_Enabled != _" -->		
+<tr>
+	<td colspan="2">
+		<span id="enableIPv4_Txt"></span><br/><br/>
+	</td>
+</tr>
+<!--#endif -->
+
+<tr>
+	<td colspan="2">
+		<span id="obtainIP_Txt1"></span><br/><br/>
+		<span id="obtainIP_Txt2"></span>
+		<ul>
+			<li>
+				<span id="obtainIP_Txt3a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="obtainIP_Txt3b"></span><br/><br/>
+			</li>
+			<li>
+				<span id="obtainIP_Txt4"></span><br/><br/>
+			</li>
+			<li>
+				<span id="obtainIP_Txt5a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="obtainIP_Txt5b"></span>
+			</li>
+		</ul>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="fixedIP_Txt1a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" --><span id="fixedIP_Txt1b"></span>
+		<ul>
+			<li>
+				<span id="fixedIP_Txt2a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="fixedIP_Txt2b"></span><br/><br/>
+			</li>
+			<li>
+				<span id="fixedIP_Txt3a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="fixedIP_Txt3b"></span><br/><br/>
+			</li>
+			<li>
+				<span id="fixedIP_Txt4"></span>
+			</li>
+		</ul>
+		<blockquote><span id="fixedIP_Txt5"></span></blockquote>
+	</td>
+</tr>
+
+<!--#if expr="_$root_Network_IPv6_Enabled != _" -->
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="subTitle_config_IPv6_Txt"></span>
+		</div>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="iPv6_config_Txt"></span><br/><br/>
+	</td>
+</tr>
+<!--#endif -->
+
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="subTitle_services_Txt"></span>
+		</div>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="aRPPing_Txt1a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" --><span id="aRPPing_Txt1b"></span><br/><br/>
+		<span id="aRPPing_Txt2"></span>
+		<blockquote>
+		<span id="aRPPing_Txt3"></span><br/><br/>
+		<span id="aRPPing_Txt4"></span>
+		</blockquote>
+	</td>
+</tr>
+
+
+<tr>
+	<td colspan="2">
+		<span id="avhs_Txt"></span><br/><br/>
+		<span id="avhs_oneClick_Txt"></span><br/><br/>
+		<span id="avhs_always_Txt"></span><br/><br/>
+		<span id="avhs_proxy_Txt1"></span>
+		<ul>
+			<li>
+				<span id="avhs_proxy_Txt2"></span>
+			</li>
+			<li>
+				<span id="avhs_proxy_Txt3"></span>
+			</li>
+			<li>
+				<span id="avhs_proxy_Txt4"></span>
+			</li>
+			<li>
+				<span id="avhs_proxy_Txt5"></span>
+			</li>
+			<li>
+				<span id="avhs_proxy_Txt6"></span>
+			</li>
+			<ul>
+				<li>
+					<span id="avhs_proxy_Txt7"></span>
+				</li>
+				<li>
+					<span id="avhs_proxy_Txt8"></span>
+				</li>
+				<li>
+					<span id="avhs_proxy_Txt9a"></span>&nbsp;<!--#echo var="glob_prodName" option="encoding:html" -->&nbsp;<span id="avhs_proxy_Txt9b"></span><br/>
+				</li>
+			</ul>
+		</ul>
+	</td>
+</tr>
+
+<!--#if expr="_$root_Network_AxisNS_Enabled != _" -->
+<tr>
+	<td colspan="2">
+		<span id="internetDDNS_Txt1"></span><br/><br/>
+		<span id="internetDDNS_Txt2"></span><br/><br/>
+	</td>
+</tr>
+<!--#endif -->
+</table>
+<!--#include virtual="/incl/helpBottom_incl.shtml" -->
+</body>
+</html>

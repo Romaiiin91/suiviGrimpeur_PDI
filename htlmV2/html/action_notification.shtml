@@ -1,0 +1,534 @@
+
+<!--#set var="id" val="notification" -->
+
+<!--#if expr="$action = scripts" -->
+  var langObjEvTyNotif = new Language("event_types", "action_notification");
+  langObjEvTyNotif.init(false, true);
+
+  var actionName = langObjEvTyNotif.getText("anNotificationTxt");
+  var hideAction = false;
+  var isPTZAction = false;
+  
+  addToActionMaps( "com.axis.action.unlimited.notification.tcp", "<!--#echo var="id" option="encoding:javascript" -->", actionName, hideAction, isPTZAction );
+  hideAction = true;
+  
+  addToActionMaps( "com.axis.action.fixed.notification.tcp", "<!--#echo var="id" option="encoding:javascript" -->", actionName, hideAction, isPTZAction );
+  addToActionMaps( "com.axis.action.fixed.notification.http", "<!--#echo var="id" option="encoding:javascript" -->", actionName, hideAction, isPTZAction );
+  addToActionMaps( "com.axis.action.fixed.notification.https", "<!--#echo var="id" option="encoding:javascript" -->", actionName, hideAction, isPTZAction );
+  addToActionMaps( "com.axis.action.fixed.notification.smtp", "<!--#echo var="id" option="encoding:javascript" -->", actionName, hideAction, isPTZAction );
+
+  <!--#if expr="$map_only != yes" -->
+    var AddHTTPBtnStatTxt = langObjEvTyNotif.getText("anAddHTTPBtnStatTxt");
+    var ModHTTPBtnStatTxt = langObjEvTyNotif.getText("anModHTTPBtnStatTxt");
+    var RemHTTPBtnStatTxt = langObjEvTyNotif.getText("anRemHTTPBtnStatTxt");
+    var ViewHTTPBtnStatTxt = langObjEvTyNotif.getText("anViewHTTPBtnStatTxt");
+
+    var emptyHTTPOptionAlertTxt = langObjEvTyNotif.getText("anParamSeAlert");
+  
+    var listHTTPColumns = new Array( 15, 30 );
+
+    function init_<!--#echo var="id" option="encoding:javascript" -->( actionTypeId, configParamArr, recipientId )
+    {  
+      var el = document.getElementById("customParamlistHeader"+actionTypeId);
+  
+      var headers = new Array();
+      headers[0] = { text: langObjEvTyNotif.getText("anHttpListNaTxt"), length: listHTTPColumns[0] }; 
+      headers[1] = { text: langObjEvTyNotif.getText("anHttpListVaTxt"), length: listHTTPColumns[1] };
+  
+      writeListHeadersWithClass( el, headers );
+
+      var httpCustomParams = "";
+      var selectedRecipient = -1;
+      var recipientType = "";
+      if( configParamArr )
+      {
+        selectedRecipient = findRecipientSortedIndex(configParamArr);
+        var tmpArr = configParamArr["TemplateToken"].split(".");
+        recipientType = tmpArr[ tmpArr.length - 1 ];
+
+        if( recipientType.toLowerCase() == "smtp" )
+        {
+          document.getElementById("subject"+actionTypeId ).value = configParamArr["subject"];
+          document.getElementById("smtpMessage"+actionTypeId ).value = configParamArr["message"];
+        }
+        else if( recipientType.toLowerCase() == "http" || recipientType.toLowerCase() == "https")
+        {
+          document.getElementById("messageParam"+actionTypeId ).value = configParamArr["message"];
+          httpCustomParams = configParamArr["parameters"];
+        }
+        else //tcp
+        {
+          document.getElementById("tcpMessage"+actionTypeId ).value = configParamArr["message"];
+          var period = configParamArr["period"];
+          if( period && period > 0 )
+          {
+            document.getElementById("tcpContinuous"+actionTypeId ).checked = true;
+            var periodUnit = 1;
+            if( period%3600 == 0 )
+            {
+              periodUnit = 3600;
+            }
+            else if( period%60 == 0 )
+            {
+              periodUnit = 60;
+            }
+            document.getElementById("tcpPeriod"+actionTypeId ).value = period/periodUnit;
+            setSelectedOption( document.getElementById("tcpPeriodUnit"+actionTypeId ), periodUnit );
+            toggletcpPeriod(document.getElementById("tcpContinuous"+actionTypeId ), actionTypeId ); 
+          }
+        }
+      }
+      writeHTTPParamList( document.getElementById( "customParam"+actionTypeId ), httpCustomParams );
+      writeRecipientsOptions( document.getElementById( "recipient"+actionTypeId ), allowedRecipientTypes_<!--#echo var="id" option="encoding:javascript" -->(), selectedRecipient, configParamArr );
+      if( selectedRecipient >= 0 || configParamArr )
+      {
+        toggleRecipientsFields( document.getElementById( "recipient"+actionTypeId ) );
+      }
+    }
+
+    function allowedRecipientTypes_<!--#echo var="id" option="encoding:javascript" -->()
+    {
+      return ( new Array("smtp","http","https","tcp") );
+    }
+
+    function addEmptyOption( selectEl )
+    {
+      var lenEmpty = 0;
+      var len = listHTTPColumns.length;
+      for(var i = 0; i < len; i++ )
+      {
+        lenEmpty += parseInt( listHTTPColumns[ i ], 10 ) + 2;
+      }
+      if( lenEmpty > 0 )
+      {
+        lenEmpty -= 2;
+      }
+      addSelectOption( selectEl, "", getPaddedString( '\u00a0', lenEmpty, true, true, "\u00a0" ), false );
+    }
+    
+    function writeHTTPParamList( selectEl, paramStr )
+    {
+      if( !paramStr )
+      {
+        addEmptyOption( selectEl );
+        return;
+      }
+      else if( paramStr.charAt(0) == "&" )
+      {
+        paramStr = paramStr.substring(1);
+      }
+
+      var paramArray = paramStr.split("&");
+      var lenParam = paramArray.length;
+
+      if( lenParam == 0 )
+      {
+        addEmptyOption( selectEl );
+        return;
+      }
+      
+      for( var i = 0; i < lenParam; i++ )
+      {
+        addHTTPParamToList( paramArray[i], selectEl );
+      }
+    }
+  
+    function addHTTPParamToList( optionValue, selectEl )
+    {
+      var tmpArr = optionValue.split("=");
+      if( tmpArr.length == 0 )
+      {
+        return;
+      }
+      var name = tmpArr[0];
+      var val = ( ( tmpArr.length > 1 )?tmpArr[1]:"" );
+      //differs between encodings
+      val = val.replace(/\+/g, "%20" );
+      val = decodeURIComponent( val );
+  
+      if( val == "" )
+      {
+        val = "\u00a0";
+      }
+      
+      var optionText = getPaddedString( name, listHTTPColumns[0], true, true, "\u00a0", true ) + '\u00a0\u00a0' +
+                      getPaddedString( val, listHTTPColumns[1],  true, true, "\u00a0", true );
+  
+      addSelectOption( selectEl, optionValue, optionText, false );
+    }
+  
+    function removeHTTPParam( actionTypeId )
+    {
+      var btnEl = document.getElementById("removeHTTPBtn"+actionTypeId );
+      btnEl.disabled = true;
+      
+      var selectEl = document.getElementById( "customParam"+actionTypeId );
+      if( !checkSelectedOption( selectEl, emptyHTTPOptionAlertTxt ) )
+      {
+        btnEl.disabled = false;
+        return;
+      }
+      selectEl.remove( selectEl.selectedIndex );
+      if( selectEl.length == 0 )
+      {
+        addEmptyOption( selectEl );
+      }
+      btnEl.disabled = false;
+    }
+  
+    function setupHTTPParameter( action, actionTypeId )
+    {
+      var btnEl = document.getElementById( action+"HTTPBtn"+actionTypeId );
+      btnEl.disabled = true;
+      
+      var url = "/operator/notification_http_param.shtml?actionTypeId="+actionTypeId;
+      
+      var selectEl = document.getElementById( "customParam"+actionTypeId );
+      var listIndex = -1;
+      if( action == "modify" )
+      {
+        if( !checkSelectedOption( selectEl, emptyHTTPOptionAlertTxt ) )
+        {
+          btnEl.disabled = false;
+          return;
+        }
+        listIndex = selectEl.selectedIndex;
+        var tmpArr = ( selectEl.options[ listIndex ].value ).split("=");
+        url += "&paramName="+tmpArr[0]+"&paramValue="+tmpArr[1];
+      }
+  
+      var now = new Date();
+      openPopUp( url + '&listIndex='+listIndex+'&timestamp=' + now.getTime(), 'NotificationHTTP', 310, 150);
+
+      btnEl.disabled = false;
+    }
+  
+    function updateHTTPParameterList( name, val, listIndex, actionTypeId )
+    {
+      var encodedValue = encodeURIComponent( val );
+      encodedValue = encodedValue.replace( /\%20/g, "+" );
+  
+      var optionValue = name+"="+encodedValue;
+  
+      if( val == "" )
+      {
+        val = "\u00a0";
+      }
+  
+      var optionText = getPaddedString( name, listHTTPColumns[0], true, true, "\u00a0", true ) + '\u00a0\u00a0' +
+                      getPaddedString( val, listHTTPColumns[1],  true, true, "\u00a0", true );
+  
+      var selectEl = document.getElementById( "customParam"+actionTypeId );
+      if( selectEl.length == 1 && selectEl.options[0].value == "")
+      {
+        clearSelect( selectEl );
+      }
+  
+      if( listIndex < 0 || listIndex >= selectEl.length )
+      {
+        addSelectOption( selectEl, optionValue, optionText, false );
+      }
+      else
+      {
+        selectEl.options[ listIndex ].value = optionValue;
+        selectEl.options[ listIndex ].text = optionText;
+      }
+    }
+
+    function viewHTTPpUrl( actionTypeId )
+    {
+
+      var url = getHTTPUploadURL( actionTypeId );
+      var showUrlArr = [url];
+      
+      var message = document.getElementById( "messageParam"+actionTypeId ).value;
+      var first = true;
+      if( message != "" )
+      {
+        message = encodeURIComponent( message );
+        message = message.replace( /\%20/g, "+" );
+        showUrlArr.push( "?Message="+message );
+        url += "?Message="+message;
+        first = false;
+      }
+  
+      var selectEl = document.getElementById( "customParam"+actionTypeId ),
+          len = selectEl.length,
+          val;
+      for( var i = 0; i < len; i++ )
+      {
+        if( selectEl.options[i].value != "" )
+        {
+          val = selectEl.options[i].value;
+          url += ((first)?"?":"&")+val;
+          showUrlArr.push( ((first)?"?":"&")+decodeURIComponent(val) );
+          first = false;
+        }
+      }
+  
+      if( confirm( langObjEvTyNotif.getText("anViewURLConfirm-1").replace( /#URL#/, showUrlArr.join('\n')) ) )
+      {
+        window.open(url, "HTTP_Notify", "width=800,height=600,toolbar=yes,location=yes,directories=yes,status=yes,menubar=yes,scrollbars=yes,copyhistory=yes,resizable=yes");
+      }
+    }
+
+    function getHTTPUploadURL( actionTypeId )
+    {
+      var uploadurl = "";
+      var selectEl = document.getElementById("recipient"+actionTypeId);
+      var selectVal = selectEl.options[ selectEl.selectedIndex ].value;
+      var recipientId = selectVal.split("#")[0];
+
+      var recipientObj = recipients[ recipientId ];
+
+      if( recipientObj && recipientObj.Parameters )
+      {
+        var params = recipientObj.Parameters.Parameter;
+        if( params )
+        {
+          if( params.constructor != Array )
+          {
+            if( params.Name == "upload_url" )
+            {
+              uploadurl = params.Value;
+            }
+          }
+          else
+          {
+            var len = params.length;
+            for(var i = 0; i < len && uploadurl == ""; i++ )
+            {
+              if( params[i].Name == "upload_url" )
+              {
+                uploadurl = params[i].Value;
+              }
+            }
+          }
+        }
+      }
+      return uploadurl;
+    } 
+
+    function toggletcpPeriod( el, actionTypeId )
+    {
+      document.getElementById( "tcpPeriod"+actionTypeId ).disabled = (( el.checked )?false:true);
+      document.getElementById( "tcpPeriodUnit"+actionTypeId ).disabled = (( el.checked )?false:true);
+    }
+  
+    function validate_<!--#echo var="id" option="encoding:javascript" -->( actionTypeId, isCondition )
+    {
+      var alertTxt_NumLargerThanZero = langObjEvTyNotif.getText("anNotifyValNZAlert");
+      var alertTxt_NumVal = langObjEvTyNotif.getText("anNumValAlert");
+  
+      var selectEl = document.getElementById("recipient"+actionTypeId);
+      var selectVal = selectEl.options[ selectEl.selectedIndex ].value;
+      var recipientType, recipientId;
+      if( selectVal == "" )
+      {
+        alert( langObjEvTyNotif.getText("anNoRecipientAlert") );
+        selectEl.focus();
+        return false;
+      }
+      else
+      {
+        recipientId = selectVal.split("#")[0];
+        recipientType = selectVal.split("#")[1];
+      }
+
+      if ( !isCondition && document.getElementById( "tcpContinuous"+actionTypeId).checked )
+      {
+        alert( langObjEvTyNotif.getText("anWhileActiveRuleAlrt") );
+        return false;
+      }
+
+      if( recipientType.toLowerCase() == "tcp")
+      {
+        var timeEl;
+        if( document.getElementById( "tcpContinuous"+actionTypeId).checked )
+        {
+          timeEl = document.getElementById( "tcpPeriod"+actionTypeId );
+          if( !IntegerCheck( timeEl.value, 1, "noUpperLimit") )
+          {
+            showErrorMsg( alertTxt_NumLargerThanZero, timeEl );
+            return false;
+          }
+        }
+      }
+
+      return true;
+    }
+
+    function is_action_while_active<!--#echo var="id" option="encoding:javascript" -->()
+    {
+      return document.getElementById("tcpContinuous<!--#echo var="id" option="encoding:javascript" -->" ).checked;
+    }
+
+    function setup_save_<!--#echo var="id" option="encoding:javascript" -->( actionTypeId )
+    {
+      var returnObj = new Object();
+      
+      var selectEl = document.getElementById("recipient"+actionTypeId);
+      var selectVal = selectEl.options[ selectEl.selectedIndex ].value;
+      var recipientId = selectVal.split("#")[0];
+      var recipientType = ( selectVal.split("#")[1] ).toLowerCase();
+
+      var paramArray = new Array();
+
+      if( recipientType == "smtp")
+      {
+        returnObj.TemplateToken = "com.axis.action.fixed.notification.smtp";
+
+        paramArray[ paramArray.length ] = new Parameter( "subject", document.getElementById("subject"+actionTypeId).value );
+        paramArray[ paramArray.length ] = new Parameter( "message", document.getElementById("smtpMessage"+actionTypeId).value );
+      }
+      else if( recipientType == "http" || recipientType == "https" )
+      {
+        if(recipientType == "http")
+          returnObj.TemplateToken = "com.axis.action.fixed.notification.http";
+        else
+          returnObj.TemplateToken = "com.axis.action.fixed.notification.https";
+        var selectEl = document.getElementById( "customParam"+actionTypeId );
+
+        var len = selectEl.length;
+        var val;
+        var urlParams = "";
+        for( var i = 0; i < len; i++ )
+        {
+          if( selectEl.options[i].value != "" )
+          {
+            val = selectEl.options[i].value;
+            urlParams += "&"+val;
+          }
+        }
+        paramArray[ paramArray.length ] = new Parameter( "parameters", urlParams );
+        paramArray[ paramArray.length ] = new Parameter( "message", document.getElementById("messageParam"+actionTypeId).value );
+      }
+      else //tcp
+      {
+        paramArray[ paramArray.length ] = new Parameter( "message", document.getElementById("tcpMessage"+actionTypeId).value );
+        var period = "";
+        if( document.getElementById("tcpContinuous"+actionTypeId ).checked )
+        {
+          returnObj.TemplateToken = "com.axis.action.unlimited.notification.tcp";
+          var periodUnit = parseInt( document.getElementById("tcpPeriodUnit"+actionTypeId ).value, 10 );
+          period = parseInt( document.getElementById("tcpPeriod"+actionTypeId ).value, 10 )*periodUnit;
+          paramArray[ paramArray.length ] = new Parameter( "period", period );
+        }
+        else
+        {
+          returnObj.TemplateToken = "com.axis.action.fixed.notification.tcp";
+        }
+      }
+
+      paramArray = addRecipientParam(paramArray, recipientId);
+
+      returnObj.Name = actionTemplateMap[returnObj.TemplateToken].name;
+      returnObj.Parameters = paramArray;
+
+      return returnObj;
+    }
+  <!--#endif -->
+<!--#elif expr="$action = render" -->
+  <!--#if expr="_$prefix != _" -->
+    <!--#set var="id" val="$prefix$_notification" -->
+  <!--#endif -->
+
+    <div id="div_<!--#echo var="id" option="encoding:javascript" -->" class="actionContainer">
+      <div class="row">
+        <label for="recipient<!--#echo var="id" option="encoding:javascript" -->"><span id="anRecipient<!--#echo var="id" option="encoding:javascript" -->Output"></span></label>
+        <select id="recipient<!--#echo var="id" option="encoding:javascript" -->" name="recipient<!--#echo var="id" option="encoding:javascript" -->" class="large" onchange="javascript:toggleRecipientsFields(this);">
+          <option value="">&nbsp;</option>
+        </select>
+        <input type="button" class="btnLonger" name="btnRecipient<!--#echo var="id" option="encoding:javascript" -->" id="btnRecipient<!--#echo var="id" option="encoding:javascript" -->" value="" onclick="javascript:recipientSetupNew('<!--#echo var="id" option="encoding:javascript" -->')" />
+      </div>
+
+      <div id="div_recipient<!--#echo var="id" option="encoding:javascript" -->_smtp" class="actionContainer">
+        <div class="row">
+          <label for="subject<!--#echo var="id" option="encoding:javascript" -->"><span id="anSmtpSubject<!--#echo var="id" option="encoding:javascript" -->Output"></span></label>
+          <input type="text" class="large" name="subject<!--#echo var="id" option="encoding:javascript" -->" id="subject<!--#echo var="id" option="encoding:javascript" -->" value="" maxlength="127" />
+        </div>
+        <div class="row">
+          <label for="smtpMessage<!--#echo var="id" option="encoding:javascript" -->"><span id="anSmtpMessage<!--#echo var="id" option="encoding:javascript" -->Output"></span></label>
+          <input type="text" class="large" name="smtpMessage<!--#echo var="id" option="encoding:javascript" -->" id="smtpMessage<!--#echo var="id" option="encoding:javascript" -->" value="" maxlength="300" />
+        </div>
+      </div>
+    
+      <div id="div_recipient<!--#echo var="id" option="encoding:javascript" -->_http" class="actionContainer">
+        <div class="row">
+          <label for="messageParam<!--#echo var="id" option="encoding:javascript" -->"><sup>*</sup><span id="anHttpMessageParam<!--#echo var="id" option="encoding:javascript" -->Output"></span></label>
+          <input type="text" class="large" name="messageParam<!--#echo var="id" option="encoding:javascript" -->" id="messageParam<!--#echo var="id" option="encoding:javascript" -->" maxlength="255" value="" />
+        </div>
+        <div class="row">
+          <label for="customParam<!--#echo var="id" option="encoding:javascript" -->"><sup>*</sup><span id="anHttpCustomParam<!--#echo var="id" option="encoding:javascript" -->Output"></span></label>
+          <div class="httpCustomParams">
+            <div id="customParamlistHeader<!--#echo var="id" option="encoding:javascript" -->" class="listHeader"></div>
+            <select class="fixed" size="3" name="customParam<!--#echo var="id" option="encoding:javascript" -->" id="customParam<!--#echo var="id" option="encoding:javascript" -->" ondblclick="javascript:setupHTTPParameter('modify', '<!--#echo var="id" option="encoding:javascript" -->')">
+            </select>
+            <div class="listButtons">
+              <input type="button" value="" class="btnNormal" onclick="javascript:setupHTTPParameter('add', '<!--#echo var="id" option="encoding:javascript" -->' )" onmouseover="return showStatus(AddHTTPBtnStatTxt)" onmouseout="return showStatus('')" id="addHTTPBtn<!--#echo var="id" option="encoding:javascript" -->" />
+              <input type="button" value="" class="btnNormal" onclick="javascript:setupHTTPParameter('modify', '<!--#echo var="id" option="encoding:javascript" -->');" onmouseover="return showStatus(ModHTTPBtnStatTxt)" onmouseout="return showStatus('')" id="modifyHTTPBtn<!--#echo var="id" option="encoding:javascript" -->" />
+              <input type="button" value="" class="btnNormal" onclick="javascript:removeHTTPParam( '<!--#echo var="id" option="encoding:javascript" -->' )" onmouseover="return showStatus(RemHTTPBtnStatTxt)" onmouseout="return showStatus('')" id="removeHTTPBtn<!--#echo var="id" option="encoding:javascript" -->" />
+            </div>
+          </div>
+          <br />
+        </div>
+        <div class="row">
+          <sup>*</sup><a href="<!--#echo var="helpURL" option="encoding:url" -->"><span id="anHttpSeeHelp<!--#echo var="id" option="encoding:javascript" -->Output"></span></a>
+          <div class="httpCustomButtons">
+            <input type="button" value="" class="btnNormal" onclick="javascript:viewHTTPpUrl('<!--#echo var="id" option="encoding:javascript" -->')" onmouseover="return showStatus(ViewHTTPBtnStatTxt)" onmouseout="return showStatus('')" id="viewHTTPBtn<!--#echo var="id" option="encoding:javascript" -->" />
+          </div>
+          <br />
+        </div>
+      </div>
+
+        <div id="div_recipient<!--#echo var="id" option="encoding:javascript" -->_tcp" class="actionContainer">
+          <div class="row">
+            <label for="tcpMessage<!--#echo var="id" option="encoding:javascript" -->"><span id="anTcpMessage<!--#echo var="id" option="encoding:javascript" -->Output"></span></label>
+            <input type="text" class="large" name="tcpMessage<!--#echo var="id" option="encoding:javascript" -->" id="tcpMessage<!--#echo var="id" option="encoding:javascript" -->" value="" maxlength="255" />
+          </div>
+          <div class="row">
+            <input type="checkbox" class="checkbox" name="tcpContinuous<!--#echo var="id" option="encoding:javascript" -->" id="tcpContinuous<!--#echo var="id" option="encoding:javascript" -->" value="yes" onclick="javascript:toggletcpPeriod(this, '<!--#echo var="id" option="encoding:javascript" -->' )" />
+            <label for="tcpContinuous<!--#echo var="id" option="encoding:javascript" -->" class="checkbox"><span id="anSeTcpCont<!--#echo var="id" option="encoding:javascript" -->Output"></span></label>
+            <div class="btnGroup">
+              <label for="tcpPeriod<!--#echo var="id" option="encoding:javascript" -->" class="checkbox boxindent"><span id="anSeTcpContParam<!--#echo var="id" option="encoding:javascript" -->Output"></span></label>
+              <input type="text" class="tiny" name="tcpPeriod<!--#echo var="id" option="encoding:javascript" -->" id="tcpPeriod<!--#echo var="id" option="encoding:javascript" -->" value="1" maxlength="3" disabled="disabled" />
+              <select name="tcpPeriodUnit<!--#echo var="id" option="encoding:javascript" -->" id="tcpPeriodUnit<!--#echo var="id" option="encoding:javascript" -->" class="small" disabled="disabled">
+              </select>
+            </div>
+            <br />
+          </div>
+        </div>
+
+    </div>
+    
+  <script language="javascript" type="text/javascript">
+  <!--
+  var langObjEvTyNotifRender = new Language("event_types", "action_notification");
+  langObjEvTyNotifRender.init(false, true);
+  
+  document.getElementById("btnRecipient<!--#echo var="id" option="encoding:javascript" -->").value = langObjEvTyNotifRender.getText("anNewRecipientBtn");
+  document.getElementById("addHTTPBtn<!--#echo var="id" option="encoding:javascript" -->").value = langObjEvTyNotifRender.getText("anHttpAddBtn");
+  document.getElementById("modifyHTTPBtn<!--#echo var="id" option="encoding:javascript" -->").value = langObjEvTyNotifRender.getText("anHttpModifyBtn");
+  document.getElementById("removeHTTPBtn<!--#echo var="id" option="encoding:javascript" -->").value = langObjEvTyNotifRender.getText("anHttpRemoveBtn");
+  document.getElementById("viewHTTPBtn<!--#echo var="id" option="encoding:javascript" -->").value = langObjEvTyNotifRender.getText("anHttpViewUrlBtn");
+
+  document.getElementById("anSmtpSubject<!--#echo var="id" option="encoding:javascript" -->Output").innerHTML = langObjEvTyNotifRender.getText("anRecipientTxt");
+  document.getElementById("anSmtpSubject<!--#echo var="id" option="encoding:javascript" -->Output").innerHTML = langObjEvTyNotifRender.getText("anSmtpSubjectTxt");
+  document.getElementById("anSmtpMessage<!--#echo var="id" option="encoding:javascript" -->Output").innerHTML = langObjEvTyNotifRender.getText("anSmtpMessageTxt");
+  document.getElementById("anHttpMessageParam<!--#echo var="id" option="encoding:javascript" -->Output").innerHTML = langObjEvTyNotifRender.getText("anHttpMessageParamTxt");
+  document.getElementById("anHttpCustomParam<!--#echo var="id" option="encoding:javascript" -->Output").innerHTML = langObjEvTyNotifRender.getText("anHttpCustomParamTxt");
+  document.getElementById("anHttpSeeHelp<!--#echo var="id" option="encoding:javascript" -->Output").innerHTML = langObjEvTyNotifRender.getText("anHttpSeeHelpTxt");
+  document.getElementById("anTcpMessage<!--#echo var="id" option="encoding:javascript" -->Output").innerHTML = langObjEvTyNotifRender.getText("anTcpMessageTxt");
+  document.getElementById("anSeTcpCont<!--#echo var="id" option="encoding:javascript" -->Output").innerHTML = langObjEvTyNotifRender.getText("anSeTcpContTxt");
+  document.getElementById("anSeTcpContParam<!--#echo var="id" option="encoding:javascript" -->Output").innerHTML = langObjEvTyNotifRender.getText("anSeTcpContParamTxt");
+  
+  var timeArr = new Array();
+  timeArr[0] = {val: "1", text: langObjEvTyNotifRender.getText("anSecTxt")};
+  timeArr[1] = {val: "60", text: langObjEvTyNotifRender.getText("anMinTxt")};
+  timeArr[2] = {val: "3600", text: langObjEvTyNotifRender.getText("anHourTxt")};
+  langObjEvTyNotifRender.addOptionsToList(document.getElementById("tcpPeriodUnit<!--#echo var="id" option="encoding:javascript" -->"), timeArr);
+  // -->
+  </script>
+<!--#else -->
+  ERROR: Missing parameter.
+<!--#endif -->

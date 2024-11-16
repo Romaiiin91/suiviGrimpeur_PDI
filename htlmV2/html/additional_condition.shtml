@@ -1,0 +1,101 @@
+<!--#set var="helpURL" val="javascript:launch('/help/additional_condition_h.shtml')" -->
+<!--#set var="WizardFormAction" val="noAction" -->
+
+<!--#include virtual="/sm/sm.srv?action=get&group=PTZ.ImageSource.I0.PTZEnabled,Image" -->
+
+<!--#include virtual="/incl/popup_header.shtml" -->
+
+  <!--#set var="skipPTZ" val="no" -->
+
+  <link rel="stylesheet" href="/css/event_dialogs.css" type="text/css" />
+
+  <script src="/incl/list_functions.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->" language="javascript" type="text/javascript"></script>
+  <script src="/incl/soapclient.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->" language="javascript" type="text/javascript"></script>
+  <script src="/incl/event_list.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->" language="javascript" type="text/javascript"></script>
+
+  <script type="text/javascript" language="javascript">
+  <!--
+    var langObjEvTyAddCond = new Language("event_types", "additional_condition");
+
+    <!--#include virtual="/incl/functions.shtml" -->
+
+    <!--#include virtual="/incl/topic_list.shtml" -->
+
+    function onInit()
+    {
+      langObjEvTyAddCond.init();
+      setActiveInactiveLabels( langObjEvTyAddCond.getText("yesTxt"), langObjEvTyAddCond.getText("noTxt") );
+      <!--#if expr="$doAction = modify" -->
+        var selectedVal = unescape("<!--#echo var="condition" option="encoding:url" -->");
+        var preValArr = selectedVal.split("#");
+        var preValObj = new Object();
+        preValObj.topicExpression = preValArr[0];
+        preValObj.messages = parseMessageStr( preValArr[1] );
+        getEventList( true, preValObj );
+      <!--#else -->
+        getEventList( true );
+      <!--#endif -->
+    }
+    addLoadEvent( onInit );
+
+    function closeWindow()
+    {
+      window.close();
+    }
+
+    function returnData()
+    {
+      var groupEl = document.getElementById("groupParent");
+      if( groupEl.options[ groupEl.selectedIndex ].value == "" )
+      {
+        alert( langObjEvTyAddCond.getText("conditionSeAlert") );
+        groupEl.focus();
+        return false;
+      }
+      else
+      {
+        var conditionEl = getSelectedConditionTopicFilter();
+        //try
+        {
+          window.opener.updateCondition( conditionEl.names, conditionEl.isActive, conditionEl.topic+"#"+conditionEl.message, "<!--#echo var="listIndex" option="encoding:javascript" -->" );
+        }
+        //catch( e )
+        {
+        }
+      }
+      closeWindow();
+    }
+
+  // -->
+  </script>
+</head>
+
+<body>
+
+  <!--#include virtual="/incl/popup_top.shtml" -->
+
+  <h1><span id="addCondTxt"></span></h1>
+
+  <a href="<!--#echo var="helpURL" option="encoding:url" -->" id="helpLink"><img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="hlpPic" /></a>
+  
+  <div class="normal_text alternateRows">
+      
+    <div class="row">
+      <label for="groupParent"><span id="conditionTxt"></span></label>
+      <div id="groupContainer">
+        <select name="triggers" id="triggerParent" style="display: none;" >
+        </select>
+        <select name="groups" id="groupParent" class="large" onchange="javascript:toggleTopics(this, 0)"></select>
+      </div>
+      <div id="subGroupContainer">
+      </div>
+      <div id="statesContainer">
+      </div>
+    </div>
+   
+    <div class="formButtons">
+      <input type="button" value="" class="btnNormal" onclick="javascript:returnData()" id="btnOK" />
+      <input type="button" value="" class="btnNormal" onclick="javascript:closeWindow()" id="btnCancel" />
+    </div>
+  </div>
+<!--#include virtual="/incl/popup_footer.shtml" -->

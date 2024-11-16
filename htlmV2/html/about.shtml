@@ -1,0 +1,50 @@
+<!--#set var="WizardFormAction" val="/sm/sm.srv" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<!--#include virtual="/sm/sm.srv?action=get&group=Properties.Firmware,Network.eth0.MACAddress" -->
+
+<!--#set var="activeMenu" val="about" -->
+
+<script language="JavaScript">
+<!--
+var langObjAbout = new Language("support", "about");
+
+var LicBtnStatTxt;
+function globalLanguageVars()
+{
+  LicBtnStatTxt = langObjAbout.getText("licBtnStatTxt");
+}
+// -->
+</script>
+</head>
+<body <!--#include virtual="/incl/bodytag.shtml" --> onload="langObjAbout.init()">
+
+<!--#include virtual="/incl/top_incl2.shtml" -->
+
+<table border="<!--#echo var="zero" option="encoding:html" -->" cellpadding="<!--#echo var="cellpadding3" option="encoding:html" -->" cellspacing="<!--#echo var="zero" option="encoding:html" -->" width="<!--#echo var="tableWidth3" option="encoding:html" -->">
+  <tr>
+    <td class="topTitle" align="left" colspan="2"><span id="aboutTxt"></span></td>
+  </tr>
+  <tr>
+    <td colspan="2" class="oddItem">
+      <!--#echo var="glob_prodName" option="encoding:html" --><br><br>
+      <span id="fiVeTxt"></span>&nbsp;<!--#echo var="root_Properties_Firmware_Version" option="encoding:html" --> <br>
+      <span id="macAdTxt"></span>&nbsp;<!--#echo var="root_Network_eth0_MACAddress" option="encoding:html" --><br><br>
+      <span id="copyTxt"></span>2021<span id="copy2Txt"></span>
+      <br>
+    </td>
+  </tr>
+
+  <tr>
+    <td class="subTitle" align="left" colspan="2"><span id="thirdLicTxt"></span></td>
+  </tr>
+  <tr>
+    <td colspan="2" class="oddItem">
+      <br>
+      <input type="button" value="" class="btnLonger" onClick="JavaScript:openPopUp('/admin/thirdpartysoftwarelicenses.txt', 'Licenses','753','480')" onMouseOver="return showStatus(LicBtnStatTxt)" onMouseOut="return showStatus('')" id="about_LicBtn">
+    </td>
+  </tr>
+  <tr><td class="topTitle" colspan="2"><br></td></tr>
+</table>
+
+<!--#include virtual="/incl/bottom_incl.shtml" -->

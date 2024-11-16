@@ -1,0 +1,110 @@
+<!--#set var="helpURL" val="javascript:launch('/help/UPnP_h.shtml')" -->
+<!--#set var="WizardFormAction" val="/sm/sm.srv" -->
+<!--#set var="activeMenu" val="system" -->
+<!--#set var="activeMenu1" val="network" -->
+<!--#set var="activePage" val="upnp" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<!--#include virtual="/java/chkbox.shtml" -->
+<!--#include virtual="/sm/sm.srv?action=get&group=Network.UPnP" -->
+
+<!--#include virtual="/java/integer.shtml" -->
+
+<script language="JavaScript">
+<!--
+var langObjUpnp = new Language("upnp", "UPnP");
+
+<!--#include virtual="/incl/functions.shtml" -->
+
+function onInit()
+{
+  langObjUpnp.init();
+  checkForEmptyName();
+}
+
+function checkForEmptyName()
+{
+  if (document.WizardForm.root_Network_UPnP_FriendlyName.value == "") {
+    openPopUp("/admin/genFriendlyName_topFrame.shtml?protocol=UPnP", 'Create_Name', 400 , 120)
+  }
+}
+
+function saveData()
+{
+  var alrt = "";
+  var form = document.WizardForm;
+  for (var i=0; i<form.friendlyName.value.length; i++) {
+    if(form.friendlyName.value.charAt(0) == "#")
+    {
+      alrt = langObjUpnp.getText("firstCharAlrt");
+      break;
+    }
+    
+    if (form.friendlyName.value.charCodeAt(i) > 127)
+    {
+      alrt = ( langObjUpnp.getText("charAlrt") );
+      break;
+    }
+  }
+  
+  if(alrt != "")
+  {
+    alert(alrt);
+    form.friendlyName.select();
+    form.friendlyName.focus();
+    return;
+  }
+  form.root_Network_UPnP_FriendlyName.value = unescape(form.friendlyName.value);
+  form.submit();
+}
+
+var SaveBtnStatTxt;
+var ResBtnStatTxt;
+function globalLanguageVars()
+{
+  SaveBtnStatTxt = langObjUpnp.getText("saveBtnStatTxt");
+  ResBtnStatTxt = langObjUpnp.getText("resBtnStatTxt");
+}
+// -->
+</script>
+
+</head>
+<body <!--#include virtual="/incl/bodytag.shtml" --> onLoad="onInit();">
+
+<!--#include virtual="/incl/top_incl2.shtml" -->
+<input type="hidden" name="root_Network_UPnP_Enabled" value="<!--#echo var="root_Network_UPnP_Enabled" option="encoding:html" -->">
+<input type="hidden" name="root_Network_UPnP_FriendlyName" value="<!--#echo var="root_Network_UPnP_FriendlyName" option="encoding:html" -->">
+
+<table border="<!--#echo var="zero" option="encoding:html" -->" cellpadding="<!--#echo var="cellpadding3" option="encoding:html" -->" cellspacing="<!--#echo var="zero" option="encoding:html" -->" width="<!--#echo var="tableWidth3" option="encoding:html" -->">
+<tr>
+<td colspan="3" valign="top" class="topTitle" nowrap>
+<div align="left"><span id="upSetTxt"></span></div>
+</td>
+<td class="topTitle" nowrap>
+<div align="right"><a href="<!--#echo var="helpURL" option="encoding:url" -->"><img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="hlpPic"></a></div></td>
+</tr>
+
+<tr>
+  <td nowrap colspan="4" class="oddItem"><input type="checkbox" name="UPnP_Enabled" onClick="CheckBoxClicked(this.form, this, 'root_Network_UPnP_Enabled', 'yes', 'no')" <!--#if expr="$root_Network_UPnP_Enabled = yes" -->checked<!--#endif -->>&nbsp;<span id="enUpTxt"></span></td>
+</tr>
+<tr>
+<td colspan="4" class="evenItem"><span id="frNaTxt"></span>&nbsp;<input type="text" name="friendlyName" value="<!--#echo var="root_Network_UPnP_FriendlyName" option="encoding:html" -->" maxlength="64" class="fieldNetAddr"></td>
+</tr>
+
+<tr>
+<td class="topTitle" align="center" nowrap colspan="4">
+  <table border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <td class="button"><input type="button" width="75" value="" class="btnNormal" onClick="saveData()" onMouseOver="return showStatus(SaveBtnStatTxt)" onMouseOut="return showStatus('')" id="upnp_SaveBtn"></td>
+      <td class="button">&nbsp;</td>
+      <td class="button"><input type="reset" width="75" value="" class="btnNormal" onMouseOver="return showStatus(ResBtnStatTxt)" onMouseOut="return showStatus('')" id="upnp_ResetBtn"></td>
+    </tr>
+  </table>
+</td>
+</tr>
+</table>
+
+<input type="hidden" name="return_page" value="/admin/UPnP.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->">
+<input type="hidden" name="action" value="modify">
+
+<!--#include virtual="/incl/bottom_incl.shtml" -->

@@ -1,0 +1,45 @@
+<!--#include virtual="/sm/sm.srv?action=get&group=Brand.ProdNbr" -->
+<!--#set var="backButton" val="yes" -->
+<!--#set var="forwardButton" val="yes" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+
+<script language="JavaScript">
+<!--
+var langObjUCRPH = new Language("users_h", "changeRootPass_h");
+
+function globalLanguageVars()
+{
+	document.getElementById("titleId").innerHTML = langObjUCRPH.getText("titleTxt");
+}
+// -->
+</script>
+
+</head>
+<body onload="langObjUCRPH.init()">
+<!--#include virtual="/incl/helpTop_incl2.shtml" -->
+<table border="0" cellpadding="3" cellspacing="0" width="440" bgcolor="white">
+<!--#include virtual="/incl/helpTop_incl3.shtml" -->
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="subTitleGenTxt"></span>
+		</div>
+	</td>
+</tr>
+<tr>
+	<td colspan="2" class="oddItem">
+		<span id="help1Txt1"></span><br/><br/>
+		<span id="help1Txt2"></span><br/><br/>
+		<span id="help1Txt3"></span>
+		64
+		<span id="help2Txt1"></span><br/><br/>
+		<span id="help2Txt2"></span><br/><br/>
+
+
+	</td>
+</tr>
+</table>
+<!--#include virtual="/incl/helpBottom_incl.shtml" -->
+</body>
+</html>

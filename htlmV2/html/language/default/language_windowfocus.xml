@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+  <windowfocus>
+    <areaZoomTxt type="text" minor="0">Area Zoom</areaZoomTxt>
+    <focusWindowTxt type="text" minor="0">Focus Window</focusWindowTxt>
+  </windowfocus>
+</language_xml>

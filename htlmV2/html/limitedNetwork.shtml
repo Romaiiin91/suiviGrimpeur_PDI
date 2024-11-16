@@ -1,0 +1,257 @@
+<!--#include virtual="/incl/top_incl.shtml" -->
+<!--#include virtual="/sm/sm.srv?action=get&group=Network.BootProto,Network.IPAddress,Network.SubnetMask,Network.DefaultRouter,Network.DNSServer1,Network.DNSServer2,Network.Wireless.MODE,RemoteService" -->
+<script language="JavaScript">
+<!--
+
+function BackPage()
+{
+  window.location.href = "/limitedIndex.shtml"
+}
+
+function staticIP0disable(disable)
+{
+  var form = document.NetworkForm
+  form.root_Network_IPAddress.disabled = disable;
+  form.root_Network_SubnetMask.disabled = disable;
+  form.root_Network_DefaultRouter.disabled = disable;
+}
+
+function setRadiobutton(theSelectElement, searchValue)
+{
+    for (var i = 0; i < theSelectElement.length; i++) {          
+       if (theSelectElement[i].value == searchValue) {
+          theSelectElement[i].checked = true;
+	  return;
+       }
+    }
+}
+function onLoad()
+{
+  var form = document.NetworkForm;
+
+  if (form.root_Network_BootProto[0].checked == true) {
+    staticIP0disable(true);
+  }
+}
+
+function saveData()
+{
+  var form = document.NetworkForm;
+  var settings = "action=update&";
+  setting += "Network.IPAddress=" + form.root.Network.IPAddress.value;
+  setting += "Network.SubnetMask=" + form.root.Network.SubnetMask.value;
+
+  form.settings.value = settings;
+  form.submit;
+  
+}
+
+function setProxyAuth(value)
+{
+  var form = document.NetworkForm;
+
+  form.root_RemoteService_ProxyAuth.value = value;
+}
+
+//-->
+</script>
+<body onLoad="onLoad()">
+<center>
+<!--#if expr="_$plain != _1" -->
+
+<table cellpadding=0 cellspacing=0 border=0 width=750>
+
+<tr>
+<td colspan="2" width="5"><img src="/pics/line_corner_lt_5x5px.gif" border="0" alt="" width="5" height="5"></td>
+<td width="740"><img src="/pics/top_line_100x5px.gif" width="740" height="5" border="0" alt=""></td>
+<td colspan="2" width="5"><img src="/pics/line_corner_rt_5x5px.gif" border="0" alt="" width="5" height="5"></td>
+</tr>
+
+<tr>
+<td bgcolor="#CCCCCC" width="1"><img src="/pics/blank.gif" border="0" alt="" width="1" height="45" ></td><td valign="top" align="left" colspan="3" width="748">
+
+
+<table cellpadding="0" cellspacing="0" border="0" width="748">
+
+<tr>
+<td width="10"><img src="/pics/blank.gif" border="0" alt="" width="1" height="10" ></td><td width="97"></td>
+<td width="631" align="right">
+<img src="/pics/blank.gif" border="0" alt="" width="10" height="10" ></td>
+</tr>
+</table>
+
+<!-- End of top most header -->
+
+<td bgcolor="#CCCCCC" width="1"><img src="/pics/blank.gif" border="0" alt="" width="1" height="45" ></td></tr>
+
+<!-- Start of fancy header -->
+<tr>
+<td bgcolor="#CCCCCC" width="1"><img src="/pics/blank.gif" border="0" alt="" width="1" height="1" ></td><td valign="middle" align="left" colspan="3" height="25" width="748" bgcolor="blue"></td>
+<td bgcolor="#CCCCCC" width="1"><img src="/pics/blank.gif" border="0" alt="" width="1" height="1" ></td></tr>
+<!-- End of fancy header -->
+
+<!-- Start of links header -->
+
+<tr>
+<td bgcolor="#CCCCCC" width="750" colspan="5"><img src="/pics/blank.gif" border="0" alt="" width="750" height="1" ></td></tr>
+
+<tr>
+<td bgcolor="#CCCCCC" width="1"><img src="/pics/blank.gif" border="0" alt="" width="1" height="14" ></td><td valign="top" align="center" colspan="3" width="748" bgcolor="#efefef">
+
+<table cellpadding="5" cellspacing="0" border="0" width="100%">
+<tr>
+		<td align="left">
+		  <a target="_top" href="/limitedIndex.shtml" title="">Main Page</a>
+
+                </td>
+		<td align="left">
+		  <a target="_top" href="/axis-cgi/session.cgi?sessionid=focus" title="">Focus</a>
+                </td>
+		<td align="left">
+		  <a target="_top" href="/axis-cgi/session.cgi?sessionid=network" title="">Network Settings</a>
+                </td>
+  <!--#if expr="_$root_Network_Wireless_MODE != _" -->
+		<td align="left">
+		  <a target="_top" href="/axis-cgi/session.cgi?sessionid=wlan" title="">Wireless Settings</a>
+                </td>
+  <!--#endif -->
+		<td align="right">
+		  <a target="_blank" href="/axis-cgi/session.cgi?sessionid=serverreport">Server Report</a>
+		</td>
+		<td align="right">
+		  <a href="/thirdpartysoftwarelicenses.txt">Third party licenses</a>
+		</td>
+	</tr>
+</table>
+<td bgcolor="#CCCCCC" width="1"><img src="/pics/blank.gif" border="0" alt="" width="1" height="14" ></td></tr>
+
+<tr>
+<td bgcolor="#CCCCCC" width="750" colspan="5"><img src="/pics/blank.gif" border="0" alt="" width="750" height="1" ></td></tr>
+
+<tr>
+<td bgcolor="#CCCCCC" width="1"><img src="/pics/blank.gif" border="0" alt="" width="1" height="1" ></td><td valign="top" align="left" colspan="3">
+<!-- End of links header -->
+<!--#endif -->
+  <table cellpadding="8"><tr><td>
+<span class="menuActive">Network settings</span>
+<form name="NetworkForm" action="/axis-cgi/session.cgi" method="get">
+<input type="hidden" name="sessionid" value="savenetwork">
+<br>
+<table>
+<tr>
+  <td nowrap colspan="4">
+   <input name="root_Network_BootProto" TYPE="radio" value="dhcp" <!--#if expr="$root_Network_BootProto = dhcp" -->checked<!--#endif --> onClick="staticIP0disable(true)"> Obtain IP address via DHCP
+  </td>
+</tr>
+<tr>
+  <td nowrap colspan="4">
+    <input name="root_Network_BootProto" type="radio" value="none" <!--#if expr="$root_Network_BootProto = none" -->checked<!--#endif -->   onClick="staticIP0disable(false)"> Use the following IP address:
+  </td>
+</tr>
+<tr>
+  <td nowrap colspan="2"><!--IP Address -->
+          &nbsp;&nbsp;&nbsp;&nbsp;IP address:</td>
+  <td colspan="2"><input type='text' name='root_Network_IPAddress' size='18' maxlength='15' value='<!--#echo var="root_Network_IPAddress" option="encoding:html" -->'></td>
+</tr>
+<tr>
+  <td nowrap colspan="2"><!--Subnet Mask -->
+          &nbsp;&nbsp;&nbsp;&nbsp;Subnet mask: </td>
+  <td colspan="2"><input type='text' name='root_Network_SubnetMask' size='18' maxlength='15' value='<!--#echo var="root_Network_SubnetMask" option="encoding:html" -->'></td>
+</tr>
+<tr>
+  <td colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;Default router:</td>
+  <td colspan="2">
+    <input type='text' name='root_Network_DefaultRouter' size='18' maxlength='15'  value='<!--#echo var="root_Network_DefaultRouter" option="encoding:html" -->'>
+  </td>
+ </tr>
+<tr>
+  <td colspan="2" nowrap>&nbsp;&nbsp;&nbsp;&nbsp;Primary DNS server:</td>
+  <td colspan="2">
+    <input type='text' name='root_Network_DNSServer1' size='18' maxlength='15'  value='<!--#echo var="root_Network_DNSServer1" option="encoding:html" -->'>
+  </td>
+ </tr>
+<tr>
+  <td colspan="2" nowrap>&nbsp;&nbsp;&nbsp;&nbsp;Secondary DNS server:</td>
+  <td colspan="2">
+    <input type='text' name='root_Network_DNSServer2' size='18' maxlength='15'  value='<!--#echo var="root_Network_DNSServer2" option="encoding:html" -->'>
+  </td>
+ </tr>
+<tr>
+  <td>
+    <br>
+    <span class="menuActive">Proxy settings</span>
+    <br><br>
+  </td>
+</tr>
+<tr>
+  <td colspan="2" nowrap>&nbsp;&nbsp;&nbsp;&nbsp;Proxy server:</td>
+  <td colspan="2">
+    <input type="text" name="root_RemoteService_ProxyServer" size="18" maxlength="15" value='<!--#echo var="root_RemoteService_ProxyServer" option="encoding:html" -->'>
+  </td>
+</tr>
+<tr>
+  <td colspan="2" nowrap>&nbsp;&nbsp;&nbsp;&nbsp;Port:</td>
+  <td colspan="2">
+    <input type="text" name="root_RemoteService_ProxyPort" size="18" maxlength="15" value='<!--#echo var="root_RemoteService_ProxyPort" option="encoding:html" -->'>
+  </td>
+</tr>
+<tr>
+  <td colspan="2" nowrap>&nbsp;&nbsp;&nbsp;&nbsp;Login:</td>
+  <td colspan="2">
+    <input type="text" name="root_RemoteService_ProxyLogin" size="18" maxlength="15" value='<!--#echo var="root_RemoteService_ProxyLogin" option="encoding:html" -->'>
+  </td>
+</tr>
+<tr>
+  <td colspan="2" nowrap>&nbsp;&nbsp;&nbsp;&nbsp;Password:</td>
+  <td colspan="2">
+    <input type="text" name="root_RemoteService_ProxyPassword" size="18" maxlength="15" value='<!--#echo var="root_RemoteService_ProxyPassword" option="encoding:html" -->'>
+  </td>
+</tr>
+<tr>
+<td colspan="2" nowrap>&nbsp;&nbsp;&nbsp;&nbsp;Proxy authentication method:</td>
+<td colspan="2">
+  <input name="RemoteService_ProxyAuth_value" type="radio" value="basic" <!--#if expr="$root_RemoteService_ProxyAuth = basic" -->checked<!--#endif --> onclick="setProxyAuth('basic')" >&nbsp; Basic
+  <input name="RemoteService_ProxyAuth_value" type="radio" value="digest" <!--#if expr="$root_RemoteService_ProxyAuth = digest" -->checked<!--#endif --> onclick="setProxyAuth('digest')" >&nbsp; Digest
+  <input name="RemoteService_ProxyAuth_value" type="radio" value="auto" <!--#if expr="$root_RemoteService_ProxyAuth = auto" -->checked<!--#endif --> onclick="setProxyAuth('auto')" >&nbsp; Auto
+  <input type="hidden" name="root_RemoteService_ProxyAuth" id="root_RemoteService_ProxyAuth">
+  </td>
+</tr>
+</table>
+<input type="hidden" name="return_page" value="/axis-cgi/session.cgi?sessionid=network">
+<input type="hidden" name="action" value="modify">
+<input type="submit" value="Save"> 
+
+</form>
+</td></tr></table>
+
+<!-- Bottom tables -->
+<td bgcolor="#CCCCCC" width="1"><img src="/pics/blank.gif" border="0" alt="" width="1" height="1" ></td></tr>
+
+<tr>
+<td bgcolor="#CCCCCC" width="1"><img src="/pics/blank.gif" border="0" alt="" width="1" height="1" ></td><td width="4"><img src="/pics/blank.gif" border="0" alt="" width="4" height="1" ></td><td valign="top" align="left" width="740"></td>
+<td width="4"><img src="/pics/blank.gif" border="0" alt="" width="4" height="1" ></td><td bgcolor="#CCCCCC" width="1"><img src="/pics/blank.gif" border="0" alt="" width="1" height="1" ></td></tr>
+<!--#if expr="_$plain != _1" -->
+<tr>
+<td colspan="2" width="5"><img src="/pics/line_corner_lb_5x5px.gif" width="5" height="5" border="0" alt=""></td>
+<td width="740"><img src="/pics/bottom_line_100x5px.gif" width="740" height="5" border="0" alt=""></td>
+<td colspan="2" width="5"><img src="/pics/line_corner_rb_5x5px.gif" width="5" height="5" border="0" alt=""></td>
+</tr>
+</table>		
+<!--#endif -->
+
+<!-- Footer -->
+
+<table border="0" width="620" height="20" cellspacing="0" cellpadding="0">
+<tr>
+<td width="100%" align="left" valign="top"> <font color="#999999">
+<b>&copy Axis Communications, All Rights Reserved.</b>         
+
+
+</font>
+</td>
+</tr>
+
+</table>
+</body>
+</html>
+

@@ -1,0 +1,206 @@
+body, h2, p, table, pre, a, input, button, select, textarea { font-family: verdana, arial, helvetica, sans-serif }
+
+body { margin:0px 0px; padding:0px 0px; background-color:#fff; }
+
+h2 {  margin:2pt 2pt 5pt 2pt; float:left; color: #36c; font-size: 18px; font-weight: bold  }
+h3, #popupContent h2, #helpContent h2 {  color: #000;  font-size: 8pt;  font-weight: bold; background-color: #ccc; display:block; padding:2pt 2pt; margin:0px 0px; float:none; clear:both; }
+
+form { margin:0px 0px;}
+p { color: #000; font-size: 10px; font-weight: normal }
+table, pre { color: #000; font-size: 9px; font-weight: normal }
+td { vertical-align:top; }
+a { color: #36c; font-size: 10px; font-weight: bold }
+
+br{ float:none; clear:both; } 
+
+label{ display:block; float:left; clear:left; min-width:110px; margin:0px 5px 1px 0px; padding:2px 2px; }
+label.small{ min-width:80px; }
+label.checkbox, label.radio{ float:none; clear:none;}
+
+sup{ font-size:9pt; vertical-align:top; }
+
+input, select, textarea, button { color: #000; font-size: 10px; font-weight: normal; padding:0px 0px; margin:1px 7px 1px 2px;}
+
+input.fieldInt   { width: 40px}
+input.fieldName  { width: 100px}
+input.fieldIP    { width: 120px}
+input.fieldNetAddr { width: 200px}
+
+input.checkbox, input.radio{ float:left; }
+select.fixed{ font-family: courier new, courier, monospace; font-size: 12px;}
+
+.predefined{ color: #3366cc; font-weight:bold; }
+.selected .predefined {color: #fff;}
+
+input.tiny{ width:20px;}
+input.smaller{ width:30px;}
+input.small{ width:45px;}
+input.medium{ width:150px;}
+input.large{ width:250px;}
+
+select.tiny{ min-width:40px;}
+select.smaller{ min-width:40px;}
+select.small{ min-width:75px;}
+select.medium{ min-width:150px;}
+select.large{ min-width:250px;}
+
+.btnNormal, .btnLonger, .btnXXL{ padding-left:4px; padding-right:4px; margin-right:2px; overflow:visible; width: auto;}
+.btnNormal{ min-width: 75px;}
+.btnLonger{ min-width: 110px;}
+.btnXXL{ min-width: 200px;}
+
+.normal_text     { color: #000; font-size: 10px; font-weight: normal; float:none;clear:both; }
+.footnote        { color: #000; font-size: 9px; font-weight: normal }
+.fixed_text, .fixedTitle  { color: #000; font-family: courier new, courier, monospace; font-size: 12px; font-weight: normal }
+#listHeader.fixedTitle { height: 16px; }
+
+.gray            { color: #ccc }
+
+.row, .reuseLast, .emptyRow{ padding:3px 3px; float:none; clear:both; display:block; }
+.emptyRow{ height:10px; }
+
+.bodyBg          { background-color: #fff }
+.toneBg          { background-color: #eee }
+.lineBg          { background-color: #ccc }
+.funcText        { color: #666; font-size: 10px; font-weight: normal }
+.linkActive      { color: #666666; font-size: 13px; font-weight: bold; text-decoration: none; }
+.linkInActive    { color: #3366cc; font-size: 13px; font-weight: bold; text-decoration: none; }
+.menuActive      { color: #3366cc; font-size: 13px; font-weight: bold; text-decoration: none }
+.menuInActive    { color: #666666; font-size: 13px; font-weight: bold; text-decoration: none; background-color: #daecff }
+.subMenuActive   { color: #3366cc; font-size: 13px; font-weight: normal; text-decoration: none }
+.subMenuInActive { color: #666666; font-size: 13px; font-weight: bold; text-decoration: none; background-color: #daecff }
+.alternateRows   { font-size: 10px }
+table.alternateRows th{  color: #000;  font-size: 8pt;  font-weight: bold; background-color: #ccc; }
+.oddItem         { color: #000; font-size: 10px; font-weight: normal; background-color: #fff }
+.evenItem        { color: #000; font-size: 10px; font-weight: normal; background-color: #eee }
+.topTitle        { color: #36c; font-size: 18px; font-weight: bold; background-color: #fff }
+.subTitle        { color: #000; font-size: 11px; font-weight: bold; background-color: #ccc }
+.button          { color: #000; font-size: 11px; font-weight: normal; background-color: #fff }
+
+#popupContent h1, #helpContent h1 { color: #36c; font-size: 18px; font-weight: bold; margin:2pt 2pt 5pt 2pt; float:left; }
+#helpContent h1 { max-width:310px; }
+
+#pageWrapper { display:table; text-align:center; margin: 8px auto; width:755px;}
+#page { text-align:left; overflow:visible; }
+#page .content{ padding-bottom:0px; }
+
+#helpLink { display:block; float:right; text-decoration:none; }
+#popupContent #helpLink{ margin-right:3px; }
+#top { min-height:32px; overflow: auto; padding:2px 10px 5px 10px; border-bottom: 1px solid #ccc;}
+#logo { float:left; display:block; }
+#prodName { float:left; width:420px; overflow-x:visible; white-space:nowrap; text-align:center; margin-top:6px; }
+
+#topMenu { float:right; margin:4px 0px 0px 0px; padding:0px 0px; }
+#topMenu li { list-style:none; float:left; display:block; padding:3px 8px; background: url(/pics/black_line1x10px.gif) no-repeat right 60%; }
+#topMenu li.last { background:0; padding-right:4px; }
+#topMenuContainer { height: 32px; }
+
+#mainContent { float:left; overflow:visible; min-width:561px;}
+#pageContent{ padding:4px 2px 0px 5px; width:auto; float:none; clear:both; border-left:1px solid #ccc; position:relative; left:-1px; }
+#pageContent div.fixedWidth{ width:485px; }
+
+#pageFooter .footerMenu { font-size:1px; padding-top:7px; margin-left:6px; border-right:1px solid #ccc; width:176px; float:left;}
+#pageFooter .footerRight { font-size:1px; padding-top:7px; margin-left:182px; border-left:1px solid #ccc;}
+#pageBottom { float:none; clear:both;}
+
+#listHeader { font-weight:bold; padding-left:5px;}
+.listHeader { font-weight:bold; padding-left:5px; color: #000; font-family: courier new, courier, monospace; font-size: 12px; }
+
+#mainMenu { float:left; width:172px; padding:8px 5px; border-right:1px solid #ccc; line-height:16px;}
+#mainMenu ul { list-style:none; margin:0px 0px; padding:0px 0px; }
+#mainMenu ul li { margin:0px 0px; padding:8px 0px 8px 13px; }
+#mainMenu ul li ul li { padding:0px 0px 0px 13px; }
+#mainMenu ul li ul li ul li { padding-left:9px; }
+#mainMenu ul li.subMenuMarkerActive { background: url(/pics/arrowActive.gif) no-repeat left 12px; }
+#mainMenu ul li.subMenuMarkerInactive{ background:  url(/pics/arrowInactive.gif) no-repeat left 12px; }
+#mainMenu ul li ul li.subMenuMarkerActive,
+#mainMenu ul li ul li.subMenuMarkerInactive { background-position:left 6px; }
+
+#popupContent, #helpContent{ float:none; clear:both; }
+#helpContent { width:440px; }
+#helpContent .helpNavLinks { float:right; margin:2px 2px 0px 0px; padding:0px 0px; }
+#helpContent .helpNavLinks li { list-style:none; float:left; display:block; padding:3px 3px; }
+#helpContent .helpNavLinks li a { text-decoration: none; font-size: 12px; }
+#helpContent .helpNavLinks li img { vertical-align:text-bottom;width:14px; height:14px; border:0 } 
+
+.listButtons { padding-top:5px; max-width: 550px; }
+.formButtons { float:none;clear:both; width:auto; text-align:center; padding:15px 0 5px 0;}
+
+.indentBtnGroup{ float:none;clear:both;padding:2px 5px 2px 120px;}
+.btnGroup{ float:left;clear:none;padding:0 0;}
+.indentBtnGroup label, .btnGroup label{ float:left; clear:none; min-width:21px; padding-left:2px; padding-right:2px;}
+.indentBtnGroup input, .indentBtnGroup select, .btnGroup input, .btnGroup select{ float:left; padding:0px 0px; margin:1px 7px 1px 2px; }
+.boxindent, input.boxindent, label.boxindent{ margin-left:22px; }
+.boxindentClearBoth { margin: 2px 0 2px 22px; float:none; clear:both; }
+
+.collapsed       { display: none; }
+.shownItems      { }
+
+.selectedStyle   { border-top: 1px solid #aeafae; border-left: 1px solid #aeafae; border-right: 1px solid #aeafae; background: #fff; }
+.unselectedStyle { border-top: 1px solid #aeafae; border-left: 1px solid #aeafae; border-right: 1px solid #aeafae; border-bottom: 1px solid #aeafae; background: #c8ddf2; }
+.usedBoxStyle    { border-left: 1px solid #aeafae; border-right: 1px solid #aeafae; border-bottom: 1px solid #aeafae; background: #fff; }
+
+.cornerBox, 
+.cornerVideoBox	{ float:left; border: 1px solid #cccccc;border-radius: 7px;-moz-border-radius: 7px;margin: 3px; }
+.cornerVideoBox { margin:3px 0px; width:100%;}
+.cornerBox .content, 
+.cornerVideoBox .content  { margin:0 0;padding:7px 0;}
+.cornerVideoBox .content  { padding:0px 0px;}
+.cornerBox .footerLeft,
+.cornerVideoBox .footerLeft   { float:none;clear:both; padding:0 0;}
+.cornerBox .footerRight,
+.cornerVideoBox .footerRight  { padding-top:7px; margin-left:7px;}
+
+.cornerVideoBox .footerRight    { padding-top:5px; margin-left:5px;}
+.cornerVideoBox .content table td { padding:2px 2px 0px 2px}
+.cornerVideoBox .content img.hover { opacity:.80;}
+
+.helpFooter {padding:2px 2px;}
+
+.cornerVideoPTZ .cornerTabs{ float:left; padding:0px 8px; width:75%; position:relative; top:1px;}
+.cornerVideoPTZ .cornerVideoBox{ float:none;clear:both; }
+.cornerVideoPTZ ul{ margin: 0px 0px; padding:0px 0px; width:100%; background:url(/pics/bottom_line_100x5px.gif) repeat-x bottom left; }
+.cornerVideoPTZ ul,
+.cornerVideoPTZ ul li { float:left; list-style:none; display:block; margin:0px 5px 0px 0px; }
+.cornerVideoPTZ ul li { width:80px; background:url(/pics/tab_left_21px.gif) top left no-repeat; }
+.cornerVideoPTZ ul li a { display:block; background:url(/pics/tab_right_21px.gif) top right no-repeat; padding-top:6px; padding-bottom:2px; text-decoration:none;}
+
+.cornerVideoPTZ ul li.selectedTab a { color:#000;}
+.cornerVideoPTZ ul li.unselectedTab a { color:#36c;}
+.cornerVideoPTZ ul li.selectedTab { background-color:#fff; padding:0px 0px 1px 0px;}
+.cornerVideoPTZ ul li.unselectedTab { background-color:#eee; padding:0px 0px;}
+.cornerVideoPTZ ul li a:active, 
+.cornerVideoPTZ ul li a:focus { outline:0; }
+
+.tabs .cornerTabs{ float:left; padding:0px 0px 5px 0px; position:relative; top:1px;}
+.tabs ul{ margin: 0px 0px; padding:0px 0px; width:100%; background:url(/pics/bottom_line_100x5px.gif) repeat-x bottom left; }
+.tabs ul,
+.tabs ul li { float:left; list-style:none; display:block; margin:0px 5px 0px 0px; }
+.tabs ul li { min-width:40px; background:url(/pics/tab_left_21px.gif) top left no-repeat; }
+.tabs ul li a { display:block; background:url(/pics/tab_right_21px.gif) top right no-repeat; padding: 6px 10px 2px 10px; text-decoration:none;}
+
+.tabs ul li.selectedTab a { color:#000;}
+.tabs ul li.unselectedTab a { color:#36c;}
+.tabs ul li.disabledTab a { color:#aaa;}
+.tabs ul li.selectedTab { background-color:#fff; padding:0px 0px 1px 0px;}
+.tabs ul li.disabledTab { background-color:#eee; padding:0px 0px;}
+.tabs ul li.unselectedTab { background-color:#eee; padding:0px 0px;}
+.tabs ul li a:active, 
+.tabs ul li a:focus { outline:0; }
+
+.actualSliderPos { position: absolute; border: blue 1px solid; background: blue; font-size: 1px; }
+
+div.selectList { overflow: visible; overflow-x: hidden; overflow-y: scroll; border: 1px inset black; height: 200px; }
+table.selectList { border-collapse: collapse; table-layout: fixed; width: 100%; }
+table.selectList td { vertical-align: middle; padding: 2px; margin: 0px; -moz-user-select:none; -webkit-user-select:none; overflow: hidden; }
+table.selectList thead { font-weight: bold; }
+table.selectList tbody { border-top: 1px solid gray; }
+table.selectList tbody tr { background-color: white; color: black; border-top: 1px none white; border-bottom: 1px none white; cursor: pointer; }
+table.selectList tbody tr.selected { background-color: #3366FF; color: white; border-top: 1px dotted black; border-bottom: 1px dotted black; }
+table.selectList select.tiny{ width:40px;}
+table.selectList select.smaller{ width:40px;}
+table.selectList select.small{ width:75px;}
+table.selectList select.medium{ width:150px;}
+table.selectList select.large{ width:250px;}
+
+.generalError{ background-color: lightPink; }

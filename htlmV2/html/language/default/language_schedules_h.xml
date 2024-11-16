@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+	<schedule_setup_h>
+		<pageTitle type="title" minor="0">Help/Schedule Setup</pageTitle>
+		<titleTxt type="msgAsText" minor="0">Schedule Setup</titleTxt>
+		<intro_Txt type="text" minor="0">This page allows you to set up schedules to be used as events.</intro_Txt>
+		<dailySubtitle type="text" minor="0">Adding a Daily Schedule</dailySubtitle>
+		<daily_Txt1 type="text" minor="0">Provide the following information:</daily_Txt1>
+		<daily_Txt2 type="text" minor="0">&#x3C;b&#x3E;Name&#x3C;/b&#x3E; - Enter a descriptive name for the schedule.</daily_Txt2>
+		<daily_Txt3 type="text" minor="0">&#x3C;b&#x3E;Type&#x3C;/b&#x3E; - Select &#x3C;b&#x3E;Daily&#x3C;/b&#x3E; from the drop-down list.</daily_Txt3>
+		<daily_Txt4 type="text" minor="0">&#x3C;b&#x3E;Start time/End time&#x3C;/b&#x3E; - Enter the hour and minute for the start and end times (hh:mm).</daily_Txt4>
+		<daily_Txt5 type="text" minor="0">&#x3C;b&#x3E;Days&#x3C;/b&#x3E; - Specify the days of the week the event will be active by checking the appropriate boxes.</daily_Txt5>
+		<weekSubtitle type="text" minor="0">Adding a Weekly Schedule</weekSubtitle>
+		<week_Txt1 type="text" minor="0">Provide the following information:</week_Txt1>
+		<week_Txt2 type="text" minor="0">&#x3C;b&#x3E;Name&#x3C;/b&#x3E; - Enter a descriptive name for the schedule.</week_Txt2>
+		<week_Txt3 type="text" minor="0">&#x3C;b&#x3E;Type&#x3C;/b&#x3E; - Select &#x3C;b&#x3E;Weekly&#x3C;/b&#x3E; from the drop-down list.</week_Txt3>
+		<week_Txt4 type="text" minor="0">&#x3C;b&#x3E;Start time/End time&#x3C;/b&#x3E; - Select the day from the drop-down list and enter the hour and minute for the start and end times (hh:mm).</week_Txt4>
+		<monthSubtitle type="text" minor="0">Adding a Monthly Schedule</monthSubtitle>
+		<month_Txt1 type="text" minor="0">Provide the following information:</month_Txt1>
+		<month_Txt2 type="text" minor="0">&#x3C;b&#x3E;Name&#x3C;/b&#x3E; - Enter a descriptive name for the schedule.</month_Txt2>
+		<month_Txt3 type="text" minor="0">&#x3C;b&#x3E;Type&#x3C;/b&#x3E; - Select &#x3C;b&#x3E;Monthly&#x3C;/b&#x3E; from the drop-down list.</month_Txt3>
+		<month_Txt4 type="text" minor="0">&#x3C;b&#x3E;Start time/End time&#x3C;/b&#x3E; - Enter the date, hour and minute for the start and end times (hh:mm).</month_Txt4>
+		<month_Txt5 type="text" minor="0">&#x3C;b&#x3E;Months&#x3C;/b&#x3E; - Specify the months the event will be active by checking the appropriate boxes.</month_Txt5>
+		<yearSubtitle type="text" minor="0">Adding a Yearly Schedule</yearSubtitle>
+		<yearly_Txt1 type="text" minor="0">Provide the following information:</yearly_Txt1>
+		<yearly_Txt2 type="text" minor="0">&#x3C;b&#x3E;Name&#x3C;/b&#x3E; - Enter a descriptive name for the schedule.</yearly_Txt2>
+		<yearly_Txt3 type="text" minor="1">&#x3C;b&#x3E;Type&#x3C;/b&#x3E; - Select &#x3C;b&#x3E;Yearly&#x3C;/b&#x3E; from the drop-down list.</yearly_Txt3>
+		<yearly_Txt4 type="text" minor="0">&#x3C;b&#x3E;Start time/End time&#x3C;/b&#x3E; - Enter the month from the drop-down list, enter the date, hour and minute for the start and end times (hh:mm).</yearly_Txt4>
+	</schedule_setup_h>
+
+
+
+
+
+	<schedules_h>
+		<pageTitle type="title" minor="0">Help/Schedules</pageTitle>
+		<titleTxt type="msgAsText" minor="0">Schedules</titleTxt>
+		<intro_Txt type="text" minor="0">This page lists the schedules that have already been created. Predefined schedules are listed in blue.</intro_Txt>
+		<listSubTitle type="text" minor="0">Schedules List</listSubTitle>
+		<list_txt1 type="text" minor="0">&#x3C;b&#x3E;Name&#x3C;/b&#x3E; - The name entered by the user or of the predefined schedule.</list_txt1>
+		<list_txt2 type="text" minor="0">To create a new schedule, click &#x3C;b&#x3E;Add...&#x3C;/b&#x3E; To change an existing schedule, select it in the list and click &#x3C;b&#x3E;Modify...&#x3C;/b&#x3E; To delete a schedule, select it and click &#x3C;b&#x3E;Remove&#x3C;/b&#x3E;.</list_txt2>
+		<link_txt type="text" minor="0">See &#x3C;a href='schedule_setup_h.shtml'&#x3E;Schedule Setup&#x3C;/a&#x3E; for more information on how to set Schedules.</link_txt>
+	</schedules_h>
+</language_xml>

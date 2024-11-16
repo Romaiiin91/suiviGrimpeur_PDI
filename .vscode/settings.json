@@ -1,0 +1,16 @@
+{
+    "files.associations": {
+        "signal.h": "c",
+        "types.h": "c",
+        "sigset_t.h": "c",
+        "__sigset_t.h": "c",
+        "signum.h": "c"
+    },
+    "cSpell.ignoreWords": [
+        "requete"
+    ],
+    "cSpell.words": [
+        "Deplacement",
+        "Enregistrees"
+    ]
+}

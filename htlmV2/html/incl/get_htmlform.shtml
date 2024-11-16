@@ -1,0 +1,10 @@
+<!--#set var="get_htmlform_pre_format_odd" val="<TR><TD+nowrap+class=%22oddItem%22>" -->
+<!--#set var="get_htmlform_pre_format_even" val="<TR><TD+nowrap+class=%22evenItem%22>" -->
+<!--#set var="get_htmlform_pre_format" val="$get_htmlform_pre_format_odd$¤$get_htmlform_pre_format_even$" -->
+<!--#set var="get_htmlform_middle_format_odd" val=":+</TD><TD+class=%22oddItem%22>" -->
+<!--#set var="get_htmlform_middle_format_even" val=":+</TD><TD+class=%22evenItem%22>" -->
+<!--#set var="get_htmlform_middle_format" val="$get_htmlform_middle_format_odd$¤$get_htmlform_middle_format_even$" -->
+<!--#set var="get_htmlform_end_format_odd" val="</TD></TR>" -->
+<!--#set var="get_htmlform_end_format_even" val="</TD></TR>" -->
+<!--#set var="get_htmlform_end_format" val="</TD></TR>" -->
+

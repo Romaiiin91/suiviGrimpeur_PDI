@@ -1,0 +1,83 @@
+<!--#set var="backButton" val="yes" -->
+<!--#set var="forwardButton" val="yes" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<script language="JavaScript">
+<!--
+var langObjPTZAGTH = new Language("ptz_h", "add_guardTour_h");
+
+function globalLanguageVars()
+{
+	document.getElementById("titleId").innerHTML = langObjPTZAGTH.getText("titleTxt");
+}
+// -->
+</script>
+
+</head>
+<body onload="langObjPTZAGTH.init()">
+<!--#include virtual="/incl/helpTop_incl2.shtml" -->
+<table class="alternateRows" border="0" cellpadding="3" cellspacing="0" width="440" bgcolor="white">
+<!--#include virtual="/incl/helpTop_incl3.shtml" -->
+<tr>
+	<td colspan="2">
+		<span id="intro_Txt"></span>
+	</td>
+</tr>	
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="layout_subTitle1Txt"></span>
+		</div>
+	</td>
+</tr>
+<tr>
+	<td colspan="2" -->
+		<span id="txt1"></span><br/><br/>
+		<span id="txt2"></span><br/><br/>
+	</td>
+</tr>	
+<tr>
+	<td colspan="2">
+		<span id="time_Txt"></span><br/><br/>
+	</td>
+</tr>	
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="layout_subTitle2Txt"></span>
+		</div>
+	</td>
+</tr>
+<tr>
+	<td colspan="2">
+		<span id="presets_txt"></span><br/><br/>
+	</td>
+</tr>
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="layout_subTitle3Txt"></span>
+		</div>
+	</td>
+</tr>
+<tr>
+	<td colspan="2" -->
+		<span id="source_txt"></span>
+		<ul>
+			<li>
+				<span id="sourceMve_txt"></span><br/><br/>
+			</li>
+			<li>
+				<span id="sourceVwT_txt3"></span><br/><br/>
+			</li>
+			<li>
+				<span id="sourceVwT_txt4"></span>
+			</li>
+		</ul>
+		<span id="sourceVwT_txt5"></span>
+	</td>
+</tr>	
+</table>
+<!--#include virtual="/incl/helpBottom_incl.shtml" -->
+</body>
+</html>

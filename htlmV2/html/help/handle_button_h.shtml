@@ -1,0 +1,57 @@
+<!--#set var="backButton" val="yes" -->
+<!--#set var="forwardButton" val="yes" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<script language="JavaScript">
+<!--
+var langObjPTZHBH = new Language("ptz_h", "handle_button_h");
+
+function globalLanguageVars()
+{
+	document.getElementById("titleId").innerHTML = langObjPTZHBH.getText("titleTxt");
+}
+// -->
+</script>
+
+</head>
+<body onload="langObjPTZHBH.init()">
+<!--#include virtual="/incl/helpTop_incl2.shtml" -->
+<table border="0" cellpadding="3" cellspacing="0" width="440" bgcolor="white">
+<!--#include virtual="/incl/helpTop_incl3.shtml" -->
+<tr>
+	<td colspan="2" class="oddItem">
+		<span id="introTxt1"></span>
+		<ol>
+			<li>
+				<span id="introTxt2"></span><br/><br/>
+			</li>
+			<li>
+				<span id="introTxt3"></span><br/><br/>
+			</li>
+			<li>
+				<span id="introTxt4"></span><br/><br/>
+			</li>
+			<li>
+				<span id="introTxt5"></span>
+			</li>
+		</ol>
+		<span id="introTxt6"></span>
+		<blockquote>
+		<ol>
+			<li>
+				<span id="introTxt7"></span>
+			</li>
+			<li>
+				<span id="introTxt8"></span>
+			</li>
+			<li>
+				<span id="introTxt9"></span>
+			</li>
+		</ol>
+		</blockquote>
+	</td>
+</tr>
+</table>
+<!--#include virtual="/incl/helpBottom_incl.shtml" -->
+</body>
+</html>

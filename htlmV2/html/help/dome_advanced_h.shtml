@@ -1,0 +1,59 @@
+<!--#include virtual="/sm/sm.srv?action=get&group=Image.OwnDateFormatEnabled" -->
+<!--#set var="backButton" val="yes" -->
+<!--#set var="forwardButton" val="yes" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<script language="JavaScript">
+<!--
+var langObjDDAH = new Language("dome_h", "dome_advanced_h");
+
+function globalLanguageVars()
+{
+	document.getElementById("titleId").innerHTML = langObjDDAH.getText("titleTxt");
+}
+// -->
+</script>
+
+</head>
+<body onload="langObjDDAH.init()">
+<!--#include virtual="/incl/helpTop_incl2.shtml" -->
+<table border="0" cellpadding="3" cellspacing="0" width="440" bgcolor="white">
+<!--#include virtual="/incl/helpTop_incl3.shtml" -->
+
+<tr>
+	<td colspan="2" class="oddItem"><span id="intro_Txt"></span><br/>
+	</td>
+</tr>	
+<tr>
+	<td class='subTitle' colspan='2'>
+		<div align='left'>
+			<span id="subTitle_intro_Txt"></span>
+		</div>
+	</td>
+</tr>
+<tr>
+	<td colspan="2" class="oddItem">
+		<span id="enable_Txt"></span><br/>
+	</td>
+</tr>
+<tr>
+	<td colspan="2" class="evenItem">
+		<span id="limit_Txt"></span><br/>
+	</td>
+</tr>
+<tr>
+	<td colspan="2" class="oddItem">
+		<span id="poll_Txt1"></span><br/>
+		<span id="poll_Txt2"></span><br/>
+	</td>
+</tr>
+<tr>
+	<td colspan='2' class="evenItem">
+		<span id="save_Txt"></span><br/>
+	</td>
+</tr>
+</table>
+
+<!--#include virtual="/incl/helpBottom_incl.shtml" -->
+</html>
+</body>

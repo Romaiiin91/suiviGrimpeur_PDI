@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+	<language>
+		<pageTitle type="title">语言/语言</pageTitle>
+		<removeLanguage type="msgAsText">删除</removeLanguage>
+		<removeConfirm type="alert">您确定要删除上传的语言包吗？</removeConfirm>
+		<quesMarkTxt type="alert">?</quesMarkTxt>
+		<uplLangBtnStatTxt type="msg">上传选定的语言包</uplLangBtnStatTxt>
+		<remBtnStatTxt type="msg">删除选定的语言包</remBtnStatTxt>
+		<langBtnStatTxt type="msg">选择语言文件</langBtnStatTxt>
+		<saveBtnStatTxt type="msg">保存设置</saveBtnStatTxt>
+		<tesBtnStatTxt type="msg">恢复为上次保存的设置</tesBtnStatTxt>
+		<langTxt type="text">语言</langTxt>
+		<hlpTxt type="image" buttonid="helpPic">在本页此处点击获得帮助</hlpTxt>
+		<getLanTxt type="text">获得语言</getLanTxt>
+		<getLanFroTxt type="text">从厖获得语言文件</getLanFroTxt>
+		<axisSupURL type="msgAsText">http://www.axis.com/r/?keyword=techsup</axisSupURL>
+		<axisSupURLTxt type="text">www.axis.com/techsup/</axisSupURLTxt>
+		<uplLanTxt type="text">上传语言包</uplLanTxt>
+		<text3Txt type="text">选择语言文件进行上传</text3Txt>
+		<anCliTxt type="text">并点击</anCliTxt>
+		<uplNewLangBtn type="button" buttonid="uploadLangBtn">上传语言包</uplNewLangBtn>
+		<selLanTxt type="text">选择语言包</selLanTxt>
+		<saveBtn type="button" buttonid="saveBtn">保存</saveBtn>
+		<resetBtn type="button" buttonid="resetBtn">复位</resetBtn>
+		<err1Alert type="alert">无法上传语言文件，文件必须是tar格式。</err1Alert>
+		<err2Alert type="alert">无法上传语言文件，语言文件验证失败。确保您正上传的语言文件与本产品和固件版本兼容。</err2Alert>
+		<err3Alert type="alert">无法上传语言文件，文件太大。</err3Alert>
+		<err4Alert type="alert">不允许删除默认语言或内置语言。</err4Alert>
+		<err5Alert type="alert">此语言文件面向产品的不同固件版本而开发。它仍旧可用，但可能会出现翻译不一致的情况。</err5Alert>
+	</language>
+	<language_selection1>
+		<pageTitle type="title">语言选择</pageTitle>
+		<englishStat type="msg">使用已经安装的语言 - 英文</englishStat>
+		<downlLangStat type="msg">下载您的语言</downlLangStat>
+		<haveLangBtnStat type="msg">使用步骤 2 中预先下载的语言文件</haveLangBtnStat>
+		<selectLangTxt type="text">选择语言</selectLangTxt>
+		<stepTxt1 type="text">第 1 (2) 步：下载</stepTxt1>
+		<stepTxt2 type="text">语言文件</stepTxt2>
+		<stepInstrTxt1 type="text">下载新的</stepInstrTxt1>
+		<languageTxt type="msgAsText"> 《中文》</languageTxt>
+		<stepInstrTxt2 type="text">语言文件或使用现有的语言文件</stepInstrTxt2>
+		<downloadBtn type="button" buttonid="langSe1_downloadBtn">下载</downloadBtn>
+		<haveLangFileTxt type="button" buttonid="langSe1_haveLangBtn">使用现有文件</haveLangFileTxt>
+		<skipTxt type="text">跳过语言选择</skipTxt>
+		<skipRegTxt type="text">稍后可通过单击“设置” &#62; “语言”选择语言</skipRegTxt>
+		<useEngBtn type="button" buttonid="langSe1_englishBtn">Use English</useEngBtn>
+	</language_selection1>
+	<language_selection2>
+		<pageTitle type="title">语言选择</pageTitle>
+		<englishConfirm type="alert">选择取消将会把英文设置为产品语言。&#10;您确定要取消吗？</englishConfirm>
+		<englishStat type="msg">使用已经安装的语言 - 英语</englishStat>
+		<downlLangStat type="msg">安装已经下载的语言文件</downlLangStat>
+		<err1Alert type="alert">未能成功上传语言文件，文件必须是 tar 格式。</err1Alert>
+		<err2Alert type="alert">无法上传语言文件，语言文件验证失败。确保您正上传的语言文件与本产品和固件的版本兼容。</err2Alert>
+		<err3Alert type="alert">无法上传语言文件，文件太大。</err3Alert>
+		<err4Alert type="alert">不允许删除默认语言或内置语言。</err4Alert>
+		<err5Alert type="alert">此语言文件面向产品的不同固件版本而开发。它仍旧可用，但可能会出现翻译不一致的情况。</err5Alert>
+		<err6Alert1 type="alert">选中的文件不在</err6Alert1>
+		<err6Alert2 type="alert">中。&#10;要安装其它语言，请单击“取消”，然后点击“设置” &#62; “语言”</err6Alert2>
+		<languageTxt type="msgAsText"> 《中文》</languageTxt>
+		<selectLangTxt type="text">选择语言</selectLangTxt>
+		<stepTxt type="text">第 2 (2) 步：安装</stepTxt>
+		<stepInstrTxt type="text">选择语言文件，然后单击“继续”</stepInstrTxt>
+		<cancelBtn type="button" buttonid="langSe2_cancelBtn">取消</cancelBtn>
+		<installBtn type="button" buttonid="langSe2_installBtn">继续</installBtn>
+	</language_selection2>
+</language_xml>

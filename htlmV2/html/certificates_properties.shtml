@@ -1,0 +1,225 @@
+<!--#set var="helpURL" val="javascript:launch('/help/https_create_h.shtml')" -->
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#include virtual="/incl/top_incl_popup.shtml" -->
+
+<script src="/incl/soapclient.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->" language="javascript" type="text/javascript"></script>
+
+<script language="JavaScript">
+<!--
+var langObjCertProp = new Language("certificates", "certificates_properties");
+
+<!--#include virtual="/incl/functions.shtml" -->
+
+var nameSpaces = new SOAPClientNS();
+nameSpaces.add("tt", "http://www.onvif.org/ver10/schema" );
+nameSpaces.add("tds", "http://www.onvif.org/ver10/device/wsdl" );
+nameSpaces.add("tev", "http://www.onvif.org/ver10/event/wsdl" );
+nameSpaces.add("ter", "http://www.onvif.org/ver10/error" );
+nameSpaces.add("wsnt", "http://docs.oasis-open.org/wsn/b-2" );
+var wsdlUrl = "/wsdl/onvif/devicemgmt.wsdl";
+
+function init()
+{
+  getInformation();
+}
+
+function getInformation()
+{
+  var params = new SOAPClientParameters();
+    
+  var now = new Date();
+  var timestamp = "?timestamp="+now.getTime();
+  
+  var url = "/vapix/services"+timestamp;
+  var method = "tds:GetCertificateInformation";
+  
+  if(window.opener)
+    var certId = window.opener.getFirstSelectedCertId();
+  else
+  {
+    alert( langObjCertProp.getText("noCertIdAlert") );
+    return;
+  }
+  
+  params.add( "CertificateID", certId);
+  
+  SOAPClient.invoke( wsdlUrl, url, nameSpaces, method, params, true, outputInformation );
+}
+
+function outputInformation( responseObj )
+{
+  if(responseObj)
+  {
+    if(responseObj.name == "Error")
+    {
+      var errorMsg = ( ( responseObj.description )?responseObj.description:(responseObj.fileName)?responseObj.fileName:responseObj.message );
+      alert( errorMsg );
+      return;
+    }
+  }
+  
+  var certInfo = responseObj.CertificateInformation;
+  var certExtension = certInfo.Extension.CertificateInformationExtension;
+  
+  document.getElementById("id").innerHTML = certInfo.CertificateID;
+  document.getElementById("version").innerHTML = certInfo.Version;
+  document.getElementById("serialNr").innerHTML = certInfo.SerialNum;
+  document.getElementById("signAlgo").innerHTML = certInfo.SignatureAlgorithm;
+  document.getElementById("issuer").innerHTML = makeDNBold(certInfo.IssuerDN);
+  document.getElementById("notBefore").innerHTML = (certInfo.Validity.From).substr(0,10);
+  document.getElementById("notAfter").innerHTML = (certInfo.Validity.Until).substr(0,10);
+  document.getElementById("subject").innerHTML = makeDNBold(certInfo.SubjectDN);
+  document.getElementById("pubKeyAlgo").innerHTML = certExtension.PublicKeyAlgorithm;
+  document.getElementById("modulusLength").innerHTML += " ("+certInfo.KeyLength+" bit):";
+  document.getElementById("modulus").innerHTML = "<code>"+certExtension.PublicKey+"</code>";
+  document.getElementById("exponent").innerHTML = "<code>"+certExtension.Exponent+"</code>";
+  document.getElementById("algo").innerHTML = certInfo.SignatureAlgorithm;
+  document.getElementById("signature").innerHTML = "<code>"+certExtension.Signature+"</code>";
+  document.getElementById("pem").innerHTML = "<code><pre>"+certExtension.CertificatePEM+"</code></pre>";
+}
+
+function makeDNBold( notBoldDNStr )
+{
+  var boldDNStr = notBoldDNStr;
+  
+  boldDNStr = boldDNStr.replace("C=", "<b>C=</b>");
+  boldDNStr = boldDNStr.replace("ST=", "<b>ST=</b>");
+  boldDNStr = boldDNStr.replace("L=", "<b>L=</b>");
+  boldDNStr = boldDNStr.replace("O=", "<b>O=</b>");
+  boldDNStr = boldDNStr.replace("OU=", "<b>OU=</b>");
+  boldDNStr = boldDNStr.replace("CN=", "<b>CN=</b>");
+  
+  return boldDNStr;
+}
+
+function globalLanguageVars()
+{
+<!--#if expr="$type$ != cert" -->
+  var currTitle = document.title;
+  var newTitle = currTitle.replace(langObjCertProp.getText("pageTitle"), langObjCertProp.getText("alternativePageTitle") );
+  document.title = newTitle;
+<!--#endif -->
+}
+
+-->
+</script>
+</head>
+<body class="bodyBg" topmargin="0" leftmargin="0" marginwidth="0" marginheight="0" bgcolor="white" onLoad="langObjCertProp.init();init()">
+
+<form name="cert_form">
+    <div class="cornerBox">
+      <div class="content">
+  <table border="<!--#echo var="zero" option="encoding:html" -->" cellpadding="<!--#echo var="cellpadding3" option="encoding:html" -->" cellspacing="0" class="oddItem" width="490">
+    <tr>
+      <td class="topTitle" align="left" colspan="2" nowrap>
+        <span id="certTopTxt"></span>
+      </td>
+    </tr>
+    <tr>
+      <td class="subTitle" align="left" colspan="2" nowrap>
+        <span id="certSubTxt"></span>
+      </td>
+    </tr>
+    <tr>
+      <td class="oddItem"><span id="idTxt"></span></td>
+      <td class="oddItem" id="id"></td>
+    </tr>
+    <tr>
+      <td class="evenItem"><span id="verTxt"></span></td>
+      <td class="evenItem" id="version"></td>
+    </tr>
+    <tr>
+      <td class="oddItem" nowrap><span id="serNuTxt"></span></td>
+      <td class="oddItem" id="serialNr"></td>
+    </tr>
+    <tr>
+    <tr>
+      <td class="evenItem" nowrap><span id="sigAlgTxt"></span></td>
+      <td class="evenItem" id="signAlgo"></td>
+    </tr>
+    <tr>
+      <td class="oddItem"><span id="issTxt"></span></td>
+      <td class="oddItem" id="issuer"></td>
+    </tr>
+
+    <tr>
+      <td class="subTitle" align="left" colspan="2" nowrap><span id="valTxt"></span></td>
+    </tr>
+    <tr>
+      <td class="oddItem" nowrap><span id="noVaBeTxt"></span></td>
+      <td class="oddItem" id="notBefore"></td>
+    </tr>
+    <tr>
+      <td class="evenItem" nowrap><span id="noVaAfTxt"></span></td>
+      <td class="evenItem" id="notAfter"></td>
+    </tr>
+    <tr>
+      <td class="oddItem"><span id="subTxt"></span></td>
+      <td class="oddItem" id="subject"></td>
+    </tr>
+
+    <tr>
+      <td class="subTitle" align="left" colspan="2" nowrap><span id="suPuKeTxt"></span></td>
+    </tr>
+    <tr>
+      <td class="oddItem" nowrap><span id="puKeAlTxt"></span></td>
+      <td class="oddItem" id="pubKeyAlgo"></td>
+    </tr>
+
+    <tr>
+      <td class="subTitle" align="left" colspan="2" nowrap><span id="rSAPuKeTxt"></span></td>
+    </tr>
+    <tr>
+      <td class="oddItem" nowrap id="modulusLength"><span id="modTxt"></span></td>
+      <td class="oddItem" id="modulus">
+        <code>
+          
+        </code>
+      </td>
+    </tr>
+    <tr>
+      <td class="evenItem"><span id="expTxt"></span></td>
+      <td class="evenItem" id="exponent"><code></code></td>
+    </tr>
+    <tr>
+      <td class="subTitle" align="left" colspan="2" nowrap><span id="sig1Txt"></span></td>
+    </tr>
+    <tr>
+      <td class="oddItem"><span id="algTxt"></span></td>
+      <td class="oddItem" id="algo"></td>
+    </tr>
+    <tr>
+      <td class="evenItem"><span id="sig2Txt"></span></td>
+      <td class="evenItem" id="signature"></td>
+    </tr>
+    <tr>
+      <td class="oddItem" colspan="2">&nbsp;</td>
+    </tr>
+
+    <tr>
+      <td class="subTitle" align="left" colspan="2" nowrap>
+        <span id="certFormatTxt"></span>
+      </td>
+    </tr>
+    <tr>
+      <td class="oddItem" colspan="2" id="pem">
+        <code><pre>
+        </pre></code>
+      </td>
+    </tr>
+    <tr>
+      <td class="topTitle" align="center" colspan="2">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td class="button"><input type="button" value="" width="75" class="btnNormal" onclick="javascript:window.close()" id="closeBtn"></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+      </div>
+      <div class="footerLeft"><div class="footerRight"></div></div>
+    </div>
+</form>
+</body>
+</html>

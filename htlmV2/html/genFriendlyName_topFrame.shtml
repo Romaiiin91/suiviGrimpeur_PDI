@@ -1,0 +1,9 @@
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#include virtual="/incl/top_incl_popup.shtml" -->
+</head>
+
+<frameset rows="*,0" border=0 cellpadding="0">
+   <frame src="genFriendlyName.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->&protocol=<!--#echo var="protocol" option="encoding:html" -->" name="gen" scrolling="auto">
+   <frame src="getFriendlyName.shtml" name="get" marginheight="0" marginwidth="0" scrolling="no">
+</frameset>
+

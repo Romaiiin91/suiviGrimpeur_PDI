@@ -1,0 +1,366 @@
+<!--#include virtual="/sm/sm.srv?action=get&group=Properties.ImageSource,ImageSource.I0.Sensor,ImageSource.I0.Focus.Mode,ImageSource.I0.Video,PTZ.Support.S1,PTZ.UserAdv.U1,Properties.ImageSource.Sensor,Properties.ImageSource.PositionableIris,PTZ.Various,Properties.LightControl,Properties.Image,Image" -->
+
+<!--#set var="backButton" val="yes" -->
+<!--#set var="forwardButton" val="yes" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<script src="/incl/zxml.js" language="javascript" type="text/javascript"></script>
+<script src="/incl/xmlPrototypes.js" language="javascript" type="text/javascript"></script>
+<script src="/incl/language_incl.js" language="javascript" type="text/javascript"></script>
+<script language="JavaScript">
+<!--
+var langObjVIAHAH = new Language("videoImage_advanced_haiti_h", "advanced_h");
+
+function outputLIs(afterLi, liArr)
+{
+  if(afterLi == null || liArr.length == 0)
+    return false;
+    
+  var newLiObj;
+  var newAfterLi;
+  for(var i=0; i < liArr.length; i++)
+  {
+    newLiObj = document.createElement("li");
+    newLiObj.innerHTML = liArr[i];
+    
+    newAfterLi = afterLi.nextSibling;
+    afterLi.parentNode.insertBefore(newLiObj, newAfterLi);
+  }
+}
+
+function globalLanguageVars()
+{
+	document.getElementById("titleId").innerHTML = langObjVIAHAH.getText("titleTxt");
+	
+  var beforeDomeLi = document.getElementById("before_dome");
+  var whiteBal = document.getElementById("hiddenWhiteBalance").innerHTML;
+  var liArrDomeToAppend = new Array();
+	  
+  if(whiteBal.indexOf('sodium') >= 0)
+    liArrDomeToAppend.push(langObjVIAHAH.getText("street_sodium_Txt2")+"<br /><br />");
+  if(whiteBal.indexOf('mercury') >= 0)
+    liArrDomeToAppend.push(langObjVIAHAH.getText("street_mercury_Txt1")+"<br /><br />");
+    
+  outputLIs(beforeDomeLi, liArrDomeToAppend);
+
+  
+  
+}
+
+// -->
+</script>
+
+</head>
+<body onload="langObjVIAHAH.init()">
+<!--#include virtual="/incl/helpTop_incl2.shtml" -->
+<table class="alternateRows" border="0" cellpadding="3" cellspacing="0" width="440" bgcolor="white">
+<!--#include virtual="/incl/helpTop_incl3.shtml" -->
+
+<tr>
+	<td colspan="2">
+		<span id="intro_Txt"></span><br /><br />
+	</td>
+</tr>
+
+
+
+
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="subTitle1Txt"></span>
+		</div>
+	</td>
+</tr>
+
+<!--#if expr="_$root_ImageSource_I0_Sensor_ColorLevel$$root_ImageSource_I0_Video_Saturation$ != _" -->
+<tr>
+	<td colspan="2">
+		<span id="colorLTxt"></span><br /><br />
+	</td>
+</tr>
+<!--#endif -->
+
+<!--#if expr="_$root_ImageSource_I0_Sensor_Brightness != _" -->
+<tr>
+	<td colspan="2">
+		<span id="brightTxt"></span><br /><br />
+	</td>
+</tr>
+<!--#endif -->
+
+<!--#if expr="$root_ImageSource_I0_Sensor_Sharpness != " -->
+<tr>
+	<td colspan='2'>
+		<span id="shrpTxt1"></span><br /><br />
+		<span id="shrpTxt2"></span><br /><br />
+		<span id="shrpTxt3"></span><br /><br />
+	</td>
+</tr>
+<!--#endif -->
+
+<!--#if expr="_$root_ImageSource_I0_Sensor_Contrast$$root_ImageSource_I0_Video_Contrast$ != _" -->
+<tr>
+	<td colspan='2'>
+		<span id="contrTxt"></span><br /><br />
+	</td>
+</tr>
+<!--#endif -->
+
+
+	<!--#if expr="_$root_ImageSource_I0_Sensor_WhiteBalance != _" -->
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="subTitleTxt"></span>
+		</div>
+	</td>
+</tr>
+<tr>
+	<td colspan="2">
+		<span id="whitebal_Txt1"></span><br /><br />
+		<span id="whitebal_Txt2"></span>
+
+		<br /><br />
+		<span id="options_Txt"></span>
+		<div id="hiddenWhiteBalance" style="display: none">
+			<!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.ImageSource.I0.Sensor.WhiteBalance&format=htmlvalue" -->
+		</div>
+
+		<ul>
+			<li>
+				<span id="dome_Txt1"></span><br /><br />
+			</li>
+			<li>
+				<span id="dome_Txt2"></span><br /><br />
+			</li>
+			<li>
+				<span id="dome_Txt3"></span><br /><br />
+			</li>
+			<li id="before_dome">
+				<span id="dome_Txt4"></span><br /><br />
+			</li>
+		</ul>
+		<span id="whitebal_notes_Txt1"></span><br /><br />
+		<ul>
+			<li>
+				<span id="whitebal_notes_Txt2"></span><br /><br />
+			</li>
+			<li>
+				<span id="whitebal_notes_Txt3"></span>
+			</li>
+		</ul>
+	</td>
+</tr>
+
+	<!--#endif -->
+
+
+<!--#if expr="_$root_ImageSource_I0_Sensor_WDR != _" -->
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="subTitlewdrTxt1"></span>
+		</div>
+	</td>
+</tr>
+
+<tr>
+	<td colspan='2'>
+		<span id="wdrTxt3"></span><br></br>
+	</td>
+</tr>
+<!--#endif -->
+
+<tr class="subTitle">
+	<td colspan="2">
+		<span id="expsubTxt"></span>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="expcont_Txt8"></span>
+		<span id="expcont_settings_Txt"></span>
+		<ul>
+			<li>
+				<span id="expcont_settings_domeTxt1"></span><br /><br />
+				<span id="expcont_settings_domeTxt2"></span><br /><br />
+			</li>
+			<li>
+				<span id="expcont_settings_domeTxt3"></span><br /><br />
+				<span id="expcont_settings_domeTxt4"></span>
+			</li>
+		</ul>
+
+	<!--#if expr="_$root_ImageSource_I0_Sensor_MaxExposureTime != _" -->
+<tr>
+	<td colspan="2">
+		<span id="max_exp_Txt2"></span><br /><br />
+		<!--#if expr="$root_ImageSource_I0_Sensor_AutoSlowShutter != " -->
+		<span id="slow_shutter_Txt"></span><br /><br />
+		<!--#endif -->
+	</td>
+</tr>
+	<!--#endif -->
+
+	<!--#if expr="_$root_ImageSource_I0_Sensor_BacklightCompensation != _" -->
+<tr>
+	<td colspan="2">
+		<span id="backlightTxt1"></span><br /><br />
+	</td>
+</tr>
+	<!--#endif -->
+
+	<!--#if expr="$root_PTZ_Various_V1_BackLightEnabled = true" -->
+<tr>
+	<td colspan="2">
+		<span id="backlightTxt2"></span><br /><br />
+	</td>
+</tr>
+	<!--#endif -->
+
+		<!--#if expr="_$root_ImageSource_I0_Sensor_MaxGain != _" -->
+<tr>
+	<td colspan="2">
+		<span id="max_gain_Txt"></span><br /><br />
+	</td>
+</tr>
+		<!--#endif -->
+
+<tr>
+	<td colspan="2">
+		<span id="expcont_settings_area3_Txt"></span><br /><br />
+	</td>
+</tr>
+
+
+	<!--#if expr="_$root_PTZ_Support_S1_IrCutFilter = _true" -->
+		<!--#set var="showIRCF" val="yes" -->
+	<!--#endif -->
+
+	<!--#if expr="$root_Properties_ImageSource_DayNight = yes" -->
+		<!--#set var="showIRCF" val="yes" -->
+	<!--#endif -->
+
+	<!--#if expr="_$root_PTZ_Support_S1_AutoIrCutFilter = _true" -->
+		<!--#set var="showAutoIRCF" val="yes" -->
+	<!--#endif -->
+
+	<!--#if expr="$root_Properties_ImageSource_DayNight = yes" -->
+		<!--#set var="showAutoIRCF" val="yes" -->
+	<!--#endif -->
+
+	<!--#if expr="$showIRCF = yes" -->
+<tr>
+	<td colspan="2">
+		<span id="iRCF_Txt2"></span><br /><br />
+		<!--#if expr="$showAutoIRCF = yes" -->
+		<span id="iRCF_auto_note_Txt2"></span>
+			<!--#if expr="_$root_PTZ_Support_S1_AutoIrCutFilter = _true" -->
+				<!--#if expr="_$root_PTZ_Support_S1_AutoIris = _true" -->
+		<span id="iRCF_dome_note_Txt2"></span>
+				<!--#endif -->
+			<!--#endif -->
+		<br><br>
+		<!--#endif -->
+		<!--#if expr="_$root_PTZ_UserAdv_U1_SupportIrLight = _true" -->
+		<span id="iRlamp_Txt2"></span><br /><br />
+		<!--#endif -->
+	</td>
+</tr>
+	<!--#endif -->
+
+	<!--#if expr="_$root_ImageSource_I0_Sensor_ExposurePriority != _" -->
+<tr>
+	<td colspan="2">
+		<span id="exposurepriority_Txt"></span><br /><br />
+	</td>
+</tr>
+	<!--#endif -->
+
+
+<!--#if expr="$root_Properties_ImageSource_DCIris = yes" -->
+<tr>
+	<td colspan="2">
+		<span id="expcont_settings_DCiris_Txt"></span><br /><br />
+	</td>
+</tr>
+<!--#endif -->
+
+<tr>
+	<td colspan="2">
+<!--#if expr="$root_Properties_ImageSource_PositionableIris = yes" -->
+		<span id="expcont_settings_positionable_Txt1"></span><br /><br />
+		<span id="expcont_settings_positionable_Txt2"></span><br /><br />
+	</td>
+</tr>
+<!--#endif -->
+
+       <!--#if expr="_$root_ImageSource_I0_Sensor_MaxGain != _" -->
+       <tr>
+           <td colspan="2"><span id="max_gain_Txt"></span></td>
+       </tr>
+       <!--#endif -->
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="subTitle2Txt"></span>
+		</div>
+	</td>
+</tr>
+
+	<!--#if expr="_$root_PTZ_Various_V1_AutoFocus != _" -->
+<tr>
+	<td colspan="2">
+		<span id="autofocus_Txt"></span><br /><br />
+	</td>
+</tr>
+	<!--#endif -->
+
+	<!--#if expr="_$root_ImageSource_I0_Sensor_NoiseReduction != _" -->
+<tr>
+	<td colspan="2">
+		<span id="noiseREduction_Txt"></span><br /><br />
+	</td>
+</tr>
+	<!--#endif -->
+
+	<!--#if expr="_$root_ImageSource_I0_Sensor_Stabilizer != _" -->
+<tr>
+	<td colspan="2">
+		<span id="stabilizer_Txt1"></span>
+		<blockquote><span id="stabilizer_Txt2"></span></blockquote>
+	</td>
+</tr>
+	<!--#endif -->
+
+	<!--#if expr="_$root_PTZ_UserAdv_U1_ImageFreeze != _" -->
+<tr>
+	<td colspan="2">
+		<span id="stabilizer_Txt3"></span><br /><br />
+	</td>
+</tr>
+	<!--#endif -->
+
+
+
+
+
+<tr class="subTitle">
+	<td colspan="2">
+		<span id="viewsubTxt2"></span>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="viewsetTxt2"></span><br /><br />
+	</td>
+</tr>
+
+
+</table>
+<!--#include virtual="/incl/helpBottom_incl.shtml" -->
+</body>
+</html>

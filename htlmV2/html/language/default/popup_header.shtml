@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <!--#include virtual="/sm/sm.srv?action=get&group=Brand,Properties.Firmware.Version" -->
+    <!--#include virtual="/incl/prodtype.shtml" -->
+    <meta http-equiv="X-UA-Compatible" content="IE=10" />
+    <meta http-equiv="Expires" content="Tue, 12 May 1962 1:00:00 GMT" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <meta http-equiv="Content-type" CONTENT="text/html; charset=iso-8859-1">
+    <meta http-equiv="Content-language" CONTENT="en">
+    <title><!--#echo var="glob_prodName" option="encoding:none" --></title>
+
+    <!--#set var="cssVersion" val="?version=014" -->
+
+    <link rel="stylesheet" href="/css/basic.css<!--#echo var="cssVersion" option="encoding:none" -->" type="text/css" />
+    <!--[if gte IE 9]>
+      <link rel="stylesheet" href="/css/IE_basic.css<!--#echo var="cssVersion" option="encoding:none" -->" type="text/css" />
+    <![endif]-->
+    <!--[if IE 8]>
+      <link rel="stylesheet" href="/css/IE8_basic.css<!--#echo var="cssVersion" option="encoding:none" -->" type="text/css" />
+    <![endif]-->
+    <!--[if lte IE 7]>
+      <link rel="stylesheet" href="/css/IE7_basic.css<!--#echo var="cssVersion" option="encoding:none" -->" type="text/css" />
+    <![endif]-->
+
+    <!-- GLOBAL JAVASCRIPTS -->
+    <script language="javascript" type="text/javascript" src="/incl/prototypes.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->"></script>
+    <script language="javascript" type="text/javascript" src="/incl/global_functions.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->"></script>
+    <script language="javascript" type="text/javascript" src="/incl/zxml.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->"></script>
+    <script language="javascript" type="text/javascript" src="/incl/xmlPrototypes.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->"></script>
+    <script language="javascript" type="text/javascript" src="/incl/axis_connection.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->"></script>
+    <script language="javascript" type="text/javascript" src="/incl/language_incl.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->"></script>
+
+    <script language="javascript" type="text/javascript">
+    <!--
+    function focusWin()
+    {
+      window.focus();
+    }
+    addLoadEvent( focusWin );
+    // -->
+    </script>
+   
+    <!--#if expr="_$hideAltRows = _" -->
+      <script language="javascript" type="text/javascript" src="/incl/alternate_div_rows.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->"></script>
+    <!--#endif -->
+
+    <!-- END GLOBAL JAVASCRIPTS -->

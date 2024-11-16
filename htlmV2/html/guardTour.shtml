@@ -1,0 +1,362 @@
+<!--#set var="helpURL" val="javascript:launch('/help/guardTour_h.shtml')" -->
+<!--#set var="WizardFormAction" val="/sm/sm.srv" -->
+<!--#set var="activePage" val="guardTour$nbr$" -->
+<!--#set var="activeMenu1" val="preset$nbr$" -->
+<!--#set var="activeMenu" val="dome" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<!--#include virtual="/incl/nbr_to_camnbr.shtml" -->
+<!--#include virtual="/sm/sm.srv?action=get&group=Properties.GuardTour" -->
+
+
+
+<script src="/incl/select_input_class.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->" language="javascript" type="text/javascript"></script>
+
+<script type="text/javascript" src="/incl/guardtour_class.js"></script>
+<script language="JavaScript" type="text/javascript">
+<!--
+var langObjGuardTour = new Language("ptz", "guardTour");
+var nocache = new Date();
+var nbrOfGuardtoursInProduct = 0;
+var nbrOfRecordedToursInProduct = 0;
+
+<!--#include virtual="/incl/paramArray.shtml" -->
+<!--#include virtual="/incl/functions.shtml" -->
+
+var _list_obj;
+var guardTourListObject = new guardtour_list("<!--#echo var="camnbr" option="encoding:javascript" -->", guardtourIsLoaded);
+
+var request = AxisConnectionFactory.createAjaxConnection();
+request.setOverrideMimeType( 'text/plain' );
+
+function initSelect()
+{
+  createSelect();
+  getTourList();
+}
+
+function createSelect()
+{
+  var headers = [ langObjGuardTour.getText("headerNameTxt"),
+                  langObjGuardTour.getText("headerRunTxt"), 
+                  langObjGuardTour.getText("headerModeTxt") ];
+  var list_container = document.getElementById("idListContainer");
+  _list_obj = new select_input_class(list_container, headers);
+  _list_obj.setColumnWidths(["250px", "150px", "150px"]);
+  _list_obj.setSortByColumn(0);
+  _list_obj.ondblclick = modify;
+  _list_obj.drawTable();
+}
+
+function getTourList()
+{
+  var use_preset = "yes";
+  <!--#if expr="$root_Properties_GuardTour_RecordedTour = yes" -->
+    var use_recorded = "yes";
+  <!--#else -->
+    var use_recorded = "no";
+  <!--#endif -->
+  guardTourListObject.load(use_preset, use_recorded);
+}
+
+function guardtourIsLoaded()
+{
+  nbrOfGuardtoursInProduct = guardTourListObject.nbrOfPresetToursInProduct;
+  nbrOfRecordedToursInProduct = guardTourListObject.nbrOfRecordedToursInProduct;
+  createGuardtourSelectlist();
+}
+
+function createGuardtourSelectlist()
+{
+  var selectedValue = -1;
+  
+  if (_list_obj.selectedIndex >= 0)
+  {
+    selectedValue = _list_obj.selectedValue;
+  }
+
+  _list_obj.clear(); 
+  var name, status, mode, isSelected, text;
+  var guardTour_list_arr = guardTourListObject.get_guardtour_list();
+  guardTour_list_arr.sort(sortByName);
+
+  for( var i = 0; i < guardTour_list_arr.length; i++)
+  {
+    if (guardTour_list_arr[i].camnbr !== guardTourListObject.camnbr.toString()) continue;  
+    switch (guardTour_list_arr[i].status)
+    {
+      case "running":   status = langObjGuardTour.getText("yesTxt");  break;
+      case "stopped":   status = langObjGuardTour.getText("noTxt");   break;
+      case "recording": status = langObjGuardTour.getText("recTxt");  break;
+    }
+    switch (guardTour_list_arr[i].mode)
+    {
+      case "sequential": mode = langObjGuardTour.getText("seqTxt");       break;
+      case "random":     mode = langObjGuardTour.getText("randomTxt");    break;
+      case "recorded":   mode = langObjGuardTour.getText("recordedTxt");  break;
+    }
+    
+    name = guardTour_list_arr[i].name;
+
+    isSelected = (selectedValue == guardTour_list_arr[i].itemType + guardTour_list_arr[i].id);
+
+    var rowArr = [ name, status, mode ];
+
+    _list_obj.addRow(rowArr, guardTour_list_arr[i].itemType + guardTour_list_arr[i].id, "");
+  }
+  _list_obj.drawTable();
+  enableInputButtons(true);
+}
+
+function sortByName(a, b)
+{
+  var A = a.name.toLowerCase();
+  var B = b.name.toLowerCase();
+  if (A > B)
+    return 1;
+  else if (A == B)
+    return 0;
+  else
+    return -1;
+}
+
+function getGuardTour(tourIndex)
+{
+  var type = tourIndex.charAt(0);
+  var id = tourIndex.substr(1);
+  return guardTourListObject.get_guardtour(type, id);
+}
+
+function addGuardTour()
+{
+  <!--#if expr="$root_Properties_GuardTour_RecordedTour = yes" -->
+  var maxNbrOfRecordedTours = parseInt("<!--#echo var="root_Properties_RecordedTour_MaxRecordedTours" option="encoding:javascript" -->", 10);
+  if (nbrOfGuardtoursInProduct >= 10 || nbrOfRecordedToursInProduct >= maxNbrOfRecordedTours) {
+      var alert_str = langObjGuardTour.getText("noGuaRecTouAlert")+" #MAX_RECORDEDTOURS#.";
+      alert_str = alert_str.replace(/#MAX_RECORDEDTOURS#/g, maxNbrOfRecordedTours);
+      alert(alert_str);
+      return 0
+    } else {
+      openPopUp('/operator/add_tour.shtml?nbr=<!--#echo var="nbr" option="encoding:url" -->&nbrOfGuardtours=' + nbrOfGuardtoursInProduct + '&nbrOfRecordedTours=' + nbrOfRecordedToursInProduct + '&id=<!--#echo var="ssi_request_id" option="encoding:url" -->', 'Add_Tour', 575, 500)
+    }
+  <!--#else -->
+  if (nbrOfGuardtoursInProduct >= 10) {
+    alert( langObjGuardTour.getText("noGuaTouAlert") );
+    return 0
+  } else {
+    openPopUp('/operator/add_guardTour.shtml?nbr=<!--#echo var="nbr" option="encoding:url" -->&id=<!--#echo var="ssi_request_id" option="encoding:url" -->', 'Add_GuardTour', 575, 500)
+  }
+  <!--#endif -->
+}
+
+function modify()
+{
+  var form = document.WizardForm;
+  var listIdx = _list_obj.selectedIndex; 
+
+  if (listIdx >= 0) {
+
+    var tourObj = getGuardTour(_list_obj.selectedValue);
+    if (tourObj.itemType == "G")
+    {
+      if (listIdx >= 0){
+        openPopUp('/operator/add_guardTour.shtml?doAction=update&id=<!--#echo var="ssi_request_id" option="encoding:url" -->&nbr=<!--#echo var="nbr" option="encoding:url" -->&GuardNo=G' + tourObj.id, 'Add_GuardTour', 575, 500)
+      } else {
+        alert( langObjGuardTour.getText("noGuardTourPresentAlert") );
+      }
+    }
+    <!--#if expr="$root_Properties_GuardTour_RecordedTour = yes" -->
+    else if (tourObj.itemType == "R")
+    {
+      if (listIdx >= 0) {
+        openPopUp('/operator/add_recordTour.shtml?doAction=update&id=<!--#echo var="ssi_request_id" option="encoding:url" -->&camnbr=<!--#echo var="camnbr" option="encoding:url" -->&GuardNo=R' + tourObj.id, 'Add_GuardTour', 575, 500)
+      } else {
+        alert( langObjGuardTour.getText("noGuardRecordedTourPresentAlert") );
+      }
+    }
+    <!--#endif -->
+  } else {
+    noneSelectedAlert();
+  }
+}
+
+function sendAction(action, method, quiet)
+{
+  var error = false;
+  var now = new Date();
+
+  action += (action.indexOf("?") > 0 ? "&" : "?") + "timestamp=" + now.getTime();
+
+  AxisConnectionFactory.sendSync([method, action], null, request);
+  
+  if( quiet )
+    return;
+  if (request.getStatus() == 200)
+  {
+    var xml = request.getResponseXml();
+    if (xml)
+    {
+      var oError = xml.getElementsByTagName('ErrorDescription');
+      if (oError && oError.length > 0)
+      {
+        error = oError[0].text;
+      }
+    }
+  }
+  else
+  {
+    error = request.getStatusText();
+  }
+  if (error)
+  {
+    alert(error);
+  }
+}
+
+function enable()
+{
+  if (_list_obj.selectedIndex >= 0) {
+    var tourObj = getGuardTour(_list_obj.selectedValue);
+
+    if (tourObj != false)
+    {
+      var tourIndex = tourObj.id;
+      var tourType = tourObj.itemType;
+      if (tourType == "G")
+      {
+        var value = (tourObj.status == "running" ? "no" : "yes" );
+        sendAction("/axis-cgi/operator/param_authenticate.cgi?action=update&root.GuardTour.G" + tourIndex + ".Running=" + value, "GET", true);
+        getTourList();
+      }
+      <!--#if expr="$root_Properties_GuardTour_RecordedTour = yes" -->
+      else if (tourType == "R")
+      {
+        if (tourObj.status == "stopped") {
+          sendAction("/axis-cgi/recordedtour/play.cgi?schemaversion=1&loop=1&recordedtourid=" + tourIndex, "GET");
+        } else if (tourObj.status == "running") {
+          sendAction("/axis-cgi/recordedtour/stopplayback.cgi?schemaversion=1&recordedtourid=" + tourIndex, "GET");
+        } else if (tourObj.status == "recording") {
+          sendAction("/axis-cgi/recordedtour/stoprecording.cgi?schemaversion=1&recordedtourid=" + tourIndex, "GET");
+        }
+        getTourList();
+      }
+      <!--#endif -->
+     }
+   } else {
+     noneSelectedAlert();
+  }
+}
+
+
+function remove()
+{
+  if (_list_obj.selectedIndex >= 0) {
+    var tourObj = getGuardTour(_list_obj.selectedValue);
+
+    if (tourObj != false)
+    {
+      var tourIndex = tourObj.id;
+      var tourType = tourObj.itemType;
+      if (tourType == "G")
+      {
+        if (tourObj.status == "running") {
+          alert( langObjGuardTour.getText("noRemRunAlert") );
+        } else if (confirm( langObjGuardTour.getText("delConfirm")+" "+tourObj.name+"?")) {
+          sendAction("/axis-cgi/operator/param_authenticate.cgi?action=remove&group=root.GuardTour.G" + tourIndex, "GET", true);
+          getTourList();
+        }
+      }
+      <!--#if expr="$root_Properties_GuardTour_RecordedTour = yes" -->
+      else if (tourType == "R")
+      {
+        if (tourObj.status != "stopped") {
+          alert( langObjGuardTour.getText("noRemRunAlert") );
+        } else if (confirm( langObjGuardTour.getText("delConfirm")+" "+tourObj.name+"?")) {
+          sendAction("/axis-cgi/recordedtour/remove.cgi?schemaversion=1&recordedtourid=" + tourIndex, "GET");
+          getTourList();
+        }
+      }
+      <!--#endif -->
+    }
+  } else {
+    noneSelectedAlert();
+  }
+}
+
+function enableInputButtons(enable)
+{
+  var buttonArr = document.getElementsByName("inputButton");
+  for( var i = 0; i < buttonArr.length; i ++)
+  {
+    buttonArr[i].disabled = !enable;
+  }
+}
+
+function noneSelectedAlert()
+{
+  <!--#if expr="$root_Properties_GuardTour_RecordedTour = yes" -->
+  alert( langObjGuardTour.getText("noGRTSelAlert") );
+  <!--#else -->
+  alert( langObjGuardTour.getText("noGTSelAlert") );
+  <!--#endif -->
+}
+
+var AddBtnStatTxt;
+var ModBtnStatTxt;
+var RemBtnStatTxt;
+var EnaDisBtnStatTxt;
+function globalLanguageVars()
+{
+  var gtArr = new Array();
+  gtArr[0] = {val: "", text: langObjGuardTour.getText("guardToursLoadingTxt")};
+  //langObjGuardTour.addOptionsToList(document.getElementById("GuardTour"), gtArr);
+
+  var AddBtnStatTxt = langObjGuardTour.getText("addBtnStatTxt");
+  var ModBtnStatTxt = langObjGuardTour.getText("modBtnStatTxt");
+  var RemBtnStatTxt = langObjGuardTour.getText("remBtnStatTxt");
+  var EnaDisBtnStatTxt = langObjGuardTour.getText("enaDisBtnStatTxt");
+}
+// -->
+</script>
+
+</head>
+<body <!--#include virtual="/incl/bodytag.shtml" --> onload="langObjGuardTour.init();initSelect();">
+<!--#include virtual="/incl/top_incl2.shtml" -->
+
+   <table border="0" cellpadding="3" cellspacing="0" width="100%" valign="top" class="alternateRows">
+    <tr class="topTitle">
+      <td align="left" colspan="2">
+        <span id="guardTourTxt"></span>
+      </td>
+      <td align="right">
+         <a href="<!--#echo var="helpURL" option="encoding:url" -->"><img height="27" width="27" src="/pics/help.gif" border="0" id="hlpPic"></a>
+      </td>
+    </tr>
+    <tr class="subTitle">
+      <td align="left" colspan="3">
+        <span id="guardTourLiTxt"></span>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+        <div id="idListContainer" class="selectList" style="width: 550px"></div>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3" align="left" class="button">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td><input type="button" name="inputButton" value="" width="75" class="btnNormal" onclick="javascript:addGuardTour()" onMouseOver="return showStatus(AddBtnStatTxt)" onMouseOut="return showStatus('')" disabled="disabled" id="addBtn"></td>
+            <td>&nbsp;</td>
+            <td><input type="button" name="inputButton" value="" width="75" class="btnNormal" onclick="javascript:modify()" onMouseOver="return showStatus(ModBtnStatTxt)" onMouseOut="return showStatus('')" disabled="disabled" id="modifyBtn"></td>
+            <td>&nbsp;</td>
+            <td><input type="button" name="inputButton" value="" width="75" class="btnLonger" onclick="javascript:enable()" onMouseOver="return showStatus(EnaDisBtnStatTxt)" onMouseOut="return showStatus('')" disabled="disabled" id="startStopBtn"></td>
+            <td>&nbsp;</td>
+            <td><input type="button" name="inputButton" value="" width="75" class="btnNormal" onclick="javascript:remove()" onMouseOver="return showStatus(RemBtnStatTxt)" onMouseOut="return showStatus('')" disabled="disabled" id="removeBtn"></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+<!--#include virtual="/incl/bottom_incl.shtml" -->

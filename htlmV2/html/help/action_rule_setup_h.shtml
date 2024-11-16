@@ -1,0 +1,369 @@
+<!--#include virtual="/sm/sm.srv?action=get&group=Brand.ProdNbr,Properties.TemperatureSensor.Fan,Serial.PurposePort0,Properties.LightControl,Properties.LEDControl.LEDControl" -->
+<!--#set var="backButton" val="yes" -->
+<!--#set var="forwardButton" val="yes" -->
+<!--#include virtual="/incl/popup_header.shtml" -->
+
+<script language="JavaScript">
+<!--
+var langObjETARSH = new Language("event_types_h", "action_rule_setup_h");
+
+function globalLanguageVars()
+{
+	document.getElementById("titleId").innerHTML = langObjETARSH.getText("titleTxt");
+
+}
+// -->
+</script>
+
+</head>
+<body onload="langObjETARSH.init()">
+<!--#include virtual="/incl/help_top.shtml" -->
+<div class="row">
+	<span id="intro_Txt"></span><br/><br/>
+</div>
+<h2>
+	<span id="title1_Txt"></span>
+</h2>
+<div class="row">
+	<span id="general_Txt1"></span><br/><br/>
+	<span id="general_Txt2"></span><br/><br/>
+</div>
+<h2>
+	<span id="title2_Txt"></span>
+</h2>
+<div class="row">
+	<span id="trigger_Txt"></span><br/><br/>
+</div>
+<div class="row">
+
+<!--Applications-->
+	<span id="trigger_appTrigger_Txt"></span>
+<br/>
+<!--Applications-->
+<br/><br/>
+
+<!--Detectors-->
+	<span id="triggergroup_Detectors"></span>
+	<ul>
+
+
+		<li>
+			<span id="live_view_accessed_Txt"></span>
+		</li> 
+
+		<li>
+			<span id="trigger_motion_Txt"></span>
+		</li>
+
+
+</ul>
+<!--Detectors-->
+<br/>
+
+<!--Hardware-->
+	<span id="triggergroup_Hardware"></span>
+	<ul>
+
+	<!--#if expr="$root_Properties_TemperatureSensor_Fan = yes" -->
+		<li>
+			<span id="trigger_fan_Txt"></span>
+		</li>
+	<!--#endif -->
+
+		<li>
+			<span id="trigger_network_lost2_Txt"></span>
+		</li>
+
+
+		<li>
+			<span id="trigger_temp_Txt"></span>
+		</li>
+
+	</ul>
+
+<!--Hardware-->
+
+<!--Input Signal-->
+
+	<span id="trigger_inputs_Txt1"></span>
+  <!--#if expr="$io_support = yes" -->
+		<span id="trigger_inputs_Txt5"></span>
+  <!--#endif -->
+	<ul>
+		<li>
+			<span id="trigger_inputs_Txt3"></span>
+		</li>
+		<li>
+			<span id="trigger_inputs_Txt4"></span>
+		</li>
+	</ul>
+<!--Input Signal--> 
+
+<!--PTZ-->
+
+	<span id="triggergroup_PTZ"></span>
+
+<ul>
+		<li>
+			<span id="ptzAutoTrack_Txt"></span>
+		</li>
+
+		<li>
+			<span id="ptzMove_Txt"></span><br/>
+		</li>
+
+		<li>
+			<span id="trigger_preset_reached_Txt1"></span><br/>
+			<span id="trigger_preset_reached_Txt2"></span><br/><br/>
+			<span id="trigger_preset_reached_Txt3"></span>
+		</li>
+
+		<li>
+			<span id="ptzError_Txt"></span>
+		</li>
+
+		<li>
+			<span id="ptzReady_Txt"></span>
+		</li>
+</ul> 
+<!--PTZ-->
+<br/>
+
+<!--Storage-->
+	<span id="trigger_disk2full_Txt1"></span>
+	<ul>
+<!--
+		<li>
+			<span id="trigger_disk2full_Txt2"></span>
+		</li>
+-->
+		<li>
+			<span id="trigger_StorageDisruption_Txt"></span>
+		</li>
+<!--
+		<li>
+			<span id="trigger_disk2full_Txt3"></span>
+		</li>
+		<li>
+			<span id="trigger_disk2full_Txt4"></span>
+		</li>
+-->
+	</ul>
+	<span id="trigger_disk2full_Txt6"></span>
+<!--Storage-->
+
+<br/><br/>
+<!--System-->
+	<span id="triggergroup_System"></span>
+	<ul>
+		<li>
+			<span id="trigger_ready_Txt1"></span><br/><br/>
+			<span id="trigger_ready_Txt2"></span>
+		</li>
+	</ul>
+<!--System-->
+<br/>
+
+<!--Time-->
+	<span id="triggergroup_Time"></span>
+	<ul>
+		<li>
+			<span id="recur_Txt"></span>
+		</li>
+		<li>
+			<span id="time_schedule_Txt"></span>
+		</li>
+	</ul>
+</div>
+<!--Time-->
+
+<div class="row">
+	<span id="sched_Txt1"></span><br/><br/>
+	<span id="sched_Txt2"></span><br/><br/>
+</div>
+<div class="row">
+	<span id="addlConditions_Txt1"></span><br/><br/>
+	<span id="addlConditions_Txt2"></span><br/><br/>
+	<span id="addlConditions_Txt3"></span><br/><br/>
+</div>
+<h2>
+	<span id="actions_title"></span>
+</h2> 
+
+<div class="row">
+	<span id="night_vision_Txt"></span>
+</div>
+
+
+<div class="row">
+	<span id="overlaytext_Txt1"></span><br/><br/>
+	<span id="overlaytext_Txt2"></span><br/><br/>
+
+
+
+
+	<span id="pTZcontrol_Txt"></span>
+
+	<ul>
+		<li>
+			<span id="control_Txt"></span>
+		</li>
+		<ul>
+			<li>
+				<span id="preSet_Txt"></span>
+			</li>
+
+			<li>
+				<span id="runtourTxt"></span>
+			</li>
+
+			<li>
+				<span id="action_AT_Txt"></span>
+			</li>
+
+		</ul>
+	</ul>
+
+	<span id="select_recordVideo_Txt1"></span>
+	<ul>
+		<li>
+			<span id="select_recordVideo_Txt3"></span>
+		</li>
+		<li>
+			<span id="select_recordVideo_Txt4"></span>
+			<ul>
+				<li>
+					<span id="select_recordVideo_Txt5"></span>
+				</li>
+				<li>
+					<span id="select_recordVideo_Txt6"></span>
+				</li>
+				<li>
+					<span id="select_recordVideo_Txt7"></span>
+				</li>
+			</ul>
+		</li>
+		<li>
+			<span id="select_recordVideo_Txt8"></span>
+		</li>
+	</ul>
+
+	<span id="sendImages_Txt1"></span>
+	<ul>
+		<li>
+			<span id="sendImages_Txt3"></span>
+		</li>
+		<li>
+			<span id="sendImages_Txt4"></span>
+		</li>
+		<li>
+			<span id="sendImages_Txt5"></span>
+			<ul>
+				<li>
+					<span id="sendImages_Txt6"></span>
+				</li>
+				<li>
+					<span id="sendImages_Txt7"></span>
+				</li>
+				<li>
+					<span id="sendImages_Txt8"></span>
+				</li>
+			</ul>
+		</li>
+		<li>
+			<span id="sendImages_Txt9"></span>
+			<ul>
+				<li>
+					<span id="sendImages_Txt10"></span>
+				</li>
+			</ul>
+		</li>
+		<li>
+			<span id="sendImages_Txt11"></span><br/><br/>
+			<span id="sendImagesNotes_Txt"></span><br/><br/>
+			<ul>
+			<li>
+				<span id="emailSendLimit_Txt-1"></span><br/><br/>
+			</li>
+			<li>
+				<span id="folderNameLimit_Txt"></span>
+			</li>
+			</ul>
+		</li>
+	</ul>
+
+	<span id="sendNotific_Txt1"></span>
+	<ul>
+		<li>
+			<span id="sendNotific_Txt2"></span>
+			<ul>
+				<li>
+					<span id="sendNotific_Txt3-1"></span><br/><br/>
+					<span id="sendNotific_Txt3-2"></span><br/><br/>
+					<span id="sendNotific_Txt3-3"></span>
+				</li>
+				<li>
+					<span id="sendNotific_Txt4-1"></span><br/><br/>
+					<span id="sendNotific_Txt4-2"></span><br/><br/>
+					<span id="sendNotific_Txt4-3"></span><br/><br/>
+					<span id="sendNotific_Txt4-4"></span>
+				</li>
+			</ul>
+		</li>
+		<li>
+			<span id="sendNotific_Txt5"></span>
+			<ul>
+				<li>
+					<span id="sendNotific_Txt6"></span>
+				</li>
+				<li>
+					<span id="sendNotific_Txt7"></span>
+				</li>
+			</ul>
+		</li>
+		<li>
+			<span id="sendNotific_Txt8"></span>
+			<ul>
+				<li>
+					<span id="sendNotific_Txt9"></span>
+				</li>
+				<li>
+					<span id="sendNotific_Txt10"></span>
+				</li>
+			</ul>
+		</li>
+	</ul>
+
+	<span id="sendVideoclip_Txt1"></span>
+	<ul>
+		<li>
+			<span id="sendVideoclip_Txt3"></span>
+		</li>
+		<li>
+			<span id="sendVideoclip_Txt4"></span>
+			<ul>
+				<li>
+					<span id="sendVideoclip_Txt5"></span>
+				</li>
+				<li>
+					<span id="sendVideoclip_Txt6"></span><br/>
+					<span id="sendVideoclip_Txt7"></span>
+				</li>
+				<li>
+					<span id="sendVideoclip_Txt8"></span>
+				</li>
+			</ul>
+		</li>
+		<li>
+			<span id="sendVideoclip_Txt9"></span><br/><br/>
+			<span id="folderNameLimitVid_Txt"></span>
+		</li>
+	</ul>
+
+
+<!--
+	<span id="failOver_Txt"></span><br/><br/>
+-->
+
+</div>
+<!--#include virtual="/incl/help_footer.shtml" -->

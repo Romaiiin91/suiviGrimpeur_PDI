@@ -1,0 +1,142 @@
+<?xml version="1.0"?> <!-- mode -*- sgml -*- -->
+
+<!-- Scene Description XML Schema                                    -->
+<!-- ============================                                    -->
+<!-- Conventions                                                     -->
+<!--   The coordinate system used is a right normalized system.      -->
+<!--   This means that the x values are in the range [0,1]           -->
+<!--   inclusive, and the y values are in the range [0,aspect],      -->
+<!--   where aspect is the aspect ratio height/width for the image   -->
+<!--   source. Velocities are the time derivatives of the positions, -->
+<!--   where the time unit is 1 second. Thus, a velocity of 1 means  -->
+<!--   moving from x=0 to x=1 in one second.                         -->
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://www.axis.com"
+            xmlns="http://www.axis.com"
+	    elementFormDefault="qualified">
+
+  <!-- Float between 0 and 1 -->
+  <xsd:simpleType name="fractionType">
+    <xsd:restriction base="xsd:float">
+      <xsd:minInclusive value="-1"/>
+      <xsd:maxInclusive value="1"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+   <!-- Float between -0.5 and 0.5 -->
+  <xsd:simpleType name="halfFracType">
+    <xsd:restriction base="xsd:float">
+      <xsd:minInclusive value="-0.5"/>
+      <xsd:maxInclusive value="0.5"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <!-- Angular type -->
+  <xsd:simpleType name="angleType">
+    <xsd:restriction base="xsd:decimal">
+      <xsd:minInclusive value="0"/>
+      <xsd:maxInclusive value="360"/>
+    </xsd:restriction>
+  </xsd:simpleType> 
+
+  <!-- 2-dimensional unconstrained vector type -->
+  <xsd:complexType name="vectorType">
+    <xsd:attribute name="x" type="xsd:float" use="required"/>
+    <xsd:attribute name="y" type="xsd:float" use="required"/>
+  </xsd:complexType>
+
+  <!-- 2-dimensional point type -->
+  <xsd:complexType name="pointType">
+    <xsd:attribute name="x" type="fractionType" use="required"/>
+    <xsd:attribute name="y" type="fractionType" use="required"/>
+  </xsd:complexType> 
+
+  <!-- Axis-aligned rectangle type.                                  -->
+  <!-- The rectangle is represented as the coordinate values of the  -->
+  <!-- bottom-left corner and the width and height values.           -->
+  <xsd:complexType name="rectangleType" >
+    <xsd:attribute name="bottom" type="fractionType" use="required"/>
+    <xsd:attribute name="left"   type="fractionType" use="required"/>
+    <xsd:attribute name="width"  type="fractionType" use="required"/>
+    <xsd:attribute name="height" type="fractionType" use="required"/>
+  </xsd:complexType>
+
+  <!-- Polygon type -->
+  <xsd:complexType name="polygonType">
+    <xsd:sequence>
+      <xsd:element name="point" type="pointType" 
+                   minOccurs="3" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <!-- YCbCr dominant color type with mean value, standard deviation -->
+  <!-- and coverage fraction. It has the same semantics as the       -->
+  <!-- DominantColor type of MPEG7.                                  -->
+  <xsd:complexType name="colorYCbCrType">
+    <xsd:attribute name="y"        type="fractionType" use="required"/>
+    <xsd:attribute name="cb"       type="halfFracType" use="required"/>
+    <xsd:attribute name="cr"       type="halfFracType" use="required"/>
+    <xsd:attribute name="yDev"     type="fractionType" use="required"/>
+    <xsd:attribute name="cbDev"    type="fractionType" use="required"/>
+    <xsd:attribute name="crDev"    type="fractionType" use="required"/>
+    <xsd:attribute name="coverage" type="fractionType" use="required"/>
+  </xsd:complexType>
+
+  <!-- Object reference type -->
+  <xsd:complexType name="referenceType">
+    <xsd:attribute name="id" type="xsd:integer" use="required"/>
+  </xsd:complexType>  
+
+  <!-- Object split/merge type -->
+  <xsd:complexType name="associationType">
+    <xsd:sequence>
+      <xsd:element name="part" type="referenceType" 
+                   minOccurs="2" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:integer" use="required"/>
+  </xsd:complexType> 
+
+  <!-- Object type -->
+  <xsd:complexType name="objectType">
+    <xsd:sequence>
+      <xsd:element name="box" type="rectangleType" 
+                   minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="polygon" type="polygonType" 
+                   minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="velocity" type="vectorType" 
+                   minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="colorYCbCr" type="colorYCbCrType" 
+                   minOccurs="0" maxOccurs="unbounded"/> 
+    </xsd:sequence>
+    <xsd:attribute name="id" type="xsd:integer" use="required"/>  
+  </xsd:complexType>
+  
+  <!-- Document definition -->
+  <xsd:element name="scene">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="frame" minOccurs="1" maxOccurs="unbounded">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="object" type="objectType" 
+                           minOccurs="0" maxOccurs="unbounded"/>
+              <xsd:element name="split" type="associationType" 
+                           minOccurs="0" maxOccurs="unbounded"/>
+              <xsd:element name="merge" type="associationType" 
+                           minOccurs="0" maxOccurs="unbounded"/>
+              <xsd:element name="delete" type="referenceType" 
+                           minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>  
+            <xsd:attribute name="time" type="xsd:unsignedLong"/>
+            <xsd:attribute name="pan"  type="angleType"/>
+            <xsd:attribute name="tilt" type="angleType"/>
+	    <xsd:attribute name="zoom" type="xsd:decimal"/>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>  
+    </xsd:complexType>
+  </xsd:element>
+
+</xsd:schema>
+

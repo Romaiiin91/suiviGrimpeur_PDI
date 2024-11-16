@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+  <snmp>
+    <pageTitle type="title" minor="0">System Options/SNMP Settings</pageTitle>
+    <iupwAlrtTxt type="alert" minor="0">Initial user password must have at least 8 characters.</iupwAlrtTxt>
+    <httpssnmpv3AlrtTxt type="alert" minor="0">HTTPS must be enabled for administrator before SNMP v3 can be enabled.</httpssnmpv3AlrtTxt>
+    <saveTrapNotsnmpv1v2Alrt type="alert" minor="1">To enable traps SNMP v1 and/or v2c must be enabled.</saveTrapNotsnmpv1v2Alrt>
+    <saveTrapIpLengthAlrt type="alert" minor="0">An IP address must be specified for traps.</saveTrapIpLengthAlrt>
+    <saveTrapIpIpv6Alrt type="alert" minor="0">IP address specified is neither a correct IPv4 nor a correct IPv6 address.</saveTrapIpIpv6Alrt>
+    <saveTrapIpAlrt type="alert" minor="0">IP address specified is not a correct IPv4 address.</saveTrapIpAlrt>
+    <trapsSnmpV3Alrt type="alert" minor="1">'SNMP v3' and 'Traps for SNMP v1/v2c' can not be enabled at the same time.</trapsSnmpV3Alrt>
+    <saveBtnStatTxt type="alert" minor="0">Save SNMP setting</saveBtnStatTxt>
+    <revertStatTxt type="alert" minor="0">Revert to last saved settings</revertStatTxt>
+    <snmpSetTxt type="text" minor="0">SNMP Settings</snmpSetTxt>
+    <hlpTxt type="image" minor="0" imageid="hlpPic">Click here for help on this page</hlpTxt>
+    <sNMPv1v2Txt type="text" minor="1">SNMP v1/v2c</sNMPv1v2Txt>
+    <enSNMP1Txt type="text" minor="0">Enable SNMP v1</enSNMP1Txt>
+    <enSNMP2Txt type="text" minor="0">Enable SNMP v2c</enSNMP2Txt>
+    <readComTxt type="text" minor="0">Read community:</readComTxt>
+    <writeComTxt type="text" minor="0">Write community:</writeComTxt>
+    <trapsTxt type="text" minor="1">Traps for SNMP v1/v2c</trapsTxt>
+    <trapsEnblTxt type="text" minor="0">Enable traps</trapsEnblTxt>
+    <trapAddrTxt type="text" minor="0">Trap address:</trapAddrTxt>
+    <trapCommTxt type="text" minor="0">Trap community:</trapCommTxt>
+    <avaTraTxt type="text" minor="0">Available traps</avaTraTxt>
+    <trapColdStartExplTxt type="msgAsText" minor="0">Sent when the camera is starting up.</trapColdStartExplTxt>
+    <trapColdStartTxt type="text" minor="0">Cold start</trapColdStartTxt>
+    <trapWarmStartExplTxt type="msgAsText" minor="0">Sent when SNMP, not the camera, is starting up.</trapWarmStartExplTxt>
+    <trapWarmStartTxt type="text" minor="0">Warm start</trapWarmStartTxt>
+    <trapLinkUpExplTxt type="msgAsText" minor="0">Sent when the link goes from down to up.</trapLinkUpExplTxt>
+    <trapLinkUpTxt type="text" minor="0">Link up</trapLinkUpTxt>
+    <trapAuthFailExplTxt type="msgAsText" minor="0">Sent when when an authentication has failed.</trapAuthFailExplTxt>
+    <trapAuthFailTxt type="text" minor="0">Authentication failed</trapAuthFailTxt>
+    <sNMPv3Txt type="text" minor="0">SNMP v3</sNMPv3Txt>
+    <enSNMP3Txt type="text" minor="0">Enable SNMP v3</enSNMP3Txt>
+    <iniPwTxt type="text" minor="1">SNMP v3 &#x3C;b&#x3E;Initial&#x3C;/b&#x3E; user's password:</iniPwTxt>
+    <iniPwSetTxt type="text" minor="0">SNMP v3 initial user password has been set.</iniPwSetTxt>
+    <noteTxt type="text" minor="0">Note:</noteTxt>
+    <note2Txt type="text" minor="0">Inital user password is activated only when HTTPS is enabled and can only be set once.</note2Txt>
+    <note3Txt type="text" minor="1">If SNMP v3 is enabled, then SNMP v1/v2c traps should be disabled.</note3Txt>
+    <saveBtn type="button" minor="0" buttonid="snmp_SaveBtn">Save</saveBtn>
+    <resetBtn type="button" minor="0" buttonid="snmp_ResetBtn">Reset</resetBtn>
+  </snmp>
+</language_xml>

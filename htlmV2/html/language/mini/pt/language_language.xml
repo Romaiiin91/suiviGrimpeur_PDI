@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<language_xml>
+	<language>
+		<pageTitle type="title">Idiomas/Idiomas</pageTitle>
+		<removeLanguage type="msgAsText">Remover</removeLanguage>
+		<removeConfirm type="alert">Tem certeza que deseja remover o idioma carregado?</removeConfirm>
+		<quesMarkTxt type="alert">?</quesMarkTxt>
+		<uplLangBtnStatTxt type="msg">Carregar o idioma selecionado</uplLangBtnStatTxt>
+		<remBtnStatTxt type="msg">Remover o idioma selecionado</remBtnStatTxt>
+		<langBtnStatTxt type="msg">Selecionar arquivo de idioma</langBtnStatTxt>
+		<saveBtnStatTxt type="msg">Salvar as configurações</saveBtnStatTxt>
+		<tesBtnStatTxt type="msg">Reverter para as últimas configurações salvas</tesBtnStatTxt>
+		<langTxt type="text">Idiomas</langTxt>
+		<hlpTxt type="image" buttonid="helpPic">Clique aqui para obter ajuda nesta página</hlpTxt>
+		<getLanTxt type="text">Obter idioma</getLanTxt>
+		<getLanFroTxt type="text">Obter um arquivo de idioma de</getLanFroTxt>
+		<axisSupURL type="msgAsText">http://www.axis.com/r/?keyword=techsup</axisSupURL>
+		<axisSupURLTxt type="text">www.axis.com/techsup/</axisSupURLTxt>
+		<uplLanTxt type="text">Carregar idioma</uplLanTxt>
+		<text3Txt type="text">Selecionar arquivo de idioma para carregar</text3Txt>
+		<anCliTxt type="text">e clique em</anCliTxt>
+		<uplNewLangBtn type="button" buttonid="uploadLangBtn">Carregar idioma</uplNewLangBtn>
+		<selLanTxt type="text">Selecionar idioma</selLanTxt>
+		<saveBtn type="button" buttonid="saveBtn">Salvar</saveBtn>
+		<resetBtn type="button" buttonid="resetBtn">Redefinir</resetBtn>
+		<err1Alert type="alert">Impossível carregar arquivo de idioma, o arquivo deve ser um tar.</err1Alert>
+		<err2Alert type="alert">Impossível carregar arquivo de idioma, a verificação do arquivo falhou. Verifique se você está carregando um arquivo de idioma compatível com esta versão de produto e firmware.</err2Alert>
+		<err3Alert type="alert">Impossível carregar arquivo de idioma, o arquivo é muito grande.</err3Alert>
+		<err4Alert type="alert">Remoção de idioma padrão ou idiomas incorporados não é permitida.</err4Alert>
+		<err5Alert type="alert">Este arquivo de idioma foi desenvolvido para uma versão de firmware diferente do produto. Ele ainda é utilizável, mas algumas inconsistências de tradução podem ocorrer.</err5Alert>
+	</language>
+	<language_selection1>
+		<pageTitle type="title">Seleção de idioma</pageTitle>
+		<englishStat type="msg">Usar o idioma já instalado - inglês</englishStat>
+		<downlLangStat type="msg">Baixar seu idioma</downlLangStat>
+		<haveLangBtnStat type="msg">Use o arquivo de idioma previamente baixado na etapa 2</haveLangBtnStat>
+		<selectLangTxt type="text">Selecionar idioma</selectLangTxt>
+		<stepTxt1 type="text">Etapa 1 de 2: Download</stepTxt1>
+		<stepTxt2 type="text">arquivo de idioma</stepTxt2>
+		<stepInstrTxt1 type="text">Baixe um novo arquivo de idioma em</stepInstrTxt1>
+		<languageTxt type="msgAsText">português</languageTxt>
+		<stepInstrTxt2 type="text">ou use um já existente.</stepInstrTxt2>
+		<downloadBtn type="button" buttonid="langSe1_downloadBtn">Download</downloadBtn>
+		<haveLangFileTxt type="button" buttonid="langSe1_haveLangBtn">Usar arquivo existente</haveLangFileTxt>
+		<skipTxt type="text">Pular seleção de idioma</skipTxt>
+		<skipRegTxt type="text">O idioma pode ser alterado posteriormente em Configuração &#62; Idiomas.</skipRegTxt>
+		<useEngBtn type="button" buttonid="langSe1_englishBtn">Use English</useEngBtn>
+	</language_selection1>
+	<language_selection2>
+		<pageTitle type="title">Seleção de idioma</pageTitle>
+		<englishConfirm type="alert">Se cancelar, o idioma inglês será definido como o idioma do produto.&#10;Tem certeza de que deseja cancelar?</englishConfirm>
+		<englishStat type="msg">Usar o idioma já instalado - inglês</englishStat>
+		<downlLangStat type="msg">Instalar o arquivo de idioma baixado</downlLangStat>
+		<err1Alert type="alert">Impossível carregar arquivo de idioma, o arquivo deve ser um tar.</err1Alert>
+		<err2Alert type="alert">Impossível carregar arquivo de idioma, a verificação do arquivo falhou. Verifique se você está carregando um arquivo de idioma compatível com esta versão do produto e firmware.</err2Alert>
+		<err3Alert type="alert">Impossível carregar arquivo de idioma, o arquivo é muito grande.</err3Alert>
+		<err4Alert type="alert">Remoção de idioma padrão ou idiomas incorporados não é permitida.</err4Alert>
+		<err5Alert type="alert">Este arquivo de idioma foi desenvolvido para uma versão de firmware diferente da versão encontrada neste produto. Ele ainda é utilizável, mas algumas inconsistências de tradução podem ocorrer.</err5Alert>
+		<err6Alert1 type="alert">O arquivo selecionado não está em</err6Alert1>
+		<err6Alert2 type="alert">.&#10;Para instalar outros idiomas, clique em Cancelar e acesse Configuração &#62; Idiomas</err6Alert2>
+		<languageTxt type="msgAsText">português</languageTxt>
+		<selectLangTxt type="text">Selecionar idioma</selectLangTxt>
+		<stepTxt type="text">Etapa 2 de 2: Instalar</stepTxt>
+		<stepInstrTxt type="text">Selecione o arquivo de idioma e clique em Continuar.</stepInstrTxt>
+		<cancelBtn type="button" buttonid="langSe2_cancelBtn">Cancelar</cancelBtn>
+		<installBtn type="button" buttonid="langSe2_installBtn">Continuar</installBtn>
+	</language_selection2>
+</language_xml>

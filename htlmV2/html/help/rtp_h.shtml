@@ -1,0 +1,138 @@
+<!--#include virtual="/sm/sm.srv?action=get&group=Brand,Network.RTP.R0.AudioAddress,Network.RTP.NbrOfRTPGroups,Properties.Audio.Audio" -->	
+<!--#set var="backButton" val="yes" -->
+<!--#set var="forwardButton" val="yes" -->
+
+<!--#if expr="$root_Properties_Audio_Audio = yes" -->
+  <!--#if expr="_$root_Network_RTP_R0_AudioAddress != _" -->
+    <!--#set var="AudioVideo" val="yes" -->
+  <!--#endif -->
+<!--#endif -->
+
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<script language="JavaScript">
+<!-- 
+var langObjRTPRTPH = new Language("rtp_h", "rtp_h");
+  function globalLanguageVars()
+  {
+    var currTitle = document.title;
+    var newTitle = currTitle.replace(langObjRTPRTPH.getText("pageTitle"), langObjRTPRTPH.getText("alternativePageTitle1") );
+    document.title = newTitle;
+    var titleTxt = langObjRTPRTPH.getText("alternativeTitleTxt1");
+    document.getElementById("titleId").innerHTML = titleTxt;
+  }
+// -->
+</script>
+
+</head>
+<body onload="langObjRTPRTPH.init()">
+<!--#include virtual="/incl/helpTop_incl2.shtml" -->
+<table class="alternateRows" border="0" cellpadding="3" cellspacing="0" width="440" bgcolor="white">
+<!--#include virtual="/incl/helpTop_incl3.shtml" -->
+<tr>
+	<td colspan="2">
+		<span id="intro_start_Txt"></span>
+	<!--#if expr="$AudioVideo = yes" -->
+		<span id="intro_add_audio_Txt"></span>
+	<!--#endif -->
+		<span id="intro_end_Txt"></span><br/><br/>
+	</td>
+</tr>
+
+<tr class="subTitle">
+	<td colspan="2">
+		<span id="rtp_mpeg4_ports1_Txt"></span>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="rtp_mpeg4_ports2_Txt"></span>
+	<!--#if expr="$AudioVideo = yes" -->
+		<span id="rtp_mpeg4_ports2_add_Txt"></span>
+	<!--#endif -->
+
+		<span id="rtp_mpeg4_end_Txt1"></span><br/><br/>
+		<span id="rtp_mpeg4_end_Txt2"></span>
+		<blockquote>
+			<span id="rtp_mpeg4_end_Txt3"></span><br/>
+			<span id="rtp_mpeg4_end_Txt4"></span>
+			<ul>
+				<li>
+					<span id="rtp_mpeg4_end_Txt5"></span>
+				</li>
+				<li>
+					<span id="rtp_mpeg4_end_Txt6"></span>
+				</li>
+			</ul>
+			<span id="rtp_mpeg4_end_Txt7"></span>
+		</blockquote>
+
+	<!--#if expr="$AudioVideo = yes" -->
+		<span id="rtp_mpeg4_ports2_note_audio_video_Txt1"></span><br/><br/>
+		<span id="rtp_mpeg4_ports2_note_audio_video_Txt2"></span><br/><br/>
+	<!--#else -->
+		<span id="rtp_mpeg4_ports2_note_Txt1"></span><br/><br/>
+	<!--#endif -->
+	</td>
+</tr>
+
+<tr class="subTitle">
+	<td colspan="2">
+		<span id="addresses_Multiast_Txt"></span>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+<!--#if expr="$AudioVideo = yes" -->
+		<span id="addresses_videoaudio_Txt"></span>
+<!--#else -->
+		<span id="addresses_no_audio_Txt"></span>
+<!--#endif -->
+		<span id="addresses_general_Txt"></span><br/><br/>
+<!--#if expr="$AudioVideo = yes" -->
+		<span id="ports_videoaudio_Txt1"></span>
+		<ul>
+			<li>
+				<span id="ports_videoaudio_Txt2"></span>
+			</li>
+			<li>
+				<span id="ports_videoaudio_Txt3"></span><br/>
+				<span id="ports_videoaudio_Txt4"></span>
+			</li>
+		</ul>
+<!--#else -->
+		<span id="ports_Txt"></span>
+<!--#endif -->
+		<blockquote>
+			<span id="notes_Txt1"></span><br/><br/>
+			<span id="notes_Txt2"></span>
+<!--#if expr="$AudioVideo = yes" -->
+			<span id="notes_audio_Txt"></span>
+<!--#else -->
+			<span id="notes_no_audio_Txt"></span>
+<!--#endif -->
+			<span id="notes_end_Txt"></span><br/><br/>
+			<span id="note3notes_Txt"></span>
+		</blockquote>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="tTL_Txt"></span><br/><br/>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="aM_video_Txt"></span><br/><br/>
+	</td>
+</tr>
+
+
+</table>
+<!--#include virtual="/incl/helpBottom_incl.shtml" -->
+</body>
+</html>

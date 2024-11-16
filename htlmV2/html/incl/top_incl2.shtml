@@ -1,0 +1,94 @@
+<!--#include virtual="/sm/sm.srv?action=get&group=Layout.PlainConfigEnabled,Layout.EnableBasicSetup" -->
+
+  <form name="UploadedFilesForm">
+  <!--#include virtual="/axis-cgi/viewer/local_list.cgi?hdgen=no" -->
+  </form>
+
+<a name="top"></a>
+<!--#if expr="$WizardFormAction != noAction" -->
+<form name="WizardForm" action="<!--#echo var="WizardFormAction" option="encoding:url" -->" method="POST" onSubmit="return false;">
+<!--#endif -->
+<table width="100%" cellspacing=0 cellpadding=0 border=0><tr><td align="center">
+<br>
+<table width=700 cellspacing=0 cellpadding=0 border=0>
+  <tr class="top-mainborder">
+    <td colspan=2><img src="/pics/line_corner_lt_5x5px.gif" width=5 height=5 border=0 alt=""></td>
+    <td colspan=5 background="/pics/line_t_100x5px.gif"><img src="/pics/line_t_100x5px.gif" width=1 height=5 border=0 alt=""></td>
+    <td colspan=2><img src="/pics/line_corner_rt_5x5px.gif" width=5 height=5 border=0 alt=""></td>
+  </tr>
+  <tr>
+    <td class="lineBg"><img src="/pics/blank.gif" width="1" border=0 alt=""></td>
+    <td><img src="/pics/blank.gif" width="4" height=1 border=0 alt=""></td>
+    <td colspan=5 valign="middle" align="left">
+      <table border=0 cellspacing=5 cellpadding=0 width="100%">
+        <tr>
+          <td width="10%" align="left" nowrap>
+  <script language="JavaScript" type="text/javascript">
+  <!--
+    if( typeof(document.UploadedFilesForm) != "undefined" )
+    for (i=0; i<document.UploadedFilesForm.length; i++) {
+      if (document.UploadedFilesForm.elements[i].value.indexOf("viewer/extraLogo_left.") != -1) {
+        document.write('<img src="/local/'+document.UploadedFilesForm.elements[i].value+'">&nbsp;');
+        break;
+      }
+    }
+  -->
+  </script>
+          <a href="<!--#echo var="root_BRAND_WEBURL" option="encoding:url" -->" target=_blank><img src="/pics/logo_70x29px.gif" width=70 height=29 border=0 alt="<!--#echo var="root_BRAND_BRAND" option="encoding:url" -->"></a>
+  <script language="JavaScript" type="text/javascript">
+  <!--
+    if( typeof(document.UploadedFilesForm) != "undefined" )
+    for (i=0; i<document.UploadedFilesForm.length; i++) {
+      if (document.UploadedFilesForm.elements[i].value.indexOf("viewer/extraLogo_right.") != -1) {
+        document.write('&nbsp;<img src="/local/'+document.UploadedFilesForm.elements[i].value+'">');
+        break;
+      }
+    }
+  -->
+  </script>
+        </td>
+
+          <td class="topTitle" nowrap width="70%" align="center" id="tincl_prodName"><!--#echo var="glob_prodName" option="encoding:html" --></td>
+
+          <td nowrap align="right">
+            <table border="0" cellspacing="5" cellpadding="0">
+              <tr>
+                <td nowrap><a href="/" class="linkInActive" target="_top" id="tincl_LViewTxt"><span id="ti2LViewTxt"></span></a></td>
+                <td>|</td>
+                <td nowrap><a href="<!--#if expr="$root_Layout_PlainConfigEnabled = yes" -->/admin/config.shtml<!--#else --><!--#if expr="$root_Layout_EnableBasicSetup = no" -->/operator/videostream.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" --><!--#else -->/operator/basic.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" --><!--#endif --><!--#endif -->" class="linkActive" id="tincl_SetTxt"><span id="ti2SetTxt"></span></a></td>
+                <td>|</td>
+                <td nowrap><a href="javascript:launch('/help/toc.shtml')" class="linkInActive" id="tincl_HelpTxt"><span id="ti2HelpTxt"></span></a></td>
+              </tr>
+            </table>
+            
+            <script language="JavaScript" type="text/javascript">
+            <!--
+            var langObjTopIncl2 = new Language("common", "top_incl2");
+            langObjTopIncl2.init(true, true);
+            -->
+            </script>
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td><img src="/pics/blank.gif" width="4" border=0 alt=""></td>	
+    <td class="lineBg"><img src="/pics/blank.gif" width=1 height=1 alt=""></td>
+  </tr>
+  <tr>
+    <td colspan=9 class="lineBg"><img src="/pics/blank.gif" width=1 height=1 border=0 alt=""></td>
+  </tr>
+  <tr>
+    <td class="lineBg"><img src="/pics/blank.gif" width=1 height=1 alt=""></td>
+    <td colspan=2 valign="top" align="left" class="topTitle">
+      <table cellpadding=0 cellspacing=0 border=0 width="100%">
+        <tr>
+          <td width=4 class="menuActive"></td>
+          <td valign="middle" align="left" width=169 class="menuActive" id="mainMenu" nowrap>
+            <!--#include virtual="/incl/adminMenu.shtml" -->
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td class="lineBg"><img src="/pics/blank.gif" width=1 height=5 alt=""></td>
+    <td valign="top"><img src="/pics/blank.gif" width=4 height=1 alt=""></td>
+    <td align="left" valign="top" colspan=2>

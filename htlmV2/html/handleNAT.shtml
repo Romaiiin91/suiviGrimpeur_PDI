@@ -1,0 +1,28 @@
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#include virtual="/incl/top_incl_popup.shtml" -->
+
+<!--#set var="querystr" val="action=$action$" -->
+<!--#if expr="_$port != _" -->
+  <!--#set var="querystr" val="$querystr$&port=$port$" -->
+<!--#endif -->
+<!--#if expr="_$router != _" -->
+  <!--#set var="querystr" val="$querystr$&router=$router$" -->
+<!--#endif -->
+
+<script language="JavaScript">
+<!--
+function closeWindow()
+{
+  opener.location = "/admin/advanced_tcpip.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->";
+  window.close();
+}
+//-->
+</script>
+
+</head>
+
+<frameset rows="*,0" border=0>
+  <frame name="Main" src="handleNATmsg.shtml?<!--#echo var="querystr" option="encoding:url" -->&id=<!--#echo var="ssi_request_id" option="encoding:html" -->">
+  <frame name="Temp" src="handleNATcgi.shtml?<!--#echo var="querystr" option="encoding:url" -->&id=<!--#echo var="ssi_request_id" option="encoding:html" -->" scrolling=no marginheight=0 marginwidth=0>
+</frameset>
+</html>

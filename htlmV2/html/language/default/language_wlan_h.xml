@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+	<wlan_h>
+		<pageTitle type="title" minor="0">Help/Wireless Settings</pageTitle>
+		<titleTxt type="msgAsText" minor="0">Wireless Settings</titleTxt>
+		<subTitleStatTxt type="text" minor="0">Status of Wireless Networks</subTitleStatTxt>
+		<list1Txt type="text" minor="0">This list is the result of a network scan. Access points with a disabled SSID Broadcast will not appear unless the Axis product is associated with it.</list1Txt>
+		<list2Txt type="text" minor="0">The network currently associated to is shown in blue. A network using unsupported security is shown in grey.</list2Txt>
+		<list3Txt type="text" minor="0">Click the &#x3C;b&#x3E;Refresh&#x3C;/b&#x3E; button to perform a new scan, which then provides the following information:</list3Txt>
+		<listSSIDTxt type="text" minor="0">&#x3C;b&#x3E;SSID&#x3C;/b&#x3E; - The name of a wireless network. If the same name occurs several times this means that several access points for that network were found. The product cannot be configured to only associate with one particular access point.</listSSIDTxt>
+		<listNetworkTypeTxt type="text" minor="0">&#x3C;b&#x3E;Network type&#x3C;/b&#x3E; - The type of network. This can be &#x3C;b&#x3E;Master&#x3C;/b&#x3E; (an access point) or &#x3C;b&#x3E;Ad-Hoc&#x3C;/b&#x3E;.</listNetworkTypeTxt>
+		<listEncTxt type="text" minor="0">&#x3C;b&#x3E;Security&#x3C;/b&#x3E; - Shows which type of security the network uses. See below for the types supported by the product.</listEncTxt>
+		<listChnTxt type="text" minor="0">&#x3C;b&#x3E;Channel&#x3C;/b&#x3E; - Shows the wireless channel currently in use.</listChnTxt>
+		<listQualTxt type="text" minor="0">&#x3C;b&#x3E;Signal strength&#x3C;/b&#x3E; - Shows the signal quality.</listQualTxt>
+		<listBtRTxt type="text" minor="0">&#x3C;b&#x3E;Bit rate&#x3C;/b&#x3E; - Shows the bit rate in Mbit/s. This can only be shown for the access point currently in use.</listBtRTxt>
+		<subTitleWSTxt type="text" minor="0">Wireless Settings</subTitleWSTxt>
+		<intro_Txt type="text" minor="0">These settings control how the Axis product interacts with the wireless network. Apart from identifying the wireless network, it is also possible to enable wireless encryption.</intro_Txt>
+		<congestion_control_Txt1 type="text" minor="0">&#x3C;b&#x3E;Enable Congestion control&#x3C;/b&#x3E; - Select this option to improve throughput on the wireless connection between the wireless camera  and access point in congested environments, for example where there are many available networks and where many devices are using the same access point.</congestion_control_Txt1>
+		<congestion_control_Txt2 type="text" minor="0">Congestion control uses a Request To Send/Clear To Send (RTS/CTS) handshake to reserve access to the wireless media before transmitting a packet. Using the handshake decreases throughput since it adds an overhead. In some situations however the overhead of the RTS/CTS handshake is lower than the overhead caused by collisions on the wireless media.</congestion_control_Txt2>
+		<congestion_control_Txt3 type="text" minor="0">Congestion control is disabled by default.</congestion_control_Txt3>
+		<pairing_button_Txt1 type="text" minor="0">&#x3C;b&#x3E;Enable WLAN pairing button&#x3C;/b&#x3E; - The WLAN pairing button is enabled in the camera by default. It allows the user to bond a wireless camera to an access point by pushing a button on both of the devices within a 120 seconds time window. During this time the devices will automatically discover each other and agree on a configuration.</pairing_button_Txt1>
+		<pairing_button_Txt2 type="text" minor="0">After a successful pairing the WLAN settings in the camera, set by the user, are overwritten.</pairing_button_Txt2>
+		<pairing_button_Txt3 type="text" minor="0">Clear this option to prevent unauthorized WLAN pairing.</pairing_button_Txt3>
+		<sSID_Txt1 type="text" minor="0">&#x3C;b&#x3E;SSID&#x3C;/b&#x3E; - This is the name of the wireless network that the product is configured for. The field accepts up to 32 characters. The name must be exactly the same as that used in the wireless access point, or the connection will not be established.</sSID_Txt1>
+		<sSID_Txt2 type="text" minor="0">Leaving this field blank means that the product will attempt to access the nearest open network.</sSID_Txt2>
+		<sSID_Txt3 type="text" minor="0">Note that SSID is sometimes written as ESSID.</sSID_Txt3>
+		<nettype_Txt1 type="text" minor="0">&#x3C;b&#x3E;Network Type&#x3C;/b&#x3E; - Select the type of wireless network to connect to. When using an access point, this should be set to &#x3C;b&#x3E;Master&#x3C;/b&#x3E;. To connect to other wireless devices, e.g. a laptop with a wireless connection, select &#x3C;b&#x3E;Ad-hoc&#x3C;/b&#x3E;.</nettype_Txt1>
+		<nettype_Txt2 type="text" minor="0">Note that when the network type is set to Ad-hoc, the only encryption method available will be WEP.</nettype_Txt2>
+		<security1_Txt type="text" minor="0">&#x3C;b&#x3E;Security&#x3C;/b&#x3E; - The product supports the security methods described below. All settings must also match the settings in the access point.</security1_Txt>
+		<security2_Txt type="text" minor="0">&#x3C;b&#x3E;Note that WPA is the stronger encryption method and is recommended.&#x3C;/b&#x3E;</security2_Txt>
+		<wPA_subTitle_Txt type="text" minor="0">WPA-/WPA2-PSK (WLAN Protected Access - Pre-Shared Key)</wPA_subTitle_Txt>
+		<wPA_Txt type="text" minor="0">In this method the product uses a pre-shared key (PSK) for key management, and uses TKIP or AES-CCMP as the cipher.</wPA_Txt>
+		<wPA2_Txt1 type="text" minor="0">In this method the product uses a pre-shared key (PSK) for key management, and uses TKIP as the cipher.</wPA2_Txt1>
+		<wPA2_Txt2 type="text" minor="0">The pre-shared key can be entered either as &#x3C;b&#x3E;Manual hex&#x3C;/b&#x3E;, as 64 hexadecimal (0-9, A-F) characters, or as a &#x3C;b&#x3E;Passphrase&#x3C;/b&#x3E;, using 8 to 63 ASCII characters. The longer the passphrase the more secure the key.</wPA2_Txt2>
+		<wPA_Enterprise_subTitle_Txt type="text" minor="0">WPA-/WPA2-Enterprise (WLAN Protected Access - Enterprise)</wPA_Enterprise_subTitle_Txt>
+		<wPAEnt_Txt type="text" minor="0">In this method the product uses EAP (Extensible Authentication Protocol) for authenticating with the network and key management, and uses TKIP or AES-CCMP as the cipher.</wPAEnt_Txt>
+		<wPAEnt_alt_Txt type="text" minor="0">In this method the product uses EAP (Extensible Authentication Protocol) for authenticating with the network and key management, and uses TKIP as the cipher.</wPAEnt_alt_Txt>
+		<wPAEnt_type1_Txt type="text" minor="0">&#x3C;b&#x3E;WPA-Enterprise Type&#x3C;/b&#x3E; - Select the type of client/server authentication being used by the access point. The product supports the EAP-TLS and EAP-PEAP/MSCHAPv2 methods.</wPAEnt_type1_Txt>
+		<wPAEnt_type2_Txt type="text" minor="0">&#x3C;b&#x3E;WPA-Enterprise Type&#x3C;/b&#x3E; - Select the type of client/server authentication being used by the access point. The product supports the EAP-TLS method.</wPAEnt_type2_Txt>
+		<wPAEnt_type3_Txt type="text" minor="0">&#x3C;b&#x3E;WPA-Enterprise Type&#x3C;/b&#x3E; - Select the type of client/server authentication being used by the access point. The product supports the EAP-PEAP/MSCHAPv2 method.</wPAEnt_type3_Txt>
+		<wPAEnt_EAPTLS_Txt1 type="text" minor="0">&#x3C;b&#x3E;EAP-TLS&#x3C;/b&#x3E; - The client and server authenticate each other using digital certificates provided by a Certification Authority. Note that to ensure successful certificate validation, time synchronization should be performed on all clients and servers prior to configuration.</wPAEnt_EAPTLS_Txt1>
+		<wPAEnt_EAPTLS_Txt2 type="text" minor="0">To gain access to the protected network, the product presents its certificate to the network access point. Access is granted if the certificate is approved.</wPAEnt_EAPTLS_Txt2>
+		<wPAEnt_EAP_PEAPMASCHAPv2_Txt1 type="text" minor="0">&#x3C;b&#x3E;EAP-PEAP/MSCHAPv2&#x3C;/b&#x3E; - The client authenticates the network using a digital certificate provided by a Certification Authority. The network authenticates the client using an identity and a password. Note that to ensure successful certificate validation, time synchronization should be performed on all clients and servers prior to configuration.</wPAEnt_EAP_PEAPMASCHAPv2_Txt1>
+		<wPAEnt_EAP_PEAPMASCHAPv2_Txt2 type="text" minor="0">To gain access to the protected network, the product presents its identity and password to the network access point. If these credentials are approved, the access point allows access on a preconfigured port.</wPAEnt_EAP_PEAPMASCHAPv2_Txt2>
+		<wPAEnt_EAPTLS_ident_Txt type="text" minor="0">&#x3C;b&#x3E;EAP-TLS - Identity&#x3C;/b&#x3E; - Enter the user identity associated with your certificate. A maximum of 32 characters can be used.</wPAEnt_EAPTLS_ident_Txt>
+		<wPAEnt_EAPTLS_privKeyPasswd_Txt type="text" minor="0">&#x3C;b&#x3E;EAP-TLS - Private key password&#x3C;/b&#x3E; - Enter the password (maximum 64 characters) for your user identity.</wPAEnt_EAPTLS_privKeyPasswd_Txt>
+		<wPAEnt_EAPPEAPMSCHAPV2_ident_Txt type="text" minor="0">&#x3C;b&#x3E;EAP-PEAP/MSCHAPv2 - Identity&#x3C;/b&#x3E; - Enter the user identity to present to the network. A maximum of 32 characters can be used.</wPAEnt_EAPPEAPMSCHAPV2_ident_Txt>
+		<wPAEnt_EAPPEAPMSCHAPV2_passwd_Txt type="text" minor="0">&#x3C;b&#x3E;EAP-PEAP/MSCHAPv2 - Password&#x3C;/b&#x3E; - Enter the password to present to the network. A maximum of 64 characters can be used.</wPAEnt_EAPPEAPMSCHAPV2_passwd_Txt>
+		<wPAEnt_EAPPEAPMSCHAPV2_version_Txt type="text" minor="0">&#x3C;b&#x3E;EAP-PEAP/MSCHAPv2 - Version&#x3C;/b&#x3E; - Select the PEAP version (0 or 1) as used in your access point.</wPAEnt_EAPPEAPMSCHAPV2_version_Txt>
+		<wPAEnt_EAPPEAPMSCHAPV2_label_Txt type="text" minor="0">&#x3C;b&#x3E;EAP-PEAP/MSCHAPv2 - Label&#x3C;/b&#x3E; - Select the PEAP label that your access point uses when using PEAP version 1. Select 1 to use 'client EAP encryption'. Select 2 to use 'client PEAP encryption'</wPAEnt_EAPPEAPMSCHAPV2_label_Txt>
+		<wPAEnt_EAPOL_Ver_Txt type="text" minor="0">&#x3C;b&#x3E;EAPOL Version&#x3C;/b&#x3E; - Select the EAPOL version (1 or 2) as used in your access point.</wPAEnt_EAPOL_Ver_Txt>
+		<wPAEnt_cert_subTitle_Txt type="text" minor="0">Certificates (for WPA-/WPA2-Enterprise)</wPAEnt_cert_subTitle_Txt>
+		<wPAEnt_certMgmt_Txt type="text" minor="1">&#x3C;b&#x3E;Certificate Management&#x3C;/b&#x3E; - Go to &#x3C;b&#x3E;Certificate Management&#x3C;/b&#x3E; to manage the certificates needed for the selected WPA-Enterprise method.</wPAEnt_certMgmt_Txt>
+		<wEP_subTitle_Txt type="text" minor="0">WEP (Wired Equivalent Privacy)</wEP_subTitle_Txt>
+		<wEP_authent_Txt type="text" minor="0">&#x3C;b&#x3E;Authentication&#x3C;/b&#x3E; - Select &#x3C;b&#x3E;Open&#x3C;/b&#x3E; or &#x3C;b&#x3E;Shared Key System Authentication,&#x3C;/b&#x3E; depending on the method used by your access point. Not all access points have this option, and they probably use Open System. Open System may also be called SSID Authentication.</wEP_authent_Txt>
+		<wEP_keylength_Txt1 type="text" minor="0">&#x3C;b&#x3E;Key length&#x3C;/b&#x3E; - This sets the length of the key used for the wireless encryption.</wEP_keylength_Txt1>
+		<wEP_keylength_Txt2 type="text" minor="0">Note that the encryption key length can sometimes be shown as 40/64 and 104/128.</wEP_keylength_Txt2>
+		<wEP_keytype_Txt type="text" minor="0">&#x3C;b&#x3E;Key Type&#x3C;/b&#x3E; - The key types available depend on the access point being used. The following options are available:</wEP_keytype_Txt>
+		<manTxt type="text" minor="0">&#x3C;b&#x3E;Manual&#x3C;/b&#x3E; - Allows you to manually enter the hex key.</manTxt>
+		<aSCITxt type="text" minor="0">&#x3C;b&#x3E;ASCII&#x3C;/b&#x3E; - In this method the string must be exactly 5 characters for 64-bit WEP and 13 characters for 128-bit WEP.</aSCITxt>
+		<passP2Txt1 type="text" minor="0">&#x3C;b&#x3E;Passphrase&#x3C;/b&#x3E; - The passphrase can contain up to 31 characters. In 64-bit WEP, the Passphrase generates 4 different keys. For 128-bit WEP, only 1 key is generated, which is then replicated for all 4 keys.</passP2Txt1>
+		<passP2Txt2 type="text" minor="0">Key generation is not standardized and can differ between brands. Check that the generated keys are identical to those in your access point - if not they must be entered manually.</passP2Txt2>
+		<wEP_active_Txt type="text" minor="0">&#x3C;b&#x3E;Active Transmit Key&#x3C;/b&#x3E; - When using WEP encryption, this selects which of the 4 keys the product uses when transmitting.</wEP_active_Txt>
+	</wlan_h>
+
+
+
+
+
+	<wlan_cert_h>
+		<pageTitle type="title" minor="0">Help/Certificate Setup</pageTitle>
+		<titleTxt type="msgAsText" minor="0">Certificate Setup</titleTxt>
+		<intro_helpTxt type="text" minor="0">The settings here enable the Axis product to access a network protected by &#x3C;b&#x3E;EAPOL (Extensible Authentication Protocol Over Lan)&#x3C;/b&#x3E;.</intro_helpTxt>
+		<auth_helpTxt type="text" minor="0">When using EAP-TLS, the client and server authenticate each other using digital certificates provided by a &#x3C;b&#x3E;Certification Authority&#x3C;/b&#x3E;.</auth_helpTxt>
+		<moreinfo_helpTxt1 type="text" minor="0">For more information see the product User's Manual. You may also need to contact your network administrator for information on certificates, user ID's and passwords.</moreinfo_helpTxt1>
+		<moreinfo_helpTxt2 type="text" minor="0">&#x3C;b&#x3E;Note:&#x3C;/b&#x3E;To ensure successful certificate validation, time synchronization should be performed on all clients and servers prior to configuration.</moreinfo_helpTxt2>
+		<subTitle_certificatesTLS_Txt type="text" minor="0">EAP-TLS</subTitle_certificatesTLS_Txt>
+		<subTitle_certificatesPEAP_Txt type="text" minor="0">EAP-PEAP/MSCHAPv2</subTitle_certificatesPEAP_Txt>
+		<ca_helpTxt type="text" minor="0">&#x3C;b&#x3E;CA Certificate&#x3C;/b&#x3E; - This certificate is created by the Certification Authority for the purpose of validating itself, so the product needs this certificate to check the server's identity. Provide the path to the certificate directly, or use the browse button to locate it. Then click the &#x3C;b&#x3E;Upload&#x3C;/b&#x3E; button. To remove a certificate, click the &#x3C;b&#x3E;Remove&#x3C;/b&#x3E; button.</ca_helpTxt>
+		<client_cert_helpTxt1 type="text" minor="0">&#x3C;b&#x3E;Client certificate/private key&#x3C;/b&#x3E; - The product must also authenticate itself, using a client certificate and a private key. Provide the path to the certificate in the first field, or use the &#x3C;b&#x3E;Browse&#x3C;/b&#x3E; button to locate it. Then click the &#x3C;b&#x3E;Upload&#x3C;/b&#x3E; button. To remove a certificate, click the &#x3C;b&#x3E;Remove&#x3C;/b&#x3E; button.</client_cert_helpTxt1>
+		<client_cert_helpTxt2 type="text" minor="0">Alternatively, it may be possible to upload the certificate and key in one combined file, (e.g. a PFX file or PEM file). Provide the path to the file, or use the &#x3C;b&#x3E;Browse&#x3C;/b&#x3E; button to locate it. Click &#x3C;b&#x3E;Upload&#x3C;/b&#x3E; to load the file. To remove a certificate and key, click the &#x3C;b&#x3E;Remove&#x3C;/b&#x3E; button.</client_cert_helpTxt2>
+	</wlan_cert_h>
+</language_xml>

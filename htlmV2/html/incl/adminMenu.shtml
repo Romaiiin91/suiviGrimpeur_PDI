@@ -1,0 +1,436 @@
+<!--#include virtual="/incl/nbr_to_camnbr.shtml" -->
+  <!--#set var="audionbr" val="0" -->
+
+
+<!--#include virtual="/sm/sm.srv?action=get&group=ImageSource,Serial,PTZ,Sersrvd.COM3.RS485Signal,AudioSource.A$audionbr$.SlopeFilterEnabled,AudioSource,Image.I0.SizeControl.MaxFrameSize,Layout.EnableBasicSetup,HTTPS.Port,System.BoaPort,System.BoaGroupPolicy" -->
+
+<!--#set var="panTiltEnabled" val="yes" -->
+<!--#include virtual="/sm/sm.srv?action=get&group=PTZ.Support.S$camnbr$.RelativeTilt,PTZ.Support.S$camnbr$.RelativePan,PTZ.Support.S$camnbr$.ContinuousTilt,PTZ.Support.S$camnbr$.ContinuousPan" -->
+
+<!--#if expr="$(root_PTZ_Support_S$camnbr$_RelativeTilt) != true" -->
+  <!--#if expr="$(root_PTZ_Support_S$camnbr$_RelativePan) != true" -->
+    <!--#if expr="$(root_PTZ_Support_S$camnbr$_ContinuousTilt) != true" -->
+      <!--#if expr="$(root_PTZ_Support_S$camnbr$_ContinuousPan) != true" -->
+        <!--#set var="panTiltEnabled" val="no" -->
+      <!--#endif -->
+    <!--#endif -->
+  <!--#endif -->
+<!--#endif -->
+
+  <!--#include virtual="/sm/sm.srv?action=get&group=Properties.LocalStorage.ContinuousRecording,Properties.LocalStorage.NbrOfContinuousRecordingProfiles" -->
+<!--#include virtual="/sm/sm.srv?action=get&group=PortManager,Properties.PTZ.DriverManagement" -->
+<!--#include virtual="/sm/sm.srv?action=getgroup&group=PTZ.PTZDriverStatuses" -->
+
+<!--#set var="defaultNbr" val="0" -->
+
+
+
+
+
+
+<script language="javascript" type="text/javascript">
+<!--
+<!--#if expr="$http_user_realms >< ¤Administrator¤" -->
+  var user_realm = 1;
+<!--#elif expr="$http_user_realms >< ¤Operator¤" -->
+  var user_realm = 2;
+<!--#else -->
+  var user_realm = 3;
+<!--#endif -->
+
+var grView = "<!--#echo var="root_System_BoaGroupPolicy_viewer" option="encoding:javascript" -->";
+var grOper = "<!--#echo var="root_System_BoaGroupPolicy_operator" option="encoding:javascript" -->";
+var grAdmin = "<!--#echo var="root_System_BoaGroupPolicy_admin" option="encoding:javascript" -->";
+var hostV = getHost(grView);
+var hostO = getHost(grOper);
+var hostA = getHost(grAdmin);
+
+function getMenu(arr, level)
+{
+  if (arr.length < 0)
+    return null;
+
+  var ulEl = document.createElement("UL");
+  var liEl = document.createElement("LI");
+
+  if (arr[6].length > 0) {
+    liEl.className = 'subMenuMarker'+(arr[4] ? 'A' : 'Ina' )+'ctive';
+  }
+
+  var aEl = document.createElement("A");
+  aEl.href = getUrl( arr );
+  aEl.innerHTML = arr[0];
+  aEl.className = (level == 0 ? 'menu' : 'subMenu') +  (arr[4] && arr[6].length == 0 ? 'In' : '') + 'Active';
+
+  if (arr[5] != null)
+    aEl.onclick= function(){ eval( arr[5]) };
+  aEl.target="_top";
+
+  liEl.appendChild( aEl );
+
+  var childEl;
+
+  if (arr[6].length > 0 && arr[4]) {
+    for (var i = 0; i < arr[6].length; i++) {
+      if (arr[6][i] && arr[6][i].length > 0) {
+        childEl = getMenu(arr[6][i], level+1);
+        if( childEl )
+        {
+          liEl.appendChild( childEl );
+        }
+      }
+    }
+  }
+
+  ulEl.appendChild( liEl );
+  return ulEl;
+}
+
+function getUrl( arr )
+{
+  var host = hostV;
+  if (user_realm == 1 || arr[3] == 1)
+    host = hostA;
+  else if (user_realm == 2 || arr[3] == 2)
+    host = hostO;
+
+  if( arr[1] == "" && arr[6].length > 0 )
+  {
+    return getUrl( arr[6][ 0 ] );
+  }
+
+  return host + arr[1] + '?' + arr[2] + "id=<!--#echo var="ssi_request_id" option="encoding:url" -->";
+}
+
+var langObjAdmMenu = new Language("common", "adminMenu");
+function writeMenu()
+{
+  langObjAdmMenu.init(false, true);
+  var elMenu = document.getElementById("mainMenu");
+  if( elMenu )
+  {
+    var el;
+    for (var i = 0; i < oMenu.length; i++) {
+      if ( oMenu[i].length <= 0)
+        continue;
+      el = getMenu(oMenu[i], 0);
+      if( el )
+      {
+        elMenu.appendChild( el );
+      }
+    }
+  }
+
+}
+
+
+function getHost(group) {
+  var httpPort = <!--#echo var="root_System_BoaPort" option="encoding:javascript" -->;
+  if( location.protocol == "http:" )
+  {
+    httpPort = (location.port > 0 ?':' + location.port : "");
+  }
+  else
+  {
+    httpPort = (httpPort == 80 ? "" : ":" + httpPort);
+  }
+
+  var httpsPort = <!--#echo var="root_HTTPS_Port" option="encoding:javascript" -->;
+  if (location.protocol == "https:")
+  {
+    httpsPort = (location.port > 0 ? ':' + location.port : "");
+  }
+  else
+  {
+    httpsPort = (httpsPort == 443 ? "" : ":" + httpsPort);
+  }
+
+  var preUrl;
+  if (group == "http")
+    preUrl = "http://" + getIPv6HostName(location.hostname) + httpPort;
+  else if (group == "https")
+    preUrl = "https://" + getIPv6HostName(location.hostname) + httpsPort;
+  else
+    preUrl = location.protocol + "//" + getIPv6HostName(location.hostname) + (location.protocol == "http:" ? httpPort : httpsPort);
+  return preUrl;
+}
+
+function getIPv6HostName(hostname)
+{
+  if (hostname.split(":").length > 1 && hostname.indexOf("[") < 0)
+    hostname = "[" + hostname + "]";
+  return hostname;
+}
+
+
+function getChannelName(nbr) {
+  var names = [];
+    names[0] = "<!--#echo var="root_ImageSource_I0_Name" option="encoding:javascript" -->";
+  var emptyName =(langObjAdmMenu.getText("emptyNameTxt")).replace(/\#NUMBER#/, ''+(nbr+1)+'');
+  return (names[nbr].length > 0 ? names[nbr] : emptyName).crop(13);
+}
+
+
+var bol = 0; //basic menu list numbering
+
+var oMenu =
+[
+
+<!--#if expr="$root_Layout_EnableBasicSetup != no" -->
+
+  [ langObjAdmMenu.getText("bSetTxt"), "/operator/basic.shtml", "", 2, <!--#if expr="$activeMenu = basic" -->true<!--#else -->false<!--#endif -->, null,
+    [
+      [langObjAdmMenu.getText("instrTxt"), "/operator/basic.shtml", "", 2, <!--#if expr="$activePage = basic" -->true<!--#else -->false<!--#endif -->, null, []],
+      [(++bol) + "  " + langObjAdmMenu.getText("usrTxt"), "/admin/users.shtml", "basic=yes&", 1, <!--#if expr="$activePage = users_basic" -->true<!--#else -->false<!--#endif -->, null, []],
+      [(++bol) + "  " + langObjAdmMenu.getText("tcpipTxt"), "/admin/tcpip.shtml", "basic=yes&", 1, <!--#if expr="$activePage = tcpip_basic" -->true<!--#else -->false<!--#endif -->, null, []],
+      [(++bol) + "  " + langObjAdmMenu.getText("daTiTxt"), "/admin/date.shtml", "basic=yes&", 1, <!--#if expr="$activePage = date_basic" -->true<!--#else -->false<!--#endif -->, null, []],
+      [(++bol) + "  " + langObjAdmMenu.getText("vidStreamTxt"), "/operator/videostream.shtml", "nbr=0&basic=yes&", 2, <!--#if expr="$activeMenu1 = basicImage" -->true<!--#else -->false<!--#endif -->, null,
+        [
+        ]
+      ],
+
+
+      []
+    ]
+  ],
+<!--#endif -->
+
+
+
+
+  [ langObjAdmMenu.getText("vidStrTxt"), "", "", 2, <!--#if expr="$activeMenu = videoImage" -->true<!--#else -->false<!--#endif -->, null,
+    [
+      [ langObjAdmMenu.getText("vidStreamTxt"), "/operator/videostream.shtml", "nbr=0&", 2, <!--#if expr="$activeMenu1 = videoImageStream" -->true<!--#else -->false<!--#endif -->, null,
+        [
+        ]
+      ],
+      [ langObjAdmMenu.getText("strProTxt"), "/operator/streamprofilelist.shtml", "", 2, <!--#if expr="$activePage = streamprofiles" -->true<!--#else -->false<!--#endif -->, null, []],
+        [ langObjAdmMenu.getText("camTxt"), "/operator/advanced.shtml", "nbr=0&", 2, <!--#if expr="$activePage = camera" -->true<!--#else -->false<!--#endif -->, null, []],
+
+
+        [langObjAdmMenu.getText("ovImTxt"), "/operator/overlay.shtml", "", 2, <!--#if expr="$activePage = overlay" -->true<!--#else -->false<!--#endif -->, null, []],
+        [langObjAdmMenu.getText("priMaTxt"), "/operator/privacy_mask.shtml", "", 2, <!--#if expr="$activePage = mask0" -->true<!--#else -->false<!--#endif -->, null, []],
+
+
+
+
+      []
+    ]
+  ],
+
+
+
+
+
+
+  [ langObjAdmMenu.getText("lViewConfTxt"), "", "", 2, <!--#if expr="$activeMenu = layout" -->true<!--#else -->false<!--#endif -->, null,
+    [
+      [ langObjAdmMenu.getText("layoutTxt"), "/operator/layout.shtml", "", 2, <!--#if expr="$activePage = layout" -->true<!--#else -->false<!--#endif -->, null, []],
+      []
+    ]
+  ],
+
+
+
+    <!--#set var="ptz" value="no" -->
+    <!--#set var="usePTZ" val="no" -->
+      <!--#if expr="$root_PTZ_ImageSource_I0_PTZEnabled != false" -->
+        <!--#set var="ptz" value="yes" -->
+        <!--#set var="usePTZ" val="yes" -->
+      <!--#endif -->
+
+
+<!--#if expr="$ptz = yes" -->
+    <!--#set var="menu_ptz_show_all" val="no" -->
+      <!--#set var="menu_ptzcam0" val="no" -->
+      <!--#if expr="$root_Image_I0_Enabled != no" -->
+      <!--#set var="menu_ptz_show_all_1" val="yes" -->
+      <!--#if expr="$root_Properties_PTZ_DriverManagement = yes" -->
+        <!--#if expr="$root_PTZ_PTZDriverStatuses_Driver1Status = 0" -->
+          <!--#set var="menu_ptz_show_all_1" val="no" -->
+        <!--#else -->
+          <!--#set var="menu_ptz_show_all" val="yes" -->
+        <!--#endif -->
+      <!--#else -->
+        <!--#set var="menu_ptz_show_all" val="yes" -->
+      <!--#endif -->
+      <!--#if expr="$menu_ptz_show_all_1 = yes" -->
+        <!--#set var="menu_ptzcam0" val="yes" -->
+      <!--#endif -->
+      <!--#endif -->
+
+
+[ langObjAdmMenu.getText("pTZConfTxt"), "", "", 2, <!--#if expr="$activeMenu = dome" -->true<!--#else -->false<!--#endif -->, null,
+  [
+
+      <!--#if expr="$menu_ptz_show_all_1 = yes" -->
+
+
+      <!--#if expr="$menu_ptzcam0 = yes" -->
+        [langObjAdmMenu.getText("presetPosTxt"), "/operator/ctl.shtml", "nbr=0&", 2, <!--#if expr="$activePage = ptz0" -->true<!--#else -->false<!--#endif -->, null, []],
+
+        [ langObjAdmMenu.getText("autTrConfTxt"), "", "", 2, <!--#if expr="$activeMenu1 = autotracking" -->true<!--#else -->false<!--#endif -->, null,
+          [
+            [ langObjAdmMenu.getText("configTxt"), "/operator/autoTracking.shtml", "", 2, <!--#if expr="$activePage = AuTrConf" -->true<!--#else -->false<!--#endif -->, null, []],
+            [ langObjAdmMenu.getText("auTrExAreaTxt"), "/operator/autoTracking_excludeAreas.shtml", "", 2, <!--#if expr="$activePage = AuTrExArea" -->true<!--#else -->false<!--#endif -->, null, []],
+            [ langObjAdmMenu.getText("auTrMaxLimTxt"), "/operator/autoTracking_maxLimits.shtml", "", 2, <!--#if expr="$activePage = AuTrMaxLim" -->true<!--#else -->false<!--#endif -->, null, []]
+          ]
+        ],
+          [ langObjAdmMenu.getText("gatekeeperTxt"), "/operator/ctl.shtml", "nbr=0&gatekeeper=yes&", 2, <!--#if expr="$activePage = gatekeeper" -->true<!--#else -->false<!--#endif -->, null, []],
+        [ langObjAdmMenu.getText("guaTouTxt"), "/operator/guardTour.shtml", "nbr=0&", 2, <!--#if expr="$activePage = guardTour0" -->true<!--#else -->false<!--#endif -->, null, []],
+        <!--#if expr="_$camnbr = _" --><!--#set var="camnbr" val="1" --><!--#endif -->
+        <!--#include virtual="/incl/setabsrel.shtml" -->
+        <!--#if expr="$UseRel != yes" -->
+        [ langObjAdmMenu.getText("osdiZonesTxt"), "/operator/osdi.shtml", "", 2, <!--#if expr="$activePage = osdi" -->true<!--#else -->false<!--#endif -->, null, []],
+        <!--#endif -->
+        [ langObjAdmMenu.getText("advImgTxt"), "", "", 1, <!--#if expr="$activeMenu2 = device0" -->true<!--#else -->false<!--#endif -->,  null,
+          [
+            <!--#if expr="$panTiltEnabled = yes" -->
+                  [ langObjAdmMenu.getText("limitsTxt"), "/admin/mechLimits.shtml", "", 1, <!--#if expr="$activePage = mechLimits" -->true<!--#else -->false<!--#endif -->, null, []],
+            <!--#endif -->
+            [ langObjAdmMenu.getText("ctrlPanTxt"), "/admin/panel_view.shtml", "nbr=0&", 1, <!--#if expr="$activePage = panel_view0" -->true<!--#else -->false<!--#endif -->, null, []],
+              <!--#if expr="$root_PTZ_Support_S1_LensOffset = true" -->
+            [ langObjAdmMenu.getText("calibrationTxt"), "/operator/calibration_frame.shtml", "nbr=0&", 2, <!--#if expr="$activePage = calibration0" -->true<!--#else -->false<!--#endif -->, null, []],
+              <!--#endif -->
+              <!--#if expr="$root_PTZ_Support_S1_OSDMenu = true" -->
+            [ langObjAdmMenu.getText("oSDMenTxt"), "/admin/osdctl.shtml", "nbr=0&", 1, <!--#if expr="$activePage = osdmenu0" -->true<!--#else -->false<!--#endif -->, null, []],
+              <!--#endif -->
+            []
+          ]
+        ],
+
+      <!--#endif --> //menu_ptzcam0 = yes
+
+      <!--#endif --> //menu_ptz_show_all_1 = yes
+
+        <!--#if expr="$menu_ptz_show_all = yes" -->
+        [ langObjAdmMenu.getText("conQueTxt"), "/operator/ptzQueue.shtml", "", 2, <!--#if expr="$activePage = ptzQueue" -->true<!--#else -->false<!--#endif -->, null, []],
+        <!--#endif -->
+    []
+  ]
+],
+
+
+<!--#endif --> // $ptz = yes
+
+
+
+[langObjAdmMenu.getText("detectorsTxt"), "", "", null, <!--#if expr="$activeMenu = detectors" -->true<!--#else -->false<!--#endif -->, null,
+  [
+      [ langObjAdmMenu.getText("moDeTxt"), "/operator/motionDetection.shtml", "nbr=0&", 2, <!--#if expr="$activePage = motiond0" -->true<!--#else -->false<!--#endif -->, null, []],
+    
+
+
+
+    []
+  ]
+],
+
+[langObjAdmMenu.getText("appsTxt"), "", "", 1, <!--#if expr="$activeMenu = apps" -->true<!--#else -->false<!--#endif -->, null,
+  [
+    [ langObjAdmMenu.getText("overviewTxt"), "/admin/devtools.shtml", "", 1, <!--#if expr="$activePage = packages" -->true<!--#else -->false<!--#endif -->, null, [] ],
+    <!--#if expr="$activeMenu = apps" -->
+      <!--#exec cmd="/usr/html/bin/devtools.sh menulist" -->
+    <!--#endif -->
+  ]
+],
+
+[langObjAdmMenu.getText("eventsTxt"), "", "", 2, <!--#if expr="$activeMenu = event" -->true<!--#else -->false<!--#endif -->, null,
+  [
+    [ langObjAdmMenu.getText("evActRulesTxt"), "/operator/action_rules.shtml", "", 2, <!--#if expr="$activePage = actionRules" -->true<!--#else -->false<!--#endif -->, null, []],
+    [ langObjAdmMenu.getText("evRecipTxt"), "/operator/recipients.shtml", "", 2, <!--#if expr="$activePage = recipients" -->true<!--#else -->false<!--#endif -->, null, []],
+    [ langObjAdmMenu.getText("evSchedTxt"), "/operator/schedules.shtml", "", 2, <!--#if expr="$activePage = schedules" -->true<!--#else -->false<!--#endif -->, null, []],
+    [ langObjAdmMenu.getText("evRecurTxt"), "/operator/recurrences.shtml", "", 2, <!--#if expr="$activePage = recurrences" -->true<!--#else -->false<!--#endif -->, null, []],
+    []
+  ]
+],
+
+
+<!--#if expr="$root_Properties_LocalStorage_ContinuousRecording = yes" -->
+[ langObjAdmMenu.getText("recordingsTxt"), "", "", 2, <!--#if expr="$activeMenu = recordings" -->true<!--#else -->false<!--#endif -->, null,
+  [
+    [ langObjAdmMenu.getText("recLSLstTxt"), "/operator/recList.shtml", "", 2, <!--#if expr="$activePage = recordingList" -->true<!--#else -->false<!--#endif -->, null, []]
+  <!--#if expr="$root_Properties_LocalStorage_NbrOfContinuousRecordingProfiles != 0" -->
+    ,[ langObjAdmMenu.getText("conRecTxt"), "/operator/continuously.shtml", "", 2, <!--#if expr="$activePage = continuouslyRec" -->true<!--#else -->false<!--#endif -->, null, []]
+  <!--#endif -->
+  ]
+],
+<!--#else -->
+[ langObjAdmMenu.getText("recLstTxt"), "/operator/recList.shtml", "", 2, <!--#if expr="$activeMenu = recordingList" -->true<!--#else -->false<!--#endif -->, null, []],
+<!--#endif -->
+
+[ langObjAdmMenu.getText("languageTxt"), "/admin/language.shtml", "", 1, <!--#if expr="$activeMenu = language" -->true<!--#else -->false<!--#endif -->, null, []],
+
+
+[ langObjAdmMenu.getText("syOptTxt"), "", "", 1, <!--#if expr="$activeMenu = system" -->true<!--#else -->false<!--#endif -->, null,
+  [
+    [ langObjAdmMenu.getText("secTxt"), "", "", 1, <!--#if expr="$activeMenu1 = security" -->true<!--#else -->false<!--#endif -->, null,
+      [
+        [langObjAdmMenu.getText("usrTxt"), "/admin/users.shtml", "", 1, <!--#if expr="$activePage = users" -->true<!--#else -->false<!--#endif -->, null, []],
+        [ langObjAdmMenu.getText("onvifTxt"), "/admin/onvif.shtml", "", 1, <!--#if expr="$activePage = onvif" -->true<!--#else -->false<!--#endif -->, null, []],
+        [ langObjAdmMenu.getText("ipAdrFTxt"), "/admin/restrictIP.shtml", "", 1, <!--#if expr="$activePage = restrictIP" -->true<!--#else -->false<!--#endif -->, null, []],
+        [ langObjAdmMenu.getText("httpsTxt"), "/admin/https.shtml", "", 1, <!--#if expr="$activePage = https" -->true<!--#else -->false<!--#endif -->, null, []],
+        [ langObjAdmMenu.getText("ieee8021xTxt"), "/admin/8021x.shtml", "", 1, <!--#if expr="$activePage = 8021x" -->true<!--#else -->false<!--#endif -->, null, []],
+    
+        [ langObjAdmMenu.getText("certificatesTxt"), "/admin/certificates.shtml", "", 1, <!--#if expr="$activePage = certificates" -->true<!--#else -->false<!--#endif -->, null, []],
+    
+        []
+      ]
+    ],
+
+    [ langObjAdmMenu.getText("daTiTxt"), "/admin/date.shtml", "", 1, <!--#if expr="$activePage = date" -->true<!--#else -->false<!--#endif -->, null, []],
+
+    [ langObjAdmMenu.getText("netTxt"), "", "", 1, <!--#if expr="$activeMenu1 = network" -->true<!--#else -->false<!--#endif -->, null,
+      [
+        [ langObjAdmMenu.getText("tcpipTxt"), "", "", 1, <!--#if expr="$activeMenu2 = tcpip" -->true<!--#else -->false<!--#endif -->, null,
+          [
+            [ langObjAdmMenu.getText("basTxt"), "/admin/tcpip.shtml", "", 1, <!--#if expr="$activePage = tcpip" -->true<!--#else -->false<!--#endif -->, null, []],
+            [ langObjAdmMenu.getText("advImgTxt"), "/admin/advanced_tcpip.shtml", "", 1, <!--#if expr="$activePage = advtcpip" -->true<!--#else -->false<!--#endif -->, null, []]
+          ]
+        ],
+
+        [ langObjAdmMenu.getText("socTxt"), "/admin/socks.shtml", "", 1, <!--#if expr="$activePage = socks" -->true<!--#else -->false<!--#endif -->, null, []],
+        [ langObjAdmMenu.getText("qosTxt"), "/admin/qos.shtml", "", 1, <!--#if expr="$activePage = qos" -->true<!--#else -->false<!--#endif -->, null, []],
+        [ langObjAdmMenu.getText("snmpTxt"), "/admin/snmp.shtml", "", 1, <!--#if expr="$activePage = snmp" -->true<!--#else -->false<!--#endif -->, null, []],
+        [ langObjAdmMenu.getText("upNpTxt"), "/admin/UPnP.shtml", "", 1, <!--#if expr="$activePage = upnp" -->true<!--#else -->false<!--#endif -->, null, []],
+        [ langObjAdmMenu.getText("rtpTxt"), "/admin/rtp.shtml", "", 1, <!--#if expr="$activePage = rtp" -->true<!--#else -->false<!--#endif -->, null, []],
+        [ langObjAdmMenu.getText("bonjourTxt"), "/admin/bonjour.shtml", "", 1, <!--#if expr="$activePage = bonjour" -->true<!--#else -->false<!--#endif -->, null, []],
+        []
+      ]
+    ],
+
+      [ langObjAdmMenu.getText("storageTxt"), "", "", 1, <!--#if expr="$activeMenu1 = storage" -->true<!--#else -->false<!--#endif -->, null,
+        [
+          [ langObjAdmMenu.getText("overviewTxt"), "/admin/storageList.shtml", "", 1, <!--#if expr="$activePage = storagelist" -->true<!--#else -->false<!--#endif -->, null, []],
+          []
+        ]
+      ],
+
+
+    [ langObjAdmMenu.getText("mainTxt"), "/admin/maintenance.shtml", "", 1, <!--#if expr="$activePage = maintenance" -->true<!--#else -->false<!--#endif -->, null, []],
+    [ langObjAdmMenu.getText("supTxt"), "", "", 1, <!--#if expr="$activeMenu1 = support" -->true<!--#else -->false<!--#endif -->, null,
+      [
+        [ langObjAdmMenu.getText("supOvTxt"), "/admin/supportOverview.shtml", "", 1, <!--#if expr="$activePage = supportOverview" -->true<!--#else -->false<!--#endif -->, null, []],
+        [ langObjAdmMenu.getText("sysOveTxt"), "/admin/overview.shtml", "", 1, <!--#if expr="$activePage = overview" -->true<!--#else -->false<!--#endif -->, "openPopUp('/admin/collectingData.shtml', 'Data', 300, 130)", []],
+        [ langObjAdmMenu.getText("loRepTxt"), "", "", 1, <!--#if expr="$activeMenu2 = logsReports" -->true<!--#else -->false<!--#endif -->, null,
+          [
+            [ langObjAdmMenu.getText("infoTxt"), "/admin/logs.shtml", "", 1, <!--#if expr="$activePage = logs" -->true<!--#else -->false<!--#endif -->, null, []]
+          ]
+        ]
+      ]
+    ],
+    [ langObjAdmMenu.getText("advImgTxt"), "", "", 1, <!--#if expr="$activeMenu1 = advanced" -->true<!--#else -->false<!--#endif -->, null,
+      [
+        [ langObjAdmMenu.getText("scrTxt"), "/admin/scripting.shtml", "", 1, <!--#if expr="$activePage = scripting" -->true<!--#else -->false<!--#endif -->, null, []],
+        [ langObjAdmMenu.getText("filUpTxt"), "/admin/fileUpload.shtml", "", 1, <!--#if expr="$activePage = fileUpload" -->true<!--#else -->false<!--#endif -->, null, []],
+        [ langObjAdmMenu.getText("plConfTxt"), "/admin/config.shtml", "", 1, <!--#if expr="$activePage = config" -->true<!--#else -->false<!--#endif -->, null, []]
+      ]
+    ]
+  ]
+],
+
+[ langObjAdmMenu.getText("abtTxt"), "/admin/about.shtml", "", 1, <!--#if expr="$activeMenu = about" -->true<!--#else -->false<!--#endif -->, null, []]
+];
+writeMenu();
+//-->
+</script>

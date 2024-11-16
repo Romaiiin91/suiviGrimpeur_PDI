@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+	<socks_h>
+		<pageTitle type="title" minor="0">Help/SOCKS Settings</pageTitle>
+		<titleTxt type="msgAsText" minor="0">SOCKS Settings</titleTxt>
+		<help1Txt1 type="text" minor="0">The Axis product can be configured to use a &#x3C;b&#x3E;SOCKS&#x3C;/b&#x3E; server to reach networks on the other side of a firewall/proxy server. This functionality is useful if the product is located on a local network behind a firewall, but notifications, uploads, alarms, etc., need to be sent to a destination outside the local network (e.g. to the Internet).</help1Txt1>
+		<help1Txt2 type="text" minor="0">The SOCKS server handles requests from clients inside the company firewall and either allows or rejects connection requests, based on the requested destination or user identification. Once the connection has been approved and set up, it will then continue, using a standard protocol, for example, HTTP.</help1Txt2>
+		<subTitle1Txt type="text" minor="0">SOCKS Settings</subTitle1Txt>
+		<help4Txt type="text" minor="0">&#x3C;b&#x3E;Enable SOCKS&#x3C;/b&#x3E; - This must be checked to use the SOCKS protocol.</help4Txt>
+		<help5Txt type="text" minor="0">&#x3C;b&#x3E;Server&#x3C;/b&#x3E; - Enter the host name or IP address of the server providing the SOCKS service. If using a host name, a DNS server must be specified in the</help5Txt>
+		<help5aTxt type="text" minor="0">Network - Advanced TCP/IP Settings</help5aTxt>
+		<help5bTxt type="text" minor="0">.</help5bTxt>
+		<help6Txt type="text" minor="0">&#x3C;b&#x3E;Server port&#x3C;/b&#x3E; - Enter the TCP port number used by the SOCKS server. This is usually 1080.</help6Txt>
+		<help7Txt type="text" minor="0">&#x3C;b&#x3E;Server type&#x3C;/b&#x3E; - Select the type of SOCKS server. Version 5 supports a number of authentication functions not supported by version 4.</help7Txt>
+		<help8Txt1 type="text" minor="0">&#x3C;b&#x3E;Local networks&#x3C;/b&#x3E; - The networks entered here are those that are not required to go via the SOCKS server. The default values are the standard local IP address series.</help8Txt1>
+		<help8Txt2 type="text" minor="0">Local networks are always entered in the format IP-address/subnet-mask, e.g. 192.168.0.0/255.255.255.0</help8Txt2>
+		<help9Txt type="text" minor="0">&#x3C;b&#x3E;User name&#x3C;/b&#x3E; - If using user authentication on a SOCKS5 server, enter the user name here.</help9Txt>
+		<help10Txt type="text" minor="0">&#x3C;b&#x3E;Password&#x3C;/b&#x3E; - Enter the password associated with the user name above. Note that the password is not encrypted at any point, either in the unit or when transmitted to the SOCKS server.</help10Txt>
+		<help11Txt type="text" minor="0">After making these settings, click &#x3C;b&#x3E;Save&#x3C;/b&#x3E;.</help11Txt>
+		<reboot_deviceNote_Txt type="text" minor="0">&#x3C;b&#x3E;Note&#x3C;/b&#x3E;: The Axis product must be restarted after enabling SOCKS.</reboot_deviceNote_Txt>
+	</socks_h>
+</language_xml>

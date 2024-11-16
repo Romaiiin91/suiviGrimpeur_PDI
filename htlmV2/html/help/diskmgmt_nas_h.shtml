@@ -1,0 +1,100 @@
+<!--#set var="backButton" val="yes" -->
+<!--#set var="forwardButton" val="yes" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<script language="JavaScript">
+<!--
+var langObjDMDMN = new Language("diskManagement_h", "diskmgmt_nas_h");
+
+function globalLanguageVars()
+{
+	document.getElementById("titleId").innerHTML = langObjDMDMN.getText("titleTxt");
+}
+// -->
+</script>
+
+</head>
+<body onload="langObjDMDMN.init()">
+<!--#include virtual="/incl/helpTop_incl2.shtml" -->
+<table class="alternateRows" border="0" cellpadding="3" cellspacing="0" width="440" bgcolor="white">
+<!--#include virtual="/incl/helpTop_incl3.shtml" -->
+<tr>
+	<td colspan="2">
+		<span id="introTxt"></span>
+		<ul>
+			<li>
+				<span id="introTxt_links1"></span>
+			</li>
+			<li>
+				<span id="introTxt_links2"></span>
+			</li>
+		</ul>
+	</td>
+</tr>
+
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="subTitle_StDev_Txt"></span>
+		</div>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="nasTxt1"></span><br/><br/>
+		<span id="nasTxt2"></span><br/><br/>
+		<span id="nasTxt3"></span><br/><br/>
+		<span id="nasTxt4"></span><br/><br/>
+		<span id="nasTxt5"></span>
+		<ul>
+			<li>
+				<span id="nasTxt6"></span>
+			</li>
+			<li>
+				<span id="nasTxt7"></span>
+			</li>
+			<li>
+				<span id="nasTxt8"></span>
+			</li>
+			<li>
+				<span id="nasTxt9"></span>
+			</li>
+		</ul>
+		<span id="nasTxt10"></span><br/><br/>
+	</td>
+</tr>
+
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="subTitle_StorageToolTxt"></span>
+		</div>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="buttonTxt1"></span><br/><br/>
+		<span id="buttonTxt2"></span><br/><br/>
+	</td>
+</tr>
+
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="subTitle_recSet_Txt"></span>
+		</div>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="recSet_Txt1"></span><br/><br/>
+		<span id="recSet_Txt2"></span><br/><br/>
+	</td>
+</tr>
+</table>
+<!--#include virtual="/incl/helpBottom_incl.shtml" -->
+</body>
+</html>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+  <captureMode>
+    <pageTitle type="title" minor="0">Capture Mode</pageTitle>
+    <reconfigDPTZTxt type="msgAsText" minor="0">Reconfiguring, please wait...</reconfigDPTZTxt>
+    <okBtnStatTxt type="msgAsText" minor="0">Save capture mode.</okBtnStatTxt>
+    <confCapModeTxt type="text" minor="0">Configure capture mode</confCapModeTxt>
+    <capModeTxt type="text" minor="0">Capture Mode:</capModeTxt>
+    <okBtn type="button" minor="0" buttonid="capMod_okBtn">OK</okBtn>
+    <infoTxt type="text" minor="0">Capture mode defines how the image data will be taken with a priority given to either resolution or frame rate.&#x3C;br&#x3E;&#x3C;br&#x3E;Note: The Capture mode is intended to be set the first time the camera is configured. If changed later, some settings will be either removed or reset.</infoTxt>
+    <infoAltTxt type="text" minor="0">Select capture mode with respect to the power line frequency (50 Hz or 60 Hz) used at the location of the camera. This will reduce image flicker in fluorescent environments.&#x3C;br&#x3E;&#x3C;br&#x3E;Note: The Capture mode is intended to be set the first time the camera is configured. If changed later, some settings will be either removed or reset.</infoAltTxt>
+  </captureMode>
+</language_xml>

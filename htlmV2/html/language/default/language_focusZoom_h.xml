@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+	<focusZoom_h>
+		<pageTitle type="title" minor="0">Help/Focus &#x26; Zoom</pageTitle>
+		<titleTxt type="msgAsText" minor="0">Focus &#x26; Zoom</titleTxt>
+		<subTitlefocusZoomTxt type="text" minor="0">Focus &#x26; Zoom</subTitlefocusZoomTxt>
+		<teleLimit_Txt type="text" minor="0">&#x3C;b&#x3E;Zoom tele limit&#x3C;/b&#x3E; - Select a value from the drop-down list to limit the camera's maximum zoom level. Use the &#x3C;b&#x3E;Go to&#x3C;/b&#x3E; button to check the selected limit. The zoom limits are represented by two values. The first is the total zoom limit while the value in the parenthesis followed by a D, is the amount of the total limit that is digital.</teleLimit_Txt>
+		<autoFocus_Txt type="text" minor="0">&#x3C;b&#x3E;Auto focus&#x3C;/b&#x3E; - Check this box to enable the camera's auto focus. This setting is enabled by default.</autoFocus_Txt>
+		<focusNearLimit_Txt type="text" minor="0">&#x3C;b&#x3E;Focus near limit&#x3C;/b&#x3E; - The near focus limit can be set to avoid focusing on objects too close to the camera.</focusNearLimit_Txt>
+		<focOptZoomMonitor_Txt type="text" minor="0">To set Focus &#x26; Zoom when you have selected &#x3C;b&#x3E;Optical zoom for monitoring&#x3C;/b&#x3E;:</focOptZoomMonitor_Txt>
+		<focOptZoomMonitor2_Txt type="text" minor="0">Go to &#x3C;b&#x3E;PTZ > Preset Positions&#x3C;/b&#x3E; and follow the instructions to set the focus. In order to be able to retain this focus position after restarting the camera, enter a name for this preset in the &#x3C;b&#x3E;Current position&#x3C;/b&#x3E; field and select the Use current position as Home option.</focOptZoomMonitor2_Txt>
+		<focOptZoomMonitor3_Txt type="text" minor="0">If you re-calibrate the optics while in this Optical zoom for monitoring mode, this preset has to be re-selected from the Available positions drop down list (PTZ > Preset Positions).</focOptZoomMonitor3_Txt>
+	</focusZoom_h>
+</language_xml>
+

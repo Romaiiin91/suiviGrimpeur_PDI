@@ -1,0 +1,506 @@
+<!--#if expr="$type$ = self" -->
+  <!--#set var="helpURL" val="javascript:launch('/help/certificates_create_selfsigned_h.shtml')" -->
+<!--#else -->
+  <!--#set var="helpURL" val="javascript:launch('/help/certificates_create_request_h.shtml')" -->
+<!--#endif -->
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#include virtual="/incl/top_incl_popup.shtml" -->
+
+<script src="/incl/soapclient.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->" language="javascript" type="text/javascript"></script>
+
+<!--#include virtual="/incl/wait.shtml" -->
+
+<script language="JavaScript" type="text/javascript">
+  <!--
+  
+  var langObjCertCreate = new Language("certificates", "certificates_create");
+  
+  //Web Service
+  var onvifWsdlUrl = "/wsdl/onvif/devicemgmt.wsdl";
+  var vapixWsdlUrl = "/wsdl/vapix/CertificateService.wsdl";
+
+  var faultArr = new Array();
+<!--#if expr="$type$ = self" -->
+  faultArr["acertificates:CertificateIdInUseFault"] = langObjCertCreate.getText("certIdInUseAlrt");
+  faultArr["acertificates:MaxNumberOfCertificatesFault"] = langObjCertCreate.getText("certMaxNbrAlrt");
+  faultArr["acertificates:KeyPairGenerationFault"] = langObjCertCreate.getText("certKeyPairAlrt");
+  faultArr["acertificates:CertificateDateFault"] = langObjCertCreate.getText("certInvalDateAlrt");
+<!--#elif expr="$type$ = req" -->
+  faultArr["acertificates:UnknownCertificateIdFault"] = langObjCertCreate.getText("certUnknownErrAlrt");
+  faultArr["acertificates:Pkcs10GenerationFault"] = langObjCertCreate.getText("certPkcs10GenAlrt");
+<!--#endif -->
+
+  
+  
+    function init()
+    {
+      var certId = "<!--#echo var="certId" option="encoding:html" -->";
+      
+      if(certId != "")
+      {
+        document.getElementById("certId").value = "<!--#echo var="certId" option="encoding:html" -->";
+        
+      <!--#if expr="$type$ = req" -->
+        document.getElementById("certId").disabled = true;
+        setCertInformation();
+      <!--#endif -->
+      }
+      else
+      {
+        var d = new Date();
+        d.setFullYear(d.getFullYear()+1);
+        
+        if(d.getMonth() == 1 && d.getDate() == 28)
+        {
+          d.setMonth(2);
+          d.setDate(1);
+        }
+        
+        document.getElementById("certValid").value = dateToString( d, true );
+      
+        document.getElementById("certCommon").value = location.hostname;
+      }
+    }
+    
+    function setCertInformation(responseObj)
+    {
+      if(responseObj == null)
+      {
+        var params = new SOAPClientParameters();
+        var nameSpaces = getNameSpaces("onvif");
+        var now = new Date();
+        var timestamp = "?timestamp="+now.getTime();
+        
+        var url = "/vapix/services"+timestamp;
+        var method = "tds:GetCertificateInformation";
+
+        params.add( "CertificateID", "<!--#echo var="certId" option="encoding:html" -->" );
+        SOAPClient.invoke( onvifWsdlUrl, url, nameSpaces, method, params, true, setCertInformation );
+      }
+      else
+      {
+        if(responseObj.name != "Error")
+        {
+          var certObj = new Object();
+          var certInfo = responseObj.CertificateInformation;
+          var issuerDN = certInfo.IssuerDN;
+          var findArr = new Array("C=", "ST=", "L=", "O=", "OU=", "CN=");
+          
+          for(var i=0; i < findArr.length; i++)
+          {
+            var index = issuerDN.indexOf( findArr[i] );
+            var commaIndex = issuerDN.indexOf(",", index);
+            
+            if(commaIndex == -1)
+              commaIndex = issuerDN.length;
+            
+            var res = issuerDN.substring( (index+findArr[i].length) , commaIndex);
+            
+            if(i==0)
+              certObj.c = res;
+            else if(i==1)
+              certObj.st = res;
+            else if(i==2)
+              certObj.l = res;
+            else if(i==3)
+              certObj.o = res;
+            else if(i==4)
+              certObj.ou = res;
+            else if(i==5)
+              certObj.cn = res;
+          }
+          
+          document.getElementById("certCountry").value = certObj.c;
+          document.getElementById("certProvince").value = certObj.st;
+          document.getElementById("certLocality").value = certObj.l;
+          document.getElementById("certOrg").value = certObj.o;
+          document.getElementById("certOrgUnit").value = certObj.ou;
+          document.getElementById("certCommon").value = certObj.cn;
+        }
+        else
+          alert( langObjCertCreate.getText("errFetchCertInfoAlert") );
+      }
+    }
+    
+    function getNameSpaces( type )
+    {
+      var nsArray = new SOAPClientNS()
+      if(type == "onvif")
+      {
+        nsArray.add("tt", "http://www.onvif.org/ver10/schema" );
+        nsArray.add("tds", "http://www.onvif.org/ver10/device/wsdl" );
+        nsArray.add("tev", "http://www.onvif.org/ver10/event/wsdl" );
+        nsArray.add("ter", "http://www.onvif.org/ver10/error" );
+        nsArray.add("wsnt", "http://docs.oasis-open.org/wsn/b-2" );
+      }
+      else if(type == "vapix")
+      {
+        nsArray.add("acertificates", "http://www.axis.com/vapix/ws/certificates" );
+        nsArray.add("acert", "http://www.axis.com/vapix/ws/cert" );
+      }
+      return nsArray;
+    }
+    
+    function saveData()
+    {
+      if( validateInput() )
+      {      
+        var params = new SOAPClientParameters();
+        var nameSpaces = getNameSpaces("vapix");
+    
+        var now = new Date();
+        var timestamp = "?timestamp="+now.getTime();
+        
+        var url = "/vapix/services"+timestamp;
+      
+      <!--#if expr="$type$ = self" -->
+        var msg = langObjCertCreate.getText("loadingTxt");
+        delayWaitTimer = window.setTimeout( 'showWaitMsg( "' + msg + '" )', 1000 );
+      
+        var method = "acertificates:CreateCertificate2";
+        
+        params.add("acertificates:Id", document.getElementById("certId").value );
+        
+        var subjObj = new Array();
+        subjObj["acert:C"] = document.getElementById("certCountry").value;
+        subjObj["acert:ST"] = document.getElementById("certProvince").value;
+        subjObj["acert:L"] = document.getElementById("certLocality").value;
+        subjObj["acert:O"] = document.getElementById("certOrg").value;
+        subjObj["acert:OU"] = document.getElementById("certOrgUnit").value;
+        subjObj["acert:CN"] = document.getElementById("certCommon").value;
+        
+        params.add("acertificates:Subject", subjObj);
+        params.add("acertificates:ValidNotBefore", dateToString( new Date() ) );
+        params.add("acertificates:ValidNotAfter", document.getElementById("certValid").value+"T00:00:00" );
+        
+        SOAPClient.invoke( vapixWsdlUrl, url, nameSpaces, method, params, true, outputCertResponse );
+      <!--#elif expr="$type$ = req" -->
+        var method = "acertificates:GetPkcs10Request2";
+        
+        params.add("acertificates:Id", document.getElementById("certId").value );
+        
+        var subjObj = new Array();
+        subjObj["acert:C"] = document.getElementById("certCountry").value;
+        subjObj["acert:ST"] = document.getElementById("certProvince").value;
+        subjObj["acert:L"] = document.getElementById("certLocality").value;
+        subjObj["acert:O"] = document.getElementById("certOrg").value;
+        subjObj["acert:OU"] = document.getElementById("certOrgUnit").value;
+        subjObj["acert:CN"] = document.getElementById("certCommon").value;
+        
+        params.add("acertificates:Subject", subjObj);
+        
+        SOAPClient.invoke( vapixWsdlUrl, url, nameSpaces, method, params, true, outputReqResponse );
+      <!--#endif -->
+      }
+    }
+    
+    function dateToString(date, noTime)
+    {
+      var date_arr = new Array();
+      date_arr[0] = date.getFullYear();
+      date_arr[1] = date.getMonth()+1;
+      date_arr[2] = date.getDate();
+      date_arr[3] = date.getHours();
+      date_arr[4] = date.getMinutes();
+      date_arr[5] = date.getSeconds();
+      
+      for(var i=1; i < date_arr.length; i++)
+      {
+        if(date_arr[i] <= 9)
+          date_arr[i] = "0"+date_arr[i];
+      }
+      
+      date_str = date_arr[0]+"-"+date_arr[1]+"-"+date_arr[2];
+      if(!noTime)
+        date_str += "T"+date_arr[3]+":"+date_arr[4]+":"+date_arr[5];
+      
+      return date_str;
+    }
+    
+    function validateInput()
+    {
+      //ID (is required, shall not be empty)
+      var certificateID = document.getElementById("certId");
+      if(certificateID.value == "")
+      {
+        alert( langObjCertCreate.getText("certIdReqAlert") );
+        certificateID.focus();
+        return false;
+      }
+          
+      //Date (correct format, not before, not to long)
+    <!--#if expr="$type$ = self" -->
+      var date = document.getElementById("certValid").value;
+      var date_error1 = false;
+      var year, month, day;
+      
+      if(date.length != 10)
+        date_error1 = true;
+      else
+      {
+        year = date.substr(0, 4);
+        month = parseInt(date.substr(5, 2), 10)-1;
+        day = parseInt(date.substr(8, 2), 10);
+        
+        if(year <= 0 || month <= -1 || day <= 0)
+          date_error1 = true;
+      }
+      
+      if(date_error1)
+      {
+        alert( langObjCertCreate.getText("dateAlert1") );
+        document.getElementById("certValid").focus();
+        document.getElementById("certValid").select();
+        return false;
+      }
+      
+      var date_error2 = false;
+      var current_date = new Date();
+      var user_date = new Date();
+      user_date.setFullYear(year, month, day);
+      
+      if(user_date < current_date)
+        date_error2 = true;
+      else
+      {
+        var max_date = new Date();
+        max_date.setFullYear(2038, 0, 18);
+      
+        if(user_date > max_date)
+          date_error2 = true;
+      }
+      
+      if(date_error2)
+      {
+        alert( langObjCertCreate.getText("dateAlert2") );
+        document.getElementById("certValid").focus();
+        document.getElementById("certValid").select();
+        return false;
+      }
+    <!--#endif -->    
+      
+      //Country (for just two ISO letters)
+      var country = document.getElementById("certCountry").value;
+      var country_error = false;
+      
+      if (country.length != 2) 
+        country_error = true;
+      else
+      {
+        for (var i = 0; i < 2; i++)
+        {
+          var c = country.charAt(i)
+          if (!((c>='A' && c<='Z') || (c>='a' && c<='z')))
+            country_error = true;
+        }
+      }
+      
+      if(country_error)
+      {
+        alert( langObjCertCreate.getText("countryAlert") );
+        document.getElementById("certCountry").focus()
+        document.getElementById("certCountry").select()
+        return false;
+      }
+      return true;
+    }
+    
+    <!--#if expr="$type$ = self" -->
+    function outputCertResponse( responseObj )
+    {
+      // The user pressed the OK button - we have tried to save - if OK - reload the parent window and close this one - otherwise output cert response
+      wait_stop();
+
+      if( delayWaitTimer )
+        window.clearTimeout( delayWaitTimer );
+          
+      if(responseObj)
+      {
+        if(responseObj.name == "Error")
+        {
+          var errorMsg;
+          if(faultArr[responseObj.description])
+            errorMsg = faultArr[responseObj.description];
+          else
+            errorMsg = ( ( responseObj.description )?responseObj.description:(responseObj.fileName)?responseObj.fileName:responseObj.message );
+          alert( errorMsg );
+          return;
+        }
+      }
+
+      window.opener.reloadPage("cert"); //<--- calls the reloadPage(cert_type) located in certificates.shtml
+      window.close();
+    }
+    
+    function showWaitMsg( msg )
+    {
+      wait_start( msg, 90, 250 );
+    }
+    <!--#endif -->
+    <!--#if expr="$type$ = req" -->
+    function outputReqResponse( responseObj )
+    {
+      if(responseObj)
+      {
+        if(responseObj.name == "Error")
+        {
+          var errorMsg;
+          if(faultArr[responseObj.description])
+            errorMsg = faultArr[responseObj.description];
+          else
+            errorMsg = ( ( responseObj.description )?responseObj.description:(responseObj.fileName)?responseObj.fileName:responseObj.message );
+          alert( errorMsg );
+          return;
+        }
+        else
+        {
+          document.getElementById("testMove").style.display = "none";
+          document.getElementById("testShow").style.display = "block";
+          
+          var str = "";
+          var response = responseObj.Pkcs10Request;
+
+          while(response.length > 0)
+          {
+            if(response.length < 64)
+            {
+              str += response;
+              response = "";
+            }
+            str += response.substring(0, 64 )+"\n";
+            response = response.substring(64);
+          }
+          
+          document.getElementById("reqInfo").innerHTML = "<pre style='WHITE-SPACE: pre'>-----BEGIN CERTIFICATE REQUEST-----\n"
+          +str
+          +"-----END CERTIFICATE REQUEST-----<\/pre>";
+        }
+      }
+    }
+    <!--#endif -->
+    
+    function globalLanguageVars()
+    {
+    <!--#if expr="$type$ = req" -->
+      var currTitle = document.title;
+      var newTitle = currTitle.replace(langObjCertCreate.getText("pageTitle"), langObjCertCreate.getText("alternativePageTitle") );
+      document.title = newTitle;
+    <!--#endif -->
+    }
+  //-->
+</SCRIPT>
+
+</head>
+<body class="bodyBg" topmargin="0" leftmargin="0" marginwidth="0" marginheight="0" bgcolor="white" onload="langObjCertCreate.init();init()">
+
+<form name="CreateCertForm" onSubmit="javascript: return saveData();">
+<div class="cornerBox">
+  <div class="content">
+  <span id="testMove">
+  <table border="0" cellpadding="3" cellspacing="0" <!--#if expr="$type$ = self" -->width="346"<!--#else -->width="496"<!--#endif -->>
+    <tr>
+      <td colspan="2">
+        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+          <tr>
+            <td class="topTitle" align="left">
+              <!--#if expr="$type$ = self" -->
+                <span id="createSelfSigTxt"></span>
+              <!--#else -->
+                <span id="createCertSigReqTxt"></span>
+              <!--#endif -->
+            </td>
+            <td class="topTitle" align="right">
+              <a href="<!--#echo var="helpURL" option="encoding:url" -->">
+                <img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="hlpPic">
+              </a>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr class="evenItem">
+      <td><span id="certIdTxt"></span></td>
+      <td align="left"><input type="text" maxlength="32" size="25" id="certId"></td>
+    </tr>
+    <!--#if expr="$type$ = self" -->
+    <tr class="oddItem">
+      <td nowrap ><span id="validTxt"></span></td>
+      <td align="left"><input type="text"  size="15" id="certValid"> yyyy-mm-dd</td>
+    </tr>
+    <!--#endif -->
+    <tr <!--#if expr="$type$ = self" -->class="evenItem"<!--#else -->class="oddItem"<!--#endif -->>
+      <td><span id="countryTxt"></span></td>
+      <td align="left" width="310"><input type="text" size="5" id="certCountry"></td>
+    </tr>
+    <tr <!--#if expr="$type$ = self" -->class="oddItem"<!--#else -->class="evenItem"<!--#endif -->>
+      <td nowrap><span id="provinceTxt"></span></td>
+      <td align="left"><input type="text" size="25" id="certProvince"></td>
+    </tr>
+    <tr <!--#if expr="$type$ = self" -->class="evenItem"<!--#else -->class="oddItem"<!--#endif -->>
+      <td nowrap><span id="localityTxt"></span></td>
+      <td align="left"><input type="text" size="25" id="certLocality"></td>
+    </tr>
+    <tr <!--#if expr="$type$ = self" -->class="oddItem"<!--#else -->class="evenItem"<!--#endif -->>
+      <td nowrap><span id="orgTxt"></span></td>
+      <td align="left"><input type="text"  size="25" id="certOrg"></td>
+    </tr>
+    <tr <!--#if expr="$type$ = self" -->class="evenItem"<!--#else -->class="oddItem"<!--#endif -->>
+      <td nowrap><span id="orgUnitTxt"></span></td>
+      <td align="left"><input type="text"  size="25" id="certOrgUnit"></td>
+    </tr>
+    <tr <!--#if expr="$type$ = self" -->class="oddItem"<!--#else -->class="evenItem"<!--#endif -->>
+      <td nowrap><span id="commonTxt"></span></td>
+      <td align="left"><input type="text"  size="25" id="certCommon"></td>
+    </tr>
+    <tr>
+      <td class="topTitle" align="center" colspan="2">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td class="button"><input type="button" width="75" value="" class="btnNormal" onClick="JavaScript:saveData()" id="createCert_okBtn"></td>
+            <td class="button">&nbsp;</td>
+            <td class="button"><input type="button" width="75" value="" class="btnNormal" onClick="window.close()" id="createCert_cancelBtn"></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+ </span>
+ <span id="testShow" style="display: none;">
+  <table border="0" cellpadding="3" cellspacing="0" class="oddItem" width="431">
+    <tr>
+      <td>
+        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+          <tr>
+            <td class="topTitle" align="left">
+                <span id="reqCreTxt"></span>
+            </td>
+            <td class="topTitle" align="right">
+              <a href="<!--#echo var="helpURL" option="encoding:url" -->"><img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="hlpPic2"></a>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td class="subTitle" align="left" nowrap>
+        <span id="ceRePEMTxt"></span>
+      </td>
+    </tr>
+    <tr>
+      <td align="left" id="reqInfo">
+          &nbsp;
+      </td>
+    </tr>
+    <tr>
+      <td align="center" class="button">
+        <input type="button" value="" style="width:75px" class="btnNormal" onclick="javascript:window.close();" id="createCert_closeBtn">
+      </td>
+    </tr>
+  </table>
+  </span>
+  </div>
+  <div class="footerLeft"><div class="footerRight"></div></div>
+</div>
+</form>
+</body>
+</html>

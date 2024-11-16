@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+  <chkbox>
+  </chkbox>
+
+  <dateAndTime>
+    <dateTimeYearAlrt type="msgAsText" minor="0">Please enter a year between 1970 and 2031.</dateTimeYearAlrt>
+    <dateTimeInvalDateAlrt type="msgAsText" minor="0">Please enter an (existing) date using the format:&#10;yyyy-mm-dd</dateTimeInvalDateAlrt>
+    <dateTimeInvalTimeAlrt type="msgAsText" minor="0">Please enter a (valid) time in the format:&#10;hh:mm:ss or hh:mm.</dateTimeInvalTimeAlrt>
+  </dateAndTime>
+
+  <integer>
+  </integer>
+
+  <ip>
+    <ipPlSpMultiCaAlrt type="alert" minor="0">Please specify the Internet Multicast address in the format a.b.c.d,&#10;with values between 224.0.0.0 to 239.255.255.255.</ipPlSpMultiCaAlrt>
+    <ipPlSpMultiCaAlrt2 type="alert" minor="0">Please specify the Internet Multicast address in the Ipv6 multicastformat</ipPlSpMultiCaAlrt2>
+    <ipPlSpFormatAlrt type="alert" minor="0">Please specify the Internet address in the format a.b.c.d,&#10;with each field having a number in the range 0 to 255.</ipPlSpFormatAlrt>
+    <ipThValAlrt type="alert" minor="0">The value</ipThValAlrt>
+    <ipUnrechableIPAlrt type="alert" minor="0">is most likely to render the unit unreachable,&#10;in which case a factory default is required to regain access.&#10;&#10;Are you absolutely sure you want to do this?</ipUnrechableIPAlrt>
+    <ipProbUnvalidAlrt type="alert" minor="0">The ip address ending with either 0 or 255 is usually invalid and could render the camera inaccessible,&#10;in which case a reset to factory default settings is required to regain access.&#10;&#10;Are you absolutely sure you want to do this?</ipProbUnvalidAlrt>
+    <ipIncorrSM1Alrt type="alert" minor="0">Incorrect subnet mask:</ipIncorrSM1Alrt>
+    <ipBinZeroIPAlrt type="alert" minor="0">The IP adress is zero at the binary host part of the subnet mask.&#10;This might cause problems. Are you sure you want to continue?</ipBinZeroIPAlrt>
+    <ipBroadCastIPAlrt type="alert" minor="0">The IP adress specified is usually the broadcast adress.&#10;This might cause problems. Are you sure you want to continue?</ipBroadCastIPAlrt>
+    <ipToMaIntIPAlrt type="alert" minor="0">Too many integers. An IP number must contain four integers between 0 and 255.</ipToMaIntIPAlrt>
+    <ipFourIntsIPAlrt type="alert" minor="0">An IP number must contain four integers (separated by a dot) between 0 and 255.</ipFourIntsIPAlrt>
+    <ipEachPartIPAlrt type="alert" minor="0">Each part of the IP number must be an integer between 0 and 255.</ipEachPartIPAlrt>
+    <ipFourIntSMAlrt type="alert" minor="0">A subnet mask must contain 4 integers between 0 and 255.</ipFourIntSMAlrt>
+    <ipEachPartSMAlrt type="alert" minor="0">Each part of the subnet mask must be an integer between 0 and 255.</ipEachPartSMAlrt>
+    <ipIncorrSM2Alrt type="alert" minor="0">Incorrect subnet mask.</ipIncorrSM2Alrt>
+    <ipUnrechableSMAlrt type="alert" minor="0">Using this subnet mask may render the camera unreachable. &#10;&#10;Are you sure you want to use the subnet mask anyway?</ipUnrechableSMAlrt>
+  </ip>
+</language_xml>

@@ -1,0 +1,289 @@
+<!--#set var="helpURL" val="javascript:launch('/help/rtp_h.shtml')" -->
+<!--#set var="WizardFormAction" val="/sm/sm.srv" -->
+<!--#set var="activeMenu" val="system" -->
+<!--#set var="activeMenu1" val="network" -->
+<!--#set var="activePage" val="rtp" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<!--#include virtual="/sm/sm.srv?action=get&group=Network.RTP,ImageSource,Properties.Audio.Audio,AudioSource.A0.AudioSupport,PTZ.ImageSource.I0.PTZEnabled" -->
+
+<!--#include virtual="/java/integer.shtml" -->
+<!--#include virtual="/java/chkbox.shtml" -->
+
+
+<!--#include virtual="/java/ip.shtml" -->
+
+<script language="JavaScript">
+<!--
+var langObjRtp = new Language("rtp", "rtp");
+
+<!--#include virtual="/incl/profile_funcs.shtml" -->
+
+function displayAlwaysMulticastProfiles(data_array, selectedProfile)
+{
+  var streamProfilesCount = profileCurrentMax(document.streamProfilesList);
+
+  for (var s = 0; s <= streamProfilesCount; s++)
+  {
+    var streamProfilesName = "root_StreamProfile_S" + s + "_Name";
+    if (document.getElementsByName(streamProfilesName).length > 0)
+    {
+      var name = document.streamProfilesList[streamProfilesName].value;
+      var currentProfile = "streamprofile="+name;
+      if ( currentProfile == selectedProfile)
+        data_array.push("<option value=\"streamprofile=" + name + "\" selected=\"selected\">" + name + "</option>");
+      else
+        data_array.push("<option value=\"streamprofile=" + name + "\">" + name + "</option>");
+    }
+  }
+}
+
+<!--#include virtual="/incl/functions.shtml" -->
+function displayRTPSetting()
+{
+  var rtpForm = document.rtpForm;
+  var form = document.WizardForm;
+  var o = new Array();
+  var nbrOfRTPGroups = <!--#echo var="root_Network_RTP_NbrOfRTPGroups" option="encoding:javascript" -->;
+  o.push("<tr><td class=\"subTitle\" align=\"left\" colspan=\"3\">"+langObjRtp.getText("mulCasTxt")+"</td></tr>");
+  for (var i = 0; i < nbrOfRTPGroups; i++) {
+    var videoAddress = "root_Network_RTP_R" + i + "_VideoAddress";
+    var videoPort = "root_Network_RTP_R" + i + "_VideoPort";
+    var alwaysMulticastVideo = "root_Network_RTP_R" + i + "_AlwaysMulticastVideo";
+    var alwaysMulticastProfile = "root_Network_RTP_R" + i + "_AlwaysMulticastProfile";
+    var VideoAddressValue = rtpForm[videoAddress].value;
+    var VideoPortValue = rtpForm[videoPort].value;
+    var AlwaysMulticastVideoValue = rtpForm[alwaysMulticastVideo].value;
+    var AlwaysMulticastProfileValue = rtpForm[alwaysMulticastProfile].value;
+    var TTL = "root_Network_RTP_R" + i + "_TTL";
+    var TTLValue = rtpForm[TTL].value;
+
+    o.push("<tr><td nowrap class=\"oddItem\">"+langObjRtp.getText("viAdTxt")+"</td>");
+    o.push('<td class="oddItem" colspan="2"><input type="text" class="fieldIP" name="' + videoAddress + '" value="' + VideoAddressValue + '" maxlength="40"></td></tr>');
+    o.push("<tr><td nowrap class=\"evenItem\">"+langObjRtp.getText("viPoTxt")+"</td>");
+    o.push('<td nowrap class="evenItem" colspan="2"><input type="text" class="fieldInt" name="' + videoPort + '" value="' + VideoPortValue+ '" maxlength="5">&nbsp;');
+    o.push(langObjRtp.getText("evVaOnTxt")+"<sup>*</sup></td></tr>");
+    o.push("<tr><td nowrap class=\"oddItem\">"+langObjRtp.getText("tTLText")+"</td>");
+    o.push('<td nowrap class="oddItem" colspan="2%"><input type="text" class="fieldInt" name="' + TTL +'" value="' + TTLValue + '" maxlength="3">&nbsp;[1..255]</td></tr>');
+    //always multicast row
+    o.push('<tr><td nowrap colspan="3" class="evenItem"><input type="checkbox" name="ckb_' + alwaysMulticastVideo + '"');
+    if ( AlwaysMulticastVideoValue == "yes" )
+      o.push(' CHECKED');
+    o.push(">"+langObjRtp.getText("alMultiVTxt")+" ");
+    o.push("<input type=\"hidden\" name=\"" + alwaysMulticastVideo + "\">");
+    //the select box
+    o.push('<select id="' + alwaysMulticastProfile + '" name="' + alwaysMulticastProfile + '">');
+    //select options
+      o.push('<option value="videocodec=h264"');
+      if ( AlwaysMulticastProfileValue == "videocodec=h264")
+        o.push(' selected');
+      o.push(">"+langObjRtp.getText("h264Txt")+"</option>");
+    o.push('<option value="videocodec=jpeg"');
+    if ( AlwaysMulticastProfileValue == "videocodec=jpeg")
+      o.push(' selected');
+    o.push(">"+langObjRtp.getText("mjpegTxt")+"</option>");
+    displayAlwaysMulticastProfiles(o, AlwaysMulticastProfileValue);
+    o.push("</select></td></tr>");
+  }//end for loop
+  o.push("<tr><td class=\"evenItem\" colspan=\"3\">"+langObjRtp.getText("poAutSelTxt")+"</td></tr>");
+  document.write(o.join(""));
+}
+
+function checkPort(value)
+{
+  if ((parseInt(value, 10) & 1) || ((value != 0) && (IntegerCheck(value, 1024, 65534) == 0)) || !(/[0-9]/.test(value))) {
+    return false;
+  }
+  return true;
+}
+
+function checkPortNbr(portField, even)
+{
+  var form = document.WizardForm;
+  var mark = 0;
+  if (even && (portField.value & 1 || !IntegerCheck(portField.value, 1024, 65534) || !(/[0-9]/.test(portField.value)))) {
+    mark = 1;
+    alert( langObjRtp.getText("poAlrtEvenAlrt") );
+  } else if (!even && (!(portField.value & 1) || !IntegerCheck(portField.value, 1025, 65535) || !(/[0-9]/.test(portField.value)))) {
+    mark = 1;
+    alert( langObjRtp.getText("poAlrtOddAlrt") );
+  }
+
+  if (mark) {
+    portField.select();
+    portField.focus();
+    return 0;
+  }
+  else
+  {
+    portField.value = parseInt( portField.value, 10 );
+  }
+  return 1;
+}
+
+function saveData()
+{
+  var form = document.WizardForm;
+  var rtpForm = document.rtpForm;
+  var ipv4AddrExp = /[0-9]*[.][0-9]*[.][0-9]*[.][0-9]*/; // Ipv4 address check expression
+  var o;
+
+  for (var i = 0; i < <!--#echo var="root_Network_RTP_NbrOfRTPGroups" option="encoding:javascript" -->; i++) {
+
+    o = form["root_Network_RTP_R" + i + "_VideoAddress"];
+
+    if (!o)
+      continue;
+
+    trimLeadingTrailing(o);
+    
+    if(o.value == "")
+    {
+      alert( langObjRtp.getText("plSpInAlrt") );
+      o.focus();
+      o.select();
+      return;
+    }
+    
+    var version = checkValidAddress(o.value, ADDR_IP_ONLY);
+    
+    if(version == 4) 
+    {
+      if( IPAddressMulticastCheck( o ) )
+        return;
+    }
+    else if(version == 6)
+    {
+      if( IPv6AddressMulticastCheck( o ) )
+        return;
+    }
+    else if(!checkValidAddress(o.value, 0) )
+    {
+      alert( langObjRtp.getText("vaFInAlrt") );
+      o.focus();
+      o.select();
+      return;
+    }
+
+    o = form["root_Network_RTP_R" + i + "_VideoPort"];
+    trimLeadingTrailing(o);
+    if (!checkPort(o.value)) {
+      alert( langObjRtp.getText("invPortAlert") );
+      o.focus();
+      o.select();
+      return;
+    }
+
+    o = "root_Network_RTP_R" + i + "_AlwaysMulticastVideo";
+    if( form["ckb_" + o].checked == true)
+      form[o].value="yes";
+    else
+      form[o].value="no";
+
+    o = form["root_Network_RTP_R" + i + "_TTL"];
+    trimLeadingTrailing(o);
+    if (IntegerCheck(o.value, 1, 255) == 0) {
+      alert( langObjRtp.getText("invTTLAlert") );
+      o.focus();
+      o.select();
+      return;
+    }
+    else
+    {
+      o.value = parseInt( o.value, 10 );
+    }
+
+  }
+  trimLeadingTrailing(form.root_Network_RTP_StartPort);
+  if (checkPortNbr(form.root_Network_RTP_StartPort, 1) != 1)
+    return;
+  trimLeadingTrailing(form.root_Network_RTP_EndPort);
+  if (checkPortNbr(form.root_Network_RTP_EndPort, 0) != 1)
+    return;
+
+      var startPort = 1;
+      var alertMsg = langObjRtp.getText("po1Alrt");
+
+  if ((form.root_Network_RTP_EndPort.value - form.root_Network_RTP_StartPort.value) < startPort) {
+    alert(alertMsg);
+    form.root_Network_RTP_EndPort.select();
+    form.root_Network_RTP_EndPort.focus();
+    return 
+  }
+
+  form.submit();
+}
+
+var SaveBtnStatTxt;
+var ResBtnStatTxt;
+function globalLanguageVars()
+{
+ var titleAddOn = langObjRtp.getText("pageTitleAddOn2");
+
+  var currTitle = document.title;
+  var newTitle = currTitle.replace(langObjRtp.getText("pageTitle"), langObjRtp.getText("pageTitle")+titleAddOn);
+  document.title = newTitle;
+  document.getElementById("pageTitle").innerHTML = titleAddOn;
+
+  SaveBtnStatTxt = langObjRtp.getText("saveBtnStatTxt");
+  ResBtnStatTxt = langObjRtp.getText("resBtnStatTxt");
+}
+//-->
+</script>
+</head>
+<body <!--#include virtual="/incl/bodytag.shtml" --> onload="langObjRtp.init()">
+
+
+<form name="rtpForm">
+<!--#include virtual="/sm/sm.srv?action=get_htmlform&getgroup=root.Network.RTP&format=hiddenhtmlform" -->
+</form>
+
+<form name="videoName">
+<!--#include virtual="/sm/sm.srv?action=get_htmlform&getgroup=root.ImageSource&param=Name&format=hiddenhtmlform" -->
+</form>
+
+
+
+<form name="streamProfilesList">
+<!--#include virtual="/sm/sm.srv?action=get_htmlform&getgroup=root.StreamProfile&format=hiddenhtmlform" -->
+</form>
+
+<!--#include virtual="/incl/top_incl2.shtml" -->
+
+<table border="<!--#echo var="zero" option="encoding:html" -->" cellpadding="<!--#echo var="cellpadding3" option="encoding:html" -->" cellspacing="<!--#echo var="zero" option="encoding:html" -->" width="<!--#echo var="tableWidth3" option="encoding:html" -->">
+  <col width="20%"><col width="60%"><col width="20%">
+  <tr>
+    <td class="topTitle" align="left" colspan="2" nowrap><div align="left"><span id="pageTitle"></span></div></td>
+    <td  class="topTitle"><div align="right"><a href="<!--#echo var="helpURL" option="encoding:url" -->"><img height="27" width="27" src="/pics/help.gif" border="0" title="" id="hlpPic"></a></div></td>
+  </tr>
+
+  <tr>
+    <td class="subTitle" align="left" colspan="3"><span id="poRaTxt"></span></td>
+  </tr>
+  <tr>
+    <td class="oddItem"><span id="staPoTxt"></span></td>
+    <td class="oddItem" colspan="2"><!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.Network.RTP.StartPort&format=htmlvalue" --></td>
+  </tr>
+  <tr>
+    <td class="evenItem"><span id="endPoTxt"></span></td>
+    <td class="evenItem" colspan="2"><!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.Network.RTP.EndPort&format=htmlvalue" --></td>
+  </tr>
+
+  <script>displayRTPSetting();</script>
+
+  <tr>
+    <td align="center" colspan="3">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td class="button"><input type="button" value="" width="75" class="btnNormal" onClick="saveData()" onMouseOver="return showStatus(SaveBtnStatTxt)" onMouseOut="return showStatus('')" id="saveBtn"></td>
+          <td class="button"><br></td>
+          <td class="button"><input type="reset" value="" width="75" class="btnNormal" onMouseOver="return showStatus(ResBtnStatTxt)" onMouseOut="return showStatus('')" id="resetBtn"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<input type="hidden" name="return_page" value="/admin/rtp.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->">
+<input type="hidden" name="action" value="modify">
+
+<!--#include virtual="/incl/bottom_incl.shtml" -->

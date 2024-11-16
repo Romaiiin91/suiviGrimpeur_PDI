@@ -1,0 +1,11 @@
+
+<!--#include virtual="/sm/sm.srv?action=get&group=Network.UPnP,Network.Bonjour" -->
+
+<html>
+<head></head>
+<body>
+<form>
+  <input type="hidden" id="UPnP" name="UPnP" value="<!--#echo var="root_Network_UPnP_FriendlyName" option="encoding:html" -->">
+  <input type="hidden" id="bonjour" name="bonjour" value="<!--#echo var="root_Network_Bonjour_FriendlyName" option="encoding:html" -->">
+</form>
+</body>

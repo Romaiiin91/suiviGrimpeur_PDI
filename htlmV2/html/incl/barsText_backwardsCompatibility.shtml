@@ -1,0 +1,24 @@
+
+function Language_backwardcomp()
+{
+  this.init = function(whatever)
+  {
+    var arr = new Array();
+    arr.push( { tag: "barFocTxt", text: "FOCUS"} );
+    arr.push( { tag: "barNearTxt", text: "Near"} );
+    arr.push( { tag: "barFarTxt", text: "Far"} );
+    arr.push( { tag: "barAutoFocTxt", text: "Auto"} );
+    arr.push( { tag: "barIrisTxt", text: "IRIS"} );
+    arr.push( { tag: "barCloseTxt", text: "Close"} );
+    arr.push( { tag: "barOpenTxt", text: "Open"} );
+    arr.push( { tag: "barAutoIrisTxt", text: "Auto"} );
+    
+    for(var i=0; i < arr.length; i++)
+    {
+      if( document.getElementById(arr[i].tag) )
+        document.getElementById(arr[i].tag).innerHTML = arr[i].text;
+    }
+  
+    window.focus();
+  }
+}

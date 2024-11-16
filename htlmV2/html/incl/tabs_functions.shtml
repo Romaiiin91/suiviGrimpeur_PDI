@@ -1,0 +1,138 @@
+<script language="JavaScript">
+<!--
+
+var globTabArray = new Array();
+var globTabsId = "writeTabsId";  /* See tabs_start.shtml */
+var globHeightId = "tabHeightId";  /* See tabs_start.shtml */
+
+/*
+ * Initiates the table of tabs with a new tab.
+ *
+ * divId: The id of the div with the content of the tab.
+ * title: The name to set in the tab.
+ * width: The width of the tab, so that there is room for the title.
+ * extra_call: Use if you want to call an extra function when switching tab.
+   E.g. something like this: createTab("basic", "Basic", 50, "showFocusWindow()");
+ */
+function createTab(divId, title, width, extra_call)
+{
+  nbr = globTabArray.length;
+  globTabArray[nbr] = new Array(divId, title, width, extra_call);
+}
+
+/*
+ * Internally used to change the appearance to active/inactive for the tabs.
+ */
+function setTabAppearance(tab, active, enabled)
+{
+   var tabName = tab + "Tab";
+  if (active) {
+    document.getElementById(tabName).className='selectedTab';
+  } else if (enabled) {
+    document.getElementById(tabName).className='unselectedTab';
+  } else {
+    document.getElementById(tabName).className='disabledTab';
+  }
+}
+
+/*
+ * Makes the given tab active, and deactivates the other tabs.
+ * Makes the div for the content visible, hides the other divs.
+ *
+ * divId : The id of the div with the content of the tab.
+ *         Same as the value given in createTab.
+ */
+function showTab(divId)
+{
+  if (!divId || !document.getElementById(divId) ||
+      document.getElementById(divId+"Tab").className.indexOf('disabled') >= 0) {
+    return;
+  }
+
+  /* inactivate all tabs */
+  for (i = 0; i < globTabArray.length; i++) {
+    document.getElementById(globTabArray[i][0]).style.display='none';
+    var enb = document.getElementById(globTabArray[i][0]+"Tab").className.indexOf('disabled') < 0;
+    setTabAppearance(globTabArray[i][0], false, enb);
+  }
+  /* activate this tab */
+  document.getElementById(divId).style.display='block';
+  setTabAppearance(divId, true, true);
+}
+
+/*
+ * Makes the given tab enabled or disabled and inactive.
+ * First tab, which is not this tab, is enabled.
+ *
+ * divId :  The id of the div with the content of the tab.
+ *          Same as the value given in createTab.
+ * enable : If the tab shall be enabled or disabled.
+ */
+function enableTab(divId, enb)
+{
+  var isActive = document.getElementById(divId+"Tab").className == 'selectedTab';
+  if (enb) {
+    setTabAppearance(divId, isActive, true);
+  } else {
+    setTabAppearance(divId, false, false);
+    if (isActive) {
+      for (i = 0; i < globTabArray.length; i++) {
+        if (globTabArray[i][0] != divId) {
+          showTab(globTabArray[i][0]);
+          return;
+        }
+      }
+    }
+  }
+}
+
+/*
+/* Returns the div id of the first tab that is active.
+/* (Should only be one.)
+ */
+function shownTab()
+{
+  for (i = 0; i < globTabArray.length; i++) {
+    var thisId = globTabArray[i][0];
+    var isActive = document.getElementById(thisId).style.display != 'none';
+    if (isActive) return thisId;
+  }
+  return "";
+}
+
+/*
+ * Writes the table html code for the tabs according to the tab information
+ * set by calling createTab.
+ *
+ * theWidth: The requested width for the area inside the tab box.
+ */
+function writeTabs(theWidth)
+{
+  var aTabs = '';
+  for (i = 0; i < globTabArray.length; i++) {
+    aTabs +=
+      '<li id="' + globTabArray[i][0] + 'Tab" class="unselectedTab"><div onclick="javascript:showTab(\'' + globTabArray[i][0] + '\');';
+      if (globTabArray[i][3] != "" && globTabArray[i][3] != undefined) aTabs += globTabArray[i][3];
+      aTabs += '"><b>' + globTabArray[i][1] + '</b></div>' +
+      '</li>';
+  }
+      
+  aWidth = theWidth;
+  aWidth += 10; /* add room for the rounded corners */
+
+  var aStart = '<table cellpadding=0 cellspacing=0 border=0 width="' + aWidth + '"><tr>' +
+      '<td class="top-fieldborder" valign="bottom"><img src="/pics/line_corner_lt_5x5px.gif" alt="" border="0" height="5" width="5"></td><td>' + 
+      '<div class="tabs"><div class="cornerTabs" style="width:'+theWidth+'px"><ul>';
+
+  var anEnd = '</ul>' +
+              '</div>' +
+              '</div>' +
+              '</td>' +
+              '<td class="top-fieldborder" valign="bottom"><img src="/pics/line_corner_rt_5x5px.gif" alt="" border="0" height="5" width="5"></td>' +
+              '</tr></table>';
+
+  document.getElementById(globTabsId).innerHTML = aStart + aTabs + anEnd;
+}
+
+//-->
+</script>

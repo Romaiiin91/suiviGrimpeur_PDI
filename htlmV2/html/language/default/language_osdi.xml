@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+  <add_osdi>
+    <pageTitle type="title" minor="0">PTZ Configuration/Add OSDI Zone</pageTitle>
+    <onGoingReqAlrt type="alert" minor="0">There is already an ongoing request. Please wait a short while for the request to finish.</onGoingReqAlrt>
+    <invalCoordsAlert type="alert" minor="1">The coordinates is invalid. Expected format: 'x,y'.</invalCoordsAlert>
+    <newOsdiZoneTxt type="msgAsText" minor="0">New OSDI zone</newOsdiZoneTxt>
+    <invalCoords1Alrt type="alert" minor="0">Invalid coordinates.</invalCoords1Alrt>
+    <invalCoords2Alrt type="alert" minor="0">Pan coordinates must be in the range #X1# to #X2# degrees.</invalCoords2Alrt>
+    <invalCoords3Alrt type="alert" minor="0">Tilt coordinates must be in the range #Y1# to #Y2# degrees.</invalCoords3Alrt>
+    <invalCharAlrt type="alert" minor="0">The following characters are illegal:</invalCharAlrt>
+    <illegalTagAlrt type="alert" minor="0">Illegal tag found!</illegalTagAlrt>
+    <invalCoordsLowLeftAlrt type="alert" minor="1">The coordinates for the lower left corner is invalid. Expected format: 'x,y'.</invalCoordsLowLeftAlrt>
+    <invalCoordsUpRightAlrt type="alert" minor="1">The coordinates for the upper right corner is invalid. Expected format: 'x,y'.</invalCoordsUpRightAlrt>
+    <toSmZoAlrt type="alert" minor="0">Too small OSDI zone</toSmZoAlrt>
+    <valLowLeftUpRightAlrt type="alert" minor="0">Lower left tilt value must be lower than Upper right tilt value,</valLowLeftUpRightAlrt>
+    <diffAtLeaOneAlrt type="alert" minor="0">the difference between them must be at least 1.</diffAtLeaOneAlrt>
+    <toBiZoAlrt type="alert" minor="0">Too big OSDI zone</toBiZoAlrt>
+    <diffNoMore90Alrt type="alert" minor="0">the difference between them must be no more than 90.</diffNoMore90Alrt>
+    <panAngleOneAlrt type="alert" minor="0">Pan angle must be at least 1 degrees.</panAngleOneAlrt>
+    <panAngle180Alrt type="alert" minor="0">Pan angle can be no more than 180 degrees.</panAngle180Alrt>
+    <osZoSetupTxt type="text" minor="0">OSDI Zone Setup</osZoSetupTxt>
+    <hlpTxt type="image" minor="0" imageid="hlpPic">Click here for help on this page</hlpTxt>
+    <instrTxt type="text" minor="0">Instructions</instrTxt>
+    <instrNr1Txt type="text" minor="0">Position the camera's view so that the center of the image (at the crosshair, if present) is where the &#x3C;b&#x3E;Lower left&#x3C;/b&#x3E; coordinates of the new OSDI Zone will be.</instrNr1Txt>
+    <instrNr2Txt type="text" minor="0">Click &#x3C;b&#x3E;Get&#x3C;/b&#x3E; to set coordinates.</instrNr2Txt>
+    <instrNr3Txt type="text" minor="0">Repeat steps 1 and 2 to define the &#x3C;b&#x3E;Upper right&#x3C;/b&#x3E; coordinates of the OSDI Zone.</instrNr3Txt>
+    <instrNr4Txt type="text" minor="0">Enter a descriptive name and click &#x3C;b&#x3E;OK&#x3C;/b&#x3E;.</instrNr4Txt>
+    <osZoSettTxt type="text" minor="0">OSDI Zone Settings</osZoSettTxt>
+    <presPosTxt type="text" minor="0">Preset positions:</presPosTxt>
+    <goto1Btn type="button" minor="0" buttonid="osdi_GotoBtn1">Go to</goto1Btn>
+    <loLePaTiTxt type="text" minor="0">Lower left (pan,tilt):</loLePaTiTxt>
+    <get1Btn type="button" minor="0" buttonid="add_osdi_GetBtn1">Get</get1Btn>
+    <goto2Btn type="button" minor="0" buttonid="osdi_GotoBtn2">Go to</goto2Btn>
+    <upRiPaTiTxt type="text" minor="0">Upper right (pan,tilt):</upRiPaTiTxt>
+    <get2Btn type="button" minor="0" buttonid="add_osdi_GetBtn2">Get</get2Btn>
+    <goto3Btn type="button" minor="0" buttonid="osdi_GotoBtn3">Go to</goto3Btn>
+    <osZoNaTxt type="text" minor="0">OSDI zone name:</osZoNaTxt>
+    <oKBtn type="button" minor="0" buttonid="add_osdi_OKBtn">OK</oKBtn>
+    <cancelBtn type="button" minor="0" buttonid="add_osdi_CancelBtn">Cancel</cancelBtn>
+  </add_osdi>
+
+  <osdi>
+    <pageTitle type="title" minor="0">PTZ Configuration/OSDI Zones</pageTitle>
+    <nameTxt type="msgAsText" minor="0">Name</nameTxt>
+    <enableTxt type="msgAsText" minor="0">Enabled</enableTxt>
+    <yesTxt type="msgAsText" minor="0">Yes</yesTxt>
+    <noTxt type="msgAsText" minor="0">No</noTxt>
+    <maxZoneReachAlrt type="alert" minor="0">It is not possible to add any more OSDI zones. The maximum number of zones is 20.</maxZoneReachAlrt>
+    <seOsdiZoAlrt type="alert" minor="0">Select an OSDI Zone first.</seOsdiZoAlrt>
+    <delOsdi1Confrm type="alert" minor="0">Do you really want to delete the OSDI zone named</delOsdi1Confrm>
+    <delOsdi2Confrm type="alert" minor="0">?</delOsdi2Confrm>
+    <delFail1Alrt type="alert" minor="0">The OSDI zone named</delFail1Alrt>
+    <delFail2Alrt type="alert" minor="0">was not deleted.</delFail2Alrt>
+    <addBtnStatTxt type="msg" minor="0">Add OSDI zone</addBtnStatTxt>
+    <chaBtnStatTxt type="msg" minor="0">Modify OSDI zone</chaBtnStatTxt>
+    <remBtnStatTxt type="msg" minor="0">Remove the selected OSDI zone</remBtnStatTxt>
+    <enbBtnStatTxt type="msg" minor="0">Enable/disable the selected OSDI zone</enbBtnStatTxt>
+    <osZoTxt type="text" minor="0">OSDI Zones</osZoTxt>
+    <hlpTxt type="image" minor="0" imageid="hlpPic">Click here for help on this page</hlpTxt>
+    <defOsZoTxt type="text" minor="0">Defined OSDI Zones</defOsZoTxt>
+    <addBtn type="button" minor="0" buttonid="osdi_AddBtn">Add...</addBtn>
+    <chaReNaBtn type="button" minor="0" buttonid="osdi_ModBtn">Modify...</chaReNaBtn>
+    <enaDisBtn type="button" minor="0" buttonid="osdi_EnaDisBtn">Enable/Disable</enaDisBtn>
+    <removeBtn type="button" minor="0" buttonid="osdi_RemoveBtn">Remove</removeBtn>
+  </osdi>
+</language_xml>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<language_xml>
+	<pwdRoot>
+		<pageTitle type="title">Options du système/Utilisateurs</pageTitle>
+		<defLang type="msgAsText">Français</defLang>
+		<pswMustConAlert type="alert">Le mot de passe doit contenir au moins un caractère.</pswMustConAlert>
+		<maxPcAlert1 type="alert">Un maximum de</maxPcAlert1>
+		<maxPcAlert2 type="alert">caractères est autorisé dans le mot de passe.</maxPcAlert2>
+		<pwdConfAlert type="alert">Le « mot de passe » et le « mot de passe de confirmation » ne correspondent pas. Saisissez-le à nouveau.</pwdConfAlert>
+		<loadingTxt type="msg">Création d'un certificat temporaire et configuration HTTPS.&#60;br&#62;Veuillez patienter...</loadingTxt>
+		<creCerBtnStatTxt type="msg">Créer un certificat autosigné.</creCerBtnStatTxt>
+		<okBtnStatTxt type="msg">Enregistrer le nouveau mot de passe root.</okBtnStatTxt>
+		<creCerTxt type="text">Définir le mot de passe sur HTTPS</creCerTxt>
+		<secConTxt type="text">La configuration sécurisée du mot de passe root via HTTPS nécessite un certificat qui sera créé automatiquement.</secConTxt>
+		<creCerBtnTxt type="button" buttonid="pwdR_CreCerBtn">Utiliser HTTPS</creCerBtnTxt>
+		<usrSetTxt type="text">Configurer un mot de passe root</usrSetTxt>
+		<usHttpTxt type="msgAsText">à l'aide de HTTP</usHttpTxt>
+		<usHttpsTxt type="msgAsText">à l'aide de HTTPS</usHttpsTxt>
+		<usrNaTxt type="text">Nom d'utilisateur :</usrNaTxt>
+		<pwdTxt type="text">Mot de passe (au maximum</pwdTxt>
+		<pwdTxt2 type="text">caractères) :</pwdTxt2>
+		<confPwdTxt type="text">Confirmer le mot de passe :</confPwdTxt>
+		<okBtn type="button" buttonid="pwdR_okBtn">OK</okBtn>
+		<infoTxt type="text">Le mot de passe root de l'administrateur préconfiguré doit être changé avant d'utiliser le produit.&#60;br&#62;&#60;br&#62; Si le mot de passe root est perdu, le produit doit être réinitialisé sur les réglages d'usine par défaut, en appuyant sur le bouton situé sur le boîtier du produit. Reportez-vous à la documentation de l'utilisateur pour obtenir plus d'informations.</infoTxt>
+		<ciphWrn type="text">&#60;strong&#62;REMARQUE : &#60;/strong&#62;vous utilisez un microprogramme qui prend en charge une sécurité améliorée du mot de passe utilisateur. Reportez-vous à la documentation en ligne pour connaître les points importants concernant les éventuels problèmes de compatibilité entre les versions antérieures du microprogramme.</ciphWrn>
+		<onvifTxt type="text">ONVIF sera désactivé.&#60;br&#62;Pour activer ONVIF, allez dans Configuration &#62; Options du système &#62; Sécurité &#62; ONVIF</onvifTxt>
+	</pwdRoot>
+</language_xml>

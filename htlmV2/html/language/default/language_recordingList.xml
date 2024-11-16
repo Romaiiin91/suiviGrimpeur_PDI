@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+  <JS_recTimeZone>
+  </JS_recTimeZone>
+	
+  <continuously>
+    <pageTitle type="title" minor="0">Recordings/Continuous Recording</pageTitle>
+    <sdCardTxt type="msgAsText" minor="0">SD card</sdCardTxt>
+    <sdCard2Txt type="msgAsText" minor="0">SD card 2</sdCard2Txt>
+    <networkShareTxt type="msgAsText" minor="0">Network share</networkShareTxt>
+    <selectDiskAlert type="alert" minor="0">Select a disk first</selectDiskAlert>
+    <lockedConfrm type="alert" minor="0">The selected disk is locked.&#10;Until it is unlocked no recording will be done.&#10;&#10; Continue anyway?</lockedConfrm>
+    <notMounConfrm1 type="alert" minor="0">The selected disk is not mounted.&#10;If not mounted errors could occur.&#10;&#10; Continue anyway?</notMounConfrm1>
+    <notMounConfrm2 type="alert" minor="0">Couldnt check if the disk was mounted.&#10;If not mounted errors could occur.&#10;&#10; Continue anyway?</notMounConfrm2>
+    <vidChannelCfrm type="alert" minor="0">Video channel:</vidChannelCfrm>
+    <confirmRestart type="alert" minor="0">Changing disk and/or stream profile will stop the current recoding.&#10;Are you sure you want to save the changes?</confirmRestart>
+    <notStopRec type="alert" minor="0">Could not stop recording</notStopRec>
+    <notStartRec type="alert" minor="0">Could not start recording</notStartRec>
+    <vidChannelTxt type="msgAsText" minor="0">Video channel:</vidChannelTxt>
+    <recSettingsTxt type="msgAsText" minor="0">Recording settings</recSettingsTxt>
+    <enableTxt type="msgAsText" minor="0">Enable</enableTxt>
+    <diskTxt type="msgAsText" minor="1">Storage:</diskTxt>
+    <streamProfTxt type="msgAsText" minor="0">Stream profile:</streamProfTxt>
+    <saveBtnStatTxt type="msg" minor="0">Save the settings for the continuous recording</saveBtnStatTxt>
+    <resBtnStatTxt type="msg" minor="0">Revert to last saved settings</resBtnStatTxt>
+    <conRecTxt type="text" minor="0">Continuous Recording</conRecTxt>
+    <hlpTxt type="image" minor="0" imageid="hlpPic">Click here for help on this page</hlpTxt>
+    <saveBtn type="button" minor="0" buttonid="conRec_saveBtn">Save</saveBtn>
+    <resetBtn type="button" minor="0" buttonid="conRec_resetBtn">Reset</resetBtn>
+  </continuously>
+  
+  <playWindow>
+    <pageTitle type="title" minor="0">Recordings/Play</pageTitle>
+    <notDefTxt type="msgAsText" minor="0">Not yet defined</notDefTxt>
+    <unkTxt type="msgAsText" minor="0">Unknown</unkTxt>
+    <ongTxt type="msgAsText" minor="0">Ongoing</ongTxt>
+    <maStTiAlert type="alert" minor="1">Malformed start time.</maStTiAlert>
+    <noRecBlockAlert type="alert" minor="0">Outside the recordings currently known timeframe.&#10;Can not jump in recording</noRecBlockAlert>
+    <stTiAftAlert type="alert" minor="0">Start time after recording end.</stTiAftAlert>
+    <stTiBeforeAlert type="alert" minor="0">Start time before recording start.</stTiBeforeAlert>
+    <playBtnStatTxt type="msg" minor="0">Play recording</playBtnStatTxt>
+    <closeBtnStatTxt type="msg" minor="0">Close recording window</closeBtnStatTxt>
+    <plaRecTxt type="text" minor="0">Play Recording</plaRecTxt>
+    <hlpTxt type="image" minor="0" imageid="hlpPic">Click here for help on this page</hlpTxt>
+    <playBtn1 type="image" minor="0" imageid="playBtn">Play</playBtn1>
+    <stoStrTxt type="image" minor="0" imageid="stopBtn">Stop stream</stoStrTxt>
+    <playTxt type="text" minor="0">Play</playTxt>
+    <frStTxt type="text" minor="0">from start.</frStTxt>
+    <downloadBtn type="button" minor="0" buttonid="downloadBtn">Download</downloadBtn>
+    <exportBtn type="button" minor="0" buttonid="play_exportBtn">Export...</exportBtn>
+    <exportBtnStatTxt type="msg" minor="0">Export the recording</exportBtnStatTxt>
+    <recPrevLink type="text" minor="0">Previous recording</recPrevLink>
+    <recNextLink type="text" minor="0">Next recording</recNextLink>
+    <playBtn2 type="button" minor="0" buttonid="playBtn">Play</playBtn2>
+    <hMSTxt type="text" minor="0">[hh:mm:ss] from start</hMSTxt>
+    <recInfTxt type="text" minor="0">Recording Information</recInfTxt>
+    <staTiTxt type="text" minor="0">Start time:</staTiTxt>
+    <stoTiTxt type="text" minor="0">Stop time:</stoTiTxt>
+    <durationTxt type="text" minor="0">Duration:</durationTxt>
+    <closeBtn type="button" minor="0" buttonid="playWi_closeBtn">Close</closeBtn>
+  </playWindow>
+  
+  <recList>
+    <pageTitle type="title" minor="0">Recordings/Recording List</pageTitle>
+    <unkTxt type="msg" minor="0">Unknown</unkTxt>
+    <invalidDateAlert type="alert" minor="0">Invalid date format.</invalidDateAlert>
+    <sdCardTxt type="msgAsText" minor="0">SD card</sdCardTxt>
+    <sdCard2Txt type="msgAsText" minor="0">SD card 2</sdCard2Txt>
+    <networkShareTxt type="msgAsText" minor="0">Network share</networkShareTxt>
+    <recSearchDatesAlert type="alert" minor="1">The selected recording time is not correct.&#10;The 'From' time is after the 'To' time</recSearchDatesAlert>
+    <loadingTxt type="msgAsText" minor="1">Loading recording list. Please wait.</loadingTxt>
+    <loadingNoRebootTxt type="msgAsText" minor="0">Because you could lose recordings, never reboot the product while the recording list is loading.</loadingNoRebootTxt>
+    <statimTxt type="msgAsText" minor="0">Start date &#x26; time</statimTxt>
+    <durTxt type="msgAsText" minor="0">Duration</durTxt>
+    <eventTxt type="msgAsText" minor="0">Event</eventTxt>
+    <camTxt type="msgAsText" minor="0">Camera</camTxt>
+    <continTxt type="msgAsText" minor="0">continuous</continTxt>
+    <ongTxt type="msgAsText" minor="0">Ongoing</ongTxt>
+    <plSeReAlrt type="alert" minor="0">Please select a recording</plSeReAlrt>
+    <limitPlayAlrt type="alert" minor="0">It is not possible to play more than 35 recordings at the same time.&#10;Please limit the number of selected recordings.</limitPlayAlrt>
+    <errorPlayMulitple type="alert" minor="0">Unable to play one of the selected recordings.&#10;Do you want to play the rest of the recordings?</errorPlayMulitple>
+    <errorPlay type="alert" minor="0">Unable to play the selected recording.</errorPlay>
+    <plSeReOneAlrt type="alert" minor="0">Please select only one recording</plSeReOneAlrt>
+    <plSeReAAlrt type="alert" minor="0">Please select a recording</plSeReAAlrt>
+    <limitDownloadAlrt type="alert" minor="0">It is not possible to download more than 30 recordings at the same time.&#10;Please limit the number of selected recordings.</limitDownloadAlrt>
+    <thDiIsLoclAlrt type="alert" minor="0">The disk is locked and must be unlocked&#10;before any recordings can be removed.</thDiIsLoclAlrt>
+    <limitRemoveAlrt type="alert" minor="0">It is not possible to remove more than 50 recordings at the same time.&#10;Please limit the number of selected recordings.</limitRemoveAlrt>
+    <selOngOneAlrt type="alert" minor="0">The selected recording is ongoing, it can not be removed.</selOngOneAlrt>
+    <selOngMultiAlrt type="alert" minor="0">One or more of the selected recordings are ongoing.&#10;Please deselect them before proceeding.</selOngMultiAlrt>
+    <diIsLoclAlrt1 type="alert" minor="0">The disk</diIsLoclAlrt1>
+    <diIsLoclAlrt2 type="alert" minor="0">is locked and must be unlocked&#10;before any recordings can be removed.</diIsLoclAlrt2>
+    <reLenNullAlrt type="alert" minor="0">It is not possible to play a recording that does not have a duration.</reLenNullAlrt>
+    <remMultipleRecConfirm type="alert" minor="0">Are you sure you want to delete the selected recording(s)?</remMultipleRecConfirm>
+    <remRecConfirm type="alert" minor="0">Are you sure you want to delete the selected recording?</remRecConfirm>
+    <removeWaitTxt type="msgAsText" minor="0">Removing recordings. Please wait...</removeWaitTxt>
+    <unknownError type="alert" minor="0">unknown error</unknownError>
+    <removeFailed type="alert" minor="0">Some of the selected recordings could not be removed:</removeFailed>
+    <removeRecFailed type="alert" minor="0">Failed to remove recording:</removeRecFailed>
+    <recTxt type="msgAsText" minor="0">Recording</recTxt>
+    <toTxt type="msgAsText" minor="0">to</toTxt>
+    <ofTxt type="msgAsText" minor="0">of</ofTxt>
+    <downloadBtnStatTxt type="msg" minor="0">Download the selected recording</downloadBtnStatTxt>
+    <exportBtnStatTxt type="msg" minor="0">Export the selected recording</exportBtnStatTxt>
+    <playBtnStatTxt type="msg" minor="0">Play the selected recording</playBtnStatTxt>
+    <propBtnStatTxt type="msg" minor="0">Show all properties for the selected recording</propBtnStatTxt>
+    <remoBtnStatTxt type="msg" minor="0">Delete the selected recording</remoBtnStatTxt>
+    <filterBtnStatTxt type="msg" minor="0">Filter list of recordings</filterBtnStatTxt>
+    <reLiTxt type="text" minor="0">Recording List</reLiTxt>
+    <hlpTxt type="image" minor="0" imageid="hlpPic">Click here for help on this page</hlpTxt>
+    <recFilterTxt type="text" minor="0">Filter</recFilterTxt>
+    <recSearchTimeTxt type="text" minor="0">Recording time:</recSearchTimeTxt>
+    <recSearchFromTxt type="text" minor="0">From:</recSearchFromTxt>
+    <recSearchFirst type="msg" minor="0">First recording</recSearchFirst>
+    <recSearchToday type="msg" minor="0">Today</recSearchToday>
+    <recSearchYesterday type="msg" minor="0">Yesterday</recSearchYesterday>
+    <recSearch7days type="msg" minor="0">Last 7 days</recSearch7days>
+    <recSearch30days type="msg" minor="0">Last 30 days</recSearch30days>
+    <recSearchDate type="msg" minor="0">Date</recSearchDate>
+    <recSearchFormatDateTxt1 type="text" minor="0">(yyyy-mm-dd hh:mm)</recSearchFormatDateTxt1>
+    <recSearchFormatDateTxt2 type="text" minor="0">(yyyy-mm-dd hh:mm)</recSearchFormatDateTxt2>
+    <recSearchToTxt type="text" minor="0">To:</recSearchToTxt>
+    <recSearchNow type="msg" minor="0">Now</recSearchNow>
+    <recSearchEventTxt type="text" minor="0">Event:</recSearchEventTxt>
+    <recSearchAny type="msg" minor="0">Any</recSearchAny>
+    <recSearchTriggTxt type="text" minor="0">Storage:</recSearchTriggTxt>
+    <recSearchSortTxt type="text" minor="0">Sort:</recSearchSortTxt>
+    <recSearchAscending type="msg" minor="0">Ascending</recSearchAscending>
+    <recSearchDescending type="msg" minor="0">Descending</recSearchDescending>
+    <recSearchResultsTxt1 type="text" minor="0">Results:</recSearchResultsTxt1>
+    <recSearchResultsTxt2 type="text" minor="0">Max</recSearchResultsTxt2>
+    <recSearchResultsTxt3 type="text" minor="0">recordings at a time</recSearchResultsTxt3>
+    <filterTxt type="button" minor="0" buttonid="searchBtn">Filter</filterTxt>
+    <RecTxt type="text" minor="0">Recording</RecTxt>
+    <playBtn type="button" minor="0" buttonid="reLi_PlayBtn">Play...</playBtn>
+    <propBtn type="button" minor="0" buttonid="reLi_PropBtn">Properties...</propBtn>
+    <downloadBtn type="button" minor="0" buttonid="reLi_DownloadBtn">Download</downloadBtn>
+    <exportBtn type="button" minor="0" buttonid="reLi_ExportBtn">Export...</exportBtn>
+    <remoBtn type="button" minor="0" buttonid="reLi_RemoBtn">Remove</remoBtn>
+  </recList>
+
+  <exportRecording>
+    <pageTitle type="title" minor="0">Export Recording</pageTitle>
+    <exportTitleTxt type="text" minor="0">Export Recording</exportTitleTxt>
+    <diIdTxt type="text" minor="0">Disk ID:</diIdTxt>
+    <estFileSizeTxt type="text" minor="0">Estimated file size:</estFileSizeTxt>
+    <estFileSizeInfoTxt type="text" minor="0">KiB</estFileSizeInfoTxt>
+    <sdCardTxt type="msgAsText" minor="0">SD card</sdCardTxt>
+    <sdCard2Txt type="msgAsText" minor="0">SD card 2</sdCard2Txt>
+    <networkShareTxt type="msgAsText" minor="0">Network share</networkShareTxt>
+    <staTiUTCTxt type="text" minor="0">Start time:</staTiUTCTxt>
+    <stoTiUTCTxt type="text" minor="0">Stop time:</stoTiUTCTxt>
+    <fileFormatTxt type="text" minor="0">File format:</fileFormatTxt>
+    <closeBtnStatTxt type="msg" minor="0">Close window</closeBtnStatTxt>
+    <exportBtnStatTxt type="msg" minor="0">Export recording</exportBtnStatTxt>
+    <timeformatTxt1 type="text" minor="0">(yyyy-mm-dd hh:mm:ss)</timeformatTxt1>
+    <timeformatTxt2 type="text" minor="0">(yyyy-mm-dd hh:mm:ss)</timeformatTxt2>
+    <invalidStarttimeAlert type="alert" minor="0">Invalid start time format.</invalidStarttimeAlert>
+    <invalidStoptimeAlert type="alert" minor="0">Invalid stop time format.</invalidStoptimeAlert>
+    <exportErrorAlert10 type="alert" minor="0">An error occurred while processing the request.</exportErrorAlert10>
+    <exportErrorAlert20 type="alert" minor="0">Invalid request.</exportErrorAlert20>
+    <exportErrorAlert40 type="alert" minor="0">Specified version not supported.</exportErrorAlert40>
+    <exportErrorAlert110 type="alert" minor="0">Recording not found.</exportErrorAlert110>
+    <exportErrorAlert120 type="alert" minor="0">Invalid start time.</exportErrorAlert120>
+    <exportErrorAlert130 type="alert" minor="0">Invalid stop time.</exportErrorAlert130>
+    <exportErrorAlert140 type="alert" minor="0">Start time is after stop time.</exportErrorAlert140>
+    <exportErrorAlert150 type="alert" minor="0">The requested start time is after recording's stop time.</exportErrorAlert150>
+    <exportErrorAlert160 type="alert" minor="0">The requested stop time is before recording's start time.</exportErrorAlert160>
+    <exportErrorAlert170 type="alert" minor="0">Invalid export format.</exportErrorAlert170>
+    <exportErrorAlert180 type="alert" minor="0">Requested export format is not compatible for this media type.</exportErrorAlert180>
+    <matroskaTxt type="text" minor="0">Matroska</matroskaTxt>
+    <filenameTxt type="text" minor="0">File name:</filenameTxt>
+    <optionalTxt type="text" minor="0">Optional</optionalTxt>
+    <notAvailableTxt type="text" minor="0">Not available</notAvailableTxt>
+    <closeBtn type="button" minor="0" buttonid="exportRec_closeBtn">Close</closeBtn>
+    <exportBtn type="button" minor="0" buttonid="exportRec_exportBtn">Export</exportBtn>
+    <tBTxt type="msgAsText" minor="0">TB</tBTxt>
+    <gBTxt type="msgAsText" minor="0">GB</gBTxt>
+    <mBTxt type="msgAsText" minor="0">MB</mBTxt>
+    <kBTxt type="msgAsText" minor="0">kB</kBTxt>
+  </exportRecording>
+
+  <recordingProperties>
+    <pageTitle type="title" minor="0">Recordings/Recording properties</pageTitle>
+    <closeBtnStatTxt type="msg" minor="0">Close window</closeBtnStatTxt>
+    <recProTxt type="text" minor="0">Recording Properties</recProTxt>
+    <recTxt type="text" minor="0">Recording</recTxt>
+    <recIdTxt type="text" minor="0">Recording ID:</recIdTxt>
+    <diIdTxt type="text" minor="0">Disk ID:</diIdTxt>
+    <sdCardTxt type="msgAsText" minor="0">SD card</sdCardTxt>
+    <sdCard2Txt type="msgAsText" minor="0">SD card 2</sdCard2Txt>
+    <networkShareTxt type="msgAsText" minor="0">Network share</networkShareTxt>
+    <staTiLocTxt type="text" minor="0">Start time (local):</staTiLocTxt>
+    <staTiUTCTxt type="text" minor="0">Start time (UTC):</staTiUTCTxt>
+    <stoTiLocTxt type="text" minor="0">Stop time (local):</stoTiLocTxt>
+    <stoTiUTCTxt type="text" minor="0">Stop time (UTC):</stoTiUTCTxt>
+    <durTxt type="text" minor="0">Duration:</durTxt>
+    <ongTxt type="msgAsText" minor="0">Ongoing</ongTxt>
+    <eventByTxt type="text" minor="0">Event:</eventByTxt>
+    <continTxt type="msgAsText" minor="0">continuous</continTxt>
+    <recTypTxt type="text" minor="0">Recording type:</recTypTxt>
+    <trigTxt type="msgAsText" minor="0">Triggered</trigTxt>
+    <recStaTxt type="text" minor="0">Recording status:</recStaTxt>
+    <complTxt type="msgAsText" minor="0">Completed</complTxt>
+    <evIdTxt type="text" minor="0">Event ID:</evIdTxt>
+    <evTrTxt type="text" minor="0">Event trigger:</evTrTxt>
+    <fiSiTxt type="text" minor="0">File size:</fiSiTxt>
+    <sourceTxt type="text" minor="0">Source:</sourceTxt>
+    <vidTxt type="text" minor="0">Video</vidTxt>
+    <vidTyTxt type="text" minor="0">Video type:</vidTyTxt>
+    <fraRaTxt type="text" minor="0">Frame rate:</fraRaTxt>
+    <fpsTxt type="text" minor="0">fps</fpsTxt>
+    <resTxt type="text" minor="0">Resolution:</resTxt>
+    <pixTxt type="text" minor="0">pixels</pixTxt>
+    <compTxt type="text" minor="0">Compression:</compTxt>
+    <audTxt1 type="text" minor="0">Audio</audTxt1>
+    <audTxt2 type="text" minor="0">Audio</audTxt2>
+    <audTyTxt type="text" minor="0">Audio type:</audTyTxt>
+    <audClTxt type="text" minor="0">Audio:</audClTxt>
+    <yesTxt type="text" minor="0">Yes</yesTxt>
+    <noTxt type="text" minor="0">No</noTxt>
+    <closeBtn type="button" minor="0" buttonid="recProp_closeBtn">Close</closeBtn>
+  </recordingProperties>
+</language_xml>

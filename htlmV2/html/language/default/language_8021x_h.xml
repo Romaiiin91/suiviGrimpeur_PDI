@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+	<x8021x_h>
+		<pageTitle type="title" minor="0">Help/IEEE 802.1X/EAPOL using EAP-TLS</pageTitle>
+		<titleTxt type="msgAsText" minor="0">IEEE 802.1X/EAPOL using EAP-TLS</titleTxt>
+		<txt1 type="text" minor="0">IEEE 802.1X is an IEEE standard for port-based Network Admission Control providing secure authentication of wired and wireless network devices. IEEE 802.1X is based on EAP (Extensible Authentication Protocol).</txt1>
+		<txt2 type="text" minor="0">To access a network protected by IEEE 802.1X, network devices must authenticate themselves. The authentication is performed by an authentication server, typically a RADIUS server, examples of which are FreeRADIUS and Microsoft Internet Authentication Server.</txt2>
+		<txt3 type="text" minor="0">In Axis' implementation, the Axis product and the authentication server authenticate themselves with digitial certificates using EAP-TLS (Extensible Authentication Protocol - Transport Layer Security).</txt3>
+		<txt4 type="text" minor="0">To allow the Axis product to access a network protected by IEEE 802.1X/EAPOL (EAP over LAN), two certificates must be installed on the product:</txt4>
+		<txt5 type="text" minor="0">a CA certificate</txt5>
+		<txt6 type="text" minor="0">a signed client certificate</txt6>
+		<txt7 type="text" minor="0">Go to &#x3C;b&#x3E;System Options &#x3E; Security &#x3E; Certificates&#x3C;/b&#x3E; to create and install certificates.</txt7>
+		<txt8 type="text" minor="0">&#x3C;b&#x3E;Note:&#x3C;/b&#x3E; For authentication to work properly the time in the Axis product should be synchronized with an</txt8>
+		<ntp_server_txt type="text" minor="0">NTP server</ntp_server_txt>
+		<subTitle1Txt type="text" minor="0">Certificates</subTitle1Txt>
+		<txt9 type="text" minor="0">&#x3C;b&#x3E;CA Certificate&#x3C;/b&#x3E; - The CA certificate validates the identity of the authentication server. Select the certificate from the list of installed certificates.</txt9>
+		<txt10 type="text" minor="0">&#x3C;b&#x3E;Client Certificate&#x3C;/b&#x3E; - The client certificate validates the identity of the Axis product. Select the certificate from the list of installed certificates.</txt10>
+		<subTitle2Txt type="text" minor="0">Settings</subTitle2Txt>
+		<txt11 type="text" minor="0">&#x3C;b&#x3E;EAPOL version&#x3C;/b&#x3E; - Select the EAPOL version (1 or 2) as used in the network switch.</txt11>
+		<txt12 type="text" minor="0">&#x3C;b&#x3E;EAP identity&#x3C;/b&#x3E; - Enter the user identity (maximum 32 characters) associated with the certificate.</txt12>
+		<txt13 type="text" minor="0">&#x3C;b&#x3E;Enable IEEE 802.1X&#x3C;/b&#x3E; - Check the box to enable the IEEE 802.1X protocol.</txt13>
+		<txt14 type="text" minor="0">Click &#x3C;b&#x3E;Save&#x3C;/b&#x3E; to enable the settings.</txt14>
+	</x8021x_h>
+</language_xml>

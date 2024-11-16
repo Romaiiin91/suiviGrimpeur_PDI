@@ -1,0 +1,22 @@
+
+  input.btnNormal{ width: 75px; overflow:hidden; }
+  input.btnLonger{ width: 110px; overflow:hidden; }
+  input.btnXXL{ width: 200px; overflow:hidden; }
+
+  input.radio, input.checkbox{ height:17px; font-size:9px; }
+  .indentBtnGroup input.radio, .btnGroup input.radio, .indentBtnGroup input.checkbox, .btnGroup input.checkbox { margin:0px 4px 0px 2px;}
+  
+  #mainContent { float:left; overflow:visible; width:564px;}
+
+  #pageFooter .footerMenu { font-size:1px; background: url(/pics/line_corner_r_box.gif) bottom left no-repeat; padding-top:7px; margin-left:7px; border-right:1px solid #ccc; width:176px; float:left;}
+  #pageFooter .footerRight { font-size:1px; background: url(/pics/line_corner_r_box.gif) bottom right no-repeat; padding-top:7px; margin-left:183px; border-left:1px solid #ccc;}
+
+  .cornerBox, 
+  .cornerVideoBox	{ float:left; background: url(/pics/line_corner_r_box.gif) top right no-repeat;border: 0;margin:3px 3px;}
+  .cornerBox .content, 
+  .cornerVideoBox .content  { background: url(/pics/line_corner_l_box.gif) top left no-repeat;margin:0 0;padding:7px 1px;}
+  .cornerBox .footerLeft,
+  .cornerVideoBox .footerLeft   { float:none;clear:both;background: url(/pics/line_corner_l_box.gif) bottom left no-repeat; padding:0 0;}
+  .cornerBox .footerRight,
+  .cornerVideoBox .footerRight  { background: url(/pics/line_corner_r_box.gif) bottom right no-repeat; padding-top:7px; margin-left:7px;}
+

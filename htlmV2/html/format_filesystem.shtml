@@ -1,0 +1,117 @@
+
+<!--#include virtual="/sm/sm.srv?action=get&group=System" -->
+
+<!--#set var="WizardFormAction" val="noAction" -->
+
+<!--#include virtual="/incl/top_incl_popup.shtml" -->
+
+<!--#if expr="$diskid = SD_DISK" -->
+
+<script language="JavaScript">
+<!--
+var langObjFrmFs = new Language("diskManagement", "format_filesystem");
+var ajaxRequest = AxisConnectionFactory.createAjaxConnection();
+
+function init()
+{
+  langObjFrmFs.init();
+  var filesystem = getCurrentFileSystem();
+  
+  var fileSysOptions = document.getElementById("diskFileSys").options;
+  if(fileSysOptions[0].value == filesystem)
+    fileSysOptions[0].selected = true;
+  else
+    fileSysOptions[1].selected = true;
+}
+
+function sendAction(action)
+{
+  return AxisConnectionFactory.getResponseXmlWith(["GET", action, false], null, ajaxRequest);
+}
+
+function getCurrentFileSystem()
+{
+  var filesystem = "";
+
+  var now = new Date();
+  var timestamp = now.getTime();
+  var url = "/axis-cgi/disks/list.cgi?diskid=<!--#echo var="diskid" option="encoding:javascript" -->&type=xml&timestamp="+timestamp;
+  var disksXML = sendAction( url);
+
+  if( disksXML )
+  {
+    var disks = disksXML.selectNodes("/root/disks/disk");
+    var disk;
+
+    if( disks.length > 0 )
+    {
+      disk = disks[0];
+      filesystem = disk.getAttribute( "filesystem" );
+    }
+  }
+  return filesystem;
+}
+
+function saveData()
+{
+  var fileSysObj = document.getElementById("diskFileSys");
+  var fs = fileSysObj.options[fileSysObj.selectedIndex].value;
+  
+  //Lets pass this to diskInfo -> filesystemChange()
+  window.opener.filesystemChange(fs); //<--- calls the filesystemChange() located in diskInfo.shtml
+  window.close();
+}
+
+function globalLanguageVars()
+{
+  var fileSysArr = new Array();
+  fileSysArr[0] = {val: "vfat", text: langObjFrmFs.getText("vfatTxt")};
+  fileSysArr[1] = {val: "ext4", text: langObjFrmFs.getText("ext4Txt")};
+  langObjFrmFs.addOptionsToList(document.getElementById("diskFileSys"), fileSysArr);
+}
+
+-->
+</script>
+
+</head>
+<body <!--#include virtual="/incl/bodytag_popup.shtml" --> onload="init()">
+
+<form name="cert_form">
+<div class="cornerBox">
+  <div class="content">
+  <table border="<!--#echo var="zero" option="encoding:html" -->" cellpadding="<!--#echo var="cellpadding3" option="encoding:html" -->" cellspacing="0" class="oddItem" width="300">
+    <tr>
+      <td class="topTitle" align="left" colspan="2" nowrap>
+        <span id="formatTxt"></span>
+      </td>
+    </tr>
+    <tr>
+      <td class="oddItem" colspan="2"><span id="waFoErAllRecText"></span></td>
+    </tr>
+    <tr>
+      <td class="evenItem" nowrap><span id="fsTxt"></span></td>
+      <td class="evenItem">
+        <select name="diskFileSys" id="diskFileSys">
+        </select>
+      </td>
+    </tr>
+    <tr>
+    <tr>
+      <td class="topTitle" align="center" colspan="2">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td class="button"><input type="button" width="75" value="" class="btnNormal" onClick="JavaScript:saveData()" id="format_okBtn"></td>
+            <td class="button">&nbsp;</td>
+            <td class="button"><input type="button" width="75" value="" class="btnNormal" onClick="window.close()" id="format_cancelBtn"></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+  </div>
+  <div class="footerLeft"><div class="footerRight"></div></div>
+</div>
+</form>
+</body>
+</html>
+<!--#endif -->

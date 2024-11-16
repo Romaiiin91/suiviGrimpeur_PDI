@@ -1,0 +1,70 @@
+[15912] Démarrage du programme
+	[15912] --> Début du processus fils de Detection [15948]
+	[15948] --> Début de la detection
+http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
+Affichage des argument de detection:
+	args[0] = /home/romain/Documents/PDI/dev/bin/detection
+	args[1] = http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
+	args[2] = (null)
+	args[3] = A����_
+	[15912] --> Arrêt du fils de PID: 15948
+[16692] Démarrage du programme
+	[16692] --> Début du processus fils de Detection [16753]
+	[16753] --> Début de la detection
+http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
+Affichage des argument de detection:
+	args[0] = /home/romain/Documents/PDI/dev/bin/detectionDEBUG
+	args[1] = 
+	
+	args[2] = (null)
+	args[3] = A����_
+	[16692] --> Arrêt du fils de PID: 16753
+Debut detection sur url : http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720
+[17153] Démarrage du programme
+	[17153] --> Début du processus fils de Detection [17196]
+	[17196] --> Début de la detection
+http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
+Affichage des argument de detection:
+	args[0] = /home/romain/Documents/PDI/dev/bin/detectionDEBUG
+	args[1] = http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
+	args[2] = (null)
+	args[3] = A����_
+	[17153] --> Arrêt du fils de PID: 17196
+[17341] Démarrage du programme
+	[17341] --> Début du processus fils de Detection [17360]
+	[17360] --> Début de la detection
+http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
+Affichage des argument de detection:
+	args[0] = /home/romain/Documents/PDI/dev/bin/detectionDEBUG
+	args[1] = http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
+	args[2] = (null)
+Debut detection sur url : http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
+	[17341] --> Arrêt du fils de PID: 17360
+[17460] Démarrage du programme
+	[17460] --> Début du processus fils de Detection [17480]
+	[17480] --> Début de la detection
+http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
+Affichage des argument de detection:
+	args[0] = /home/romain/Documents/PDI/dev/bin/detectionDEBUG
+	args[1] = http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
+	args[2] = (null)
+Debut detection sur url : http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
+[18548] Démarrage du programme
+	[18548] --> Début du processus fils de Detection [18585]
+	[18585] --> Début de la detection
+http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
+Affichage des argument de detection:
+	args[0] = /home/romain/Documents/PDI/dev/bin/detectionDEBUG
+	args[1] = http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
+	args[2] = (null)
+Debut detection sur le lien : http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
+[7822] Démarrage du programme
+	[7822] --> Début du processus fils de Detection [7864]
+	[7864] --> Début de la detection
+http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
+Affichage des argument de detection:
+	args[0] = /home/romain/Documents/PDI/dev/bin/detectionDEBUG
+	args[1] = http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
+	args[2] = (null)
+Debut detection sur le lien : http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
+	[7822] --> Arrêt du fils de PID: 7864

@@ -1,0 +1,134 @@
+<!--#set var="backButton" val="yes" -->
+<!--#set var="forwardButton" val="yes" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<script language="JavaScript">
+<!--
+var langObjRLRLH = new Language("recordingList_h", "recordingList_h");
+
+function globalLanguageVars()
+{
+	document.getElementById("titleId").innerHTML = langObjRLRLH.getText("titleTxt");
+  document.getElementById("hrefSupUrl").href = langObjRLRLH.getText("axisSupURL");
+}
+// -->
+</script>
+
+</head>
+<body onload="langObjRLRLH.init()">
+<!--#include virtual="/incl/helpTop_incl2.shtml" -->
+<table class="alternateRows" border="0" cellpadding="3" cellspacing="0" width="440" bgcolor="white">
+<!--#include virtual="/incl/helpTop_incl3.shtml" -->
+<tr>
+	<td colspan="2">
+		<span id="intro"></span><br/><br/>
+	</td>
+</tr>
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="subTitle_filter_Txt"></span>
+		</div>
+	</td>
+</tr>
+<tr class="oddItem" classname="oddItem">
+	<td colspan="2">
+		<span id="filter1"></span><br/><br/>
+		<span id="filter2"></span><br/><br/>
+		<span id="filter3"></span><br/><br/>
+		<span id="filter4"></span>
+		<ul>
+			<li>
+				<span id="filter5"></span>
+			</li>
+			<li>
+				<span id="filter6"></span>
+			</li>
+			<li>
+				<span id="filter18"></span>
+			</li>
+			<li>
+				<span id="filter7"></span>
+			</li>
+			<li>
+				<span id="filter8"></span>
+			</li>
+			<li>
+				<span id="filter9"></span>
+			</li>
+		</ul>
+		<span id="filter10"></span>
+		<ul>
+			<li>
+				<span id="filter11"></span>
+			</li>
+			<li>
+				<span id="filter12"></span>
+			</li>
+		</ul>
+		<span id="filter13"></span><br/><br/>
+		<span id="filter14"></span><br/><br/>
+		<span id="filter15"></span><br/><br/>
+		<span id="filter16"></span><br/><br/>
+		<span id="filter17"></span><br/><br/>
+	</td>
+</tr>
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="subTitle_recording_Txt"></span>
+		</div>
+	</td>
+</tr>
+<tr class="oddItem" classname="oddItem">
+	<td colspan="2">
+		<span id="recording1"></span><br/><br/>
+		<span id="recording2"></span><br/><br/>
+		<span id="recording3"></span><br/><br/>
+		<span id="recording4"></span>
+		<blockquote>
+			<span id="recording5"></span>
+			<ul>
+				<li>
+					<span id="recording6"></span>
+				</li>
+				<li>
+					<span id="recording7"></span>
+				</li>
+				<li>
+					<span id="recording8"></span>
+				</li>
+				<li>
+					<span id="recording9"></span>
+				</li>
+				<li>
+					<span id="recording10"></span>
+				</li>
+				<li>
+					<span id="recording11"></span>
+				</li>
+			</ul>
+		</blockquote>
+		<span id="recording12"></span>
+		<blockquote>
+			<span id="recording13"></span>&nbsp;<a href="" id="hrefSupUrl" target="main"><span id="axisSupURLTxt"></span></a>
+		</blockquote>
+		<span id="recording14"></span>
+		<ul>
+			<li>
+				<span id="recording15"></span>
+			</li>
+			<li>
+				<span id="recording16"></span>
+			</li>
+			<li>
+				<span id="recording17"></span>
+			</li>
+		</ul>
+		<span id="recording18"></span><br/><br/>
+	</td>
+</tr>
+</table>
+<!--#include virtual="/incl/helpBottom_incl.shtml" -->
+</body>
+</html>

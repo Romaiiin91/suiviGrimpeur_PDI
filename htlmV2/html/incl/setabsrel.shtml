@@ -1,0 +1,112 @@
+<!--#set var="cgi_path" val="axis-cgi" -->
+  <!--#if expr="$camnbr = 1" -->
+    <!--#set var="nbr" val="0" -->
+  <!--#endif -->
+<!--#set var="MovePan" val="no" -->
+<!--#set var="MoveTilt" val="no" -->
+<!--#set var="Focus" val="no" -->
+<!--#set var="Iris" val="no" -->
+<!--#set var="ZoomFunc" val="no" -->
+<!--#set var="AutoIris" val="no" -->
+<!--#set var="AutoFocus" val="no" -->
+<!--#set var="showHome" val="no" -->
+<!--#set var="UseRel" val="no" -->
+<!--#set var="useWithCam" val="no" -->
+<!--#set var="cntrlQue" val="no" -->
+<!--#set var="ptzgui" val="no" -->
+<!--#set var="ptzaccess" val="no" -->
+<!--#set var="showPTZBars" val="no" -->
+<!--#set var="ptzpresets" val="no" -->
+
+<!--#include virtual="/sm/sm.srv?action=get&group=Properties.PTZ" -->
+<!--#if expr="$root_Properties_PTZ_PTZ = yes" -->
+  <!--#set var="ptzpresets" val="yes" -->
+  <!--#if expr="_$relative != _" -->
+    <!--#if expr="$relative = yes" -->
+      <!--#set var="UseRel" val="yes" -->
+    <!--#endif -->
+  <!--#elif expr="$root_Layout_DefaultJoystickMode = yes" -->
+    <!--#set var="UseRel" val="yes" -->
+  <!--#endif -->
+<!--#endif -->
+
+
+<!--#if expr="$camnbr != quad" -->
+    <!--#include virtual="/sm/sm.srv?action=get&group=PTZ.PTZDriverStatuses,PTZ.CamPorts.Cam$camnbr$Port,PTZ.ImageSource.I$nbr$.PTZEnabled,PTZ.SerDriverStatuses,PTZ.BoaProtPTZOperator,System.BoaProtViewer" -->
+    <!--#set var="port_setabsrel" val="$(root_PTZ_PTZDriverStatuses_Driver$camnbr$Status)" -->
+    <!--#set var="invalid_port" val="0" -->
+  <!--#if expr="$port_setabsrel != $invalid_port" -->
+    <!--#if expr="$(root_PTZ_ImageSource_I$nbr$_PTZEnabled) = true" -->
+
+      <!--#if expr="$root_PTZ_BoaProtPTZOperator = anonymous" -->
+        <!--#set var="ptzaccess" val="yes" -->
+      <!--#elif expr="$root_System_BoaProtViewer = anonymous" -->
+         <!--#set var="ptzaccess" val="yes" -->
+      <!--#elif expr="$http_user_realms$ >< ¤PTZOperator¤" -->
+        <!--#set var="ptzaccess" val="yes" -->
+      <!--#endif -->
+
+      <!--#if expr="$ptzaccess = yes" -->
+        <!--#include virtual="/sm/sm.srv?action=get&group=PTZ.Limit.L$camnbr$,PTZ.Support.S$camnbr$,PTZ.Various.V$camnbr$.PanEnabled,PTZ.Various.V$camnbr$.TiltEnabled,PTZ.Various.V$camnbr$.FocusEnabled,PTZ.Various.V$camnbr$.ZoomEnabled,PTZ.Various.V$camnbr$.IrisEnabled,PTZ.Various.V$camnbr$.HomePresetSet,PTZ.Various.V$camnbr$.CtlQueueing,PTZ.Auxiliary.A$camnbr$,PTZ.ImageSource.I0.PTZEnabled" -->
+
+        <!--#if expr="$(root_PTZ_Support_S$camnbr$_AbsolutePan) = true" -->
+          <!--#set var="MovePan" val="abs" -->
+        <!--#elif expr="$(root_PTZ_Support_S$camnbr$_RelativePan) = true" -->
+          <!--#set var="MovePan" val="rel" -->
+          <!--#set var="UseRel" val="yes" -->
+        <!--#endif -->
+
+        <!--#if expr="$(root_PTZ_Support_S$camnbr$_AbsoluteTilt) = true" -->
+          <!--#set var="MoveTilt" val="abs" -->
+        <!--#elif expr="$(root_PTZ_Support_S$camnbr$_RelativeTilt) = true" -->
+          <!--#set var="MoveTilt" val="rel" -->
+          <!--#set var="UseRel" val="yes" -->
+        <!--#endif -->
+
+        <!--#if expr="$(root_PTZ_Various_V$camnbr$_FocusEnabled) = true" -->
+          <!--#if expr="$(root_PTZ_Support_S$camnbr$_AbsoluteFocus) = true" -->
+            <!--#set var="Focus" val="abs" -->
+          <!--#elif expr="$(root_PTZ_Support_S$camnbr$_RelativeFocus) = true" -->
+            <!--#set var="Focus" val="rel" -->
+          <!--#endif -->
+        <!--#endif -->
+
+        <!--#if expr="$(root_PTZ_Support_S$camnbr$_AbsoluteIris) = true" -->
+          <!--#set var="Iris" val="abs" -->
+        <!--#elif expr="$(root_PTZ_Support_S$camnbr$_RelativeIris) = true" -->
+          <!--#set var="Iris" val="rel" -->
+        <!--#endif -->
+
+        <!--#if expr="$(root_PTZ_Various_V$camnbr$_ZoomEnabled) = true" -->
+          <!--#if expr="$(root_PTZ_Support_S$camnbr$_AbsoluteZoom) = true" -->
+            <!--#set var="ZoomFunc" val="abs" -->
+          <!--#elif expr="$(root_PTZ_Support_S$camnbr$_RelativeZoom) = true" -->
+            <!--#set var="ZoomFunc" val="rel" -->
+          <!--#endif -->
+        <!--#endif -->
+
+        <!--#if expr="$(root_PTZ_Support_S$camnbr$_AutoIris) = true" -->
+          <!--#set var="AutoIris" val="yes" -->
+        <!--#endif -->
+
+        <!--#if expr="$(root_PTZ_Support_S$camnbr$_AutoFocus) = true" -->
+          <!--#set var="AutoFocus" val="yes" -->
+        <!--#endif -->
+
+        <!--#if expr="$(root_PTZ_Various_V$camnbr$_HomePresetSet) = true" -->
+          <!--#set var="showHome" val="yes" -->
+        <!--#endif -->
+
+        <!--#if expr="$(root_PTZ_Various_V$camnbr$_CtlQueueing) = true" -->
+          <!--#set var="cntrlQue" val="yes" -->
+        <!--#endif -->
+
+        <!--#set var="useWithCam" val="yes" -->
+        <!--#set var="ptzgui" val="yes" -->
+        <!--#set var="showPTZBars" val="yes" -->
+        <!--#set var="ptzpresets" val="yes" -->
+
+      <!--#endif -->
+    <!--#endif -->
+  <!--#endif -->
+<!--#endif -->

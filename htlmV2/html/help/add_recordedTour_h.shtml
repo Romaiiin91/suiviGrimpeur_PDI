@@ -1,0 +1,59 @@
+<!--#set var="backButton" val="yes" -->
+<!--#set var="forwardButton" val="yes" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<script language="JavaScript">
+<!--
+var langObjPTZARTH = new Language("ptz_h", "add_recordedTour_h");
+
+function globalLanguageVars()
+{
+	document.getElementById("titleId").innerHTML = langObjPTZARTH.getText("titleTxt");
+}
+// -->
+</script>
+
+</head>
+<body onload="langObjPTZARTH.init()">
+<!--#include virtual="/incl/helpTop_incl2.shtml" -->
+<table class="alternateRows" border="0" cellpadding="3" cellspacing="0" width="440" bgcolor="white">
+<!--#include virtual="/incl/helpTop_incl3.shtml" -->
+<tr>
+	<td colspan="2">
+		<span id="intro_Txt"></span>
+	</td>
+</tr>	
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="layout_subTitle1Txt"></span>
+		</div>
+	</td>
+</tr>
+<tr>
+	<td colspan="2">
+		<span id="txt1"></span><br/><br/>
+		<span id="txt2"></span>
+	</td>
+</tr>	
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="tour_subtitle"></span>
+		</div>
+	</td>
+</tr>
+<tr>
+	<td colspan="2">
+		<span id="record_button_txt"></span><br/><br/>
+		<span id="play_button_txt"></span><br/><br/>
+		<span id="stop_button_txt"></span><br/><br/>
+		<span id="cameracontrol_button_txt"></span><br/><br/>
+		<span id="oK_button_txt"></span><br/><br/>
+		<span id="cancel_button_txt"></span>
+	</td>
+</tr>
+</table>
+<!--#include virtual="/incl/helpBottom_incl.shtml" -->
+</body>
+</html>

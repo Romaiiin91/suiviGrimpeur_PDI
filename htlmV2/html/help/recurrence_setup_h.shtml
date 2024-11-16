@@ -1,0 +1,29 @@
+<!--#set var="backButton" val="yes" -->
+<!--#set var="forwardButton" val="yes" -->
+<!--#include virtual="/incl/popup_header.shtml" -->
+
+<script language="JavaScript">
+<!--
+var langObjRRSH = new Language("recurrences_h", "recurrence_setup_h");
+
+function globalLanguageVars()
+{
+	document.getElementById("titleId").innerHTML = langObjRRSH.getText("titleTxt");
+}
+// -->
+</script>
+
+</head>
+<body onload="langObjRRSH.init()">
+<!--#include virtual="/incl/help_top.shtml" -->
+<div class="row">
+	<span id="intro_Txt"></span><br/><br/>
+	<span id="txt"></span><br/><br/>
+	<span id="txt_extra_info"></span><br/><br/>
+	<span id="txt_note"></span><br/><br/>
+	<span id="txt_note_example"></span><br/><br/>
+	<span id="txt_note_1example"></span><br/><br/>
+	<span id="txt_note_2example"></span><br/><br/>
+	<span id="txt_note_3example"></span>
+</div>
+<!--#include virtual="/incl/help_footer.shtml" -->

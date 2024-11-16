@@ -1,0 +1,431 @@
+<!--#set var="helpURL" val="javascript:launch('/help/users_h.shtml')" -->
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#if expr="$basic = yes" -->
+  <!--#set var="activeMenu" val="basic" -->
+  <!--#set var="activePage" val="users_basic" -->
+<!--#else -->
+  <!--#set var="activeMenu" val="system" -->
+  <!--#set var="activeMenu1" val="security" -->
+  <!--#set var="activePage" val="users" -->
+<!--#endif -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<!--#include virtual="/java/chkbox.shtml" -->
+<!--#include virtual="/java/integer.shtml" -->
+<!--#include virtual="/sm/sm.srv?action=get&group=System.BoaProtViewer,Image.MaxViewers,PTZ.BoaProtPTZOperator,Network.RTSP.ProtViewer,Network.HTTP,Properties.PTZ.PTZ" -->
+
+<script src="/incl/select_input_class.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->" language="javascript" type="text/javascript"></script>
+
+<script language="JavaScript">
+<!--
+<!--#include virtual="/incl/functions.shtml" -->
+function reloadPage()
+{
+  document.location.href ="/admin/users.shtml?<!--#if expr="$basic = yes" -->basic=yes&<!--#endif -->id=<!--#echo var="ssi_request_id" option="encoding:url" -->";
+}
+
+var _list_obj;
+var configArray = new Array();
+
+function initSelect()
+{
+  createSelect();
+  getUserList();
+}
+
+function createSelect()
+{
+  var headers = [ langObjUsers.getText("usNaTxt"),
+                  langObjUsers.getText("usGrTxt") ];
+  var colWidths = [ "130px", "300px" ];
+  var selectWidth = 130 + 300;
+  var list_container = document.getElementById("idListContainer");
+  list_container.style.width = selectWidth + "px";
+  _list_obj = new select_input_class(list_container, headers);
+  _list_obj.setColumnWidths(colWidths);
+  _list_obj.setSortByColumn(-1);
+  _list_obj.ondblclick = edit;
+  _list_obj.drawTable();
+} 
+
+var langObjUsers;
+function onLoad()
+{
+  langObjUsers = new Language("users", "users");
+  langObjUsers.init();
+  setFields();
+  initSelect();
+}
+
+function removeUser()
+{
+  var aSubmitForm = document.userDelete;
+  var aUser = "";
+
+  if (_list_obj.selectedIndex != -1) {
+    var aTempArray = aSortArray[_list_obj.selectedIndex];
+    var anItem = aTempArray[2];
+    aUser = anItem[1];
+    if (aUser != 'root') {
+      if (confirm( langObjUsers.getText("remUsrConfirm")+" "+aUser + "?")) {
+        aSubmitForm.user.value = aUser;
+        aSubmitForm.submit();
+      }
+    } else {
+      alert( langObjUsers.getText("rootDelAlert") )
+    }
+  } else {
+    alert( langObjUsers.getText("selUsrAlert") );
+  }
+}
+
+function resetFields()
+{
+  var form = document.anonForm;
+
+    form.reset();
+    setFields();
+}
+
+function setFields()
+{
+  var form = document.anonForm;
+
+  if ("<!--#echo var="root_Image_MaxViewers" option="encoding:javascript" -->" == "") {
+    form.root_Image_MaxViewers.value = "20";
+  }
+  setSelectlist(form.root_Network_HTTP_AuthenticationPolicy, "<!--#echo var="root_Network_HTTP_AuthenticationPolicy" option="encoding:javascript" -->");
+
+  <!--#if expr="$ChangedPolicy = yes" -->
+     alert( langObjUsers.getText("chaPswTypAlert") );
+  <!--#endif -->
+  anonymousPTZLogin();
+}
+
+var aSortArray = [];
+
+// Sort function used for the item array sort
+function sortFunc(theFirstItem, theSecondItem)
+{
+  var anItemGroup1 = theFirstItem[2];
+  var anItemName1 = theFirstItem[2];
+  var anItemGroup2 = theSecondItem[2];
+  var anItemName2 = theSecondItem[2];
+
+  var aStr1_1 = anItemGroup1[0].toLowerCase();
+  var aStr1_2 = anItemName1[1].toLowerCase();
+  var aStr2_1 = anItemGroup2[0].toLowerCase();
+  var aStr2_2 = anItemName2[1].toLowerCase();
+
+  if ((aStr1_1 == "administrator") && (aStr1_2 == "root")) {
+    aResult = -1;
+  } else if ((aStr2_1 == "administrator") && (aStr2_2 == "root")) {
+    aResult = 1;
+  } else if (aStr1_1 == aStr2_1) {
+    if (aStr1_2 < aStr2_2)
+      aResult = -1;
+    else if (aStr1_2 > aStr2_2)
+      aResult = 1;
+    else // aStr1_2 == aStr2_2
+      aResult = 0;
+  } else {
+    if (aStr1_1 < aStr2_1)
+      aResult = -1;
+    else if (aStr1_1 > aStr2_1)
+      aResult = 1;
+    else // aStr1_1 == aStr2_1
+      aResult = 0;
+  }
+  return aResult;
+}
+
+
+function createUserArray()
+{
+  var userList = document.userList;
+  var anItemArray = [];
+  var aUser;
+
+  aUser = userList.admin.value.split(",");
+  for (j = 0 ; j < aUser.length ; j++) {
+    anItemArray = insertUser(anItemArray, aUser[j], "Administrator");
+  }
+
+
+  aUser = userList.operator.value.split(",");
+  for (j = 0 ; j < aUser.length ; j++) {
+    anItemArray = insertUser(anItemArray, aUser[j], "Operator");
+  }
+
+
+  aUser = userList.viewer.value.split(",");
+  for (j = 0 ; j < aUser.length ; j++) {
+    if (aUser[j] != "anonymous") {
+      anItemArray = insertUser(anItemArray, aUser[j], "Viewer");
+    }
+  }
+
+  for (i = 0; i < anItemArray.length; i++) {
+    var anItem = anItemArray[i];
+    aSortArray = aSortArray.concat([[anItem[0], anItem[1], anItem]]); // Sorted by 'User group' and then 'User name'
+  }
+  aSortArray.sort(sortFunc);
+}
+
+function insertUser(insertArray, user, group, digest)
+{
+  // Check if user already added, if true we shouldn't add it again
+  for (i = 0; i < insertArray.length; i++) {
+    var anItem = insertArray[i];
+    if(anItem[1] == user) {
+     return insertArray;
+    }
+  }
+  insertArray = insertArray.concat([[group, user, digest]]);
+  return insertArray;
+}
+
+function getUserList()
+{
+  var op;
+  var userText;
+  var aTempArray;
+  var anItem;
+  var aBasicUser;
+  var aDigestUser;
+  var isDigestUser;
+  // Create the item list
+  createUserArray();
+  for (i = 0; i < aSortArray.length; i++) {
+    aTempArray = aSortArray[i]; 
+    anItem = aTempArray[2]; 
+    aDigestUser = userList.digusers.value.split(",");  
+    if (aDigestUser != null) {
+      isDigestUser = 0; 
+      for (j = 0; j < aDigestUser.length; j++) {
+        if (aDigestUser[j] == anItem[1]) {
+          isDigestUser = 1;
+        }
+      }
+    }
+    if (isDigestUser == 1) 
+    {
+      aBasicUser = "";
+    } else {
+      aBasicUser = langObjUsers.getText("unEncPswTxt");
+    }
+    if(anItem[0] == "Administrator")
+      userText = langObjUsers.getText("adminTxt");
+    else if(anItem[0] == "Operator")
+      userText = langObjUsers.getText("oprTxt");
+    else
+      userText = langObjUsers.getText("vieTxt");
+    var rowArr = [ anItem[1], userText ];
+    rowArr.push(aBasicUser);
+    _list_obj.addRow(rowArr, i, "");
+  }
+  _list_obj.drawTable();
+}
+
+function writePasswordList()
+{
+  var list = document.getElementById("passwordList");
+
+  var listArr = new Array();
+  listArr[0] = {val: "basic_digest", text: langObjUsers.getText("enAndUnPswTxt")};
+  listArr[1] = {val: "digest", text: langObjUsers.getText("enPswTxt")};
+  listArr[2] = {val: "basic", text: langObjUsers.getText("unPsdTxt")};
+  var op;
+
+  for(var i=0; i < listArr.length; i++)
+  {
+    op = document.createElement('option');
+    op.value = listArr[i].val;
+    op.text = listArr[i].text;
+    list.options.add( op );
+  }
+}
+
+<!--#if expr="$root_Properties_PTZ_PTZ = yes" -->
+    var popUpWidth = 320 , popUpHeight = 240;
+<!--#else -->
+    var popUpWidth = 320 , popUpHeight = 230;
+<!--#endif -->
+
+function edit()
+{
+  if (_list_obj.selectedIndex != -1) {
+    var aTempArray = aSortArray[_list_obj.selectedIndex];
+    var anItem = aTempArray[2];
+    aUser = anItem[1];
+    aGroup = anItem[0];
+    linkstring = "/admin/users_set.shtml?<!--#if expr="$basic = yes" -->basic=yes&<!--#endif -->group=" + aGroup + "&user=" + aUser + "&doAction=update&id=<!--#echo var="ssi_request_id" option="encoding:url" -->";
+
+    openPopUp(linkstring, 'Set_User', popUpWidth , popUpHeight );
+
+  } else {
+    alert( langObjUsers.getText("selUsrModAlert") )
+  }
+}
+
+function add()
+{
+  if (_list_obj.length >= 20) {
+    alert( langObjUsers.getText("noMoUsrAlert") )
+  } else {
+    openPopUp('/admin/users_set.shtml?<!--#if expr="$basic = yes" -->basic=yes&<!--#endif -->group=view&doAction=add&id=<!--#echo var="ssi_request_id" option="encoding:url" -->', 'Set_User', popUpWidth, popUpHeight );
+  }
+}
+
+
+function anonymousPTZLogin()
+{
+  var form = document.anonForm;
+  if (form.System_BoaProtViewer.checked) {
+    form.PTZ_BoaProtPTZOperator.disabled = false;
+  } else {
+    form.PTZ_BoaProtPTZOperator.disabled = true;
+    form.PTZ_BoaProtPTZOperator.checked = false;
+  }
+}
+
+
+function saveData()
+{
+  var form = document.anonForm
+
+  <!--#if expr="_$root_Network_RTSP_ProtViewer != _" -->
+    if (form.System_BoaProtViewer.checked) {
+      form.root_Network_RTSP_ProtViewer.value = "anonymous";
+    } else {
+      form.root_Network_RTSP_ProtViewer.value = "password";
+    }
+  <!--#endif -->
+
+  if (!form.System_BoaProtViewer.checked) {
+    form.root_PTZ_BoaProtPTZOperator.value = "password";
+  } else {
+  }
+  if (form.root_Network_HTTP_AuthenticationPolicy.selectedIndex != 2 && userList.digusers.value.indexOf("root") == -1)
+  {
+    alert( langObjUsers.getText("pasWorTypAlert") )
+    form.root_Network_HTTP_AuthenticationPolicy.selectedIndex = 2;
+    return
+  }
+
+  if ("<!--#echo var="root_Network_HTTP_AuthenticationPolicy" option="encoding:javascript" -->" !=  form.root_Network_HTTP_AuthenticationPolicy.options[form.root_Network_HTTP_AuthenticationPolicy.selectedIndex].value)
+  {
+    form.return_page.value = '/admin/users.shtml?<!--#if expr="$basic = yes" -->basic=yes&<!--#endif -->id=<!--#echo var="ssi_request_id" option="encoding:url" -->&ChangedPolicy=yes';
+  }
+  form.submit()
+}
+
+var AddBtnStatTxt;
+var ModBtnStatTxt;
+var RemBtnStatTxt;
+var SaveBtnStatTxt;
+var ResBtnStatTxt;
+function globalLanguageVars()
+{
+  AddBtnStatTxt = langObjUsers.getText("addBtnStatTxt");
+  ModBtnStatTxt = langObjUsers.getText("modBtnStatTxt");
+  RemBtnStatTxt = langObjUsers.getText("remBtnStatTxt");
+  SaveBtnStatTxt = langObjUsers.getText("saveBtnStatTxt");
+  ResBtnStatTxt = langObjUsers.getText("resBtnStatTxt");
+  
+  writePasswordList();
+}
+
+// -->
+</script>
+
+</head>
+<body <!--#include virtual="/incl/bodytag.shtml" --> onLoad="onLoad();">
+
+<form name="userList">
+<!--#include virtual="/axis-cgi/admin/pwdgrp.cgi?action=get&format=form" -->
+</form>
+
+<!--#include virtual="/incl/top_incl2.shtml" -->
+
+  <form name="anonForm" action="/sm/sm.srv" method="post">
+  <table border="<!--#echo var="zero" option="encoding:html" -->" cellpadding="<!--#echo var="cellpadding3" option="encoding:html" -->" cellspacing="<!--#echo var="zero" option="encoding:html" -->" width="<!--#echo var="tableWidth3" option="encoding:html" -->" class="alternateRows">
+    <tr>
+      <td class="topTitle" align="left" colspan="2"><span id="usersTxt"></span></td>
+      <td class="topTitle">
+        <div align="right"><a href="javascript:launch('/help/users_h.shtml')"><img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="helpPic"></a></div>
+      </td>
+    </tr>
+    <tr><td class="subTitle" align="left" colspan="3"><span id="usrLiTxt"></span></td></tr>
+    <tr>
+      <td nowrap colspan="3">
+        <div id="idListContainer" class="selectList" style="width: 550px"></div>
+      </td>
+    </tr>
+    <tr class="topTitle">
+      <td align="left" nowrap colspan="3">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td class="button"><img src="/pics/space.gif" border="0" width="1" height="20"><input type="button" value="" width="75" class="btnNormal" onClick="JavaScript:add()" onMouseOver="return showStatus(AddBtnStatTxt)" onMouseOut="return showStatus('')" id="users_adddBtn"></td>
+            <td class="button">&nbsp;</td>
+            <td class="button"><img src="/pics/space.gif" border="0" width="1" height="20"><input type="button" value="" width="75" class="btnNormal" onClick="JavaScript:edit()" onMouseOver="return showStatus(ModBtnStatTxt)" onMouseOut="return showStatus('')" id="users_modifyBtn"></td>
+            <td class="button">&nbsp;</td>
+            <td class="button"><img src="/pics/space.gif" border="0" width="1" height="20"><input type="button" value="" width="75" class="btnNormal" onClick="JavaScript:removeUser()" onMouseOver="return showStatus(RemBtnStatTxt)" onMouseOut="return showStatus('')" id="users_removeBtn"></td>
+          </tr>
+        </table>
+        <!--#if expr="_$root_Network_RTSP_ProtViewer != _" -->
+          <input type="hidden" name="root_Network_RTSP_ProtViewer" value="<!--#echo var="root_Network_RTSP_ProtViewer" option="encoding:html" -->" />
+        <!--#endif -->
+      </td>
+    </tr>
+
+    <tr><td colspan="3">&nbsp;</td></tr>
+    <tr><td class="subTitle" align="left" colspan="3"><span id="pswdSetTxt"></span></td></tr>
+    <tr>
+      <td colspan="3" nowrap><span id="allPswdLogTxt"></span>&nbsp;
+      <select name="root_Network_HTTP_AuthenticationPolicy" id="passwordList">
+      </select>
+      </td>
+    </tr>
+    <tr class="reuseLast"><td colspan="3">&nbsp;</td></tr>
+    <tr><td class="subTitle" align="left" colspan="3"><span id="usrSetTxt"></span></td></tr>
+    <tr>
+      <td colspan="3" nowrap>
+        <input type="hidden" name="root_System_BoaProtViewer" value="<!--#echo var="root_System_BoaProtViewer" option="encoding:html" -->">
+        <input name="System_BoaProtViewer" type="checkbox"<!--#if expr="$root_System_BoaProtViewer = anonymous" --> checked<!--#endif --> onClick="JavaScript:CheckBoxClicked(this.form, this, 'root_System_BoaProtViewer', 'anonymous', 'password');anonymousPTZLogin()"><span id="enblAnLogTxt"></span>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3" nowrap>
+        <input type="hidden" name="root_PTZ_BoaProtPTZOperator" value="<!--#echo var="root_PTZ_BoaProtPTZOperator" option="encoding:html" -->">
+        <input name="PTZ_BoaProtPTZOperator" type="checkbox"<!--#if expr="$root_PTZ_BoaProtPTZOperator = anonymous" --> checked<!--#endif --> onClick="JavaScript:CheckBoxClicked(this.form, this, 'root_PTZ_BoaProtPTZOperator', 'anonymous', 'password')"><span id="enblPTZlogTxt"></span>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3">
+        <!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.Layout.EnableBasicSetup&format=htmlvalue" -->&nbsp;<span id="enBasSetTxt"></span>
+      </td>
+    </tr>
+    <tr class="topTitle">
+      <td align="center" colspan="3">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td class="button"><input type="button" width="75" value="" class="btnNormal" onClick="saveData()" onMouseOver="return showStatus(SaveBtnStatTxt)" onMouseOut="return showStatus('')" id="users_saveBtn"></td>
+            <td class="button">&nbsp;</td>
+            <td class="button"><input type="button" width="75" value="" class="btnNormal" onClick="resetFields()" onMouseOver="return showStatus(ResBtnStatTxt)" onMouseOut="return showStatus('')" id="users_resetBtn"></td>
+          </tr>
+        </table>
+        <input type="hidden" name="return_page" value="/admin/users.shtml?<!--#if expr="$basic = yes" -->basic=yes&<!--#endif -->id=<!--#echo var="ssi_request_id" option="encoding:url" -->">
+        <input type="hidden" name="action" value="modify">
+      </td>
+    </tr>
+  </table>
+  </form>
+
+<form name="userDelete" action="/axis-cgi/admin/pwdgrp.cgi" method="POST">
+<input type="hidden" name="action" value="remove">
+<input type="hidden" name="user" value="">
+<input type="hidden" name="return_page" value="/admin/users.shtml?<!--#if expr="$basic = yes" -->basic=yes&<!--#endif -->id=<!--#echo var="ssi_request_id" option="encoding:url" -->">
+</form>
+
+<!--#include virtual="/incl/bottom_incl.shtml" -->

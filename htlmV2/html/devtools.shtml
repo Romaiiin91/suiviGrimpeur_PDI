@@ -1,0 +1,285 @@
+<!--#set var="helpURL" val="javascript:launch('/help/packages_h.shtml')" -->
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+<!--#set var="activeMenu" val="apps" -->
+<!--#set var="activeParentPage" val="packages" -->
+<!--#set var="activePage" val="packages" -->
+
+<script src="/incl/select_input_class.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->" language="javascript" type="text/javascript"></script>
+
+<script language="JavaScript">
+<!--
+var langObjDevT = new Language("adptools", "devtools");
+<!--#include virtual="/incl/functions.shtml" -->
+
+function sendAction(action, method)
+{
+  var result = AxisConnectionFactory.getResponseTextWith([method, action], null);
+  return result;
+}
+
+var _list_obj;
+var configArray = new Array();
+
+function initSelect()
+{
+  createSelect();
+  getList();
+}
+
+function createSelect()
+{
+  var headers = [ langObjDevT.getText("applTxt"),
+                  langObjDevT.getText("versionTxt"),
+                  langObjDevT.getText("vendorTxt"),
+                  langObjDevT.getText("statusTxt"),
+                  langObjDevT.getText("licenseTxt") ];
+  var list_container = document.getElementById("idListContainer");
+  _list_obj = new select_input_class(list_container, headers);
+  _list_obj.setColumnWidths(["230px", "75px", "150px", "105px", "90px"]);
+  _list_obj.setSortByColumn(0);
+  _list_obj.ondblclick = gotoSettings;
+  _list_obj.drawTable();
+}
+
+var listRequest = AxisConnectionFactory.createAjaxConnection();
+function getList()
+{
+  var url = "/axis-cgi/applications/list.cgi"
+  AxisConnectionFactory.sendAsync(["GET", url], null, populateList, listRequest);
+}
+
+function populateList()
+{
+  if (listRequest.getReadyState() != 4)
+    return;
+
+  _list_obj.clear();
+  var appListXml = listRequest.getResponseXml();
+
+  if (appListXml != null)
+  {
+    var xmlNodes = appListXml.selectNodes("/reply/application");
+    for (var i = 0; i < xmlNodes.length; i++) 
+    {
+      var configNode = new Object();
+      var appId = xmlNodes[i].getAttribute("ApplicationID");
+
+      configNode["applicationid"] = appId;
+      configNode["name"] = xmlNodes[i].getAttribute("Name");
+      configNode["status"] = xmlNodes[i].getAttribute("Status");
+      configNode["vendor"] = xmlNodes[i].getAttribute("Vendor");
+      configNode["license"] = xmlNodes[i].getAttribute("License");
+      configNode["version"] = xmlNodes[i].getAttribute("Version");
+      configNode["nicename"] = xmlNodes[i].getAttribute("NiceName");
+      configNode["configurationpage"] = xmlNodes[i].getAttribute("ConfigurationPage");
+      configArray[i] = configNode;
+
+      var rowArr = [ configNode["nicename"],
+                     configNode["version"], 
+                     configNode["vendor"],
+                     configNode["status"], 
+                     configNode["license"] ];
+      _list_obj.addRow(rowArr, i, "");
+    }
+  }
+  _list_obj.drawTable();
+}
+
+function init()
+{
+  langObjDevT.init();
+  initSelect();
+
+<!--#if expr="_$error != _" -->
+  var errorUpload="<!--#echo var="error" option="encoding:javascript" -->";
+
+  checkErrorResponse(errorUpload);
+<!--#endif -->
+}
+
+function uploadPackage()
+{
+  var form = document.uploadForm
+
+  if (form.packfil.value.length < 1) {
+    alert( langObjDevT.getText("notAFile") );
+    return;
+  }
+
+  try
+  {
+    form.submit()
+  }
+  catch(err) 
+  {
+    alert("\"" + form.packfil.value + "\" "+langObjDevT.getText("notAValidFile"));
+  }
+}
+
+function StartSelected()
+{
+  if( _list_obj.selectedIndex < 0 )
+    return;
+
+  var appname = configArray[_list_obj.selectedValue]["name"]; 
+  if (appname != null) {
+    var url = "/axis-cgi/applications/control.cgi?action=start&package="+appname;
+    controlApplication( url );
+  }
+}
+
+function StopSelected()
+{
+  if( _list_obj.selectedIndex < 0 )
+    return;
+
+  var appname = configArray[_list_obj.selectedValue]["name"];
+
+  if (appname != null) {
+    var url = "/axis-cgi/applications/control.cgi?action=stop&package="+appname;
+    controlApplication( url );
+  }
+}
+
+function RemoveSelected(appname)
+{
+  if( _list_obj.selectedIndex < 0 )
+    return;
+
+  var appname = configArray[_list_obj.selectedValue]["name"];
+
+  if (appname != null) {
+    var url = "/axis-cgi/applications/control.cgi?action=remove&package="+appname;
+    var confirmTxt = langObjDevT.getText("removeTxt");
+    controlApplication( url, confirmTxt );
+  }
+}
+
+function controlApplication(url, confirmTxt)
+{
+  if (!confirmTxt || confirm( confirmTxt )) {
+    var result = sendAction(url, "GET");
+    checkErrorResponse(result);
+    getList();
+  }
+}
+
+function ViewLogSelected()
+{
+  if( _list_obj.selectedIndex < 0 )
+    return;
+
+  var appname = configArray[_list_obj.selectedValue]["name"];
+
+  if (appname != null) {
+    document.open('/axis-cgi/admin/systemlog.cgi?id=<!--#echo var="ssi_request_id" option="encoding:url" -->&appname='+appname,
+                  'ApplicationLog', 
+                  'toolbar=0,location=no,directories=0,status=0,menubar=1,scrollbars=1,resizable=1,width=600,height=480');
+  }
+}
+
+function gotoSettings()
+{
+  var appname = configArray[_list_obj.selectedValue]["name"];
+
+  if (appname != null) {
+    window.location.href = 'app_params.shtml?app='+appname+'&id=<!--#echo var="ssi_request_id" option="encoding:url" -->';
+  }
+}
+
+function checkErrorResponse(error)
+{
+  switch( String( error ).replace("Error: ", "") )
+  {
+    case "1":
+      alert( langObjDevT.getText("err1Txt") ); break;
+    case "2":
+      alert( langObjDevT.getText("err2Txt") ); break;
+    case "3":
+      alert( langObjDevT.getText("err3Txt") ); break;
+    case "4":
+      alert( langObjDevT.getText("err4Txt") ); break;
+    case "5":
+      alert( langObjDevT.getText("err5Txt") ); break;
+    case "6":
+      alert( langObjDevT.getText("err6Txt") ); break;
+    case "7":
+      alert( langObjDevT.getText("err7Txt") ); break;
+    case "8":
+      alert( langObjDevT.getText("err8Txt") ); break;
+    case "9":
+      alert( langObjDevT.getText("err9Txt") ); break;
+    case "10":
+      alert( langObjDevT.getText("err10Txt") ); break;
+    case "11":
+      alert( langObjDevT.getText("err11Txt") ); break;
+  }
+}
+var app_SelPackStat;
+var app_UplPackBtnStat;
+var app_StartBtnStat;
+var app_StopBtnStat;
+var app_ViewLogBtnStat;
+var app_RemBtnStat;
+function globalLanguageVars()
+{
+  app_SelPackStat = langObjDevT.getText("selPackStatTxt");
+  app_UplPackBtnStat = langObjDevT.getText("uplPackBtnStatTxt");
+  app_StartBtnStat = langObjDevT.getText("startBtnStatTxt");
+  app_StopBtnStat = langObjDevT.getText("stopBtnStatTxt");
+  app_ViewLogBtnStat = langObjDevT.getText("viewLogBtnStatTxt");
+  app_RemBtnStat = langObjDevT.getText("remBtnStatTxt");
+}
+
+// -->
+</script>
+
+</head>
+<body <!--#include virtual="/incl/bodytag.shtml" --> onload="init();">
+<!--#include virtual="/incl/top_incl2.shtml" -->
+
+<table border="0" cellpadding="3" cellspacing="0" width="100%" valign="top" class="alternaterows">
+  <tr>
+    <td class="topTitle" align="left" colspan="2"><span id="apPkgsTxt"></span></td>
+    <td class="topTitle"><div align="right"><!--#if expr="$link = yes" --><br><!--#else --><a href="<!--#echo var="helpURL" option="encoding:url" -->"><img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="hlpPic"></a><!--#endif --></div></td>
+  </tr>
+  <tr>
+    <td class="subTitle" colspan="3"><span id="uplAppTitle"></span></td>
+  </tr>
+<!--#if expr="$link != yes" -->
+  <tr>
+    <td colspan="3" class="oddItem" nowrap>
+      <form name="uploadForm" action="/axis-cgi/applications/upload.cgi?reload_page=yes" method="POST" enctype="multipart/form-data">
+        <span id="selPackTxt"></span>&nbsp;<input type="file" name="packfil" onMouseOver="return showStatus(app_SelPackStat)" onMouseOut="return showStatus('')" value="">&nbsp;<span id="selPackTxt2"></span>&nbsp;<input type="button" class="btnLonger" value="" onMouseOver="return showStatus(app_UplPackBtnStat)" onMouseOut="return showStatus('')" onclick="uploadPackage()" id="uplPkgBtn">&nbsp;<span id="selPackTxt3"></span>
+      </form>
+    </td>
+  </tr>
+<!--#endif -->
+  <tr>
+    <td class="subTitle" colspan="3"><span id="instAppTxt"></span></td>
+  </tr>
+  <tr>
+    <td colspan="2" nowrap>
+      <div id="idListContainer" class="selectList" style=""></div>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td class="button"><input type="button" value="" width="75" class="btnNormal" onClick="javaScript:StartSelected()" onMouseOver="return showStatus(app_StartBtnStat)" onMouseOut="return showStatus('')" id="app_StartBtn"></td>
+          <td class="button"><br></td>
+          <td class="button"><input type="button" value="" width="75" class="btnNormal" onClick="javaScript:StopSelected()" onMouseOver="return showStatus(app_StopBtnStat)" onMouseOut="return showStatus('')" id="app_StopBtn"></td>
+          <td class="button"><br></td>
+          <td class="button"><input type="button" value="" width="75" class="btnNormal" onClick="javaScript:RemoveSelected()" onMouseOver="return showStatus(app_RemBtnStat)" onMouseOut="return showStatus('')" id="app_Remove"></td>
+          <td class="button"><br></td>
+          <td class="button"><input type="button" value="" width="75" class="btnNormal" onClick="javaScript:ViewLogSelected()" onMouseOver="return showStatus(app_ViewLogBtnStat)" onMouseOut="return showStatus('')" id="app_Log"></td>
+          <td class="button"><br></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<!--#include virtual="/incl/bottom_incl.shtml" -->

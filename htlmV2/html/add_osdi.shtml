@@ -1,0 +1,551 @@
+<!--#set var="helpURL" val="javascript:launch('/help/add_osdi_h.shtml')" -->
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#include virtual="/incl/top_incl_popup.shtml" -->
+
+<!--#set var="nbr" val="0" -->
+<!--#set var="camnbr" val="1" -->
+<!--#include virtual="/sm/sm.srv?action=get&group=PTZ.Various.V1.CtlQueueing,PTZ.Auxiliary.A1" -->
+<!--#if expr="$root_PTZ_Various_V1_CtlQueueing = true" -->
+  <!--#set var="queueUsers" val="yes" -->
+<!--#endif -->
+
+<!--#set var="rotation" val="0" -->
+<!--#set var="imagerotation" val="0" -->
+
+<!--#include virtual="/sm/sm.srv?action=get&group=ImageSource,Layout.ShowRelCrossEnabled,Layout.ViewerIE,Layout.ViewerOther" -->
+
+<!--#if expr="_$zonenumber != _" -->
+  <!--#include virtual="/sm/sm.srv?action=get&group=PTZ.Locator.L0.Zone.Z$zonenumber$" -->
+<!--#endif -->
+
+  <!--#set var="resolution" val="320x180" -->
+<!--#set var="size" val="1" -->
+<!--#set var="external" val="no" -->
+<!--#set var="UseAudio" val="no" -->
+<!--#set var="UseRel" val="no" -->
+<!--#set var="useWithCam" val="yes" -->
+<!--#set var="motion" val="no" -->
+<!--#set var="ptzgui" val="yes" -->
+<!--#set var="showPTZBars" val="yes" -->
+<!--#set var="showPTZCrosshair" val="yes" -->
+<!--#set var="enableAreaZoom" val="no" -->
+<!--#include virtual="/axis-cgi/view/imagesize.cgi?format=ssi&camera=$camnbr$&resolution=$resolution$&rotation=$rotation$" -->
+
+<!--#include virtual="/incl/ama_version.shtml" -->
+<!--#include virtual="/incl/setabsrel.shtml" -->
+<!--#include virtual="/java/integer.shtml" -->
+
+<script src="/incl/activeX.js"></script>
+<script src="/incl/pos.js"></script>
+<script language="JavaScript">
+<!--
+  <!--#include virtual="/incl/functions.shtml" -->
+-->
+</script>
+
+<script language="JavaScript">
+<!--
+var langObjAddOsdi = new Language("osdi", "add_osdi");
+
+if ((navigator.appName == "Microsoft Internet Explorer") && (navigator.platform != "MacPPC") && (navigator.platform != "Mac68k")) {
+  var browser = "IE";
+} else {
+  var browser = "Netscape";
+}
+
+function showPresetList()
+{
+  var o = '<select name="gotoserverpresetname">';
+  if (document.presetForm.elements.length < 1) {
+    o += '<option class="gray">&nbsp;----------------</option>';
+  } else {
+    for (var j=0; j<document.presetForm.elements.length; j++) {
+      var tmpArray = document.presetForm.elements[j].name.split("_");
+  <!--#include virtual="/sm/sm.srv?action=get&group=PTZ.Preset.P0.HomePosition" -->
+      if (tmpArray[tmpArray.length - 1] == "Name") {
+        var value = document.presetForm.elements[j].value;
+        var group = tmpArray[tmpArray.length - 2];
+        var homeGrp = "P<!--#echo var="root_PTZ_Preset_P0_HomePosition" option="encoding:javascript" -->";
+        o += '<option value="' + value + '">' + value + '';
+        if (group == homeGrp) {
+          o += '&nbsp;(H)';
+        }
+        o += '</option>';
+      }
+    }
+  }
+  o += '</select>';
+  document.write(o);
+}
+
+var request;
+
+function sendAction(action, method)
+{
+  if( !request )
+  {
+    request = AxisConnectionFactory.createAjaxConnection();
+    request.setOverrideMimeType( 'text/plain' );
+  }
+  var readyState = request.getReadyState()
+  if (readyState > 0 && readyState < 4) {
+    alert( langObjAddOsdi.getText("onGoingReqAlrt") );
+    return;
+  }
+
+  AxisConnectionFactory.sendSync([method, action], null, request);
+
+  var result = (request.getStatus() == 200 ? request.getResponseText() : null);
+  return result;
+}
+
+function commitPreset(srcform, formid)
+{
+  var form = document.getElementById(formid);
+  var select = srcform.elements[0];
+  var val = select.options[select.selectedIndex].value;
+  var now = new Date();
+  var url = "/axis-cgi/com/ptz.cgi";
+  url += "?camera=<!--#echo var="camnbr" option="encoding:url" -->";
+  url += "&gotoserverpresetname=" + escape(val);
+  url += "&imagerotation=<!--#echo var="rotation" option="encoding:url" -->";
+  url += "&timestamp=" + now.getTime();
+  delete now;
+
+  sendAction(url, "GET");
+}
+
+function setCoordinates(coords, selectedPosition)
+{
+  var pan = 0.0
+  var tilt = 0.0
+
+  var a = coords.split("\n");
+  for (var i = 0; i < a.length; i++)
+  {
+    var v = a[i].split("=");
+    switch (v[0])
+    {
+      case "pan":
+        pan = parseFloat(v[1]);
+        break;
+      case "tilt":
+        tilt = parseFloat(v[1]);
+        break;
+    }
+  }
+
+  if (pan > limits.maxPan) pan = limits.maxPan
+  if (pan < limits.minPan) pan = limits.minPan
+  if (tilt > limits.maxTilt) tilt = limits.maxTilt
+  if (tilt < limits.minTilt) tilt = limits.minTilt
+  var str = pan.toFixed(2) + "," + tilt.toFixed(2)
+  if (selectedPosition == "LowerLeft") {
+    document.getpositionform.LowerLeft.value = str
+  } else {
+    document.getpositionform.UpperRight.value = str
+  }
+}
+
+function getCoords(pos)
+{
+  var now = new Date();
+  var url = "/axis-cgi/com/ptz.cgi";
+  url += "?query=position";
+  url += "&camera=<!--#echo var="camnbr" option="encoding:javascript" -->";
+  url += "&html=no";
+  url += "&imagerotation=<!--#echo var="rotation" option="encoding:url" -->";
+  url += "&timestamp=" + now.getTime();
+  delete now;
+
+  var coords = sendAction(url, "GET");
+
+  setCoordinates(coords, pos);
+}
+
+function ptzLimits()
+{
+  this.minPan = -180.0;
+  this.maxPan = 180.0;
+  this.minTilt = -90.0;
+  this.maxTilt = 20.0;
+}
+
+var limits = new ptzLimits;
+function getLimits()
+{
+  var now = new Date();
+  var url = "/axis-cgi/com/ptz.cgi";
+  url += "?query=limits";
+  url += "&camera=<!--#echo var="camnbr" option="encoding:javascript" -->";
+  url += "&html=no";
+  url += "&imagerotation=<!--#echo var="rotation" option="encoding:url" -->";
+  url += "&timestamp=" + now.getTime();
+  delete now;
+
+  var l = sendAction(url, "GET");
+
+  var a = l.split("\n");
+  for (var i = 0; i < a.length; i++)
+  {
+    var v = a[i].split("=");
+    switch (v[0])
+    {
+      case "MinPan":
+        limits.minPan = parseFloat(v[1]);
+        break;
+      case "MaxPan":
+        limits.maxPan = parseFloat(v[1]);
+        break;
+      case "MinTilt":
+        limits.minTilt = parseFloat(v[1]);
+        break;
+      case "MaxTilt":
+        limits.maxTilt = parseFloat(v[1]);
+        break;
+    }
+  }
+}
+
+function initPos()
+{
+  var panzone = "<!--#echo var="root_PTZ_Locator_L0_Zone_Z$zonenumber$_Pan" option="encoding:javascript" -->"
+  var tiltzone = "<!--#echo var="root_PTZ_Locator_L0_Zone_Z$zonenumber$_Tilt" option="encoding:javascript" -->"
+  var x1 = panzone.substring(0, (panzone.indexOf(" :")))
+  var y1 = tiltzone.substring(0, (tiltzone.indexOf(" :")))
+  var x2 = panzone.slice(panzone.lastIndexOf(" ") + 1)
+  var y2 = tiltzone.slice(tiltzone.lastIndexOf(" ") + 1)
+  document.getpositionform.LowerLeft.value = x1 + "," + y1
+  document.getpositionform.UpperRight.value = x2 + "," + y2
+  gotoPosition(x1,y1)
+}
+
+function gotoPos(pos)
+{
+  var form = document.getpositionform
+
+  if (pos == "LowerLeft") {
+    var o = form.LowerLeft;
+  } else {
+    var o = form.UpperRight;
+  }
+  if( !isValidCoord(o.value) ) {
+    o.focus();
+    o.select();
+    alert( langObjAddOsdi.getText("invalCoordsAlert") );
+    return;
+  }
+  tmp = o.value.split(",");
+  x = parseFloat(tmp[0]);
+  y = parseFloat(tmp[1]);
+  gotoPosition(x,y)
+}
+
+function gotoPosition(x,y)
+{
+  var now = new Date();
+  var url = "/axis-cgi/com/ptz.cgi";
+  url += "?pan=" + x;
+  url += "&tilt=" + y;
+  url += "&imagerotation=<!--#echo var="rotation" option="encoding:url" -->";
+  url += "&timestamp=" + now.getTime();
+  delete now;
+
+  sendAction(url, "GET");
+}
+
+function setName()
+{
+<!--#if expr="_$areaname != _" -->
+  document.getElementById("areaname").value = unescape("<!--#echo var="areaname" option="encoding:javascript" -->");
+<!--#elif expr="_$zonenumber = _" -->
+  document.getElementById("areaname").value = langObjAddOsdi.getText("newOsdiZoneTxt");
+<!--#endif -->
+}
+
+function searchIllegal(txt)
+{
+  var textScript=new Array(5);
+
+  textScript[0]="<script";
+  textScript[1]="</script";
+  textScript[2]="<object";
+  textScript[3]="</object";
+  textScript[4]="<applet";
+  textScript[5]="</applet";
+  textScript[6]="<embed";
+  textScript[7]="</embed";
+  textScript[8]="<form";
+  textScript[9]="</form";
+  txt=txt.toLowerCase();
+  for (i=0;i<=4;i++){
+    if (txt.indexOf(textScript[i])!=-1)
+      return 1;
+  }
+  return 0;
+}
+
+function isValidCoord(coords)
+{
+  var a = coords.split(",");
+  return (a.length == 2 && !isNaN(a[0]) && !isNaN(a[1]));
+}
+
+function isCoordInRange(x, y)
+{
+  if (x < limits.minPan || x > limits.maxPan || y < limits.minTilt || y > limits.maxTilt) {
+    var str = langObjAddOsdi.getText("invalCoords1Alrt") + "\n" + langObjAddOsdi.getText("invalCoords2Alrt") + "\n" + langObjAddOsdi.getText("invalCoords3Alrt");
+    str = str.replace(/#X1#/, limits.minPan);
+    str = str.replace(/#X2#/, limits.maxPan);
+    str = str.replace(/#Y1#/, limits.minTilt);
+    str = str.replace(/#Y2#/, limits.maxTilt);
+    alert(str)
+    return false;
+  }
+  return true;
+}
+
+function saveData()
+{
+  var form = document.setzoneform
+  var form2 = document.getpositionform
+  var maxtilt = parseInt("<!--#echo var="root_PTZ_Limit_L1_MaxTilt" option="encoding:javascript" -->", 10);
+
+  var oAreaName = document.getElementById("areaname");
+  if (oAreaName.value.indexOf("\"") >= 0) {
+    alert( langObjAddOsdi.getText("invalCharAlrt")+" \"");
+    oAreaName.focus();
+    oAreaName.select();
+    return;
+  } else if (searchIllegal(oAreaName.value) == 1) {
+    alert( langObjAddOsdi.getText("illegalTagAlrt") );
+    oAreaName.focus();
+    oAreaName.select();
+    return;
+  }
+
+  var oLL = form2.LowerLeft;
+  if( !isValidCoord(oLL.value) ) {
+    oLL.focus();
+    oLL.select();
+    alert( langObjAddOsdi.getText("invalCoordsLowLeftAlrt") );
+    return;
+  }
+  var tmp = oLL.value.split(",");
+  X1 = parseFloat(tmp[0]);
+  Y1 = parseFloat(tmp[1]);
+
+  if (!isCoordInRange(X1, Y1)) {
+    oLL.focus()
+    oLL.select()
+    return;
+  }
+
+  var oUR = form2.UpperRight;
+  if( !isValidCoord(oUR.value) ) {
+    oUR.focus();
+    oUR.select();
+    alert( langObjAddOsdi.getText("invalCoordsUpRightAlrt") );
+    return;
+  }
+  tmp = oUR.value.split(",");
+  X2 = parseFloat(tmp[0]);
+  Y2 = parseFloat(tmp[1]);
+  if (!isCoordInRange(X2, Y2)) {
+    oUR.focus()
+    oUR.select()
+    return;
+  }
+  if (Y2 - Y1 < 1) {
+    alert( langObjAddOsdi.getText("toSmZoAlrt") + "\n" + langObjAddOsdi.getText("valLowLeftUpRightAlrt") + "\n" + langObjAddOsdi.getText("diffAtLeaOneAlrt") )
+    return;
+  } else {
+    if (Y2 - Y1 > 90) {
+      alert( langObjAddOsdi.getText("toBiZoAlrt") + "\n" + langObjAddOsdi.getText("valLowLeftUpRightAlrt") + "\n" + langObjAddOsdi.getText("diffNoMore90Alrt") )
+      return;
+    }
+  }
+  if (X2 > X1) {
+    if ((X2 - X1) < 1) {
+      alert( langObjAddOsdi.getText("toSmZoAlrt") + "\n" + langObjAddOsdi.getText("panAngleOneAlrt") )
+      return;
+    } else if ((X2 - X1) > 180) {
+      alert( langObjAddOsdi.getText("toBiZoAlrt") + "\n" + langObjAddOsdi.getText("panAngle180Alrt") )
+      return;
+    }
+  } else {
+    if ((360 - X1 + X2) < 1) {
+      alert( langObjAddOsdi.getText("toSmZoAlrt") + "\n" + langObjAddOsdi.getText("panAngleOneAlrt") )
+      return;
+    } else if ((360 - X1 + X2) > 180) {
+      alert( langObjAddOsdi.getText("toBiZoAlrt") + "\n" + langObjAddOsdi.getText("panAngle180Alrt") )
+      return;
+    }
+  }
+  form.root_PTZ_Locator_L0_Zone_Z<!--#echo var="zonenumber" option="encoding:javascript" -->_Pan.value = X1 + " : " + X2
+  form.root_PTZ_Locator_L0_Zone_Z<!--#echo var="zonenumber" option="encoding:javascript" -->_Tilt.value = Y1 + " : " + Y2
+  form.submit();
+}
+
+// -->
+</script>
+
+
+</head>
+<body class="bodyBg" topmargin="5" leftmargin="5" marginwidth="5" marginheight="5" bgcolor="white" onload="langObjAddOsdi.init();init();setName();getLimits();<!--#if expr="_$zonenumber != _" -->;initPos()<!--#endif -->" onresize="init();">
+
+<!--#if expr="$pageclose = 1" -->
+<script language="JavaScript">
+<!--
+  if (window.opener)
+    window.opener.location = "/operator/osdi.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->";
+  // The user pressed the OK button, so close the window (parameters are already saved).
+  window.close()
+//-->
+</script>
+<!--#endif -->
+
+<form name="presetForm">
+  <!--#include virtual="/sm/sm.srv?action=get_htmlform&getgroup=root.PTZ.Preset.P0.Position&format=hiddenhtmlform" -->
+</form>
+
+<table border="0" cellpadding="2" cellspacing="0" class="oddItem" width="590">
+  <tr><td class="evenItem">
+  <table border="0" cellpadding="3" cellspacing="0" class="oddItem" width="586">
+    <tr>
+      <td class="topTitle" align="left" colspan="3" nowrap width="80%"><span id="osZoSetupTxt"></span></td>
+      <td class="topTitle">
+        <div align="right"><a href="<!--#echo var="helpURL" option="encoding:url" -->"><img height="27" width="27" src="/pics/help.gif" border="0" id="hlpPic"></a></div>
+      </td>
+    </tr>
+    <tr><td class="subTitle" align="left" colspan="4"><span id="instrTxt"></span></td></tr>
+    <tr>
+      <td class="oddItem" colspan="4">
+        <ol>
+          <li><span id="instrNr1Txt"></span></li>
+          <li><span id="instrNr2Txt"></span></li>
+          <li><span id="instrNr3Txt"></span></li>
+          <li><span id="instrNr4Txt"></span></li>
+        </ol>
+      </td>
+    </tr>
+
+    <tr><td class="subTitle" align="left" colspan="4"><span id="osZoSettTxt"></span></td></tr>
+    <tr>
+      <td class="oddItem" width="20%">
+        <form>
+          <span id="presPosTxt"></span><br>
+          <script>showPresetList()</script>
+          <br><br>
+          <input type="button" id="osdi_GotoBtn1" onclick="JavaScript:return commitPreset(this.form, 'gotopresetform')">
+        </form>
+      </td>
+      <td class="oddItem" colspan="2">
+        <table border="0" cellpadding="0" cellspacing="0" class="oddItem" width="100%">
+          <tr>
+            <td>
+              <img id="crosshair" src="/pics/crosshair.png" width="16" height="16" style="position:absolute;visibility:hidden;left:0;top:0" border="0">
+              <div id="filterinstallocation"></div>
+              <div id="zoombox" class="dragbox"></div>
+              <script language="JavaScript" type="text/javascript">
+              <!--
+              var File = "/axis-cgi/mjpg/video.cgi?";
+              File += "resolution=<!--#echo var="resolution" option="encoding:javascript" -->";
+              File += "&rotation=<!--#echo var="rotation" option="encoding:url" -->";
+              File += "&text=1";
+              File += "&textstring=x%3D%23x%20y%3D%23y";
+              File += "&camera=<!--#echo var="camnbr" option="encoding:url" -->";
+
+              var stopFile = File;
+
+              <!--#include virtual="/incl/video.shtml" -->
+              video(File);
+
+              stopStartStream(File);
+              // -->
+              </script>
+            </td>
+            <td>
+              <!--#include virtual="/incl/tiltbar.shtml" -->
+            </td>
+            <td><br></td>
+          </tr>
+        </table>
+      </td>
+      <td class="oddItem"><br></td>
+    </tr>
+
+    <tr>
+      <td class="oddItem"><br></td>
+      <td class="oddItem" align="left" valign="top" colspan="2" nowrap>
+        <!--#set var="hideFocusComletely" val="yes" -->
+        <!--#set var="hideIrisComletely" val="yes" -->
+        <!--#include virtual="/incl/bars.shtml" -->
+      </td>
+      <td class="oddItem"><br></td>
+    </tr>
+
+    <tr>
+      <td class="oddItem" width="20%"><br></td>
+      <td colspan="2" class="oddItem" nowrap>
+        <form name="getpositionform">
+        <table  border="0" cellpadding="1" cellspacing="1" class="oddItem" width="100%">
+          <tr>
+            <td nowrap><span id="loLePaTiTxt"></span></td>
+            <td nowrap>
+              <input type="text" id="LowLeft" name="LowerLeft" size="20" maxlength="20" value="<!--#echo var="lowerleft" option="encoding:url" -->">
+              <input type="button" id="add_osdi_GetBtn1" class="btnNormal" onclick="JavaScript:getCoords('LowerLeft');">
+              <input type="button" id="osdi_GotoBtn2" class="btnNormal" onclick="JavaScript:gotoPos('LowerLeft');">
+            </td>
+          </tr>
+          <tr>
+            <td nowrap><span id="upRiPaTiTxt"></span></td>
+            <td nowrap>
+              <input type="text" id="UpRight" name="UpperRight" size="20" maxlength="20" value="<!--#echo var="upperright" option="encoding:url" -->">
+              <input type="button" id="add_osdi_GetBtn2" class="btnNormal" onclick="JavaScript:getCoords('UpperRight');">
+              <input type="button" id="osdi_GotoBtn3" class="btnNormal" onclick="JavaScript:gotoPos('UpperRight');">
+            </td>
+          </tr>
+        </table>
+        </form>
+        <form name="setzoneform" action="/axis-cgi/admin/param.cgi" method="post" onsubmit="return false;">
+        <table  border="0" cellpadding="1" cellspacing="1" class="oddItem" width="100%">
+          <tr>
+            <td nowrap><span id="osZoNaTxt"></span></td>
+            <td>
+              <input type="text" id="areaname" name="root_PTZ_Locator_L0_Zone_Z<!--#echo var="zonenumber" option="encoding:url" -->_Name" size="20" maxlength="16" value="<!--#echo var="root_PTZ_Locator_L0_Zone_Z$zonenumber$_Name" option="encoding:html" -->">
+              <input type="hidden" name="root_PTZ_Locator_L0_Zone_Z<!--#echo var="zonenumber" option="encoding:url" -->_Pan" value="">
+              <input type="hidden" name="root_PTZ_Locator_L0_Zone_Z<!--#echo var="zonenumber" option="encoding:url" -->_Tilt" value="">
+              <input type="hidden" name="root_PTZ_Locator_L0_Zone_Z<!--#echo var="zonenumber" option="encoding:url" -->_Enabled" value="yes">
+              <input type="hidden" name="action" value="<!--#echo var="doAction" option="encoding:url" -->">
+              <input type="hidden" name="group" value="root.PTZ.Locator.L0.Zone">
+              <input type="hidden" name="template" value="ptzlocator">
+              <input type="hidden" name="return_page" value="/operator/add_osdi.shtml?pageclose=1">
+            </td>
+          </tr>
+        </table>
+        </form>
+      </td>
+      <td class="oddItem"><br></td>
+    </tr>
+
+    <tr>
+      <td class="oddItem" colspan="4" align="center"><br>
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td class="button"><input type="button" name="okBtn" width="75" id="add_osdi_OKBtn" class="btnNormal" onclick="JavaScript:saveData();"></td>
+            <td class="button"><br></td>
+            <td class="button"><input type="button" width="75" id="add_osdi_CancelBtn" class="btnNormal" onclick="JavaScript:window.close();"></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+  </table>
+  </td></tr>
+
+</table>
+<iframe name="Temp" style="display:none"></iframe>
+<!--#include virtual="/incl/ptz_incl.shtml" -->
+</body>
+</html>

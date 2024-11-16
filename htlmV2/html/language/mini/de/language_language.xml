@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<language_xml>
+	<language>
+		<pageTitle type="title">Sprachen / Sprachen</pageTitle>
+		<removeLanguage type="msgAsText">Entfernen</removeLanguage>
+		<removeConfirm type="alert">Möchten Sie die hochgeladene Sprachdatei wirklich entfernen?</removeConfirm>
+		<quesMarkTxt type="alert">?</quesMarkTxt>
+		<uplLangBtnStatTxt type="msg">Ausgewählte Sprache hochladen</uplLangBtnStatTxt>
+		<remBtnStatTxt type="msg">Ausgewählte Sprache entfernen</remBtnStatTxt>
+		<langBtnStatTxt type="msg">Sprachdatei auswählen</langBtnStatTxt>
+		<saveBtnStatTxt type="msg">Einstellungen speichern</saveBtnStatTxt>
+		<tesBtnStatTxt type="msg">Zuletzt gespeicherte Einstellungen wiederherstellen</tesBtnStatTxt>
+		<langTxt type="text">Sprachen</langTxt>
+		<hlpTxt type="image" buttonid="helpPic">Klicken Sie hier, wenn Sie Hilfe zu dieser Seite benötigen.</hlpTxt>
+		<getLanTxt type="text">Sprachdatei beziehen</getLanTxt>
+		<getLanFroTxt type="text">Sprachdatei beziehen von</getLanFroTxt>
+		<axisSupURL type="msgAsText">http://www.axis.com/r/?keyword=techsup</axisSupURL>
+		<axisSupURLTxt type="text">www.axis.com/techsup/</axisSupURLTxt>
+		<uplLanTxt type="text">Sprachdatei hochladen</uplLanTxt>
+		<text3Txt type="text">Sprachdatei zum Hochladen auswählen</text3Txt>
+		<anCliTxt type="text">und klicken Sie auf</anCliTxt>
+		<uplNewLangBtn type="button" buttonid="uploadLangBtn">Sprachdatei hochladen</uplNewLangBtn>
+		<selLanTxt type="text">Sprache auswählen</selLanTxt>
+		<saveBtn type="button" buttonid="saveBtn">Speichern</saveBtn>
+		<resetBtn type="button" buttonid="resetBtn">Zurücksetzen</resetBtn>
+		<err1Alert type="alert">Sprachdatei konnte nicht hochgeladen werden. Die Datei muss ein TAR-Archiv sein.</err1Alert>
+		<err2Alert type="alert">Sprachdatei konnte nicht hochgeladen werden, die Sprachdateiüberprüfung ist fehlgeschlagen Vergewissern Sie sich, dass Sie eine Sprachdatei hochladen, die mit dem Produkt und dessen Firmwareversion kompatibel ist.</err2Alert>
+		<err3Alert type="alert">Die Sprachdatei konnte aufgrund ihrer Größe nicht hochgeladen werden.</err3Alert>
+		<err4Alert type="alert">Das Entfernen der Standardsprache bzw. von integrierten Sprachen ist nicht zugelassen.</err4Alert>
+		<err5Alert type="alert">Diese Sprach-Datei wurde für eine andere Firmware-Version des Produkts entwickelt. Sie ist zwar brauchbar, jedoch können Übersetzungsinkonsistenzen auftreten.</err5Alert>
+	</language>
+	<language_selection1>
+		<pageTitle type="title">Sprachauswahl</pageTitle>
+		<englishStat type="msg">Verwenden Sie die bereits installierte Sprache - Englisch</englishStat>
+		<downlLangStat type="msg">Laden Sie Ihre Sprache herunter</downlLangStat>
+		<haveLangBtnStat type="msg">Verwenden Sie die bereits heruntergeladene Sprachdatei in Schritt 2</haveLangBtnStat>
+		<selectLangTxt type="text">Sprache auswählen</selectLangTxt>
+		<stepTxt1 type="text">Schritt 1 von 2: Herunterladen der</stepTxt1>
+		<stepTxt2 type="text">Sprachdatei</stepTxt2>
+		<stepInstrTxt1 type="text">Neue Sprachdatei herunterladen in</stepInstrTxt1>
+		<languageTxt type="msgAsText">Deutsch</languageTxt>
+		<stepInstrTxt2 type="text">oder eine vorhandene verwenden.</stepInstrTxt2>
+		<downloadBtn type="button" buttonid="langSe1_downloadBtn">Herunterladen</downloadBtn>
+		<haveLangFileTxt type="button" buttonid="langSe1_haveLangBtn">Vorhandene Datei verwenden</haveLangFileTxt>
+		<skipTxt type="text">Sprachauswahl überspringen</skipTxt>
+		<skipRegTxt type="text">Die Sprache kann unter Setup &#62; Sprache auch später noch ausgewählt werden.</skipRegTxt>
+		<useEngBtn type="button" buttonid="langSe1_englishBtn">Use English</useEngBtn>
+	</language_selection1>
+	<language_selection2>
+		<pageTitle type="title">Sprachauswahl</pageTitle>
+		<englishConfirm type="alert">Wenn Sie den Vorgang abbrechen, wird Englisch als Produktsprache eingerichtet.&#10;Möchten Sie den Vorgang wirklich abbrechen?</englishConfirm>
+		<englishStat type="msg">Verwenden Sie die bereits installierte Sprache - Englisch</englishStat>
+		<downlLangStat type="msg">Installieren Sie die heruntergeladene Sprachdatei</downlLangStat>
+		<err1Alert type="alert">Sprachdatei konnte nicht hochgeladen werden. Die Datei muss ein TAR-Archiv sein.</err1Alert>
+		<err2Alert type="alert">Sprachdatei konnte nicht hochgeladen werden, die Sprachdateiüberprüfung ist fehlgeschlagen Vergewissern Sie sich, dass Sie eine Sprachdatei hochladen, die mit dem Produkt und dessen Firmwareversion kompatibel ist.</err2Alert>
+		<err3Alert type="alert">Die Sprachdatei konnte aufgrund ihrer Größe nicht hochgeladen werden.</err3Alert>
+		<err4Alert type="alert">Das Entfernen der Standardsprache bzw. von integrierten Sprachen ist nicht zugelassen.</err4Alert>
+		<err5Alert type="alert">Diese Sprachdatei wurde für eine andere Firmware-Version des Produkts entwickelt. Sie ist zwar brauchbar, jedoch können Übersetzungsinkonsistenzen auftreten.</err5Alert>
+		<err6Alert1 type="alert">Die ausgewählte Datei befindet sich nicht in</err6Alert1>
+		<err6Alert2 type="alert">.&#10;Wenn Sie andere Sprachen installieren möchten, klicken Sie auf Abbrechen und gehen Sie zu Setup &#62; Sprachen.</err6Alert2>
+		<languageTxt type="msgAsText">Deutsch</languageTxt>
+		<selectLangTxt type="text">Sprache auswählen</selectLangTxt>
+		<stepTxt type="text">Schritt 2 von 2: Installieren von</stepTxt>
+		<stepInstrTxt type="text">Wählen Sie die gewünschte Sprachdatei aus und klicken Sie auf Weiter.</stepInstrTxt>
+		<cancelBtn type="button" buttonid="langSe2_cancelBtn">Abbrechen</cancelBtn>
+		<installBtn type="button" buttonid="langSe2_installBtn">Weiter</installBtn>
+	</language_selection2>
+</language_xml>

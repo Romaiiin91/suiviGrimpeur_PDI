@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+  <rtp>
+    <pageTitle type="title" minor="0">System Options/</pageTitle>
+    <pageTitleAddOn1 type="msg" minor="0">RTP Audio Settings</pageTitleAddOn1>
+    <pageTitleAddOn2 type="msg" minor="0">RTP Settings</pageTitleAddOn2>
+    <mulCasTxt type="msgAsText" minor="0">Multicast</mulCasTxt>
+    <viAdTxt type="msgAsText" minor="0">Video address:</viAdTxt>
+    <viPoTxt type="msgAsText" minor="0">Video port:</viPoTxt>
+    <evVaOnTxt type="msgAsText" minor="0">[0, 1024..65534; even values only]</evVaOnTxt>
+    <auAdTxt type="msgAsText" minor="0">Audio address:</auAdTxt>
+    <auPoTxt type="msgAsText" minor="0">Audio port:</auPoTxt>
+    <tTLText type="msgAsText" minor="0">Time to live:</tTLText>
+    <alMultiVTxt type="msgAsText" minor="0">Always Multicast Video</alMultiVTxt>
+    <h264Txt type="msgAsText" minor="0">H.264</h264Txt>
+    <mjpegTxt type="msgAsText" minor="0">Motion JPEG</mjpegTxt>
+    <mpeg4Txt type="msgAsText" minor="0">MPEG-4</mpeg4Txt>
+    <alMultiATxt type="msgAsText" minor="0">Always Multicast Audio</alMultiATxt>
+    <poAutSelTxt type="msgAsText" minor="0">&#x3C;sup&#x3E;*&#x3C;/sup&#x3E;0 = Port automatically selected within the port range specified above.</poAutSelTxt>
+    <poAlrtEvenAlrt type="alert" minor="0">Invalid port number. Enter an even value between 1024 and 65534.</poAlrtEvenAlrt>
+    <poAlrtOddAlrt type="alert" minor="0">Invalid port number. Enter an odd value between 1025 and 65535.</poAlrtOddAlrt>
+    <plSpInAlrt type="alert" minor="0">Address field is empty. Please enter a valid Multicast address.</plSpInAlrt>
+    <vaFInAlrt type="alert" minor="0">Video address format is invalid.&#10;Please enter a valid (ipv4, ipv6 or hostname) Multicast address.</vaFInAlrt>
+    <invPortAlert type="alert" minor="0">Invalid port number. Enter 0 or an even value between 1024 and 65534.</invPortAlert>
+    <invTTLAlert type="alert" minor="0">Invalid 'Time to live' value. Enter a value between 1 and 255.</invTTLAlert>
+    <aaFInAlrt type="alert" minor="0">Invalid Audio address format.&#10;Please enter a valid (ipv4, ipv6 or hostname) Multicast address.</aaFInAlrt>
+    <collPortAlert type="alert" minor="0">Invalid port number. The video and audio port cannot be the same.</collPortAlert>
+    <globAudioDisAlrt type="alert" minor="0">Audio is currently disabled under Video Stream Settings. Enabling Always Multicast Audio will enable audio. Do you want to continue?</globAudioDisAlrt>
+    <po3Alrt type="alert" minor="0">The value for the end port must be greater than for the&#10;start port by at least three, e.g. 50000 and 50003.</po3Alrt>
+    <po1Alrt type="alert" minor="0">The value for the end port must be greater than for the&#10;start port by at least one, e.g. 50000 and 50001.</po1Alrt>
+    <saveBtnStatTxt type="msg" minor="0">Save the RTP settings</saveBtnStatTxt>
+    <resBtnStatTxt type="msg" minor="0">Revert to last saved settings</resBtnStatTxt>
+    <helpTitle type="image" minor="0" imageid="hlpPic">Click here for help</helpTitle>
+    <poRaTxt type="text" minor="0">Port Range</poRaTxt>
+    <staPoTxt type="text" minor="0">Start port:</staPoTxt>
+    <endPoTxt type="text" minor="0">End port:</endPoTxt>
+    <saveBtn type="button" minor="0" buttonid="saveBtn">Save</saveBtn>
+    <resetBtn type="button" minor="0" buttonid="resetBtn">Reset</resetBtn>
+  </rtp>
+</language_xml>

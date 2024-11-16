@@ -1,0 +1,147 @@
+<!--#set var="backButton" val="yes" -->
+<!--#set var="forwardButton" val="yes" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+<!--#include virtual="/sm/sm.srv?action=get&group=Properties.LEDControl.LEDcontrol" -->
+
+<script language="JavaScript">
+<!--
+var langObjMMH = new Language("maintenance_h", "maintenance_h");
+
+function globalLanguageVars()
+{
+	document.getElementById("titleId").innerHTML = langObjMMH.getText("titleTxt");
+}
+// -->
+</script>
+
+</head>
+<body onload="langObjMMH.init()">
+<!--#set var="events" value="yes" -->
+<!--#set var="savesystemtime" value="yes" -->
+<!--#if expr="$root_Brand_ProdNbr = 205" -->
+  <!--#set var="events" val="no" -->
+  <!--#set var="savesystemtime" value="no" -->
+<!--#endif -->
+<!--#if expr="$root_Brand_ProdNbr >< 206" -->
+  <!--#set var="events" val="no" -->
+  <!--#set var="savesystemtime" value="no" -->
+<!--#endif -->
+<!--#if expr="$root_Brand_ProdNbr >< 207" -->
+  <!--#set var="events" val="no" -->
+  <!--#set var="savesystemtime" value="no" -->
+<!--#endif -->
+
+<!--#include virtual="/incl/helpTop_incl2.shtml" -->
+<table class="alternateRows" border="0" cellpadding="3" cellspacing="0" width="440" bgcolor="white">
+<!--#include virtual="/incl/helpTop_incl3.shtml" -->
+<tr>
+	<td colspan="2">
+		<span id="help1Txt1a"></span>&nbsp;<!--#echo var="root_Brand_ProdShortName" option="encoding:html" -->&nbsp;<span id="help1Txt1b"></span><br/><br/>
+	</td>
+</tr>
+
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="subTitle1Txt"></span>
+		</div>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="presetTxt1a"></span>&nbsp;<!--#echo var="root_Brand_ProdShortName" option="encoding:html" -->&nbsp;<span id="presetTxt1b"></span><br/><br/>
+		<span id="presetTxt2"></span>
+
+		<ul>
+			<li>
+				<span id="bootTxt1"></span>
+			</li>
+			<li>
+				<span id="bootTxt2"></span>
+			</li>
+			<li>
+				<span id="bootTxt3"></span>
+			</li>
+			<li>
+				<span id="bootTxt4"></span>
+			</li>
+			<li>
+				<span id="bootTxt5"></span>
+			</li>
+      <!--#if expr="$savesystemtime = yes" -->
+			<li>
+				<span id="help56Txt"></span>
+			</li>
+      <!--#endif -->
+			<li>
+				<span id="help57Txt"></span>
+			</li>
+		</ul>
+		<span id="defaultTxt1"></span><br/><br/>
+		<span id="defaultTxt2a"></span>&nbsp;<!--#echo var="root_Brand_ProdShortName" option="encoding:html" -->&nbsp;<span id="defaultTxt2b"></span><br/><br/>
+	</td>
+</tr>
+
+	<tr class="subTitle">
+		<td colspan="2">
+			<div align="left">
+				<span id="subTitle2bTxt"></span>
+			</div>
+		</td>
+	</tr>
+	
+	<tr>
+		<td colspan="2">
+			<span id="help7bTxt"></span><br/><br/>
+		</td>
+	</tr>
+
+
+<tr class="subTitle">
+	<td colspan="2">
+		<div align="left">
+			<span id="subTitle2Txt"></span>
+		</div>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2">
+		<span id="help7Txt1a"></span>&nbsp;<!--#echo var="root_Brand_ProdShortName" option="encoding:html" --><span id="help7Txt1b"></span><br/><br/>
+		<span id="help9Txt"></span><br/><br/>
+		<span id="help10Txt1a"></span>&nbsp;<!--#echo var="root_Brand_ProdShortName" option="encoding:html" --><span id="help10Txt1b"></span><br/><br/>
+	</td>
+</tr>
+
+<!--#if expr="$root_Properties_LEDControl_LEDControl != " -->
+	<tr class="subTitle">
+		<td colspan="2">
+			<div align="left">
+				<span id="subTitleLEDTxt"></span>
+			</div>
+		</td>
+	</tr>
+
+	<tr>
+		<td colspan="2">
+<!--#set var="rack_autodetect" val="no" -->
+<!--#if expr="_$root_Information_Rack_AutoDetected != _" -->
+  <!--#if expr="$root_Information_Rack_AutoDetected != false" -->
+			<span id="blinkLEDTxt"></span><br/><br/>
+			<span id="rackOverTxt"></span><br/><br/>
+    <!--#set var="rack_autodetect" val="yes" -->
+  <!--#endif -->
+<!--#endif -->
+  <!--#if expr="$rack_autodetect = no" -->
+      <span id="blinkLEDcamTxt"></span><br/><br/>
+  <!--#endif -->
+		</td>
+	</tr>
+<!--#endif -->
+
+
+</table>
+<!--#include virtual="/incl/helpBottom_incl.shtml" -->
+</body>
+</html>

@@ -1,0 +1,342 @@
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#include virtual="/incl/top_incl_popup.shtml" -->
+<!--#include virtual="/sm/sm.srv?action=get&group=Properties.PTZ.PTZ" -->
+<!--#set var="operator" val="yes" -->
+<!--#if expr="$root_Brand_ProdNbr = 205" -->
+  <!--#set var="operator" val="no" -->
+<!--#endif -->
+<!--#if expr="$root_Brand_ProdNbr >< 206" -->
+  <!--#set var="operator" val="no" -->
+<!--#endif -->
+
+
+<script language="JavaScript" type="text/javascript">
+  <!--
+  
+  <!--#if expr="$pageclose$ = 1" -->
+    function pageClose()
+    {     
+      // The user pressed the OK button, reload the parent window and close this one (params are already saved). 
+      window.opener.reloadPage(); //<--- calls the reloadPage() located in users.shtml
+      window.close();
+    }
+    
+    function init()
+    {
+      pageClose();
+    }
+  <!--#else -->
+    var langObjUsrSet;
+    function init()
+    {
+      langObjUsrSet = new Language("users", "users_set");
+      langObjUsrSet.init();
+      initControls();
+      window.focus();
+      focusOnFirst();
+    }
+  
+    function initControls()
+    {
+      var form = document.useraddForm;
+      var myOriginalName = "<!--#echo var="user" option="encoding:javascript" -->";
+      var myOriginalGroup = "<!--#echo var="group" option="encoding:javascript" -->";
+      var ptzUser = [];
+
+      if (myOriginalName != "root") {
+        if (myOriginalName.length > 0) {
+         <!--#if expr="$operator = yes" -->
+          if (myOriginalGroup.toLowerCase().charAt(0) == "a")
+            form.sgrp[2].checked = true;
+          else if (myOriginalGroup.toLowerCase().charAt(0) == "o")
+            form.sgrp[1].checked = true;
+         <!--#else -->
+          if (myOriginalGroup.toLowerCase().charAt(0) == "a")
+            form.sgrp[1].checked = true;
+         <!--#endif -->
+          else
+            form.sgrp[0].checked = true;
+        } else {
+          form.sgrp[0].checked = true;
+        }
+      }
+    <!--#if expr="$root_Properties_PTZ_PTZ = yes" -->
+        ptzUser = ptzUser.concat(document.userList.ptz.value.split(","));
+        for (var i = 0; i < ptzUser.length; i++) {
+          if (ptzUser[i].toLowerCase() == myOriginalName.toLowerCase()) {
+            form.enablePTZ.checked = true;
+          }
+        }
+          if (form.user.value == "root") {
+            form.enablePTZ.disabled = true;
+          }
+
+      <!--#if expr="$user != root" -->
+      user_set_enablePtz = form.enablePTZ.checked;
+      groupClick();
+      <!--#endif -->
+    <!--#endif -->
+    }
+
+    function focusOnFirst()
+    {
+      var form = document.useraddForm;
+    <!--#if expr="$doAction = add" -->
+        form.user.focus()
+        form.user.select()
+    <!--#else -->
+        form.pwd.focus()
+        form.pwd.select()
+    <!--#endif -->
+    }
+
+      var user_set_enablePtz = true;
+      function groupClick()
+      {
+    <!--#if expr="$root_Properties_PTZ_PTZ = yes" -->
+      <!--#if expr="$user != root" -->
+        var isAdmin = document.getElementById("groupAdmin").checked;
+        var o = document.getElementsByName("enablePTZ")[0];
+        if (isAdmin)
+        {
+          user_set_enablePtz = o.checked;
+          o.checked = true;
+          o.disabled = true;
+        }
+        else
+        {
+          o.checked = user_set_enablePtz;
+          o.disabled = false;
+        } 
+      <!--#endif -->
+    <!--#else -->
+        //Does nothing unless PTZ is on
+    <!--#endif -->
+      }
+
+    function checkUserName()
+    {
+      var form = document.useraddForm;
+      var aName = form.user.value;
+      var c;
+      var currentUsers=[];
+
+      // Check empty username
+      if (aName.charAt(0) == '') {
+        alert( langObjUsrSet.getText("usNaAlert") )
+        form.user.focus()
+        form.user.select()
+        return false
+      }
+
+      // Check for too long username
+      if (aName.length > 14) {
+        alert( langObjUsrSet.getText("maChAlert") )
+        form.user.focus()
+        form.user.select()
+        return false
+      }
+
+      // Check invalid characters
+      c = aName.charAt(0)
+      if (!((c>='A' && c<='Z') || (c>='a' && c<='z'))) {
+        alert( langObjUsrSet.getText("fiChAlert") )
+        form.user.focus()
+        form.user.select()
+        return false
+      }
+
+      for (var i = 0; i < aName.length; i++) {
+        c = aName.charAt(i)
+        if (!((c>='A' && c<='Z') || (c>='a' && c<='z') || (c>='0' && c<='9'))) {
+          alert( langObjUsrSet.getText("alwdChAlert") )
+          form.user.focus()
+          form.user.select()
+          return false
+        }
+      }
+
+      currentUsers = currentUsers.concat(document.userList.admin.value.split(","));
+      currentUsers = currentUsers.concat(document.userList.operator.value.split(","));
+      currentUsers = currentUsers.concat(document.userList.viewer.value.split(","));
+
+      for (var i = 0; i < currentUsers.length; i++) {
+        if (currentUsers[i].toLowerCase() == aName.toLowerCase()) {
+          alert( langObjUsrSet.getText("usrExAlert") );
+          form.user.focus()
+          form.user.select()
+          return false
+        }
+      }
+      return true
+    }
+
+
+    function checkPassword()
+    {
+      var form = document.useraddForm
+      var aPass1 = form.pwd.value
+      var aPass2 = form.pwd_confirm.value
+
+      // Check for a too (don) short password
+      if (aPass1.length < 1) {
+        alert( langObjUsrSet.getText("pswMustConAlert") )
+        form.pwd.focus()
+        form.pwd.select()
+        return false
+      }
+
+      // Check for too long password
+      // The maximum length of the password is determined at compile time.
+      if (aPass1.length > 64) {
+        alert( langObjUsrSet.getText("maPwChAlert1")+" 64 "+langObjUsrSet.getText("maPwChAlert2"))
+        form.pwd.focus()
+        form.pwd.select()
+        return false
+      }
+
+      // Check that the real password is same as the confirm password.
+      if (aPass1 != aPass2) {
+        alert( langObjUsrSet.getText("pwdConfAlert") )
+        form.pwd.focus()
+        form.pwd.select()
+        return false
+      }
+
+      // Check invalid characters
+      for (var i = 0; i < aPass1.length; i++) {
+        c = aPass1.charAt(i)
+        if (!((c>='A' && c<='Z') || (c>='a' && c<='z') || (c>=' ' && c<='~'))) {
+          alert( langObjUsrSet.getText("strictPwdCheckAlert") )
+          form.pwd.focus()
+          form.pwd.select()
+          return false
+        }
+      }
+      return true
+    }
+
+
+    function saveData()
+    {
+      var action = "<!--#echo var="doAction" option="encoding:javascript" -->";
+      var originalUser = "<!--#echo var="user" option="encoding:javascript" -->";
+      var submitForm = document.submitForm;
+      var userForm = document.useraddForm;
+
+      if (action == "add" && !checkUserName()) {
+         return false;
+      }
+
+      if (!checkPassword()) {
+         return false;
+      }
+
+      // Build submitstring
+      submitForm.user.value = userForm.user.value;
+
+      if (originalUser != "root") {
+
+        for (i = 0 ; i < 3 ; i++) {
+           if (userForm.sgrp[i].checked) {
+              submitForm.sgrp.value = userForm.sgrp[i].value;
+              break;
+           }
+        }
+        <!--#if expr="$root_Properties_PTZ_PTZ = yes" -->
+          if (userForm.enablePTZ.checked == true) {
+            submitForm.sgrp.value += ":ptz";
+          }
+        <!--#endif -->
+      }
+
+      if (userForm.pwd.value.length > 0) {
+        submitForm.pwd.value = userForm.pwd.value;
+      }
+
+      submitForm.submit();
+      return false;
+    }
+  <!--#endif -->
+  
+  //-->
+</script>
+
+</head>
+<body class="bodyBg" topmargin="0" leftmargin="0" marginwidth="0" marginheight="0" bgcolor="white" onload="init()">
+
+<form name="userList">
+<!--#include virtual="/axis-cgi/admin/pwdgrp.cgi?action=get&format=form" -->
+</form>
+
+<form name="useraddForm" onSubmit="javascript: return saveData();">
+<div class="cornerBox">
+    <div class="content">
+      <table border="0" cellpadding="3" cellspacing="0" class="oddItem" width="296">
+        <tr>
+          <td class="topTitle" align="left"><span id="usrSetTxt"></span></td>
+          <td class="topTitle">
+            <div align="right"><a href="javascript:launch('/help/users_set_h.shtml')"><img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="helpPic"></a></div>
+          </td>
+        </tr>
+        <tr>
+          <td class="oddItem"><span id="usrNaTxt"></span></td>
+          <td nowrap class="oddItem"><!--#if expr="$doAction = add" --><input type="text" class="fieldName" maxlength="14" name="user"><!--#else --><!--#echo var="user" option="encoding:html" --><input type="hidden" name="user" value="<!--#echo var="user" option="encoding:html" -->"><!--#endif --></td>
+        </tr>
+        <tr>
+          <td class="evenItem"><span id="pwdTxt1"></span>&nbsp;64&nbsp;<span id="pwdTxt2"></span></td>
+          <td class="evenItem"><input type="password" class="fieldName" maxlength="64" name="pwd"></td>
+        </tr>
+        <tr>
+          <td nowrap class="oddItem"><span id="confPwdTxt"></span></td>
+          <td class="oddItem"><input type="password" class="fieldName" maxlength="64" name="pwd_confirm"></td>
+        </tr>
+        <!--#if expr="$user != root" -->
+        <tr>
+          <td valign="top" class="evenItem"><span id="usrGrTxt"></span></td>
+          <td class="evenItem">
+              <input type="radio" name="sgrp" value="viewer" id="groupView" onclick="javascript:groupClick();"><span id="vieTxt"></span><br>
+              <!--#if expr="$operator != no" -->
+                <input type="radio" name="sgrp" value="viewer:operator" id="groupOperator" onclick="javascript:groupClick();"><span id="oprTxt"></span><br>
+              <!--#endif -->
+              <input type="radio" name="sgrp" value="viewer:operator:admin" id="groupAdmin" onclick="javascript:groupClick();"><span id="adminTxt"></span>
+          </td>
+        </tr>
+        <!--#endif -->
+        <!--#if expr="$root_Properties_PTZ_PTZ = yes" -->
+        <tr>
+          <td class="oddItem" colspan="2"><input type="checkbox" name="enablePTZ"<!--#if expr="$doAction = add" -->checked<!--#endif --> onclick="javascript:user_set_enablePtz=this.checked;">&nbsp;<span id="enblPtzTxt"></span></td>
+        </tr>
+        <!--#endif -->
+        <tr>
+          <td class="topTitle" align="center" colspan="2">
+            <table border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td class="button"><input type="button" width="75" value="" class="btnNormal" onClick="JavaScript:saveData()" id="users_set_okBtn"></td>
+                <td class="button">&nbsp;</td>
+                <td class="button"><input type="button" width="75" value="" class="btnNormal" onClick="window.close()" id="users_set_cancelBtn"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="footerLeft"><div class="footerRight"></div></div>
+  </div>
+</form>
+
+<form name="submitForm" action="/axis-cgi/admin/pwdgrp.cgi" method="post">
+  <input type="hidden" name="action" id="action" value="<!--#echo var="doAction" option="encoding:html" -->" />
+  <input type="hidden" name="return_page" id="return_page" value="/admin/users_set.shtml?<!--#if expr="$basic = yes" -->basic=yes&<!--#endif -->pageclose=1" />
+  <input type="hidden" name="user" value="<!--#echo var="user" option="encoding:html" -->" />
+  <input type="hidden" name="pwd" id="pwd" value="" />
+<!--#if expr="$user != root" -->
+  <input type="hidden" name="grp" id="grp" value="users" />
+  <input type="hidden" name="sgrp" value="" />
+  <input type="hidden" name="comment" id="comment" value="WebUser" />
+<!--#else -->
+  <input type="hidden" name="comment" id="comment" value="Administrator" />
+<!--#endif -->
+</form>
+</body>
+</html>

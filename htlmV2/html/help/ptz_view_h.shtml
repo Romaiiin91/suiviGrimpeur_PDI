@@ -1,0 +1,80 @@
+<!--#include virtual="/sm/sm.srv?action=get&group=Properties.PTZ.PTZ,ImageSource.NbrOfSources,Properties.Image.Format,Properties.Image.Resolution,Audiod.audioEnabled,PTZ.Support.S1,PTZ.Support.S1.LensOffset,PTZ.UserAdv.U1,PTZ.Various.V1" -->
+<!--#set var="backButton" val="yes" -->
+<!--#set var="forwardButton" val="yes" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<script language="JavaScript">
+<!--
+var langObjVLVH = new Language("ptzview_h", "ptz_view_h");
+
+function globalLanguageVars()
+{	
+ 	document.getElementById("titleId").innerHTML = langObjVLVH.getText("set_TitleTxt");
+}
+// -->
+</script>
+
+</head>
+<body onload="langObjVLVH.init()">
+<!--#include virtual="/incl/helpTop_incl2.shtml" -->
+<table border="0" cellpadding="3" cellspacing="0" width="440" bgcolor="white">
+<tr>
+	<td class="topTitle">
+		<div align="left">
+			<span id="set_TitleTxt"></span><br/><br/>
+		</div>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2" class="oddItem">
+		<span id="intro_Txt"></span><br/><br/>
+	</td>
+</tr>
+
+<tr>
+	<td class="subTitle" colspan="2">
+		<div align="left">
+		<span id="subTitle1Txt"></span><br/><br/>
+		</div>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2" class="oddItem">
+		<span id="help1Txt"></span><br/><br/>
+		<ul>
+			<li><span id="help1Txt1"></span><br/><br/></li>
+			<li><span id="help1Txt2"></span><br/><br/></li>
+			<li><span id="help1Txt3"></span><br/><br/></li>
+		</ul>
+		<span id="help1Txt4"></span><br/>
+		<ul>
+			<li><span id="help1Txt5"></span><br/><br/></li>
+			<li><span id="help1Txt6"></span><br/><br/></li>
+		</ul>
+		<span id="help1Txt7"></span><br/><br/>
+		<span id="help2Txt"></span><br/><br/>
+	</td>
+</tr>
+
+<tr>
+	<td class="subTitle" colspan="2">
+		<div align="left">
+		<span id="subTitle2Txt"></span><br/><br/>
+		</div>
+	</td>
+</tr>
+
+<tr>
+	<td colspan="2" class="oddItem">
+		<span id="help3Txt"></span><br/><br/>
+		<span id="help4Txt"></span><br/><br/>
+		<span id="help4Txt1"></span><br/><br/>
+		<span id="help4Txt2"></span><br/><br/>
+	</td>
+</tr>
+</table>
+<!--#include virtual="/incl/helpBottom_incl.shtml" -->
+</body>
+</html>

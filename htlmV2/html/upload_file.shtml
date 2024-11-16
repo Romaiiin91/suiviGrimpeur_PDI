@@ -1,0 +1,36 @@
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#include virtual="/incl/top_incl_popup.shtml" -->
+
+<script language="JavaScript" type="text/javascript">
+<!--
+  var langObjUplFile = new Language("certificates", "upload_file");
+  
+  function init()
+  {
+    langObjUplFile.init(false);
+    var fileID = "<!--#echo var="fileID" option="encoding:javascript" -->";
+    var uploaderror = "<!--#echo var="uploaderror" option="encoding:javascript" -->";
+    if( fileID != "" )
+    {
+      document.getElementById("fileID").innerHTML += "<!--#echo var="fileID" option="encoding:html" -->";
+    }
+    if( uploaderror == "1" )
+    {
+      document.getElementById("errorMessage").innerHTML += langObjUplFile.getText("noFileTxt");
+    }
+    else if( uploaderror != "" )
+    {
+      document.getElementById("errorMessage").innerHTML += langObjUplFile.getText("failedUploadTxt");
+    }
+  }
+//-->
+</script>
+
+</head>
+<body onLoad="init();">
+
+  <div id="fileID"></div>
+  <div id="errorMessage"></div>
+
+</body>
+</html>

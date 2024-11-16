@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+	<UPnP_h>
+		<pageTitle type="title" minor="0">Help/UPnP&#x2122; Settings</pageTitle>
+		<titleTxt type="msgAsText" minor="0">UPnP&#x2122; Settings</titleTxt>
+		<help1Txt type="text" minor="0">The Axis product includes support for UPnP&#x2122;. This means that when using a workstation running Windows XP, Windows Vista or Windows 7 and with UPnP&#x2122; enabled, the product will automatically be detected and added to &#x3C;b&#x3E;My Network Places&#x3C;/b&#x3E; in Windows. Note that, in Windows 7 the product will be found under Start &#x3E; Computer &#x3E; Network.</help1Txt>
+		<help1Txt-1 type="text" minor="0">The Axis product includes support for UPnP&#x2122;. This means that when using a workstation running Windows XP, Windows Vista, Windows 7 or Windows 8 and with UPnP&#x2122; enabled, the product will automatically be detected and added to &#x3C;b&#x3E;My Network Places&#x3C;/b&#x3E; in Windows. Note that, in Windows 7 or Windows 8 the product will be found under Start &#x3E; Computer &#x3E; Network.</help1Txt-1>
+		<subTitle1Txt type="text" minor="0">UPnP&#x2122; Settings</subTitle1Txt>
+		<help4Txt1 type="text" minor="0">The available settings for UPnP&#x2122; are:</help4Txt1>
+		<help4Txt2 type="text" minor="0">Enable UPnP&#x2122;</help4Txt2>
+		<help4Txt3 type="text" minor="0">Friendly name - This name will be used for the new &#x3C;b&#x3E;Network Place&#x3C;/b&#x3E; in Windows. The friendly name currently used for this product is:</help4Txt3>
+		<help5Txt1 type="text" minor="0">Saving an empty friendly name will return it to the default, which is the product's name and serial number.</help5Txt1>
+		<help5Txt2 type="text" minor="0">To install UPnP&#x2122; support on Windows XP or Windows Vista; open the Control Panel and select &#x3C;b&#x3E;Add/Remove Programs&#x3C;/b&#x3E;. Then select &#x3C;b&#x3E;Add/Remove Windows Components &#x3C;/b&#x3E;and open the Networking Services section. Click &#x3C;b&#x3E;Details&#x3C;/b&#x3E; and then select UPnP&#x2122; as the service to add.</help5Txt2>
+		<help5Txt3 type="text" minor="0">To enable UPnP&#x2122; support on Windows 7, open the Control Panel and select &#x3C;b&#x3E;Network and Sharing Center&#x3C;/b&#x3E;. Then select &#x3C;b&#x3E;Change advanced sharing settings&#x3C;/b&#x3E;, choose a network profile and select &#x3C;b&#x3E;Turn on network discovery&#x3C;/b&#x3E;.</help5Txt3>
+		<help5Txt3-1 type="text" minor="0">To enable UPnP&#x2122; support on Windows 7 or Windows 8, open the Control Panel and select &#x3C;b&#x3E;Network and Sharing Center&#x3C;/b&#x3E;. Then select &#x3C;b&#x3E;Change advanced sharing settings&#x3C;/b&#x3E;, choose a network profile and select &#x3C;b&#x3E;Turn on network discovery&#x3C;/b&#x3E;.</help5Txt3-1>
+		<help7Txt type="text" minor="0">UPnP&#x2122; is a certification mark of the UPnP&#x2122; Implementers Corporation.</help7Txt>
+	</UPnP_h>
+</language_xml>

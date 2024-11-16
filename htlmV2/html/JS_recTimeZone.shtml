@@ -1,0 +1,315 @@
+<!--#include virtual="/sm/sm.srv?action=get&group=Time.POSIXTimeZone,Time.DST.Enabled" -->
+
+<script language="javascript" type="text/javascript">
+<!--
+  var timeZoneObj = parseTimeZone( "<!--#echo var="root_Time_POSIXTimeZone" option="encoding:none" -->" );
+
+  function parseTimeZone( timeZone )
+  {
+    var obj = new Object();
+    obj.offsetMinutes = 0;
+    obj.zoneStr = timeZone;
+
+    obj.strDTSStartDate = "";
+    obj.strDTSEndDate = "";
+    obj.offsetMinutesDTS = 0;
+
+    if( obj.zoneStr != "" )
+    {
+      var offset = 0;
+      var tmpArr = obj.zoneStr.split(",");
+      //remove time zone name
+      var tmpStr = tmpArr[0].replace(/^[^0-9:-]*/, '');
+
+      //remove prefix
+      var prefix = "-";
+      // If the sign is - or the first digit is 0, then the prefix is +
+      if( tmpStr.indexOf("-") != -1 || tmpStr[0] == '0' )
+      {
+        prefix = "+";
+        tmpStr = tmpStr.replace("-", "");
+      }
+
+      //get offset
+      var offsetStr = "";
+      var matches = tmpStr.match(/^[0-9:]*/);
+      if( matches )
+      {
+        offsetStr = matches[0];
+      }
+
+      if( offsetStr.indexOf(':') != -1 )
+      {
+        offset = Number( offsetStr.split(':')[0] ) + ( Number( offsetStr.split(':')[1] ) / 60 );
+      }
+      else
+      {
+        offset = Number( offsetStr );
+      }
+      
+      <!--#if expr="$root_Time_DST_Enabled = yes" -->
+        //remove offset from str
+        tmpStr = tmpStr.replace(/^[0-9:]*/, "");
+        if( tmpStr.length > 0 )
+        {
+          //remove dts zone name from str
+          var timeStrDTS = tmpStr.replace(/^[^0-9:-]*/, '');
+          if( timeStrDTS.length == 0 )
+          {
+            timeStrDTS = "01:00";
+          }
+
+          var DTSStart = "M4.1.0/2";
+          var DTSEnd = "M10.1.0/2";
+
+          if( tmpArr.length > 1 )
+          {
+            DTSStart = tmpArr[1];
+            DTSEnd = tmpArr[2];
+          }
+  
+          addYear = check_DST_span(DTSStart, DTSEnd);
+
+          /* Do not add any years to the start year. */
+          obj.strDTSStartDate = calcDTSDate( DTSStart );
+          obj.strDTSEndDate = calcDTSDate( DTSEnd, addYear );
+  
+          //add dts
+          var offsetHours = offset + Number( timeStrDTS.split(':')[0] ) + ( Number( timeStrDTS.split(':')[1] ) / 60 );
+          obj.offsetMinutesDTS = ((prefix == "-")?(offsetHours * -1):offsetHours) * 60;
+  
+        }
+      <!--#endif -->
+      obj.offsetMinutes = ((prefix == "-")?(offset * -1):offset) * 60;
+    }
+    return obj;
+  }
+  
+  <!--#if expr="$root_Time_DST_Enabled = yes" --> 
+    // Return true if the DST duration spans over two years.
+    function check_DST_span( startTime, endTime )
+    {
+      if (startTime.charAt(0) == "M" && endTime.charAt(0) == "M")
+      {
+        /* Check if the End time is in the following year. */
+        var arrStart = startTime.replace( "M", "" ).split(".");
+        var arrEnd = endTime.replace( "M", "" ).split(".");
+        if (Number( arrStart[0]) > Number(arrEnd[0]) )
+        {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function calcDTSDate( DTSStr, addYear )
+    {
+      var strDTSDate = "";
+      var theDate = new Date();
+      var hour, month, date;
+      var currentYear = ( theDate.getFullYear() );
+      if (addYear == true)
+      {
+        currentYear += 1;
+      }
+
+      if( DTSStr.charAt(0) == "M")
+      {
+        DTSStr = DTSStr.replace( "M", "" );
+        var arr = DTSStr.split(".");
+        month = Number( arr[0] );
+        var day = Number( arr[2].substring( 0, arr[2].indexOf("/")) );
+        hour = ( arr[2].indexOf("/") != -1 )?arr[2].substring( arr[2].indexOf("/")+1, arr[2].length ):"2";
+  
+        //set up a date for the first of the correct month
+        theDate.setFullYear( currentYear, (month-1), 1 );
+  
+        //calculate how long it is until the correct day of the week
+        var dateDay = theDate.getDay();
+        var diff = dateDay - day;
+        if( diff < 0 )
+          diff = diff * -1;
+  
+        //add so the date is set to the correct day of the week
+        if( diff > 0 )
+        {
+          theDate.setDate( 1 + ( 7 - diff ) );
+        }
+        var weekNum = Number( arr[1] );
+        var dateWeekNum = 1;
+  
+        if( weekNum != dateWeekNum )
+        {
+          var currMonth = (month-1);
+          var tmpMonth, tmpDate;
+          do
+          {
+            tmpDate = theDate.getDate();
+            theDate.setDate( tmpDate + 7 );
+            tmpMonth = theDate.getMonth();
+  
+            if( tmpMonth != currMonth )
+            {
+              theDate.setDate( tmpDate - 7 );
+              dateWeekNum = weekNum;
+            }
+            else
+            {
+              dateWeekNum++;
+            }
+          }
+          while( weekNum != dateWeekNum )
+        }
+        strDTSDate = dateToStr( theDate, false );
+      }
+      else if( DTSStr.charAt(0) == "J")
+      {
+        var jDay = Number( DTSStr.substring( 1, DTSStr.indexOf("/")) );
+        hour = ( DTSStr.indexOf("/") != -1 )?DTSStr.substring( DTSStr.indexOf("/")+1, DTSStr.length ):"2";
+  
+        if( jDay >= 30 )
+        {
+          //set the date to from the first of march because the first of march is always 30
+          theDate.setMonth( 2, ( jDay - 29 ) );
+        }
+        else
+        {
+          //need to know if it is a leap year
+          if( ( currentYear%4 == 0 && currentYear%100 != 0 ) || currentYear%400 == 0  )
+          {
+            //the day count starts at 0
+            theDate.setMonth( 0, ( jDay + 1 ) );
+          }
+          else
+          {
+            //the day count starts at 1
+            theDate.setMonth( 0, jDay );
+          }
+        }
+        strDTSDate = dateToStr( theDate, false );
+      }
+  
+      if( strDTSDate.length > 0 )
+      {
+        var min = 0;
+        if( hour.indexOf(':') != -1 )
+        {
+          min = Number( parseInt( hour.split(':')[1], 10 ) );
+          hour = Number( parseInt( hour.split(':')[0], 10 ) );
+        }
+        else
+        {
+          hour = Number( parseInt( hour, 10 ) );
+        }
+        strDTSDate += " "+(( hour < 10 )?"0"+hour:hour )+":"+(( min < 10 )?"0"+min:min );
+      }
+  
+      return strDTSDate;
+    }
+  <!--#endif -->
+
+  function addRemoveOffset( str, action )
+  {
+    var tmpStr = str;
+    if( timeZoneObj.offsetMinutes != 0 || timeZoneObj.offsetMinutesDTS != 0  )
+    {
+      var tmpDate = new Date();
+
+      var dateArr, timeArr;
+
+      if( tmpStr.indexOf('Z') != -1 )
+      {
+        tmpStr = tmpStr.replace('Z', '');
+        dateArr = ( tmpStr.split('T')[0] ).split('-');
+        timeArr = ( tmpStr.split('T')[1] ).split(':');
+      }
+      else
+      {
+        dateArr = ( tmpStr.split(' ')[0] ).split('-');
+        timeArr = ( tmpStr.split(' ')[1] ).split(':');
+      }
+
+      tmpDate.setFullYear( dateArr[0], parseInt(dateArr[1], 10)-1, parseInt(dateArr[2], 10) );
+      tmpDate.setHours( timeArr[0] );
+      tmpDate.setMinutes( timeArr[1] );
+      tmpDate.setSeconds( timeArr[2] );
+
+      var offSetMilliSec = timeZoneObj.offsetMinutes * 60 * 1000;
+
+      if( timeZoneObj.strDTSStartDate != "" && timeZoneObj.strDTSEndDate != "" )
+      {
+        if( timeZoneObj.strDTSStartDate <= tmpStr && timeZoneObj.strDTSEndDate > tmpStr )
+        {
+          offSetMilliSec = timeZoneObj.offsetMinutesDTS * 60 * 1000;
+        }
+      }
+
+      if( action == "add" )
+      {
+        tmpDate.setTime( tmpDate.getTime() + offSetMilliSec );
+      }
+      else
+      {
+        tmpDate.setTime( tmpDate.getTime() - offSetMilliSec );
+      }
+      tmpStr = dateToStr( tmpDate, true, true );
+      
+      if( action != "add" )
+      {
+        tmpStr = tmpStr.replace(" ", "T")+"Z";
+      }
+    }
+    return tmpStr;
+  }
+
+  function initProductDate()
+  {
+    var tmpDate = new Date();
+
+    //remove client offset 
+    var clientOffsetMilliSec = ( tmpDate.getTimezoneOffset() ) * -1 * 60 * 1000;
+    tmpDate.setTime( tmpDate.getTime() - clientOffsetMilliSec );
+
+    if( timeZoneObj.offsetMinutes != 0 || timeZoneObj.offsetMinutesDTS != 0  )
+    {
+      var tmpStr = dateToStr( tmpDate, true, false );
+      var offSetMilliSec = timeZoneObj.offsetMinutes * 60 * 1000;
+
+      if( timeZoneObj.strDTSStartDate != "" && timeZoneObj.strDTSEndDate != "" )
+      {
+        if( timeZoneObj.strDTSStartDate <= tmpStr && timeZoneObj.strDTSEndDate > tmpStr )
+        {
+          offSetMilliSec = timeZoneObj.offsetMinutesDTS * 60 * 1000;
+        }
+      }
+      //add new offset
+      tmpDate.setTime( tmpDate.getTime() + offSetMilliSec );
+    }
+
+    return tmpDate;
+  }
+
+  function dateToStr( dateObj, includeTime, includeSeconds )
+  {
+    var month = Number( dateObj.getMonth() )+1;
+    var date = dateObj.getDate();
+    var dateStr = dateObj.getFullYear()+"-"+(( month < 10 )?"0"+month:month)+"-"+(( date < 10 )?"0"+date:date);
+
+    if( includeTime )
+    {
+      var hour = dateObj.getHours();
+      var min = dateObj.getMinutes();
+      dateStr += " "+(( hour < 10 )?"0"+hour:hour )+":"+(( min < 10 )?"0"+min:min );
+
+      if( includeSeconds )
+      {
+        var sec = dateObj.getSeconds();
+        dateStr += ":"+(( sec < 10 )?"0"+sec:sec );
+      }
+    }
+    return dateStr;
+  }
+
+
+//-->
+</script>

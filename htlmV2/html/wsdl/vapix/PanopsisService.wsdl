@@ -1,0 +1,710 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="wsdl-viewer.xsl"?>
+
+<wsdl:definitions targetNamespace="http://www.axis.com/vapix/ws/panopsiscalibration1"
+		  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+		  xmlns:apc="http://www.axis.com/vapix/ws/panopsiscalibration1"
+		  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap12/">
+
+  <wsdl:documentation xmlns="http://www.w3.org/1999/xhtml">
+    <p>
+      The VAPIX Panopsis Calibration Service provides an API to calibrate
+      a Panopsis device. The calibration is needed to get accurate
+      positioning and PTZ movements on the device. The calibration is done
+      in two steps, overview rotation and accuracy adjustment. It must be done
+      in the order mentioned above, if the overview is rotated the accuracy calibration
+      must be done again.
+    </p>
+
+    <h2>Overview rotation</h2>
+    <p>
+      Rotates the overview images seen through the fish eye lens. Done in two steps:
+      <ul>
+	<li>Start the rotation proccess using <b>StartOverviewRotation</b>.</li>
+	<li>Rotate the overview to a desired rotation using VAPIX PTZ API.</li>
+	<li>Save the rotation using <b>SaveOverviewRotation</b>.</li>
+      </ul>
+      When a new rotation is saved the any existing calibration data will be invalidated
+      and a new <i>Accurracy calibration</i> is needed.
+      The rotation process can anytime be aborted using <b>AbortOverviewRotation</b>. If the rotation is aborted
+      the camera returns to the last saved overview rotation and existing accuracy calibration data will be kept.
+    </p>
+
+    <h2>Accuracy calibration</h2>
+    <p>
+      Calibrates the accuracy of the coordinate transform between overview and normal PTZ mode.
+      The calibration is initiated using <b>StartCalibration</b> and saved using <b>SaveCalibration</b>.
+      The calibration process is sequential and requires the client to select and center a number of objects in both
+      normal PTZ mode and in the overview. When requesting a recommendation zone the returned data also contains information
+      about how many more calibration points are needed before the calibration is completed.
+      The following sequence is used to select a point.
+      <ol>
+	<li>Request a recommendation zone for the next calibration point using <b>GetCalibrationTargetRecommendation</b></li>
+	<li>Select a target in the recommended area (or as close as possible) using <b>SelectCalibrationTarget</b></li>
+	<li>Confirm the target position in Normal Mode using <b>OnCalibrationTarget</b>.</li>
+	<li>Back to 1.</li>
+      </ol>
+      It is possible to undo the latest calibration target at any time and this is
+      done with the <b>UndoCalibrationTarget</b> command. Repeated calls to <b>UndoCalibrationTarget</b> will
+      continue to undo stored calibration targets until the session is empty and then it returns an error.
+    </p>
+  </wsdl:documentation>
+  <wsdl:types>
+    <xs:schema targetNamespace="http://www.axis.com/vapix/ws/panopsiscalibration1"
+	       xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	       elementFormDefault="qualified">
+
+      <xs:simpleType name="CalibrationStatus">
+	<xs:restriction base="xs:string">
+	  <xs:enumeration value="Unrotated" />
+	  <xs:enumeration value="Initializing" />
+	  <xs:enumeration value="Rotating" />
+	  <xs:enumeration value="Uncalibrated" />
+	  <xs:enumeration value="Calibrating" />
+	  <xs:enumeration value="Calibrated" />
+	  <xs:enumeration value="Rotating Manual" />
+	</xs:restriction>
+      </xs:simpleType>
+
+      <xs:complexType name="CalibrationRecommendation">
+	<xs:sequence>
+          <xs:element name="X" type="xs:float">
+	    <xs:annotation>
+              <xs:documentation>X pixel coordinate of target recommendation zone.
+		Value is normalized and is returned in the range 0.0-1.0, where 0.0 is
+		the left edge of the image and 1.0 the right.
+	      </xs:documentation>
+	    </xs:annotation>
+          </xs:element>
+          <xs:element name="Y" type="xs:float">
+	    <xs:annotation>
+              <xs:documentation>
+		Y pixel ordinate of target recommendation zone.
+		Value is normalized and is returned in the range 0.0-1.0, where 0.0 is
+		the top edge of the image and 1.0 the bottom.
+	      </xs:documentation>
+	    </xs:annotation>
+          </xs:element>
+          <xs:element name="Radius" type="xs:float">
+	    <xs:annotation>
+              <xs:documentation>Radius of recommendation zone.
+		Value is normalized and is returned in the range 0.0-1.0, where 1.0 is
+		the total image width.
+	      </xs:documentation>
+	    </xs:annotation>
+          </xs:element>
+          <xs:element name="RemainingPoints" type="xs:integer">
+	    <xs:annotation>
+              <xs:documentation>Number of remaining calibration points before calibration is completed.
+	      </xs:documentation>
+	    </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+
+
+      <xs:complexType name="CalibrationInformation">
+        <xs:sequence>
+	  <xs:element name="LensXCenter" type="xs:float">
+	    <xs:annotation>
+              <xs:documentation>
+		Lens center X coordinate.
+		Value is normalized and is returned in the range 0.0-1.0, where 0.0 is
+		the left edge of the image and 1.0 the right.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="LensYCenter" type="xs:float">
+	    <xs:annotation>
+              <xs:documentation>
+		Lens center Y coordinate.
+		Value is normalized and is returned in the range 0.0-1.0,
+		where 0.0 is the top and 1.0 is the bottom.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="LensXRadius" type="xs:float">
+	    <xs:annotation>
+              <xs:documentation>
+		Lens horizontal radius.
+		Value is normalized and is returned in the range 0.0-1.0, where 1.0
+		is the total image width.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="LensYRadius" type="xs:float">
+	    <xs:annotation>
+              <xs:documentation>
+		Lens vertical radius.
+		Value is normalized and is returned in the range 0.0-1.0, where 1.0
+		is the total image height.
+	      </xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="OverviewMode" type="xs:boolean">
+	    <xs:annotation>
+              <xs:documentation>True if camera is in overview mode.</xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+	  <xs:element name="CalibrationStatus" type="apc:CalibrationStatus">
+	    <xs:annotation>
+              <xs:documentation>The current calibration status.</xs:documentation>
+	    </xs:annotation>
+	  </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+
+      <!--  Message Request/Responses elements  -->
+      <xs:element name="StartOverviewRotation">
+        <xs:complexType/>
+      </xs:element>
+
+      <xs:element name="StartManualOverviewRotation">
+        <xs:complexType/>
+      </xs:element>
+
+      <xs:element name="StartOverviewRotationResponse">
+        <xs:complexType/>
+      </xs:element>
+
+      <xs:element name="StartManualOverviewRotationResponse">
+        <xs:complexType/>
+      </xs:element>
+
+      <xs:element name="SaveOverviewRotation">
+        <xs:complexType/>
+      </xs:element>
+
+      <xs:element name="SaveManualOverviewRotation">
+        <xs:complexType>
+	  <xs:sequence>
+            <xs:element name="X" type="xs:float">
+              <xs:annotation>
+                <xs:documentation>Normalized horizontal pixel coordinate for center of overview.
+		  Shall be in the range 0.0-1.0, 0.0 is the left edge of the image.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="Y" type="xs:float">
+              <xs:annotation>
+                <xs:documentation>Normalized vertical pixel coordinate for center of overview.
+		  Shall be in the range 0.0-1.0, 0.0 is the top edge of the image.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="SaveOverviewRotationResponse">
+        <xs:complexType/>
+      </xs:element>
+
+      <xs:element name="SaveManualOverviewRotationResponse">
+        <xs:complexType/>
+      </xs:element>
+
+      <xs:element name="AbortOverviewRotation">
+        <xs:complexType/>
+      </xs:element>
+
+      <xs:element name="AbortOverviewRotationResponse">
+        <xs:complexType/>
+      </xs:element>
+
+      <xs:element name="StartCalibration">
+        <xs:complexType>
+	  <xs:sequence>
+            <xs:element name="Backup" type="xs:boolean">
+              <xs:annotation>
+                <xs:documentation>
+		  True if StartCalibration should backup the current calibration data.
+		  False if this has been done previously by StartOverviewRotation.<br/>
+		  This enables both a rotation calibration and a accuracy calibration to be executed
+		  as a complete calibration sequence without overwriting the previous settings.
+		</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="StartCalibrationResponse">
+        <xs:complexType/>
+      </xs:element>
+
+      <xs:element name="SelectCalibrationTarget">
+        <xs:complexType>
+	  <xs:sequence>
+            <xs:element name="X" type="xs:float">
+              <xs:annotation>
+                <xs:documentation>Normalized horizontal pixel coordinate of object in overview.
+		  Shall be in the range 0.0-1.0, 0.0 is the left edge of the image.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="Y" type="xs:float">
+              <xs:annotation>
+                <xs:documentation>Normalized vertical pixel coordinate of object in overview.
+		  Shall be in the range 0.0-1.0, 0.0 is the top edge of the image.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="SelectCalibrationTargetResponse">
+        <xs:complexType/>
+      </xs:element>
+
+      <xs:element name="OnCalibrationTarget">
+        <xs:complexType>
+	  <xs:sequence>
+            <xs:element name="X" type="xs:float">
+              <xs:annotation>
+                <xs:documentation>Normalized horizontal pixel coordinate of object in overview.
+		  Shall be in the range 0.0-1.0, 0.0 is the left edge of the image.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="Y" type="xs:float">
+              <xs:annotation>
+                <xs:documentation>Normalized vertical pixel coordinate of object in overview.
+		  Shall be in the range 0.0-1.0, 0.0 is the top edge of the image.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="OnCalibrationTargetResponse">
+        <xs:complexType>
+	  <xs:sequence>
+            <xs:element name="RemainingPoints" type="xs:integer">
+	      <xs:annotation>
+                <xs:documentation>
+		  Number of remaining calibration points before calibration is completed.
+		</xs:documentation>
+	      </xs:annotation>
+            </xs:element>
+	  </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="UndoCalibrationTarget">
+        <xs:complexType/>
+      </xs:element>
+
+      <xs:element name="UndoCalibrationTargetResponse">
+        <xs:complexType/>
+      </xs:element>
+
+      <xs:element name="GetCalibrationTargetRecommendation">
+	<xs:complexType/>
+      </xs:element>
+
+      <xs:element name="GetCalibrationTargetRecommendationResponse">
+        <xs:complexType>
+	  <xs:sequence>
+            <xs:element name="CalibrationRecommendation" type="apc:CalibrationRecommendation">
+	      <xs:annotation>
+                <xs:documentation>
+		  Information about where to select the next calibration point.
+		</xs:documentation>
+	      </xs:annotation>
+            </xs:element>
+	  </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="SaveCalibration">
+        <xs:complexType/>
+      </xs:element>
+
+      <xs:element name="SaveCalibrationResponse">
+        <xs:complexType/>
+      </xs:element>
+
+      <xs:element name="AbortCalibration">
+        <xs:complexType/>
+      </xs:element>
+
+      <xs:element name="AbortCalibrationResponse">
+        <xs:complexType/>
+      </xs:element>
+
+      <xs:element name="GetCalibrationInformation">
+	<xs:complexType/>
+      </xs:element>
+
+      <xs:element name="GetCalibrationInformationResponse">
+        <xs:complexType>
+          <xs:sequence>
+	    <xs:element name="CalibrationInformation" type="apc:CalibrationInformation">
+	      <xs:annotation>
+                <xs:documentation>
+		  The current calibration status of the device.
+		</xs:documentation>
+	      </xs:annotation>
+	    </xs:element>
+          </xs:sequence>
+	</xs:complexType>
+      </xs:element>
+
+    </xs:schema>
+  </wsdl:types>
+
+  <wsdl:message name="StartOverviewRotationRequest">
+    <wsdl:part name="parameters" element="apc:StartOverviewRotation"/>
+  </wsdl:message>
+
+  <wsdl:message name="StartManualOverviewRotationRequest">
+    <wsdl:part name="parameters" element="apc:StartManualOverviewRotation"/>
+  </wsdl:message>
+
+  <wsdl:message name="StartOverviewRotationResponse">
+    <wsdl:part name="parameters" element="apc:StartOverviewRotationResponse"/>
+  </wsdl:message>
+
+  <wsdl:message name="StartManualOverviewRotationResponse">
+    <wsdl:part name="parameters" element="apc:StartManualOverviewRotationResponse"/>
+  </wsdl:message>
+
+  <wsdl:message name="SaveOverviewRotationRequest">
+    <wsdl:part name="parameters" element="apc:SaveOverviewRotation"/>
+  </wsdl:message>
+
+  <wsdl:message name="SaveManualOverviewRotationRequest">
+    <wsdl:part name="parameters" element="apc:SaveManualOverviewRotation"/>
+  </wsdl:message>
+
+  <wsdl:message name="SaveOverviewRotationResponse">
+    <wsdl:part name="parameters" element="apc:SaveOverviewRotationResponse"/>
+  </wsdl:message>
+
+  <wsdl:message name="SaveManualOverviewRotationResponse">
+    <wsdl:part name="parameters" element="apc:SaveManualOverviewRotationResponse"/>
+  </wsdl:message>
+
+  <wsdl:message name="AbortOverviewRotationRequest">
+    <wsdl:part name="parameters" element="apc:AbortOverviewRotation"/>
+  </wsdl:message>
+
+  <wsdl:message name="AbortOverviewRotationResponse">
+    <wsdl:part name="parameters" element="apc:AbortOverviewRotationResponse"/>
+  </wsdl:message>
+
+  <wsdl:message name="StartCalibrationRequest">
+    <wsdl:part name="parameters" element="apc:StartCalibration"/>
+  </wsdl:message>
+
+  <wsdl:message name="StartCalibrationResponse">
+    <wsdl:part name="parameters" element="apc:StartCalibrationResponse"/>
+  </wsdl:message>
+
+  <wsdl:message name="SelectCalibrationTargetRequest">
+    <wsdl:part name="parameters" element="apc:SelectCalibrationTarget"/>
+  </wsdl:message>
+
+  <wsdl:message name="SelectCalibrationTargetResponse">
+    <wsdl:part name="parameters" element="apc:SelectCalibrationTargetResponse"/>
+  </wsdl:message>
+
+  <wsdl:message name="OnCalibrationTargetRequest">
+    <wsdl:part name="parameters" element="apc:OnCalibrationTarget"/>
+  </wsdl:message>
+
+  <wsdl:message name="OnCalibrationTargetResponse">
+    <wsdl:part name="parameters" element="apc:OnCalibrationTargetResponse"/>
+  </wsdl:message>
+
+  <wsdl:message name="UndoCalibrationTargetRequest">
+    <wsdl:part name="parameters" element="apc:UndoCalibrationTarget"/>
+  </wsdl:message>
+
+  <wsdl:message name="UndoCalibrationTargetResponse">
+    <wsdl:part name="parameters" element="apc:UndoCalibrationTargetResponse"/>
+  </wsdl:message>
+
+  <wsdl:message name="GetCalibrationTargetRecommendationRequest">
+    <wsdl:part name="parameters" element="apc:GetCalibrationTargetRecommendation"/>
+  </wsdl:message>
+
+  <wsdl:message name="GetCalibrationTargetRecommendationResponse">
+    <wsdl:part name="parameters" element="apc:GetCalibrationTargetRecommendationResponse"/>
+  </wsdl:message>
+
+  <wsdl:message name="SaveCalibrationRequest">
+    <wsdl:part name="parameters" element="apc:SaveCalibration"/>
+  </wsdl:message>
+
+  <wsdl:message name="SaveCalibrationResponse">
+    <wsdl:part name="parameters" element="apc:SaveCalibrationResponse"/>
+  </wsdl:message>
+
+  <wsdl:message name="AbortCalibrationRequest">
+    <wsdl:part name="parameters" element="apc:AbortCalibration"/>
+  </wsdl:message>
+
+  <wsdl:message name="AbortCalibrationResponse">
+    <wsdl:part name="parameters" element="apc:AbortCalibrationResponse"/>
+  </wsdl:message>
+
+  <wsdl:message name="GetCalibrationInformationRequest">
+    <wsdl:part name="parameters" element="apc:GetCalibrationInformation"/>
+  </wsdl:message>
+
+  <wsdl:message name="GetCalibrationInformationResponse">
+    <wsdl:part name="parameters" element="apc:GetCalibrationInformationResponse"/>
+  </wsdl:message>
+
+  <wsdl:portType name="PanopsisCalibration">
+
+    <wsdl:operation name="StartOverviewRotation">
+      <wsdl:documentation>
+	Enables rotation in Panopsis overview. When rotation is enabled
+	it is possible to rotate the overview using VAPIX PTZ API.
+	The new rotation must be saved using SaveOverviewRotation. If rotation is updated
+	the device must be re-calibrated using StartCalibration.
+      </wsdl:documentation>
+      <wsdl:input message="apc:StartOverviewRotationRequest"/>
+      <wsdl:output message="apc:StartOverviewRotationResponse"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="SaveOverviewRotation">
+      <wsdl:documentation>
+	Save rotation of overview initiated using StartOverviewRotation.
+      </wsdl:documentation>
+      <wsdl:input message="apc:SaveOverviewRotationRequest"/>
+      <wsdl:output message="apc:SaveOverviewRotationResponse"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="StartManualOverviewRotation">
+      <wsdl:documentation>
+	Enables manual rotation in Panopsis overview. When manual rotation is enabled
+	it is possible to rotate and tilt the overview using VAPIX PTZ API.
+	The new rotation must be saved using SaveManualOverviewRotation.
+        If rotation is updated the device must be re-calibrated using StartCalibration.
+      </wsdl:documentation>
+      <wsdl:input message="apc:StartManualOverviewRotationRequest"/>
+      <wsdl:output message="apc:StartManualOverviewRotationResponse"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="SaveManualOverviewRotation">
+      <wsdl:documentation>
+	Save rotation of overview initiated using StartManualOverviewRotation.
+      </wsdl:documentation>
+      <wsdl:input message="apc:SaveManualOverviewRotationRequest"/>
+      <wsdl:output message="apc:SaveManualOverviewRotationResponse"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="AbortOverviewRotation">
+      <wsdl:documentation>
+	Abort rotation of overview initiated using StartOverviewRotation.
+	The calibration state is changed back to the state before the
+	rotation was initiated, the device returns to overview mode
+	rotated as it was before the overview rotation was initiated.
+      </wsdl:documentation>
+      <wsdl:input message="apc:AbortOverviewRotationRequest"/>
+      <wsdl:output message="apc:AbortOverviewRotationResponse"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="StartCalibration">
+      <wsdl:documentation>
+	Start Panopsis Calibration, the calibration must be saved using
+	SaveCalibration to take action.
+      </wsdl:documentation>
+      <wsdl:input message="apc:StartCalibrationRequest"/>
+      <wsdl:output message="apc:StartCalibrationResponse"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="SelectCalibrationTarget">
+      <wsdl:documentation>
+	Selects a calibration point in overview.
+      </wsdl:documentation>
+      <wsdl:input message="apc:SelectCalibrationTargetRequest"/>
+      <wsdl:output message="apc:SelectCalibrationTargetResponse"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="OnCalibrationTarget">
+      <wsdl:documentation>
+	Confirms a calibration point in normal PTZ view and
+	make device return to overview.
+      </wsdl:documentation>
+      <wsdl:input message="apc:OnCalibrationTargetRequest"/>
+      <wsdl:output message="apc:OnCalibrationTargetResponse"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="UndoCalibrationTarget">
+      <wsdl:documentation>
+	Undo latest entry done with either SelectCalibrationTarget or
+	OnCalibrationTarget.
+	Returns device to overview.
+      </wsdl:documentation>
+      <wsdl:input message="apc:UndoCalibrationTargetRequest"/>
+      <wsdl:output message="apc:UndoCalibrationTargetResponse"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="GetCalibrationTargetRecommendation">
+      <wsdl:documentation>
+	Request an recommendation area for the the next calibration point.
+      </wsdl:documentation>
+      <wsdl:input message="apc:GetCalibrationTargetRecommendationRequest"/>
+      <wsdl:output message="apc:GetCalibrationTargetRecommendationResponse"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="SaveCalibration">
+      <wsdl:documentation>
+	Save the calibration data.
+      </wsdl:documentation>
+      <wsdl:input message="apc:SaveCalibrationRequest"/>
+      <wsdl:output message="apc:SaveCalibrationResponse"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="AbortCalibration">
+      <wsdl:documentation>
+	Abort the calibration and restore the previous calibration data.
+      </wsdl:documentation>
+      <wsdl:input message="apc:AbortCalibrationRequest"/>
+      <wsdl:output message="apc:AbortCalibrationResponse"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="GetCalibrationInformation">
+      <wsdl:documentation>
+	Read calibration information.
+      </wsdl:documentation>
+      <wsdl:input message="apc:GetCalibrationInformationRequest"/>
+      <wsdl:output message="apc:GetCalibrationInformationResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+
+  <wsdl:binding name="PanopsisCalibrationBinding" type="apc:PanopsisCalibration">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+    <wsdl:operation name="StartOverviewRotation">
+      <soap:operation soapAction="http://www.axis.com/vapix/ws/panopsiscalibration1/StartOverviewRotation"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="SaveOverviewRotation">
+      <soap:operation soapAction="http://www.axis.com/vapix/ws/panopsiscalibration1/SaveOverviewRotation"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="StartManualOverviewRotation">
+      <soap:operation soapAction="http://www.axis.com/vapix/ws/panopsiscalibration1/StartManualOverviewRotation"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="SaveManualOverviewRotation">
+      <soap:operation soapAction="http://www.axis.com/vapix/ws/panopsiscalibration1/SaveManualOverviewRotation"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="AbortOverviewRotation">
+      <soap:operation soapAction="http://www.axis.com/vapix/ws/panopsiscalibration1/AbortOverviewRotation"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="StartCalibration">
+      <soap:operation soapAction="http://www.axis.com/vapix/ws/panopsiscalibration1/StartCalibration"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="SelectCalibrationTarget">
+      <soap:operation soapAction="http://www.axis.com/vapix/ws/panopsiscalibration1/SelectCalibrationTarget"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="OnCalibrationTarget">
+      <soap:operation soapAction="http://www.axis.com/vapix/ws/panopsiscalibration1/OnCalibrationTarget"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="UndoCalibrationTarget">
+      <soap:operation soapAction="http://www.axis.com/vapix/ws/panopsiscalibration1/UndoCalibrationTarget"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="GetCalibrationTargetRecommendation">
+      <soap:operation soapAction="http://www.axis.com/vapix/ws/panopsiscalibration1/GetCalibrationTargetRecommendation"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="SaveCalibration">
+      <soap:operation soapAction="http://www.axis.com/vapix/ws/panopsiscalibration1/SaveCalibration"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="AbortCalibration">
+      <soap:operation soapAction="http://www.axis.com/vapix/ws/panopsiscalibration1/AbortCalibration"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+
+    <wsdl:operation name="GetCalibrationInformation">
+      <soap:operation soapAction="http://www.axis.com/vapix/ws/panopsiscalibration1/GetCalibrationInformation"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+</wsdl:definitions>

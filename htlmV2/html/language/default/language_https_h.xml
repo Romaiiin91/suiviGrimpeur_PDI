@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+	<https_h>
+		<pageTitle type="title" minor="0">Help/HTTPS Settings</pageTitle>
+		<titleTxt type="msgAsText" minor="0">HTTPS Settings</titleTxt>
+		<help1Txta type="text" minor="0">&#x3C;b&#x3E;HTTPS&#x3C;/b&#x3E; (Hypertext Transfer Protocol over Secure Socket Layer, or HTTP over SSL) is a web protocol that provides encryption for page requests from users and for the pages returned by the web server. The encrypted exchange of information is governed by the use of an &#x3C;b&#x3E;HTTPS certificate&#x3C;/b&#x3E;, which guarantees the authenticity of the server.</help1Txta>
+		<help1Txtb type="text" minor="0">The Secure Socket Layer (SSL) as used by HTTPS uses a 40-bit key size for encryption, a level considered adequate for most commercial exchanges.</help1Txtb>
+		<help2Txt type="text" minor="0">To use HTTPS on the Axis product, an HTTPS certificate must be installed. Go to &#x3C;b&#x3E;System Options &#x3E; Security &#x3E; Certificates&#x3C;/b&#x3E; to create and install certificates.</help2Txt>
+		<note_Txt type="text" minor="0">&#x3C;blockquote&#x3E;&#x3C;b&#x3E;Note&#x3C;/b&#x3E; that viewing encrypted web pages via HTTPS is almost certain to cause a slight drop in performance, especially when requesting a page for the first time.&#x3C;/blockquote&#x3E;</note_Txt>
+		<subTitle1Txt type="text" minor="0">Certificates</subTitle1Txt>
+		<help3Txta type="text" minor="0">To enable HTTPS on the Axis product, select an HTTPS certificate from the list of installed certificates.</help3Txta>
+		<help3Txtb type="text" minor="0">Optionally, click &#x3C;b&#x3E;Ciphers&#x3C;/b&#x3E; and select the ciphers to use with the certificate.</help3Txtb>
+		<subTitle4Txt type="text" minor="0">HTTPS Connection Policy</subTitle4Txt>
+		<help4Txta type="text" minor="0">The HTTPS connection policy defines the protocol(s) that can be used by different user groups. The options are to use either HTTP or HTTPS only, or to use both.</help4Txta>
+		<help4Txtb type="text" minor="0">Click &#x3C;b&#x3E;Save&#x3C;/b&#x3E; to enable the settings.</help4Txtb>
+		<help4Txtc type="text" minor="0">To access the Axis product via the desired protocol, enter https://... or http://... in the address field in a browser. If using both protocols, switching from one to the other is allowed, and no other changes are required.</help4Txtc>
+		<help4Txtd type="text" minor="0">&#x3C;b&#x3E;Note:&#x3C;/b&#x3E; The connection policy is only available if a valid HTTPS certificate is selected. If the certificate is removed, or if no certificate is selected, the connection policy will automatically return to the default value, i.e. HTTP.</help4Txtd>
+	</https_h>
+
+
+
+
+
+	<https_create_cert_h>
+		<pageTitle type="title" minor="0">Help/HTTPS Settings</pageTitle>
+		<titleTxt type="msgAsText" minor="0">HTTPS Settings</titleTxt>
+		<help1Txt1 type="text" minor="0">To create a self-signed HTTPS certificate or a certificate request, provide the information listed below:</help1Txt1>
+		<help1Txt2 type="text" minor="0">&#x3C;b&#x3E;Country&#x3C;/b&#x3E; - Use a 2-letter combination to denote the country the certificate will be used in. The letter combination must be according to the standard ISO 3166. For example, the code for the United States is US. For the full list of country codes, please visit the web site of the &#x3C;a href='http://www.iso.org' target='_blank'&#x3E;International Organisation for Standardization&#x3C;/a&#x3E;.</help1Txt2>
+		<help1Txt3 type="text" minor="0">&#x3C;b&#x3E;State or province&#x3C;/b&#x3E; - The local administrative region.</help1Txt3>
+		<help1Txt4 type="text" minor="0">&#x3C;b&#x3E;Locality&#x3C;/b&#x3E;- Other geographical information.</help1Txt4>
+		<help1Txt5 type="text" minor="0">&#x3C;b&#x3E;Organization&#x3C;/b&#x3E; - The name of the organization to which the entity identified in 'common name' belongs.</help1Txt5>
+		<help1Txt6 type="text" minor="0">&#x3C;b&#x3E;Organizational unit&#x3C;/b&#x3E; - The name of the organizational unit to which the entity identified in 'common name' belongs (e.g Finance Department)</help1Txt6>
+		<help1Txt7 type="text" minor="0">&#x3C;b&#x3E;Common name&#x3C;/b&#x3E; - Denotes the name of the person or other entity that the certificate identifies (often used to identify the web site)</help1Txt7>
+		<help1Txt8 type="text" minor="0">&#x3C;b&#x3E;Validity&#x3C;/b&#x3E; (only when creating a self-signed certificate) - this period in days defines how long the certificate will be valid for.</help1Txt8>
+	</https_create_cert_h>
+</language_xml>

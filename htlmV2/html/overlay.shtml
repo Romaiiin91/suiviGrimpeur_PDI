@@ -1,0 +1,294 @@
+<!--#set var="helpURL" val="javascript:launch('/help/overlay_h.shtml')" -->
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#include virtual="/sm/sm.srv?action=get&group=Image,ImageSource,Brand" -->
+<!--#set var="activeMenu" val="videoImage" -->
+<!--#if expr="$root_ImageSource_NbrOfSources != 4" -->
+  <!--#if expr="$root_Brand_ProdType = Video Server" -->
+    <!--#set var="activeMenu1" val="overlay1" -->
+  <!--#endif -->
+<!--#endif -->
+<!--#set var="activePage" val="overlay" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<script language="JavaScript">
+<!--
+var langObjOvl;
+
+var nocache = new Date();
+
+function openPopUpTest(thePage, theName, theWidth, theHeight)
+{
+  var someFeatures = 'scrollbars=yes,toolbar=0,location=no,directories=0,status=0,menubar=0,resizable=1,width=' + theWidth + ',height=' + theHeight;
+
+  thePage += 'id=<!--#echo var="ssi_request_id" option="encoding:url" -->&standalone=yes';
+  thePath = '/mjpg/video.mjpg';
+  thePage += "&imagepath="+escape( thePath );
+  var aPopUpWin = document.open(thePage, theName, someFeatures);
+
+  if (navigator.appName == "Netscape") {
+    aPopUpWin.focus();
+  }
+}
+
+function setRemoveButtonStatus()
+{
+  var isNoOverlaySelected = (document.overlaylist_form.overlaylist.selectedIndex == 0)
+  document.getElementById("overlay_RemSelBtn").disabled = isNoOverlaySelected;
+}
+
+function files()
+{
+  var form = document.FilesForm
+  var ol = document.getElementById("overlaylist").options;
+  var usedFile = "";
+  if (document.UsedOverlayForm.elements.length > 0)
+    usedFile = document.UsedOverlayForm.elements[0].value
+  
+  var noOvlOp = document.createElement("option");
+  noOvlOp.value = ""
+  noOvlOp.text = "<"+langObjOvl.getText("noOverlayTxt")+">"
+  
+  if (usedFile == "")
+    noOvlOp.selected = true;
+  ol.add( noOvlOp );
+
+  var op, v;
+  for (i=0; i<form.length; i++)
+  {
+    v = form.elements[i].value;
+    op = document.createElement("option");
+    op.value = v;
+    op.text = v;
+    
+    if (v == usedFile)
+      op.selected = true;
+    ol.add( op );
+  }
+}
+
+function checkOverlay()
+{
+  var safeChars = /^[\w.\-+()\[\]{}]*$/;
+  var nameForm = document.UploadForm;
+  var filesForm = document.FilesForm;
+  var filename = nameForm.fileInput.value;
+  var i = 0;
+  var lastSlash;
+  var lastBSlash;
+  if (filename == "") {
+    alert( langObjOvl.getText("noImgAlert") );
+    return;
+  }
+  lastSlash = filename.lastIndexOf('/');	
+  if (lastSlash >= 0 && filename.length - 4 > lastSlash + 1) {
+    filename = filename.slice(lastSlash + 1,filename.length - 4);
+  }
+  lastBSlash = filename.lastIndexOf('\\');
+  if (lastBSlash >= 0 && filename.length - 4 > lastBSlash + 1) {
+    filename = filename.slice(lastBSlash + 1,filename.length - 4);
+  }
+  if (!safeChars.test(filename)) {
+    alert( langObjOvl.getText("upBadNameAlert") );
+    return;
+  }
+  while (i < filesForm.elements.length) {
+    var tempStr = filesForm.elements[i].value;
+    var lastStartPar;
+    lastSlash = tempStr.lastIndexOf('/');
+    if (lastSlash >= 0) {
+      tempStr = tempStr.slice(lastSlash + 1,tempStr.length - 1);
+    }
+    lastStartPar = tempStr.lastIndexOf('(');
+    if (lastStartPar >= 0) {
+      tempStr = tempStr.slice(0,lastStartPar);	
+    }
+    if (tempStr == filename) {
+     if (confirm( langObjOvl.getText("existsConfirm") )) {
+        try {
+          nameForm.submit();
+        } catch (e) {
+          if ((e.number & 0xFFFF) == 5)
+            alert( langObjOvl.getText("errAccesDeniedSubmit")+" "+ e.description);
+          else
+            alert( langObjOvl.getText("errDescSubmit")+" "+ e.description);
+        }
+      }
+      return;
+    }
+    i++;
+  }
+  try {
+    nameForm.submit();
+  } catch (e) {
+    if ((e.number & 0xFFFF) == 5)
+      alert( langObjOvl.getText("errAccesDeniedSubmit")+" "+ e.description );
+    else
+      alert( langObjOvl.getText("errDescSubmit")+" "+ e.description );
+  }
+}
+
+function removeFile()
+{
+  var form = document.RemoveForm
+  var overlaylist = document.getElementById("overlaylist");
+  var selectedOverlay = "";
+  if( overlaylist.selectedIndex >= 0 )
+    selectedOverlay = overlaylist[overlaylist.selectedIndex].value;
+
+  if( selectedOverlay == "" ) {
+    alert( langObjOvl.getText("noOverlaySelectedTxt") );
+  } else if (document.FilesForm.elements.length > 0) {
+    if (confirm( langObjOvl.getText("remConfirm")+" "+overlaylist[overlaylist.selectedIndex].value + "?")) {
+      form.action += overlaylist[overlaylist.selectedIndex].value
+      try {
+        form.submit();
+      } catch (e) {
+        alert( langObjOvl.getText("errDescSubmit")+" "+ e.description);
+      }
+    }
+  } else {
+    alert( langObjOvl.getText("noUplAlert") );
+  }
+}
+
+function saveData()
+{
+  var form = document.SaveForm
+  var overlaylist = document.getElementById("overlaylist");
+
+  form.action += '?' + overlaylist[overlaylist.selectedIndex].value
+  document.WizardForm.root_Image_OverlayPath.value = overlaylist[overlaylist.selectedIndex].value
+  try {
+    form.submit();
+  } catch (e) {
+    if ((e.number & 0xFFFF) == 5)
+      alert( langObjOvl.getText("errAccesDeniedSubmit")+" "+ e.description);
+    else
+      alert( langObjOvl.getText("errDescSubmit")+" "+ e.description);
+  }
+}
+
+function onLoad()
+{
+  langObjOvl = new Language("videoImage_overlay", "overlay");
+  langObjOvl.init();
+
+  <!--#if expr="_$uploaderror != _" -->
+    errorOutput();
+  <!--#endif -->
+  setRemoveButtonStatus();
+}
+
+function resetValues()
+{
+  window.location.href = "/operator/overlay.shtml?id=<!--#echo var="ssi_request_id" option="encoding:url" -->";
+}
+
+var OpenImgWinTxt;
+var SelBtnStatTxt;
+var UplBtnStatTxt;
+var RemBtnStatTxt;
+var SaveBtnStatTxt;
+var ResBtnStatTxt;
+function globalLanguageVars()
+{
+  files();
+
+  document.getElementById("overlay_RemSelBtn").value = langObjOvl.getText("remSelBtn");
+
+  OpenImgWinTxt = langObjOvl.getText("openImgWinStatTxt");
+  SelBtnStatTxt = langObjOvl.getText("selBtnStatTxt");
+  UplBtnStatTxt = langObjOvl.getText("uplBtnStatTxt");
+  RemBtnStatTxt = langObjOvl.getText("remBtnStatTxt");
+  SaveBtnStatTxt = langObjOvl.getText("saveBtnStatTxt");
+  ResBtnStatTxt = langObjOvl.getText("resBtnStatTxt");
+}
+
+<!--#if expr="_$uploaderror != _" -->
+function errorOutput()
+{
+  <!--#if expr="$uploaderror = 1" -->alert( langObjOvl.getText("alrt1aTxt") )<!--#endif -->
+  <!--#if expr="$uploaderror = 2" -->alert( langObjOvl.getText("alrt2Txt") )<!--#endif -->
+  <!--#if expr="$uploaderror = 3" -->alert( langObjOvl.getText("alrt3Txt") )<!--#endif -->
+  <!--#if expr="$uploaderror = 4" -->alert( langObjOvl.getText("alrt4Txt") )<!--#endif -->
+  <!--#if expr="$uploaderror = 5" -->alert( langObjOvl.getText("alrt5Txt") )<!--#endif -->
+  <!--#if expr="$uploaderror = 6" -->alert( langObjOvl.getText("alrt6Txt") )<!--#endif -->
+  <!--#if expr="$uploaderror = 7" -->alert( langObjOvl.getText("alrt7Txt") )<!--#endif -->
+  <!--#if expr="$uploaderror = 8" -->alert( langObjOvl.getText("alrt8Txt") )<!--#endif -->
+  <!--#if expr="$uploaderror = 9" -->alert( langObjOvl.getText("alrt9Txt") )<!--#endif -->
+}
+<!--#endif -->
+
+// -->
+</script>
+
+</head>
+<body <!--#include virtual="/incl/bodytag.shtml" --> onLoad="onLoad()">
+
+<form name="FilesForm">
+<!--#include virtual="/axis-cgi/operator/overlay_list.cgi" -->
+</form>
+
+<form name="UsedOverlayForm">
+<!--#include virtual="/axis-cgi/operator/overlay_get.cgi" -->
+</form>
+
+
+<!--#include virtual="/incl/top_incl2.shtml" -->
+
+<form name="WizardForm" action="/this_server/ServerManager.srv" method="POST" onSubmit="return false;">
+<input type="hidden" name="root_Image_OverlayPath" value="<!--#echo var="root_Image_OverlayPath" option="encoding:html" -->">
+</form>
+
+<table border="0" cellpadding="3" cellspacing="0" width="100%" valign="top">
+  <tr>
+    <td class="topTitle" align="left" colspan="2"><span id="ovImgTxt"></span></td>
+    <td class="topTitle"><div align="right"><a href="<!--#echo var="helpURL" option="encoding:url" -->"><img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="hlpPic"></a></div></td>
+  </tr>
+  <tr>
+    <td colspan="3" nowrap>
+      <table border="0" cellpadding="3" cellspacing="0" width="100%">
+        <tr>
+          <td nowrap class="oddItem">
+            <form name="UploadForm" action="/axis-cgi/operator/call_overlay_upload.cgi" enctype="multipart/form-data" method="POST">
+              <span id="uplImgTxt"></span>&nbsp;<input type="file" name="fileInput" onMouseOver="return showStatus(SelBtnStatTxt)" onMouseOut="return showStatus('')">
+            </form>
+          </td>
+          <td class="oddItem" align="center">
+            <input type="button" onClick="checkOverlay()" value="" width="75" class="btnNormal" onMouseOver="return showStatus(UplBtnStatTxt)" onMouseOut="return showStatus('')" id="overlay_UploadBtn">
+          </td>
+        </tr>
+        <tr>
+          <td nowrap class="evenItem">
+            <form name="overlaylist_form">
+              <span id="useOvTxt"></span>
+              <select name="overlaylist" id="overlaylist" onchange="setRemoveButtonStatus()"></select>
+            </form>
+          </td>
+          <td class="evenItem" align="center">
+            <form name="RemoveForm" action="/axis-cgi/operator/call_overlay_del.cgi?" method="POST">
+              <input type="button" onClick="removeFile()" onMouseOver="return showStatus(RemBtnStatTxt)" onMouseOut="return showStatus('')" style="width:180px" id="overlay_RemSelBtn">
+              <input type="hidden" name="directory" value="overlays">
+            </form>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="3" align="center" class="button"><br>
+      <form name="SaveForm" action="/axis-cgi/operator/call_overlay_set.cgi" enctype="multipart/form-data" method="POST">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td class="button"><input type="button" class="btnNormal" width="75" value="" onclick="saveData()" onMouseOver="return showStatus(SaveBtnStatTxt)" onMouseOut="return showStatus('')" id="overlay_SaveBtn"></td>
+          <td class="button"><input type="hidden" name="directory" value="overlays"></td>
+          <td class="button"><input type="button" class="btnNormal" width="75" onClick="resetValues()" value="" onMouseOver="return showStatus(ResBtnStatTxt)" onMouseOut="return showStatus('')" id="overlay_ResetBtn"></td>
+        </tr>
+      </table>
+      </form>
+    </td>
+  </tr>
+</table>
+
+<!--#include virtual="/incl/bottom_incl.shtml" -->

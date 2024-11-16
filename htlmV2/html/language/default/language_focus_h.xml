@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+	<remote_focus_h>
+		<pageTitle type="title" minor="0">Help/Focus &#x26; Zoom</pageTitle>
+		<titleTxt type="msgAsText" minor="0">Focus &#x26; Zoom</titleTxt>
+		<alternativePageTitle type="msgAsText" minor="0">Help/Focus</alternativePageTitle>
+		<alternativeTitleTxt type="msgAsText" minor="0">Focus</alternativeTitleTxt>
+		<subTitleZoomTxt type="text" minor="0">Focus &#x26; Zoom</subTitleZoomTxt>
+		<subTitleFocusTxt type="text" minor="0">Focus</subTitleFocusTxt>
+		<tCintro_Txt1 type="text" minor="0">This page provides the tools to focus the Axis product remotely from the product web page.</tCintro_Txt1>
+		<tCintro_Txt2 type="text" minor="0">An auto focus function is available under the &#x3C;b&#x3E;Basic&#x3C;/b&#x3E; tab. At the bottom of the preview is a pixel counter which is useful in situations where there is a requirement that the image is a certain size, for example face recognition. Under the &#x3C;b&#x3E;Advanced&#x3C;/b&#x3E; tab fine-tune the focus.</tCintro_Txt2>
+		<intro_Txt1 type="text" minor="0">This page provides the tools to focus the Axis product remotely from the product web page.</intro_Txt1>
+		<intro_Txt2 type="text" minor="0">An auto focus function is available under the &#x3C;b&#x3E;Basic&#x3C;/b&#x3E; tab. At the bottom of the preview is a pixel counter which is useful in situations where there is a requirement that the image is a certain size, for example face recognition.</intro_Txt2>
+		<intro_Txt3 type="text" minor="0">Under the &#x3C;b&#x3E;Advanced&#x3C;/b&#x3E; tab fine-tune the focus or run a full range scan to find the optimal focus setting.</intro_Txt3>
+		<intro_NofullScan_Txt type="text" minor="0">Under the &#x3C;b&#x3E;Advanced&#x3C;/b&#x3E; tab fine-tune the focus to find the optimal focus setting.</intro_NofullScan_Txt>
+		<intro_Txt4 type="text" minor="0">&#x3C;b&#x3E;Note:&#x3C;/b&#x3E; Fine-tune focus automatically and Full range focus scan work best if there is no movement in front of the camera.</intro_Txt4>
+		<intro_autoFineTune_Txt type="text" minor="0">&#x3C;b&#x3E;Note:&#x3C;/b&#x3E; Fine-tune focus automatically works best if there is no movement in front of the camera.</intro_autoFineTune_Txt>
+		<hsubTitle_basic_Txt type="text" minor="0">Basic</hsubTitle_basic_Txt>
+		<intro_Txt5 type="text" minor="0">To perform a simple auto focus follow the instructions under the &#x3C;b&#x3E;Basic&#x3C;/b&#x3E; tab. Use the &#x3C;b&#x3E;Zoom&#x3C;/b&#x3E; slide bar to zoom in on a desired area to focus. If further adjustments are required go to the &#x3C;b&#x3E;Advanced&#x3C;/b&#x3E; tab.</intro_Txt5>
+		<intro_Txt6 type="text" minor="0">&#x3C;b&#x3E;Note:&#x3C;/b&#x3E; If the &#x3C;b&#x3E;Zoom&#x3C;/b&#x3E; button is clicked after focusing, you will need to focus again.</intro_Txt6>
+		<basic_assist_Txt1 type="text" minor="0">For best results when focusing the</basic_assist_Txt1>
+		<basic_assist_Txt2 type="text" minor="0">follow the instructions in the Installation Guide. The iris should be open while the device is being focused, click &#x3C;b&#x3E;Open iris&#x3C;/b&#x3E;, if the button is inactive the iris is already open. When satisfied with the result, click &#x3C;b&#x3E; Enable iris&#x3C;/b&#x3E;.</basic_assist_Txt2>
+		<pixelCounter_Txt type="text" minor="0">&#x3C;b&#x3E;Pixel counter&#x3C;/b&#x3E; - The pixel counter is useful in situations where there is a requirement that the image is a certain size, for example face recognition. To set the size of the rectangle enter the number of pixels to show and click &#x3C;b&#x3E;Apply&#x3C;/b&#x3E;. Check &#x3C;b&#x3E;Show pixel counter&#x3C;/b&#x3E; to enable the box in the image.</pixelCounter_Txt>
+		<hsubTitle_advanced_Txt type="text" minor="0">Advanced</hsubTitle_advanced_Txt>
+		<adv_Txt type="text" minor="0">Under the &#x3C;b&#x3E;Advanced&#x3C;/b&#x3E; tab are more tools to help achieve the optimal focus position. Before focusing always open the iris and enable it when finished. Position the Focus window in the desired area of the preview.</adv_Txt>
+		<adv2_Txt type="text" minor="0">Use the &#x3C;b&#x3E;Zoom&#x3C;/b&#x3E; slide bar to zoom in on a desired area to focus.</adv2_Txt>
+		<tCadv_Txt type="text" minor="0">It is recommended to try the &#x3C;b&#x3E;Perform auto focus&#x3C;/b&#x3E; button first, if you're not satisfied with the results, try fine-tuning the focus by clicking in the &#x3C;b&#x3E;Focus position&#x3C;/b&#x3E; bar.</tCadv_Txt>
+		<adv3_Txt type="text" minor="0">It is recommended to try the &#x3C;b&#x3E;Fine-tune focus automatically&#x3C;/b&#x3E; button first, if you're not satisfied with the results, try fine-tuning the focus by clicking in the &#x3C;b&#x3E;Focus position&#x3C;/b&#x3E; bar. A third option is to run the &#x3C;b&#x3E;Full range focus scan&#x3C;/b&#x3E;.</adv3_Txt>
+		<adv3_Txt-1 type="text" minor="0">It is recommended to try the &#x3C;b&#x3E;Fine-tune focus automatically&#x3C;/b&#x3E; button first, if you're not satisfied with the results, try fine-tuning the focus by clicking in the &#x3C;b&#x3E;Focus position&#x3C;/b&#x3E; bar.</adv3_Txt-1>
+		<fullFocus_scan_Txt type="text" minor="0">Another option is to run the &#x3C;b&#x3E;Full range focus scan&#x3C;/b&#x3E;.</fullFocus_scan_Txt>
+		<openIris_Txt type="text" minor="0">&#x3C;b&#x3E;Open iris&#x3C;/b&#x3E; - Use this button to open the iris to its maximum before focusing. When the iris is open to the maximum position it gives the smallest depth of field and provides the best conditions for focusing.</openIris_Txt>
+		<adv_reset_Txt type="text" minor="0">&#x3C;b&#x3E;Reset&#x3C;/b&#x3E; - If the focus has been set before, click this button to reset the back focus to the default position. Follow the instructions in the Installation Guide to adjust the front lens focus first and then proceed with the instructions on the Focus page.</adv_reset_Txt>
+		<tCadv4_Txt type="text" minor="0">&#x3C;b&#x3E;Focus position bar&#x3C;/b&#x3E; - Click on the bar to put the focus in a desired location. The buttons &#x3C;b&#x3E;&#x3C;&#x3C;/b&#x3E; and &#x3C;b&#x3E;&#x3E;&#x3C;/b&#x3E; move the focus position one step in either direction. The buttons &#x3C;b&#x3E;&#x3C;&#x3C;&#x3C;/b&#x3E; and &#x3C;b&#x3E;&#x3E;&#x3E;&#x3C;/b&#x3E; move the focus position in multiple steps in either direction.</tCadv4_Txt>
+		<adv4_Txt1 type="text" minor="0">&#x3C;b&#x3E;Fine-tune focus automatically&#x3C;/b&#x3E; - Try this tool first to automatically set the focus. The focus can be further adjusted by clicking in the Focus position bar.</adv4_Txt1>
+		<perAutoFocus_Txt type="text" minor="0">&#x3C;b&#x3E;Perform auto focus&#x3C;/b&#x3E; - Click to focus the camera automatically.</perAutoFocus_Txt>
+		<adv4_Txt2 type="text" minor="0">&#x3C;b&#x3E;Full range focus scan&#x3C;/b&#x3E; - Transforms the Focus position bar into a graph which shows the optimal focus position. For best results let the scan run to completion, which could take several minutes. The peaks in the graph correspond to the positions that put parts of the scene in focus. Click in the graph to adjust the focus to the desired part of the scene.</adv4_Txt2>
+		<adv4_Txt3 type="text" minor="0">A Full range scan can be aborted by clicking in the graph.</adv4_Txt3>
+		<adv4_Txt4 type="text" minor="0">&#x3C;b&#x3E;Focus position bar&#x3C;/b&#x3E; - Click on the bar to put the focus in a desired location. The buttons &#x3C;b&#x3E;&#x3C;&#x3C;/b&#x3E; and &#x3C;b&#x3E;&#x3E;&#x3C;/b&#x3E; move the focus position one step in either direction. The buttons &#x3C;b&#x3E;&#x3C;&#x3C;&#x3C;/b&#x3E; and &#x3C;b&#x3E;&#x3E;&#x3E;&#x3C;/b&#x3E; move the focus position in multiple steps in either direction.</adv4_Txt4>
+		<dayNight_Txt type="text" minor="0">&#x3C;b&#x3E;At day/night switch&#x3C;/b&#x3E; - For a fixed focus position at all times select &#x3C;b&#x3E;Fixed position&#x3C;/b&#x3E; from the drop-down list. Select &#x3C;b&#x3E;Reposition&#x3C;/b&#x3E; to change the focus settings between two saved positions; one for day and another for night.</dayNight_Txt>
+		<enableIris_Txt type="text" minor="0">&#x3C;b&#x3E;Enable iris&#x3C;/b&#x3E; - When satisfied with the focus position enable the iris with this button.</enableIris_Txt>
+		<irisnote_Txt type="text" minor="0">&#x3C;b&#x3E;Note&#x3C;/b&#x3E;: The iris should be enabled at all times, except while focusing.</irisnote_Txt>
+	</remote_focus_h>
+</language_xml>
+

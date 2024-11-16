@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+	<pwdRoot>
+		<pageTitle type="title">Системные опции/Пользователи</pageTitle>
+		<defLang type="msgAsText">Английский</defLang>
+		<pswMustConAlert type="alert">Пароль должен содержать, по крайней мере, один символ.</pswMustConAlert>
+		<maxPcAlert1 type="alert">Максимально</maxPcAlert1>
+		<maxPcAlert2 type="alert">символов допустимы в пароле.</maxPcAlert2>
+		<pwdConfAlert type="alert">'Пароль' и 'Подтверждение пароля' не соответствуют. Введите пароль повторно.</pwdConfAlert>
+		<loadingTxt type="msg">Выполняется создание временного сертификата и настройка HTTPS.&#60;br&#62;Пожалуйста, подождите...</loadingTxt>
+		<creCerBtnStatTxt type="msg">Создать самозаверяющий сертификат.</creCerBtnStatTxt>
+		<okBtnStatTxt type="msg">Сохранить новый пароль к корневому каталогу.</okBtnStatTxt>
+		<creCerTxt type="text">Настроить пароль через HTTPS</creCerTxt>
+		<secConTxt type="text">Обеспечение безопасности конфигурации пароля к корневому каталогу через HTTPS требует сертификата, который создается автоматически.</secConTxt>
+		<creCerBtnTxt type="button" buttonid="pwdR_CreCerBtn">Применить HTTPS</creCerBtnTxt>
+		<usrSetTxt type="text">Выполнить конфигурацию пароля к корневому каталогу</usrSetTxt>
+		<usHttpTxt type="msgAsText">использование HTTP</usHttpTxt>
+		<usHttpsTxt type="msgAsText">использование HTTPS</usHttpsTxt>
+		<usrNaTxt type="text">Имя пользователя:</usrNaTxt>
+		<pwdTxt type="text">Пароль (максимально</pwdTxt>
+		<pwdTxt2 type="text">символов):</pwdTxt2>
+		<confPwdTxt type="text">Подтвердить пароль:</confPwdTxt>
+		<okBtn type="button" buttonid="pwdR_okBtn">ОК</okBtn>
+		<infoTxt type="text">&#10; Предустановленный пароль администратора должен быть изменен перед использованием продукции.&#60;br&#62;&#60;br&#62;&#10; При потере пароля необходимо выполнить сброс к заводским настройкам, нажав соответствующую кнопку на корпусе устройства.&#10; Для более подробной информации см. пользовательскую документацию.&#10;</infoTxt>
+		<ciphWrn type="text">&#10; &#60;strong&#62;ВНИМАНИЕ: &#60;/strong&#62;Вы используете прошивку, поддерживающую повышенный уровень безопасности пароля. Для дополнительной информации&#10; о совместимости прошивок ознакомьтесь с соответствующей документацией онлайн.&#10;</ciphWrn>
+		<onvifTxt type="text">ONVIF будет деактивирован.&#60;br&#62;Для активации ONVIF перейдите в раздел Настройка &#62; Системные опции &#62; Безопасность &#62; ONVIF</onvifTxt>
+	</pwdRoot>
+</language_xml>

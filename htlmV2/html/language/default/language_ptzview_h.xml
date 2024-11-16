@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+
+	<ptz_view_h>
+		<pageTitle type="title" minor="0">Help/PTZ View</pageTitle>
+		<titleTxt type="msgAsText" minor="0">Pan Tilt Zoom Controls in Live View</titleTxt>
+		<set_TitleTxt type="text" minor="0">Pan Tilt Zoom Controls in Live View</set_TitleTxt>
+		<intro_Txt type="text" minor="0">The&#x3C;b&#x3E;Pan Tilt Zoom (PTZ)&#x3C;/b&#x3E; controls shown on the Live View page are used to move the connected camera to the desired location.</intro_Txt>
+		<subTitle1Txt type="text" minor="0">PTZ Control Bars</subTitle1Txt>
+		<help1Txt type="text" minor="0">The exact controls shown will depend on the make and model of PTZ unit, but there are usually 3 basic controls available:</help1Txt>
+		<help1Txt1 type="text" minor="0">The &#x3C;b&#x3E;Pan&#x3C;/b&#x3E; bar - used to move the camera to the right and left.</help1Txt1>
+		<help1Txt2 type="text" minor="0">The &#x3C;b&#x3E;Tilt&#x3C;/b&#x3E; bar - tips the camera up and down.</help1Txt2>
+		<help1Txt3 type="text" minor="0">The &#x3C;b&#x3E;Zoom&#x3C;/b&#x3E; bar - zooms the view in and out. Note that this is only available if the camera is fitted with a zoom lens.</help1Txt3>
+		<help1Txt4 type="text" minor="0">The Pan, Tilt and Zoom bars control their respective functions in two different ways.</help1Txt4>
+		<help1Txt5 type="text" minor="0">Clicking a position directly on the bar moves the camera all the way to the new position in one movement (absolute movement), so it is possible to e.g. move all the way from the extreme left to the extreme right simply by clicking once on the bar.</help1Txt5>
+		<help1Txt6 type="text" minor="0">Clicking on the arrows at the ends of the bar causes instead a stepped, incremental change (relative movement).</help1Txt6>
+		<help1Txt7 type="text" minor="0">Other controls that may be available, depending on the camera and PTZ unit, are e.g. &#x3C;b&#x3E;Focus&#x3C;/b&#x3E; and &#x3C;b&#x3E;Iris&#x3C;/b&#x3E; bars.</help1Txt7>
+		<help2Txt type="text" minor="0">Also available with many PTZ units are &#x3C;b&#x3E;Preset positions&#x3C;/b&#x3E;. These presets are selected from the drop-down list on the Live View page and will move and/or zoom the camera to a pre-defined position, i.e. to cover an area of particular interest.</help2Txt>
+		<subTitle2Txt type="text" minor="0">PTZ Control Queue</subTitle2Txt>
+		<help3Txt type="text" minor="0">The PTZ Control Queue is a system for placing requests for control of the PTZ device in a queue. The fields show the user's current status and position in the queue and the amount of time remaining until PTZ control is given, or if the user already has control - the amount of control time remaining.</help3Txt>
+		<help4Txt type="text" minor="0">&#x3C;b&#x3E;Notes!&#x3C;/b&#x3E;</help4Txt>
+		<help4Txt1 type="text" minor="0">Different user levels have different priorities in the PTZ Control Queue. This means that a viewer can be overridden by an administrator or an operator, and an operator can be overridden by an administrator. Users can be overridden both when in the control queue and when actually 'in control' of the PTZ device.</help4Txt1>
+		<help4Txt2 type="text" minor="0">Actions that cause the Live View page to reload (e.g. resizing the image) can temporarily cause the queue status to disappear. To rectify this, click the &#x3C;b&#x3E;Request Control&#x3C;/b&#x3E; button again. The user's place in the queue is maintained.</help4Txt2>
+	</ptz_view_h>
+</language_xml>
+
+
+

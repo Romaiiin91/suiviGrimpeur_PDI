@@ -1,0 +1,141 @@
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#include virtual="/incl/top_incl_popup.shtml" -->
+<!--#include virtual="/sm/sm.srv?action=get&group=Network.eth0.IPAddress,Network.eth0.SubnetMask,Network.Routing.DefaultRouter,Network.Resolver,Time.ObtainFromDHCP,Time,Network.IPv6.Enabled,Network.IPv6.DHCPv6,Network.eth0.IPv6.IPAddresses,Network.Routing.IPv6.DefaultRouter,Network.BootProto,Network.Enabled,Network.Interface.I1.Link.IPv4Enabled,Network.Interface.I1.Link.IPv6Enabled,Network.Interface.I1.Link.BootProto" -->
+
+<!--#if expr="$root_Network_BootProto$ $root_Network_Enabled$ = dhcp yes" -->
+ <!--#set var="useDHCP" val="yes" -->
+<!--#endif -->
+
+<!--#if expr="$root_Network_IPv6_DHCPv6 != off" -->
+ <!--#if expr="$root_Network_IPv6_Enabled = yes" -->
+  <!--#set var="useDHCP" val="yes" -->
+ <!--#endif -->
+<!--#endif -->
+
+<!--#if expr="$useDHCP = yes" -->
+  <!--#if expr="$root_Time_ObtainFromDHCP = yes" -->
+   <!--#if expr="$root_Time_NTP_VolatileServer != " -->
+    <!--#set var="useNTPVolatileServer" val="yes" -->
+   <!--#else -->
+    <!--#set var="NoServerSpec" val="yes" -->
+   <!--#endif -->
+  <!--#endif -->
+<!--#elif expr="$root_Network_BootProto = none" -->
+ <!--#if expr="$root_Time_NTP_Server != 0.0.0.0" -->
+   <!--#set var="UseTimeNTPServer" val="yes" -->
+ <!--#elif expr="$root_Time_NTP_VolatileServer != " -->
+   <!--#set var="useNTPVolatileServer" val="yes" -->
+  <!--#else -->
+    <!--#set var="NoServerSpec" val="yes" -->
+  <!--#endif -->
+<!--#endif -->
+
+<!--#if expr="$root_Time_ObtainFromDHCP != yes" -->
+  <!--#if expr="$root_Time_NTP_Server != 0.0.0.0" -->
+    <!--#set var="UseTimeNTPServer" val="yes" -->
+  <!--#elif expr="$root_Time_NTP_VolatileServer != " -->
+    <!--#set var="useNTPVolatileServer" val="yes" -->
+  <!--#else -->
+    <!--#set var="NoServerSpec" val="yes" -->
+  <!--#endif -->
+<!--#endif -->
+
+<script language="javascript" type="text/javascript">
+
+var langObjViNetSet = new Language("network", "viewNetSettings");
+
+function listAddresses(theList)
+{
+  var anArray = theList.split(" ");
+  for (i = 0; i < anArray.length; i++)
+  {
+    if (i > 0)
+      document.write("<br>");
+    document.write(anArray[i]);
+  }
+}
+//-->
+</script>
+
+</head>
+<body <!--#include virtual="/incl/bodytag_popup.shtml" --> onload="langObjViNetSet.init()">
+<form>
+<div class="cornerBox">
+  <div class="content">
+  <table border="<!--#echo var="zero" option="encoding:html" -->" cellpadding="<!--#echo var="cellpadding3" option="encoding:html" -->" cellspacing="0" width="395" class="alternateRows">
+
+    <tr class="topTitle">
+      <td align="left" colspan="3" nowrap><span id="currNetSetTxt"></span></td>
+    </tr>
+    <tr class="subTitle">
+      <td colspan="3"><span id="ipConfTxt"></span></td>
+    </tr>
+    <tr>
+      <td nowrap width="35%"><span id="ipV4AdrTxt"></span></td>
+      <td colspan="2" nowrap><!--#echo var="root_Network_eth0_IPAddress" option="encoding:html" --></td>
+    </tr>
+    <tr>
+      <td nowrap><span id="subMasTxt"></span></td>
+      <td colspan="2"><!--#echo var="root_Network_eth0_SubnetMask" option="encoding:html" --></td>
+    </tr>
+  <tr valign="top">
+   <td nowrap width="35%"><span id="ipv6AdrTxt"></span></td>
+    <td colspan="2" nowrap align="left"><script language="JavaScript">listAddresses('<!--#echo var="root_Network_eth0_IPv6_IPAddresses" option="encoding:javascript" -->')</script></td>
+ </tr>
+    <tr>
+      <td nowrap><span id="defRouIpV4Txt"></span></td>
+      <td colspan="2"><!--#echo var="root_Network_Routing_DefaultRouter" option="encoding:html" --></td>
+    </tr>
+    <tr valign="top">
+    <td nowrap width="35%"><span id="defRouIpV6Txt"></span></td>
+   <td colspan="2" nowrap><script language="JavaScript">listAddresses('<!--#echo var="root_Network_Routing_IPv6_DefaultRouter" option="encoding:javascript" -->')</script></td>
+  </tr>
+    <tr>
+      <td nowrap><span id="doNaTxt"></span></td>
+      <td colspan="2" nowrap>
+        <!--#if expr="_$root_Network_Resolver_Search = _" --><span id="noSe1Txt"></span><!--#else --><!--#echo var="root_Network_Resolver_Search" option="encoding:html" --><!--#endif -->
+      </td>
+    </tr>
+    <tr>
+      <td nowrap><span id="dns1Txt"></span></td>
+      <td colspan="2">
+        <!--#if expr="_$root_Network_Resolver_NameServer1 = _" --><span id="noSe2Txt"></span><!--#else --><!--#echo var="root_Network_Resolver_NameServer1" option="encoding:html" --><!--#endif -->
+      </td>
+    </tr>
+    <tr>
+      <td nowrap><span id="dns2Txt"></span></td>
+      <td colspan="2">
+        <!--#if expr="_$root_Network_Resolver_NameServer2 = _" --><span id="noSe3Txt"></span><!--#else --><!--#echo var="root_Network_Resolver_NameServer2" option="encoding:html" --><!--#endif -->
+      </td>
+    </tr>
+    <tr>
+      <td nowrap><span id="ntpTxt"></span></td>
+      <td colspan="2">
+<!--#if expr="$useNTPVolatileServer = yes" -->
+        <script language="JavaScript">listAddresses('<!--#echo var="root_Time_NTP_VolatileServer" option="encoding:html" -->');</script>
+<!--#endif -->
+<!--#if expr="$NoServerSpec = yes" -->
+        <span id="noSerSp"></span>
+<!--#endif -->
+<!--#if expr="$UseTimeNTPServer = yes" -->
+     <!--#echo var="root_Time_NTP_Server" option="encoding:html" -->
+<!--#endif -->
+      </td>
+    </tr>
+    <tr>
+      <td class="topTitle" align="right" colspan="3">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <td class="button"><input type="button" value="" width="75" class="btnNormal" onclick="javascript:window.close()" id="viewNetSet_closeBtn"></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+  </div>
+  <div class="footerLeft"><div class="footerRight"></div></div>
+</div>
+</form>
+<!--#include virtual="/incl/alternate_rows.shtml" -->
+</body>
+</html>

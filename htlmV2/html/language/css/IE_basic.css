@@ -1,0 +1,11 @@
+p                { font-size: 9px }
+a                { font-size: 9px }
+
+.cornerVideoBox .content img.hover { filter:alpha(opacity=80);}
+
+select.tiny{ width:40px;}
+select.smaller{ width:40px;}
+select.small{ width:75px;}
+select.medium{ width:150px;}
+select.large{ width:250px;}
+

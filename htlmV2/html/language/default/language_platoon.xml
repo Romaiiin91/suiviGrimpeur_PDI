@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>	
+	<snapshot>
+	  <pageTitle type="title" minor="0">Snapshot</pageTitle>
+		<useTxt type="text" minor="0">Use right mouse button to save image.</useTxt>
+		<altTxt type="image" minor="0" imageid="img">If no image is displayed, the maximum number of clients may already be connected.</altTxt>
+		<closeBtn type="button" minor="0" buttonid="closeBtn">Close</closeBtn>
+	</snapshot>
+	
+	<view>
+	  <pageTitle type="title" minor="0">Live view</pageTitle>
+	  <inpPortsTxt type="msgAsText" minor="0">Input Ports</inpPortsTxt>
+	  <outPortsTxt type="msgAsText" minor="0">Output Ports</outPortsTxt>
+		<wi800pxTxt type="msgAsText" minor="0">800 px width</wi800pxTxt>
+		<scDoToTxt type="msgAsText" minor="0">Scale down to 800 px width</scDoToTxt>
+		<adjToBrSizeTxt type="msgAsText" minor="0">Adjust to the browser size</adjToBrSizeTxt>
+		<fuImTxt type="msgAsText" minor="0">Full image</fuImTxt>
+		<shoFuImTxt type="msgAsText" minor="0">Show full image</shoFuImTxt>
+		<viewSizeTxt type="msgAsText" minor="0">View size</viewSizeTxt>
+		<hdtvSelTxt type="msgAsText" minor="0">HDTV</hdtvSelTxt>
+		<strProTxt type="msgAsText" minor="0">Stream profile</strProTxt>
+		<viFoTxt type="msgAsText" minor="0">Video format</viFoTxt>
+		<paletteTxt type="msgAsText" minor="0">Palette</paletteTxt>
+		<lightTxt type="msgAsText" minor="0">Light</lightTxt>
+		<actTxt type="msgAsText" minor="0">Activate</actTxt>
+		<inaTxt type="msgAsText" minor="0">Inactivate</inaTxt>
+		<pls1Txt type="msgAsText" minor="0">Pulse</pls1Txt>
+		<pls2Txt type="msgAsText" minor="0">for</pls2Txt>
+		<pls3Txt type="msgAsText" minor="0">second(s)</pls3Txt>
+		<plAuTxt type="msgAsText" minor="0">Play Audio</plAuTxt>
+		<auClipTxt type="msgAsText" minor="0">Audio clip</auClipTxt>
+		<edPaFoRuMoTxt type="msgAsText" minor="0">Edit parameters for running module</edPaFoRuMoTxt>
+		<stFoRuMoTxt type="msgAsText" minor="0">Status for running module</stFoRuMoTxt>
+		<iVTxt type="msgAsText" minor="0">IV</iVTxt>
+		<recTourLoadingTxt type="msgAsText" minor="0">Loading...</recTourLoadingTxt>
+		<recTourPlayTxt type="msgAsText" minor="0">Play</recTourPlayTxt>
+		<recTourStopTxt type="msgAsText" minor="0">Stop</recTourStopTxt>
+		<recTourTxt type="msgAsText" minor="0">Recorded tours</recTourTxt>
+		<souTxt type="msgAsText" minor="0">Source</souTxt>
+		<ptzPreTxt type="msgAsText" minor="0">PTZ preset</ptzPreTxt>
+		<vidStrPtzPreTxt type="msgAsText" minor="0">Video stream or PTZ preset</vidStrPtzPreTxt>
+		<quadStrTxt type="text" minor="0">Quad Stream</quadStrTxt>
+		<seqModRunTxt type="msgAsText" minor="0">Sequence mode - Running</seqModRunTxt>
+		<stopSeqModTxt type="msgAsText" minor="0">Click to stop sequence mode</stopSeqModTxt>
+		<viewSeqModTxt type="msgAsText" minor="0">Click to view sequence mode</viewSeqModTxt>
+		<segModeStopTxt type="msgAsText" minor="0">Sequence mode - Stopped</segModeStopTxt>
+		<triTxt type="msgAsText" minor="0">Trigger</triTxt>
+		<triQuadTxt type="msgAsText" minor="0">Trigger Quad</triQuadTxt>
+		<onTxt type="msgAsText" minor="0">on</onTxt>
+		<offTxt type="msgAsText" minor="0">off</offTxt>
+		<fanManDurTxt type="msgAsText" minor="0">Activate fan for manual set duration.</fanManDurTxt>
+		<fanTxt type="msgAsText" minor="0">Fan</fanTxt>
+		<heaterManDurTxt type="msgAsText" minor="0">Activate heater for manual set duration.</heaterManDurTxt>
+		<heaterTxt type="msgAsText" minor="0">Heater</heaterTxt>
+		<snaTxt type="msgAsText" minor="0">Snapshot</snaTxt>
+		<gatekeeperOnTxt type="" minor="0">On</gatekeeperOnTxt>
+		<gatekeeperOffTxt type="" minor="0">Off</gatekeeperOffTxt>
+		<gatekeeperTxt type="" minor="0">Gatekeeper</gatekeeperTxt>
+		<ioTxt type="msgAsText" minor="0">I/O</ioTxt>
+		<playAlert type="alert" minor="0">Error when playing audio clip.</playAlert>
+		<playAlertPlaying type="alert" minor="0">An audio clip is already playing.</playAlertPlaying>
+		<playEnAudAlert type="alert" minor="0">An audio clip cannot be played when audio is enabled. Please disable audio on the Video Stream page and try again.</playEnAudAlert>
+		<goBtn type="msgAsText" minor="0">Go</goBtn>
+		<proNoVaAlrt type="alert" minor="0">The selected profile is no longer valid.&#10;The list has been updated with valid profiles&#10;so you may select another one now.</proNoVaAlrt>
+		<lViewTxt type="msgAsText" minor="0">Live View</lViewTxt>
+		<settTxt type="msgAsText" minor="0">Setup</settTxt>
+		<helpTxt type="msgAsText" minor="0">Help</helpTxt>
+		<defTitTxt type="text" minor="0">Title text above image</defTitTxt>
+		<defDescTxt type="text" minor="0">Description text below image</defDescTxt>
+		<queUsTxt type="text" minor="0">PTZ Control Queue</queUsTxt>
+		<stIQTxt type="text" minor="0">Status in queue:</stIQTxt>
+		<poIQTxt type="text" minor="0">Position in queue:</poIQTxt>
+		<tiReTxt type="text" minor="0">Time remaining:</tiReTxt>
+		<tiReSecTxt type="text" minor="0">seconds</tiReSecTxt>
+		<auClipColTxt type="text" minor="0">Audio clip:</auClipColTxt>
+		<vidNumTitleTxt type="text" minor="0">Video #NUMBER#</vidNumTitleTxt>
+		<plAuTitle type="image" minor="0" imageid="playAudioPic">Play Audio</plAuTitle>
+        <viewSrcNotCompatProfile type="text" minor="0">The selected video source is not compatible with the current stream profile.</viewSrcNotCompatProfile>
+        <viewProfileNotCompatSrc type="text" minor="0">The selected stream profile is not compatible with the current video source.</viewProfileNotCompatSrc>
+        <viewActivateIr type="text" minor="0">Activate IR illumination</viewActivateIr>
+        <viewDectivateIr type="text" minor="0">Deactivate IR illumination</viewDectivateIr>
+        <viewIrTxt type="text" minor="0">IR illumination</viewIrTxt>
+        <viewActivateWDR type="text" minor="0">WDR mode</viewActivateWDR>
+        <viewActivateLightfinder type="text" minor="0">Lightfinder mode</viewActivateLightfinder>
+        <viewLightfinder type="text" minor="0">Lightfinder</viewLightfinder>
+        <viewWDROn type="text" minor="0">WDR on</viewWDROn>
+        <viewWDROff type="text" minor="0">WDR off</viewWDROff>
+        <viewWDR type="text" minor="0">WDR</viewWDR>
+	</view>
+	
+	<viewer_index>
+	  <pageTitle type="title" minor="0">Live view</pageTitle>
+	</viewer_index>
+	
+	<temp>
+	</temp>
+</language_xml>

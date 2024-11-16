@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+  <recipient_setup>
+    <ftpTxt type="msgAsText" minor="0">FTP</ftpTxt>
+    <sftpTxt type="msgAsText" minor="0">SFTP</sftpTxt>
+    <httpTxt type="msgAsText" minor="0">HTTP</httpTxt>
+    <httpsTxt type="msgAsText" minor="0">HTTPS</httpsTxt>
+    <smtpTxt type="msgAsText" minor="0">Email</smtpTxt>
+    <tcpTxt type="msgAsText" minor="0">TCP</tcpTxt>
+    <nsTxt type="msgAsText" minor="0">Network Share</nsTxt>
+    <nameAlert type="alert" minor="0">Please enter a name for the recipient</nameAlert>
+    <nameConfirm1 type="alert" minor="0">There is already an other recipient named</nameConfirm1>
+    <nameConfirm2 type="alert" minor="0">Are you sure you want to use this name again?</nameConfirm2>
+    <couldNotSetupNSAlert type="alert" minor="0">Could not setup Network Share</couldNotSetupNSAlert>
+    <ftpUplPathAlert type="alert" minor="0">Invalid upload path. Space is not allowed.</ftpUplPathAlert>
+    <urlStaAlert type="alert" minor="0">The URL must start with http://</urlStaAlert>
+    <urlStaHttpsAlert type="alert" minor="0">The URL must start with https://</urlStaHttpsAlert>
+    <speUseAlert type="alert" minor="0">Specify a user name.</speUseAlert>
+    <spePswAlert type="alert" minor="0">Specify a password.</spePswAlert>
+    <spePubKeyMD5 type="alert" minor="0">Specify the MD5 fingerprint (32 hexdigits) of the remote host's public key.&#10;You need to contact the SFTP server's administrator if you don't have it.</spePubKeyMD5>
+    <fmtPubKeyMD5 type="alert" minor="0">The MD5 fingerprint consists of only hexdigits [0..9,A-F] and must be 32 digits long!</fmtPubKeyMD5>
+    <illNetAdrAlert type="alert" minor="0">Illegal network address.</illNetAdrAlert>
+    <proxyPortAlert type="alert" minor="0">Invalid Proxy Port number. Enter a value between 1 and 65535.</proxyPortAlert>
+    <addrIPv6Alert type="alert" minor="0">This is an IPv6 address. IPv6 must be enabled for the recipient to work properly.</addrIPv6Alert>
+    <invalPortNbrAlert type="alert" minor="0">Invalid port number in the URL.</invalPortNbrAlert>
+    <invalURLAlert type="alert" minor="0">The URL seems invalid. Please check it and try again.</invalURLAlert>
+    <speEmailAlert type="alert" minor="0">Specify an email address.</speEmailAlert>
+    <invalidEmailAlert type="alert" minor="0">Email address entered does not seem valid.&#10;&#10;Continue anyway?</invalidEmailAlert>
+    <chPrDefProvUsrAlrt type="alert" minor="0">Choose a predefined provider or 'User defined'.</chPrDefProvUsrAlrt>
+    <usrIdPassReqAlrt type="alert" minor="0">User id and password are required when using a predefined provider.</usrIdPassReqAlrt>
+    <illegalSMTPAlrt type="alert" minor="0">Illegal SMTP server address.</illegalSMTPAlrt>
+    <invalPrtAlrt type="alert" minor="0">Invalid Port number. Enter a value between 1 and 65535.</invalPrtAlrt>
+    <illegalPOP3Alrt type="alert" minor="0">Illegal POP3 server address.</illegalPOP3Alrt>
+    <missReqParamAlert type="alert" minor="0">Missing required parameter</missReqParamAlert>
+    <comaPassAlert type="alert" minor="0">',' character can't be used in Network Share's password field</comaPassAlert>
+    <illegalHostAlert type="alert" minor="0">Illegal host name</illegalHostAlert>
+    <numOfCharAlert type="alert" minor="0">The combined number of characters entered in the fields is too high.&#10;Please enter shorter strings for the test to work.</numOfCharAlert>
+    <conFaAlert type="alert" minor="0">Connection failed:</conFaAlert>
+    <errPrblConnShareAlert type="alert" minor="0">Problem connecting to share.</errPrblConnShareAlert>
+    <errWhlMntNetShareAlert type="alert" minor="0">Error while mounting network share.</errWhlMntNetShareAlert>
+    <conSuAlert type="alert" minor="0">Connection successful</conSuAlert>
+    <tesTimAlert type="alert" minor="0">Test timeout. No response from server.</tesTimAlert>
+    <sendFaAlert type="alert" minor="0">Sending email failed:</sendFaAlert>
+    <uplFaAlert type="alert" minor="0">Upload failed:</uplFaAlert>
+    <sendSuAlert type="alert" minor="0">Email sent</sendSuAlert>
+    <uplSuAlert type="alert" minor="0">Upload successful</uplSuAlert>
+    <smtpTestSubject type="msgAsText" minor="0">Test email</smtpTestSubject>
+    <smtpTestBody_bonjour type="msgAsText" minor="0">This mail is generated to check if the mail settings for notification on the server #BONJOUR# (#HOSTNAME#) are correct. As you received this mail, the settings are OK</smtpTestBody_bonjour>
+    <smtpTestBody_noBonjour type="msgAsText" minor="0">This mail is generated to check if the mail settings for notification on the server #HOSTNAME# are correct. As you received this mail, the settings are OK</smtpTestBody_noBonjour>
+    <testingMsgTxt type="msgAsText" minor="0">Testing</testingMsgTxt>
+    <stopMsgTxt type="msgAsText" minor="0">.</stopMsgTxt>
+    <waitMsgTxt type="msgAsText" minor="0">Please wait...</waitMsgTxt>
+    <noMailserversConfirm type="msgAsText" minor="0">Could not setup Network Share.</noMailserversConfirm>
+    <onlyAdminNASConfirm type="msgAsText" minor="0">Only the Administrator user can create a Network Share recipient. Do you wish to continue?</onlyAdminNASConfirm>
+    <requestTimeoutAlert type="msgAsText" minor="0">Request Timeout</requestTimeoutAlert>
+    <unknownErrorAlert type="alert" minor="0">Request failed.&#10;Unknown error</unknownErrorAlert>
+  </recipient_setup>
+
+  <recipients>
+    <addBtnStatTxt type="msg" minor="0">Add recipient</addBtnStatTxt>
+    <viewBtnStatTxt type="msg" minor="0">View the selected recipient</viewBtnStatTxt>
+    <copBtnStatTxt type="msg" minor="0">Copy the selected recipient</copBtnStatTxt>
+    <remBtnStatTxt type="msg" minor="0">Remove the selected recipient</remBtnStatTxt>
+    <selAlert type="alert" minor="0">Select a recipient first.</selAlert>
+    <nameTxt type="msgAsText" minor="0">Name</nameTxt>
+    <typeTxt type="msgAsText" minor="0">Type</typeTxt>
+    <addrTxt type="msgAsText" minor="0">Address</addrTxt>
+    <uplPaTxt type="msgAsText" minor="0">Upload path</uplPaTxt>
+    <usrNameTxt type="msgAsText" minor="0">User name</usrNameTxt>
+    <ftpTxt type="msgAsText" minor="0">FTP</ftpTxt>
+    <sftpTxt type="msgAsText" minor="0">SFTP</sftpTxt>
+    <httpTxt type="msgAsText" minor="0">HTTP</httpTxt>
+    <httpsTxt type="msgAsText" minor="0">HTTPS</httpsTxt>
+    <smtpTxt type="msgAsText" minor="0">Email</smtpTxt>
+    <tcpTxt type="msgAsText" minor="0">TCP</tcpTxt>
+    <nsTxt type="msgAsText" minor="0">Network share</nsTxt>
+    <maxAlert type="alert" minor="0">It is not possible to add any more recipients. The maximum number of recipients is 10.</maxAlert>
+    <actionAddMaxRecipAlert type="alert" minor="0">It is not possible to add any more recipients. The maximum number of recipients is #MAX_RECIPIENTS#.</actionAddMaxRecipAlert>
+    <actionCopyMaxRecipAlert type="alert" minor="0">It is not possible to copy any more recipients. The maximum number of recipients is #MAX_RECIPIENTS#.</actionCopyMaxRecipAlert>
+    <remUsedAlert1 type="alert" minor="0">Used recipients cannot be removed!</remUsedAlert1>
+    <remUsedAlert2 type="alert" minor="0">The recipient</remUsedAlert2>
+    <remUsedAlert3 type="alert" minor="0">is used by the following action rules:</remUsedAlert3>
+    <remSerConfirm type="alert" minor="0">Are you sure you want to remove the recipient</remSerConfirm>
+    <remShareRecpAlert type="alert" minor="0">The share used by this recipient could not be removed&#10;Aborting removal of recipient</remShareRecpAlert>
+    <requestTimeoutAlert type="msgAsText" minor="0">Request Timeout</requestTimeoutAlert>
+    <unknownErrorAlert type="alert" minor="0">Request failed.&#10;Unknown error</unknownErrorAlert>
+    <invalidRecipientNoShareError type="text" minor="0">Invalid recipient: Share does not exist.</invalidRecipientNoShareError>
+  </recipients>    
+</language_xml>
+

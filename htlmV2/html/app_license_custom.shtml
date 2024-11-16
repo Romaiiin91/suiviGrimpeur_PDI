@@ -1,0 +1,45 @@
+<!--#set var="helpURL" val="javascript:launch('/help/packages_h.shtml')" -->
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#set var="activeMenu" val="apps" -->
+<!--#set var="activeParentPage" val="packages" -->
+<!--#set var="activeMenu1" val="$app$" -->
+<!--#set var="activePage" val="custom_$app$" -->
+
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<!--#set var="scriptPath" val="/usr/html/bin/devtools.sh" -->
+
+<script language="javascript" type="text/javascript">
+<!--
+  var langObjAppLiCust = new Language("adptools", "app_license_custom");
+  
+function globalLanguageVars()
+{
+  var currTitle = document.title;
+  var newTitle = currTitle.replace(langObjAppLiCust.getText("pageTitle"), langObjAppLiCust.getText("pageTitle")+"<!--#echo var="app" option="encoding:html" -->");
+  document.title = newTitle;
+}
+-->
+</script>
+
+</head>
+<body <!--#include virtual="/incl/bodytag.shtml" --> onload="langObjAppLiCust.init()">
+<!--#include virtual="/sm/sm.srv?action=get&group=Layout" -->
+<!--#include virtual="/incl/top_incl2.shtml" -->
+
+
+<table border="<!--#echo var="zero" option="encoding:html" -->" cellpadding="<!--#echo var="cellpadding3" option="encoding:html" -->" cellspacing="<!--#echo var="zero" option="encoding:html" -->" width="<!--#echo var="tableWidth3" option="encoding:html" -->"  class="alternateRows">
+  <tr class="topTitle">
+    <td valign="top" nowrap>
+      <div align="left">License: <!--#exec cmd="/usr/html/bin/devtools.sh confvariable $app$ PACKAGENAME" --></div>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <!--#if expr="$app != " --><!--#include virtual="/local/$app$/license.inc" --><!--#endif -->
+    </td>
+  </tr>
+</table>
+<br>
+
+<!--#include virtual="/incl/bottom_incl.shtml" -->

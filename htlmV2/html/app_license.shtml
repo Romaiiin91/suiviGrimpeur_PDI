@@ -1,0 +1,250 @@
+<!--#set var="helpURL" val="javascript:launch('/help/packages_h.shtml')" -->
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#set var="activeMenu" val="apps" -->
+<!--#set var="activeParentPage" val="packages" -->
+<!--#set var="activeMenu1" val="$app$" -->
+<!--#set var="activePage" val="license_$app$" -->
+<!--#include virtual="/incl/top_incl.shtml" -->
+
+<!--#include virtual="/sm/sm.srv?action=get&group=Properties.System" -->
+<!--#exec cmd="/usr/html/bin/devtools.sh echo_ssivar_licensekey $app$" -->
+
+<script language="JavaScript">
+
+var langObjAppLi = new Language("adptools", "app_license");
+
+function print_no_conn_text()
+{
+  document.write( langObjAppLi.getText("autoTxt") );
+}
+
+function errors(error)
+{
+  if (error == "1") {
+    alert( langObjAppLi.getText("err1Txt") );
+  } else if (error == "2") {
+    alert( langObjAppLi.getText("err2Txt") );
+  } else if (error == "3") {
+    alert( langObjAppLi.getText("err3Txt") );
+  } else if (error == "4") {
+    alert( langObjAppLi.getText("err4Txt") );
+  } else if (error == "5") {
+    alert( langObjAppLi.getText("err5Txt") );
+  } else if (error == "6") {
+    alert( langObjAppLi.getText("err6Txt") );
+  } else if (error == "7") {
+    alert( langObjAppLi.getText("err7Txt") );
+  } else if (error == "8") {
+    alert( langObjAppLi.getText("err8Txt") );
+  } else if (error == "9") {
+    alert( langObjAppLi.getText("err9Txt") );
+  } else if (error == "10") {
+    alert( langObjAppLi.getText("err10Txt") );
+  } else if (error == "21") {
+    alert( langObjAppLi.getText("err21Txt") );
+  } else if (error == "22") {
+    alert( langObjAppLi.getText("err22Txt") );
+  } else if (error == "23") {
+    alert( langObjAppLi.getText("err23Txt") );
+  } else if (error == "24") {
+    alert( langObjAppLi.getText("err24Txt") );
+  } else if (error == "25") {
+    if (confirm( langObjAppLi.getText("err25Txt") )) {
+      var form = document.upLicenseKey;
+      form.action += '?action=installlicensekey&package=<!--#echo var="app" option="encoding:url" -->&reload_page=yes';
+      form.submit();
+    }
+  } else if (error == "26") {
+    if (confirm( langObjAppLi.getText("err26Txt") )) {
+      var form = document.upLicenseKey;
+      form.action += '?action=installlicensekey&package=<!--#echo var="app" option="encoding:url" -->&reload_page=yes';
+      form.submit();
+    }
+  } else if (error == "27") {
+    alert( langObjAppLi.getText("err27Txt") );
+  } else if (error == "28") {
+    alert( langObjAppLi.getText("err28Txt") );
+  } else if (error == "29") {
+    alert( langObjAppLi.getText("err29Txt") );
+  } else if (error == "30") {
+    if (confirm( langObjAppLi.getText("err30Txt") )) {
+      var form = document.upLicenseKey;
+      form.action += '?action=installlicensekey&package=<!--#echo var="app" option="encoding:url" -->&reload_page=yes';
+      form.submit();
+    }
+  } else if (error == "31") {
+    if (confirm( langObjAppLi.getText("err31Txt") )) {
+      var form = document.upLicenseKey;
+      form.action += '?action=installlicensekey&package=<!--#echo var="app" option="encoding:url" -->&reload_page=yes';
+      form.submit();
+    }
+  }
+}
+
+
+var autoInstallStatus = AxisConnectionFactory.createAjaxConnection();
+
+function autoInstall()
+{
+  var customerInfoString = customerInfo()
+
+  if (customerInfoString != "invalid") {
+    AxisConnectionFactory.sendAsync(["GET", "/axis-cgi/applications/license.cgi?action=autoinstalllicensekey&package=<!--#echo var="app" option="encoding:url" -->&device_id=<!--#echo var="root_Properties_System_SerialNumber" option="encoding:url" -->" + customerInfoString], "", showAutoInstallStatus, autoInstallStatus);
+  }
+}
+
+function showAutoInstallStatus()
+{
+  if (autoInstallStatus.getReadyState() == 4) {
+    if (autoInstallStatus.getStatus() == 200) {
+      var responseText = autoInstallStatus.getResponseText();
+      if (responseText.indexOf("Error") != -1) {
+        var errorCode = responseText.slice(7);
+        errors(errorCode);
+      } else {
+        document.location = "/app_license.shtml?app=<!--#echo var="app" option="encoding:url" -->&id=<!--#echo var="ssi_request_id" option="encoding:url" -->";
+      }
+    }
+  }
+}
+
+
+function removeLicenseKey()
+{
+  if (confirm( langObjAppLi.getText("arYoSuRemConfirm") )) {
+    var form = document.remLicenseKey;
+    form.submit();
+  }
+}
+
+function uploadLicenseKey() {
+  if (document.getElementById("licFileTextbox").value == "") {
+      alert( langObjAppLi.getText("noFileSelctdAlert") );
+      return;
+  }
+<!--#if expr="$license_key != none" -->
+  if (!confirm( langObjAppLi.getText("aLicKeyIsInConfirm") )) {
+    return;
+  }
+<!--#endif -->
+  var form = document.upLicenseKey;
+  form.action += '?action=uploadlicensekey&package=<!--#echo var="app" option="encoding:url" -->&reload_page=yes';
+  try {
+    form.submit();
+  } catch (e) {
+    alert("\"" + form.lic_file.value + "\" "+langObjAppLi.getText("notAValidFile"));
+  }
+}
+
+<!--#if expr="$license_key != none" -->
+function formatKey()
+{
+  var agent = navigator.userAgent.toLowerCase();
+  if (agent.indexOf("applewebkit/") == -1) {
+    var theKey = document.getElementById("licenseKeyInfo").innerHTML;
+    document.getElementById("licenseKeyInfo").innerHTML = "";
+    while (theKey.length > 22) {
+      theName = theKey.substring(theKey.indexOf("&lt;")+4, theKey.indexOf("&gt;"))
+      theKey = theKey.slice(theKey.indexOf("&gt;")+4)
+      if (theName != "LicenseKey") {
+        theValue = theKey.substring(0, theKey.indexOf("&lt;"))
+        if (theValue.length > 70) theValue = theValue.substring(0, 60) + "<br>" + theValue.substring(60, 130) + "<br>" + theValue.slice(130);
+        document.getElementById("licenseKeyInfo").innerHTML += theName + ": " + theValue + "<br>";
+        theKey = theKey.slice(theKey.indexOf(theName)+4+theName.length)
+      }
+    }
+  }
+}
+<!--#endif -->
+
+function globalLanguageVars()
+{
+  var currTitle = document.title;
+  var newTitle = currTitle.replace(langObjAppLi.getText("pageTitle"), langObjAppLi.getText("pageTitle")+"<!--#echo var="app" option="encoding:html" -->");
+  document.title = newTitle;
+}
+
+</script>
+</head>
+<body <!--#include virtual="/incl/bodytag.shtml" --> onload="langObjAppLi.init();errors('<!--#echo var="error" option="encoding:javascript" -->')">
+<!--#include virtual="/sm/sm.srv?action=get&group=Layout" -->
+<!--#include virtual="/incl/top_incl2.shtml" -->
+
+<table border="0" cellpadding="3" cellspacing="0" width="100%" valign="top" class="alternaterows">
+  <tr class="topTitle">
+    <td valign="top" nowrap>
+      <div align="left"><span id="licensTxt"></span>&nbsp;<!--#exec cmd="/usr/html/bin/devtools.sh confvariable $app$ PACKAGENAME" --></div>
+    </td>
+    <td>
+      <div align="right"><a href="<!--#echo var="helpURL" option="encoding:url" -->"><img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="hlpPic"></a></div>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="subTitle"><span id="installedLicense"></span></td>
+  </tr>
+  <tr>
+    <td colspan="2">
+      <table border="0" cellpadding="1" cellspacing="1" width="100%">
+        <tr>
+          <td class="fixed" colspan="3">
+            <table border="1" cellpadding="1" cellspacing="0" width="100%">
+              <tr>
+                <td colspan="1" height="23">
+                  <table border="0" cellpadding="3" cellspacing="1" width="100%">
+                    <tr>
+                      <td width="100%">
+                      <!--#if expr="$license_key != none" -->
+                        <pre><span id="licenseKeyInfo"><!--#echo var="license_key" option="encoding:html" --></span></pre>
+                        <script>formatKey();</script>
+                      <!--#endif -->
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="button">
+      <form name="remLicenseKey" action="/axis-cgi/applications/license.cgi?action=removelicensekey&package=<!--#echo var="app" option="encoding:url" -->&reload_page=yes" method="POST" enctype="multipart/form-data">
+        <input type="button" name="lic_remove" id="lic_remove" value="" width="75" class="btnNormal"<!--#if expr="$license_key = none" --> disabled<!--#endif --> onclick="removeLicenseKey()"><br/><br/>
+      </form>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="subTitle"><span id="manualInstTxt"></span></td>
+  </tr>
+  <tr>
+    <td colspan="2"><span id="manualTxt"></span>&nbsp;<a href="http://www.axis.com/techsup/compatible_applications/" target=_blank>www.axis.com</a>&nbsp;<span id="manual2Txt"></span>&nbsp;<b><!--#echo var="root_Properties_System_SerialNumber" option="encoding:html" --></b>.<br></td>
+  </tr>
+</table>
+<form name="upLicenseKey" action="/axis-cgi/applications/license.cgi" method="POST" enctype="multipart/form-data">
+<table border="0" cellpadding="3" cellspacing="0" width="100%" valign="top" class="alternaterows">
+  <tr>
+    <td nowrap>
+      <span id="liKeyTxt"></span>
+      <input type="file" id="licFileTextbox" name="lic_file"><br><br>
+    </td>
+  </tr>
+  <tr>
+    <td class="button">
+      <input type="button" name="lic_upload" id="lic_upload" width="75" class="btnNormal" onclick="uploadLicenseKey()"><br><br>
+    </td>
+  </tr>
+</table>
+</form>
+
+<form name="customerInformation">
+<table border="0" cellpadding="3" cellspacing="0" width="100%" valign="top" class="alternaterows">
+  <tr>
+    <td class="subTitle"><span id="autoInstTxt"></span></td>
+  </tr>
+<!--#exec cmd="/usr/html/bin/devtools.sh load_auto_inst_form" -->
+</table>
+</form>
+
+<!--#include virtual="/incl/bottom_incl.shtml" -->

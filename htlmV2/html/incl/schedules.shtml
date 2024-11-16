@@ -1,0 +1,463 @@
+<script language="javascript" type="text/javascript">
+<!--
+  var langObjSchSch;
+
+  var AddBtnStatTxt;
+  var ModBtnStatTxt;
+  var RemBtnStatTxt;
+
+  var confirmRemoveTxt;
+
+  function onInit()
+  {
+    langObjSchSch = new Language("incl_schedules", "schedules");
+    langObjSchSch.init(false, true);
+    <!--#if expr="$scheduleType = Pulse" -->
+      AddBtnStatTxt = langObjSchSch.getText("addRecurBtnStatTxt");
+      ModBtnStatTxt = langObjSchSch.getText("modRecurBtnStatTxt");
+      RemBtnStatTxt = langObjSchSch.getText("remRecurBtnStatTxt");
+      confirmRemoveTxt = langObjSchSch.getText("remRecurSerConfirm");
+    <!--#else -->
+      AddBtnStatTxt = langObjSchSch.getText("addSchBtnStatTxt");
+      ModBtnStatTxt = langObjSchSch.getText("modSchBtnStatTxt");
+      RemBtnStatTxt = langObjSchSch.getText("remSchBtnStatTxt");
+      confirmRemoveTxt = langObjSchSch.getText("remSchSerConfirm");
+    <!--#endif -->
+    createSelect();
+    getSchedulesList();
+    markPredefinedSchedules();
+    getActionRules();
+  }
+  addLoadEvent( onInit );
+
+  var _list_obj;
+
+  function createSelect()
+  {
+    var headers = new Array();
+
+    headers[0] = langObjSchSch.getText("nameTxt");
+    <!--#if expr="$scheduleType = Pulse" -->
+      headers[1] = langObjSchSch.getText("patternTxt");
+    <!--#endif -->
+
+    var list_container = document.getElementById("idListContainer");
+    _list_obj = new select_input_class(list_container, headers);
+
+    <!--#if expr="$scheduleType = Pulse" -->
+      _list_obj.setColumnWidths(["180px", "180px"]);
+    <!--#else -->
+      _list_obj.setColumnWidths(["360px"]);
+    <!--#endif -->
+
+    _list_obj.setSortByColumn(0);
+    _list_obj.ondblclick = function() {
+      setupItem("modify");
+    };
+    _list_obj.onRowSelect = function() {
+      togglePredefined();
+    };
+    _list_obj.drawTable();
+  }
+
+  var eventNameSpaces = new SOAPClientNS();
+  eventNameSpaces.add("aev", "http://www.axis.com/vapix/ws/event1" );
+  eventNameSpaces.add("tns1", "http://www.onvif.org/ver10/topics" );
+  eventNameSpaces.add("tnsaxis", "http://www.axis.com/2009/event/topics" );
+  eventNameSpaces.add("wsnt", "http://docs.oasis-open.org/wsn/b-2" );
+
+  var wsdlUrl = "/wsdl/vapix/EventService.wsdl";
+
+  function getSchedulesList()
+  {
+    var params = new SOAPClientParameters();
+  
+    var now = new Date();
+    var timestamp = "?timestamp="+now.getTime();
+
+    var params = new SOAPClientParameters();
+    var scheduleFilter = { "ScheduleType":"<!--#echo var="scheduleType" option="encoding:javascript" -->" };
+    params.add("ScheduleFilter", scheduleFilter );
+    
+    var url = "/vapix/services"+timestamp;
+    var method = "aev:GetScheduledEvents";
+  
+    SOAPClient.invoke( wsdlUrl, url, eventNameSpaces, method, params, false, loadSchedulesList );
+  }
+
+  function loadSchedulesList( responseObj )
+  {
+    _list_obj.clear();
+    
+    if( !responseObj ) {
+      return;
+    }
+    var selectEl = document.getElementById("idListContainer");
+
+    var scheduledParent;
+    if( !( scheduledParent = responseObj.ScheduledEvents ) ) {
+      return;
+    }
+    var scheduleArr;
+    if( !( scheduleArr = scheduledParent.ScheduledEvent ) ) {
+      return;
+    }
+
+    if( scheduleArr.constructor != Array )
+    {
+      scheduleArr = new Array( scheduleArr );
+    }
+    var len = scheduleArr.length;
+
+    for( var i = 0; i < len; i++ ) {
+      if( String( scheduleArr[i].EventID ).indexOf("com.axis.schedules.") != -1 && String( scheduleArr[i].EventID ).indexOf(".genid.") == -1 ) {
+        scheduleArr[i].Name = "&#11;" + scheduleArr[i].Name;
+      }
+    }
+    scheduleArr.sort( sortByObjectName );
+
+    for( var i = 0; i < len; i++ ) {
+      addScheduleOption( scheduleArr[ i ], selectEl );
+    }
+    _list_obj.drawTable();
+  }
+
+  function markPredefinedSchedules()
+  {
+    var eventId;
+    var cells;
+
+    for( var i = 0; i < _list_obj._rows.length; i++ ) {
+      eventId = _list_obj._rows[i].value;
+      if( String( eventId ).indexOf("com.axis.schedules.") != -1 && String( eventId ).indexOf(".genid.") == -1 ) {
+        cells = _list_obj._rows[i].trObject.cells;
+        for ( var j = 0; j < cells.length; j++ ) {
+          cells[j].className = "predefined";
+        }
+      }
+    }
+  }
+
+  var actionNameSpaces = new SOAPClientNS();
+  actionNameSpaces.add("aa", "http://www.axis.com/vapix/ws/action1" );
+  actionNameSpaces.add("wsnt", "http://docs.oasis-open.org/wsn/b-2" );
+  var actionWsdlUrl = "/wsdl/vapix/ActionService.wsdl";
+
+  function getActionRules()
+  {
+    var params = new SOAPClientParameters();
+  
+    var now = new Date();
+    var timestamp = "?timestamp="+now.getTime();
+    
+    var url = "/vapix/services"+timestamp;
+    var method = "aa:GetActionRules";
+  
+    SOAPClient.invoke( actionWsdlUrl, url, actionNameSpaces, method, params, false, loadActionRules );
+  }
+
+  var usedSchedules;
+  function loadActionRules( responseObj )
+  {
+    usedSchedules = new Array();
+
+    if( responseObj )
+    {
+      var actionParent = responseObj.ActionRules;
+      if( actionParent )
+      {
+        var actionRule = actionParent.ActionRule;
+        if( actionRule )
+        {
+          if( actionRule.constructor != Array )
+          {
+            actionRule = new Array( actionRule );
+          }
+          var len = actionRule.length;
+          for( var i = 0; i < len; i++ )
+          {
+            <!--#if expr="$scheduleType = Pulse" -->
+              loadUsedRecurrenceList( actionRule[ i ] );
+            <!--#else -->
+              loadUsedSchedulesList( actionRule[ i ] );
+            <!--#endif -->
+          }
+        }
+      }
+    }//if response
+  }
+
+  <!--#if expr="$scheduleType = Pulse" -->
+  function loadUsedRecurrenceList( ruleObj )
+  {
+    var added = false;
+    if( ruleObj )
+    {
+      var messageArray, schId;
+      var ruleName = ((ruleObj.Name)?ruleObj.Name:"");
+
+      if( ruleObj.StartEvent )
+      {
+        topicId = ruleObj.StartEvent.TopicExpression["#text"];
+        if( topicId.indexOf("UserAlarm") != -1 )
+        {
+          schId = getMessageScheduleId( ruleObj.StartEvent.MessageContent["#text"] );
+          if( schId )
+          {
+            if( !usedSchedules[ schId ] )
+            {
+              usedSchedules[ schId ] = new Array();
+            }
+            usedSchedules[ schId ].push( ruleName );
+          }
+        }
+      }
+    }
+  }
+  <!--#else -->
+  function loadUsedSchedulesList( ruleObj )
+  {
+    var added = false;
+    if( ruleObj )
+    {
+      var messageArray, schId;
+      var ruleName = ((ruleObj.Name)?ruleObj.Name:"");
+
+      if( ruleObj.Conditions )
+      {
+        var conditionArr = ruleObj.Conditions.Condition;
+        if( conditionArr )
+        {
+          var topicId;
+          if( conditionArr.constructor != Array )
+          {
+            conditionArr = new Array(conditionArr);
+          }
+          var len = conditionArr.length;
+          for( var i = 0; i < len; i++ )
+          {
+            topicId = conditionArr[i].TopicExpression["#text"];
+            if( topicId.indexOf("UserAlarm") != -1 )
+            {
+              schId = getMessageScheduleId( conditionArr[i].MessageContent["#text"] );
+              if( schId )
+              {
+                if( !usedSchedules[ schId ] )
+                {
+                  usedSchedules[ schId ] = new Array();
+                }
+                usedSchedules[ schId ].push( ruleName );
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  <!--#endif -->
+
+  function getMessageScheduleId( str )
+  {
+    var re = /boolean\(\/\/SimpleItem\[@Name="id" and @Value="([^"]*)"\]\)/ig;
+    var theId;
+   
+    var matchArr = re.exec(str);
+    if( matchArr && matchArr.length > 1 )
+    {
+      theId = matchArr[ 1 ];
+    }
+    return theId;
+  }
+
+  var configArray = new Array();
+  function addScheduleOption( configObj, selectEl )
+  {
+    var added = false;
+    if( configObj )
+    {
+      var name = (( configObj.Name )?configObj.Name:"");
+      <!--#if expr="$scheduleType = Pulse" -->
+        var schedule = configObj.Schedule.ICalendar;
+        schedule = schedule.replace(/\\n/g, "\n");
+
+        var tmpArr = schedule.split("\n");
+        var len = tmpArr.length;
+        var rrule, dtstart, tmpStr;
+        for( var i = 0; i < len; i++ )
+        {
+          tmpStr = tmpArr[i];
+          if( tmpStr.indexOf("DTSTART:") != -1 )
+          {
+            dtstart = tmpStr.replace("DTSTART:", "");
+          }
+          else if( tmpStr.indexOf("RRULE:FREQ=") != -1 )
+          {
+            rrule = tmpStr.replace("RRULE:FREQ=", "");
+          }
+        }
+        var tmpArr = rrule.split(';');
+        
+        var unit = tmpArr[0];
+        var interval = tmpArr[1].replace("INTERVAL=", "");
+        var unitStr = "";
+
+        if( unit =="DAILY" && interval == "1" )
+        {
+          unitStr = langObjSchSch.getText("dayTxt");
+        }
+        else if( unit =="DAILY" )
+        {
+          unitStr = interval +" "+langObjSchSch.getText("daysTxt");
+        }
+        else if( unit =="HOURLY" && interval == "1" )
+        {
+          unitStr = langObjSchSch.getText("hourTxt");
+        }
+        else if( unit =="HOURLY" )
+        {
+          unitStr = interval +" "+langObjSchSch.getText("hoursTxt");
+        }
+        else if( unit =="MINUTELY" && interval == "1" )
+        {
+          unitStr = langObjSchSch.getText("minuteTxt");
+        }
+        else if( unit =="MINUTELY" )
+        {
+          unitStr = interval +" "+langObjSchSch.getText("minutesTxt");
+        }
+        else if( unit =="SECONDLY" && interval == "1" )
+        {
+          unitStr = langObjSchSch.getText("secondTxt");
+        }
+        else // ( unit =="SECONDLY" )
+        {
+          unitStr = interval +" "+langObjSchSch.getText("secondsTxt");
+        }
+        
+        var pattern = langObjSchSch.getText("everyTxt")+" "+unitStr;
+
+        var rowArr = [name, pattern];
+      <!--#else -->
+        var rowArr = [name];
+      <!--#endif -->
+
+      _list_obj.addRow(rowArr, configObj.EventID, "");
+
+      configArray[ configObj.EventID ] = configObj;
+      added = true;
+    }
+    return added;
+  }
+
+  function togglePredefined()
+  {
+    var selectedVal = _list_obj.selectedValue;
+    var isDisabled = (( selectedVal.indexOf("com.axis.schedules.") != -1 && selectedVal.indexOf(".genid.") == -1 )?true:false);
+    document.getElementById("removeBtn").disabled = isDisabled;
+  }
+
+  function setupItem( action )
+  {
+    var btnEl = document.getElementById(action+"Btn");
+    btnEl.disabled = true;
+    <!--#if expr="$scheduleType = Pulse" -->
+      var url = "/operator/recurrence_setup.shtml?doAction="+action;
+    <!--#else -->
+      var url = "/operator/schedule_setup.shtml?doAction="+action;
+    <!--#endif -->
+    
+    var selectEl = document.getElementById("idListContainer");
+    
+    if( action != "add" )
+    {
+      var eventId = _list_obj.selectedValue;
+      url += "&eventId="+eventId;
+    }
+    var now = new Date();
+    <!--#if expr="$scheduleType = Pulse" -->
+      openPopUp( url + '&timestamp=' + now.getTime(), 'RecurrenceSetup', 310, 170);
+    <!--#else -->
+      openPopUp( url + '&timestamp=' + now.getTime(), 'ScheduleSetup', 570, 255);
+    <!--#endif -->
+    btnEl.disabled = false;
+  }
+
+  function removeItem()
+  {
+    var btnEl = document.getElementById("removeBtn");
+    btnEl.disabled = true;
+
+    var selectEl = document.getElementById("idListContainer");
+
+    if (_list_obj.selectedIndex < 0)
+    {
+      alert(emptyOptionAlertTxt);
+      btnEl.disabled = false;
+      return false;
+    }
+
+    var eventId = _list_obj.selectedValue;
+    var nameValue = (( configArray[ eventId ].Name )?configArray[ eventId ].Name:"");
+
+    if( usedSchedules[ eventId ] )
+    {
+      <!--#if expr="$scheduleType = Pulse" -->
+        var alertMsg = langObjSchSch.getText("remRecurUsedAlert1")+"\n\n";
+        alertMsg += langObjSchSch.getText("remRecurUsedAlert2")+" \""+nameValue+"\" ";
+        alertMsg += langObjSchSch.getText("remRecurUsedAlert3")+"\n";
+      <!--#else -->
+        var alertMsg = langObjSchSch.getText("remSchUsedAlert1")+"\n\n";
+        alertMsg += langObjSchSch.getText("remSchUsedAlert2")+" \""+nameValue+"\" ";
+        alertMsg += langObjSchSch.getText("remSchUsedAlert3")+"\n";
+      <!--#endif -->
+      alertMsg += " - "+usedSchedules[ eventId ].join("\n - ");
+      alert( alertMsg );
+      btnEl.disabled = false;
+      return;
+    }
+
+    if( confirm( confirmRemoveTxt+' "'+nameValue+'"?') )
+    {
+      var params = new SOAPClientParameters();
+      params.add("EventID", eventId );
+
+      var now = new Date();
+      var timestamp = "?timestamp="+now.getTime();
+      
+      var url = "/vapix/services"+timestamp;
+      var method = "aev:RemoveScheduledEvent";
+      SOAPClient.invoke( wsdlUrl, url, eventNameSpaces, method, params, true, onRemoveItem );
+    }
+    else
+    {
+      btnEl.disabled = false;
+    }
+  }
+
+  function onRemoveItem( responseObj )
+  {
+    if( responseObj )
+    {
+      if( responseObj.name == "Error" )
+      {
+        var errorMsg = ( ( responseObj.description )?responseObj.description:(responseObj.fileName)?responseObj.fileName:responseObj.message );
+        alert( errorMsg );
+        
+        document.getElementById("removeBtn").disabled = false;
+        return;
+      }
+    }//if response
+
+    document.getElementById("removeBtn").disabled = false;
+    reloadSchedulesList();
+  }
+
+  function reloadSchedulesList()
+  {
+    getSchedulesList();
+    markPredefinedSchedules();
+    getActionRules();
+  }
+
+-->
+</script>

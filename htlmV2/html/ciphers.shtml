@@ -1,0 +1,102 @@
+<!--#include virtual="/sm/sm.srv?action=get&group=System" -->
+  
+<!--#set var="helpURL" val="javascript:launch('/help/ciphers_h.shtml')" -->
+<!--#set var="WizardFormAction" val="noAction" -->
+
+<!--#include virtual="/incl/top_incl_popup.shtml" -->
+
+<script src="/incl/soapclient.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->" language="javascript" type="text/javascript"></script>
+
+<script language="JavaScript">
+<!--
+var langObjCipHttps = new Language("https", "ciphers");
+
+function init()
+{
+  var list = document.getElementById("ciphersList");
+
+  var cipherArr = "<!--#echo var="ciphers" option="encoding:javascript" -->".split("&#59;");
+  
+  if(cipherArr.length > 0)
+  {
+    for(var i=0; i < cipherArr.length; i++)
+    {
+      for(var j=0; j < list.options.length; j++)
+      {
+        if(cipherArr[i] == list.options[j].value)
+        {
+          list.options[j].selected = true;
+          break;
+        }
+      }
+    }
+  }
+}
+
+function saveData()
+{
+  //Does not really save - just send the currently marked ciphers to https.shtml
+  var retArr = new Array();
+  
+  var list = document.getElementById("ciphersList");
+  for(var i=0; i < list.options.length; i++)
+  {
+    if(list.options[i].selected)
+      retArr.push(list.options[i].value);
+  }
+  
+  if(retArr.length == 0)
+  {
+    alert( langObjCipHttps.getText("oneCipherAlrt") );
+    return;
+  }
+  
+  if(window.opener)
+    window.opener.saveCiphers(retArr.join());
+  else
+    alert( langObjCipHttps.getText("parentClosedAlrt") );
+  window.close();
+}
+
+-->
+</script>
+</head>
+<body class="bodyBg" topmargin="0" leftmargin="0" marginwidth="0" marginheight="0" bgcolor="white" onLoad="langObjCipHttps.init();init()">
+
+<form name="cert_form">
+    <div class="cornerBox">
+      <div class="content">
+  <table border="<!--#echo var="zero" option="encoding:html" -->" cellpadding="<!--#echo var="cellpadding3" option="encoding:html" -->" cellspacing="0" class="oddItem" width="190">
+    <tr>
+      <td class="topTitle" align="left" nowrap>
+        <span id="certTopTxt"></span>
+      </td>
+    </tr>
+    <tr>
+      <td class="evenItem">
+        <select size="10" name="ciphersList" id="ciphersList" style="width:180px;" multiple>
+          <optgroup label="High">
+          <option value="AES256-SHA">AES256-SHA</option>
+          <option value="AES128-SHA">AES128-SHA</option>
+          <option value="DES-CBC3-SHA">DES-CBC3-SHA</option>
+          <optgroup label="Medium">
+          <option value="RC4-SHA">RC4-SHA</option>
+          <option value="RC4-MD5">RC4-MD5</option>
+          <optgroup label="Low">
+          <option value="DES-CBC-SHA">DES-CBC-SHA</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td class="button" align="center">
+        <input type="button" value="" width="65" class="btnNormal" onclick="javascript:saveData()" id="okBtn">
+        <input type="button" value="" width="65" class="btnNormal" onclick="javascript:window.close()" id="cancelBtn">
+      </td>
+    </tr>
+  </table>
+      </div>
+      <div class="footerLeft"><div class="footerRight"></div></div>
+    </div>
+</form>
+</body>
+</html>

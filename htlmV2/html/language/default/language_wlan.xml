@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language_xml>
+	<enterprise_scripts>
+	  <noCertsTxt type="msgAsText" minor="0">[no certificates]</noCertsTxt>
+	  <noCertSelectedTxt type="msgAsText" minor="0">None</noCertSelectedTxt>
+    <plsEntEAPAlrt type="msgAsText" minor="0">Please enter EAP identity.</plsEntEAPAlrt>
+    <plsEntEAPPwdAlrt type="msgAsText" minor="0">Please enter EAP password.</plsEntEAPPwdAlrt>
+  </enterprise_scripts>
+
+  <enterprise_web>
+    <ewWpaEntTyTxt type="text" minor="0">WPA-Enterprise type:</ewWpaEntTyTxt>
+    <ewId1Txt type="text" minor="0">Identity:</ewId1Txt>
+    <ewId2Txt type="text" minor="0">Identity:</ewId2Txt>
+    <ewPwdTxt type="text" minor="0">Password:</ewPwdTxt>
+    <ewVerTxt type="text" minor="0">Version:</ewVerTxt>
+    <ewLabelTxt type="text" minor="0">Label:</ewLabelTxt>
+    <ewEapolVerTxt type="text" minor="0">EAPOL version:</ewEapolVerTxt>
+    <ewCertsTxt type="text" minor="0">Certificates</ewCertsTxt>
+    <ewIfNoCerts1Txt type="text" minor="0">If no certificates are available go to</ewIfNoCerts1Txt>
+    <ewCertsLinkTxt type="text" minor="0">certficates</ewCertsLinkTxt>
+    <ewIfNoCerts2Txt type="text" minor="0">to manage.</ewIfNoCerts2Txt>
+    <ewCACertTxt type="text" minor="0">CA Certificate:</ewCACertTxt>
+    <ewClientCertTxt type="text" minor="0">Client Certificate:</ewClientCertTxt>
+    <ewNoClientCertTxt type="text" minor="0">[not applicable for the current configuration]</ewNoClientCertTxt>
+  </enterprise_web>
+
+  <wlan>
+    <pageTitle type="title" minor="0">System Options/Wireless</pageTitle>
+    <invalHexAlrt type="alert" minor="0">Invalid value. Hex chars are: 0123456789ABCDEF</invalHexAlrt>
+    <noSSIDAlrt type="alert" minor="0">An SSID must be specified when connecting to a secure network.</noSSIDAlrt>
+    <emptyWPAKAlrt type="alert" minor="0">Empty Pre-shared Key</emptyWPAKAlrt>
+    <invalWPAKAlrt type="alert" minor="0">Invalid length of Pre-shared Key</invalWPAKAlrt>
+    <saveUSB1Cfrm type="alert" minor="0">Please check that you have entered the correct settings. If the connection to the wireless network is lost, the</saveUSB1Cfrm>
+    <saveUSB2Cfrm type="alert" minor="0">will need to be reconfigured via the USB cable.</saveUSB2Cfrm>
+    <saveEth1Cfrm type="alert" minor="0">Please check that you have entered the correct settings. If the connection to the wireless network is lost, the</saveEth1Cfrm>
+    <saveEth2Cfrm type="alert" minor="0">will need to be reconfigured over the Ethernet connection.</saveEth2Cfrm>
+    <invalManKeyAlrt type="alert" minor="0">Invalid length of Manual Key</invalManKeyAlrt>
+    <selActvTransKeyAlrt type="alert" minor="0">Selected Active transmit key is not set</selActvTransKeyAlrt>
+    <invalLgthASCIIAlrt type="alert" minor="0">Invalid length of ASCII Key</invalLgthASCIIAlrt>
+    <emptyWEPPassAlrt type="alert" minor="0">Empty WEP passphrase</emptyWEPPassAlrt>
+    <descAlrt type="alert" minor="0">Description:</descAlrt>
+    <messAlrt type="alert" minor="0">Message:</messAlrt>
+    <unsecuredTxt type="msgAsText" minor="0">unsecured</unsecuredTxt>
+    <unknTxt type="msgAsText" minor="0">unknown</unknTxt>
+    <mbitsTxt type="msgAsText" minor="0">Mbit/s</mbitsTxt>
+    <cliToCopTxt type="msgAsText" minor="0">Click to copy these values to Wireless Settings</cliToCopTxt>
+    <refrBtnStatTxt type="msg" minor="0">Refresh network status table</refrBtnStatTxt>
+    <saveBtnStatTxt type="msg" minor="0">Save Wireless settings</saveBtnStatTxt>
+    <resBtnStatTxt type="msg" minor="0">Revert to last saved settings</resBtnStatTxt>
+    <wirelessTxt type="text" minor="0">Wireless</wirelessTxt>
+    <hlpTxt type="image" minor="0" imageid="hlpPic">Click here for help on this page</hlpTxt>
+    <statWLANTxt type="text" minor="0">Status of Wireless Networks</statWLANTxt>
+    <ssidTxt type="text" minor="0">SSID</ssidTxt>
+    <modeTxt type="text" minor="0">Mode</modeTxt>
+    <securTxt type="text" minor="0">Security</securTxt>
+    <chnnTxt type="text" minor="0">Channel</chnnTxt>
+    <sigStrghTxt type="text" minor="0">Signal strength</sigStrghTxt>
+    <bitRateTxt type="text" minor="0">Bit rate</bitRateTxt>
+    <refreshBtn type="button" minor="0" buttonid="wlan_RefreshBtn">Refresh</refreshBtn>
+    <wlanSettTxt type="text" minor="0">Wireless Settings</wlanSettTxt>
+    <enblCongCtrlTxt type="text" minor="0">Enable congestion control</enblCongCtrlTxt>
+    <enblWlanPairBtnTxt type="text" minor="0">Enable WLAN pairing button</enblWlanPairBtnTxt>
+    <ssidColTxt type="text" minor="0">SSID:</ssidColTxt>
+    <securColTxt type="text" minor="0">Security:</securColTxt>
+    <wpaWpa2PSKTxt type="msgAsText" minor="0">WPA-/WPA2-PSK</wpaWpa2PSKTxt>
+    <wpaPSKTxt type="msgAsText" minor="0">WPA-PSK</wpaPSKTxt>
+    <wpaWpa2EntTxt type="msgAsText" minor="0">WPA-/WPA2-Enterprise</wpaWpa2EntTxt>
+    <wpaEntTxt type="msgAsText" minor="0">WPA-Enterprise</wpaEntTxt>
+    <wepTxt type="msgAsText" minor="0">WEP</wepTxt>
+    <noSecurTxt type="msgAsText" minor="0">No security</noSecurTxt>
+    <netwrkTypeTxt type="text" minor="0">Network type:</netwrkTypeTxt>
+    <masterTxt type="text" minor="0">Master</masterTxt>
+    <adHocTxt type="text" minor="0">Ad-Hoc</adHocTxt>
+    <wpaSettTxt type="text" minor="0">WPA settings:</wpaSettTxt>
+    <preShKeyTxt type="text" minor="0">Pre-shared Key:</preShKeyTxt>
+    <manHexTxt type="text" minor="0">Manual hex (64 HEX chars)</manHexTxt>
+    <pass8to63ascTxt type="text" minor="0">Passphrase (8 to 63 ASCII chars)</pass8to63ascTxt>
+    <passPhrsColTxt type="msgAsText" minor="0">Passphrase:</passPhrsColTxt>
+    <wepSettTxt type="text" minor="0">WEP settings:</wepSettTxt>
+    <authTxt type="text" minor="0">Authentication:</authTxt>
+    <openTxt type="text" minor="0">Open</openTxt>
+    <shaKeyTxt type="text" minor="0">Shared Key</shaKeyTxt>
+    <keyLenTxt type="text" minor="0">Key length:</keyLenTxt>
+    <bitTxt type="msgAsText" minor="0">bit</bitTxt>
+    <keyTypeTxt type="text" minor="0">Key type:</keyTypeTxt>
+    <manualTxt type="text" minor="0">Manual</manualTxt>
+    <asciiTxt type="text" minor="0">ASCII</asciiTxt>
+    <passPhrsTxt type="text" minor="0">Passphrase</passPhrsTxt>
+    <actvTrnsmKeyTxt type="msgAsText" minor="0">Active transmit key:</actvTrnsmKeyTxt>
+    <key1Txt type="msgAsText" minor="0">Key 1:</key1Txt>
+    <key2Txt type="msgAsText" minor="0">Key 2:</key2Txt>
+    <key3Txt type="msgAsText" minor="0">Key 3:</key3Txt>
+    <key4Txt type="msgAsText" minor="0">Key 4:</key4Txt>
+    <char10HexTxt type="msgAsText" minor="0">(10 HEX chars)</char10HexTxt>
+    <char26HexTxt type="msgAsText" minor="0">(26 HEX chars)</char26HexTxt>
+    <charAsc5Txt type="msgAsText" minor="0">(5 ASCII chars)</charAsc5Txt>
+    <genKey1Txt type="msgAsText" minor="0">Generated key 1:&#x3C;sup&#x3E;*&#x3C;/sup&#x3E;</genKey1Txt>
+    <genKey2Txt type="msgAsText" minor="0">Generated key 2:&#x3C;sup&#x3E;*&#x3C;/sup&#x3E;</genKey2Txt>
+    <genKey3Txt type="msgAsText" minor="0">Generated key 3:&#x3C;sup&#x3E;*&#x3C;/sup&#x3E;</genKey3Txt>
+    <genKey4Txt type="msgAsText" minor="0">Generated key 4:&#x3C;sup&#x3E;*&#x3C;/sup&#x3E;</genKey4Txt>
+    <willGenTxt type="msgAsText" minor="0">&#x3C;sup&#x3E;*&#x3C;/sup&#x3E; Will be generated on Save</willGenTxt>
+    <charAsc13Txt type="msgAsText" minor="0">(13 ASCII chars)</charAsc13Txt>
+    <warnSaveTxt type="text" minor="0">Warning! Passphrases and keys saved here will be sent to the</warnSaveTxt>
+    <warnSaveUSBTxt type="text" minor="0">in plain text. Use the USB interface to preserve secrecy during configuration.</warnSaveUSBTxt>
+    <warnSaveOtherTxt type="text" minor="0">in plain text.</warnSaveOtherTxt>
+    <SaveBtn type="button" minor="0" buttonid="wlan_SaveBtn">Save</SaveBtn>
+    <ResetBtn type="button" minor="0" buttonid="wlan_ResetBtn">Reset</ResetBtn>
+  </wlan>
+</language_xml>

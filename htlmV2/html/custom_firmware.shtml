@@ -1,0 +1,191 @@
+<!--#set var="WizardFormAction" val="noAction" -->
+<!--#include virtual="/incl/page_header.shtml" -->
+
+  <!--#include virtual="/incl/wait.shtml" -->
+
+  <script language="javascript" type="text/javascript">
+  <!--
+    var langObjCustomFW;
+
+    var ajaxRequest;
+    var ajaxAsyncRequest;
+    
+    var showWait = false;
+    var checkTimer;
+
+    function onInit()
+    {
+      langObjCustomFW = new Language("customfirmware", "custom_firmware");
+      langObjCustomFW.init();
+    }
+
+    function generateFirmware()
+    {
+      document.getElementById("generateBtn").disabled = true;
+
+      var msg = langObjCustomFW.getText("stoppingTxt");
+      wait_start( msg );
+
+      var now = new Date();
+      var timestamp = now.getTime();
+
+      var url = "/axis-cgi/customfirmware.cgi?html=yes&action=init&timestamp="+timestamp;
+
+      if( !ajaxAsyncRequest )
+        ajaxAsyncRequest = AxisConnectionFactory.createAjaxConnection();
+      AxisConnectionFactory.sendAsync(["GET", url], null, onStoppedProcesses, ajaxAsyncRequest);
+    }
+
+    function onStoppedProcesses()
+    {
+      if( ajaxAsyncRequest.getReadyState() == 4 )
+      {
+        var result = "error";
+        var errorMsg = unknownErrorMsg;
+        var resultXML;
+
+        if( ajaxAsyncRequest.getStatus() == 200 )
+        {
+          resultXML = ajaxAsyncRequest.getResponseXml();
+  
+          if( resultXML )
+          {
+            var replyNode = resultXML.selectSingleNode("/reply");
+            if( replyNode )
+            {
+              result = replyNode.getAttribute("result");
+              if( result == "error" )
+              {
+                var errorNode = resultXML.selectSingleNode("/reply/error");
+                if( errorNode )
+                {
+                  errorMsg = errorNode.getAttribute("message");
+                }
+              }
+            }
+          }
+        }
+      
+        //hide loading message
+        if( result == "error" )
+        {
+          wait_stop();
+          alert( errorMsg );
+          document.getElementById("generateBtn").disabled = disabled;
+        }
+        else
+        {
+          checkTimer = window.setTimeout( checkFileGeneration, 5000 );
+          msg = langObjCustomFW.getText("generatingTxt");
+          wait_update_message( msg );
+        }
+      }
+    }
+
+    function checkFileGeneration()
+    {
+      if( checkTimer )
+      {
+        window.clearTimeout( checkTimer );
+      }
+
+      var now = new Date();
+      var timestamp = now.getTime();
+
+      var url = "/axis-cgi/customfirmware.cgi?html=yes&action=check&timestamp="+timestamp;
+      var resultXML = sendAction( url, "get" );
+  
+      var result = "error";
+      var errorMsg = unknownErrorMsg;
+
+      if( resultXML )
+      {
+        var replyNode = resultXML.selectSingleNode("/reply");
+        if( replyNode )
+        {
+          result = replyNode.getAttribute("result");
+          if( result == "error" )
+          {
+            var errorNode = resultXML.selectSingleNode("/reply/error");
+            if( errorNode )
+            {
+              errorMsg = errorNode.getAttribute("message");
+            }
+          }
+        }
+      }
+
+      //hide loading message
+      if( result == "error" )
+      {
+        wait_stop();
+        alert( errorMsg );
+        document.getElementById("generateBtn").disabled = false;
+      }
+      else if( result == "in progress" )
+      {
+        checkTimer = window.setTimeout( checkFileGeneration, 5000 );
+      }
+      else // result == "done"
+      {
+        wait_stop();
+        document.getElementById("generateBtn").disabled = false;
+        downloadCustomFirmware();
+      }
+    }
+
+    function downloadCustomFirmware()
+    {
+      var now = new Date();
+      var timestamp = now.getTime();
+
+      var url = "/axis-cgi/customfirmware.cgi?html=yes&action=get&timestamp="+timestamp;
+      document.location.href = url;
+    }
+
+    function sendAction(action, method )
+    {
+      if( !ajaxRequest )
+        ajaxRequest = AxisConnectionFactory.createAjaxConnection();
+      AxisConnectionFactory.sendSync([method, action], "", ajaxRequest);
+      var result = (ajaxRequest.getStatus() == 200 ? ajaxRequest.getResponseXml() : null);
+      return result;
+    }
+
+    function wait_update_message( msg )
+    {
+      if( waitDiv2 && waitDiv3 )
+      {
+        try
+        {
+          waitDiv2.innerHTML = msg;
+          waitDiv3.innerHTML = msg;
+        }
+        catch( e )
+        {
+        }
+      }
+    }
+
+    var genFWBtnStatTxt;
+    var unknownErrorMsg;
+    function globalLanguageVars()
+    {
+      genFWBtnStatTxt = langObjCustomFW.getText("genCustFWBtnStatTxt");
+      unknownErrorMsg = langObjCustomFW.getText("unknwnErrAlrt");
+    }
+  //-->
+  </script>
+
+</head>
+<body onload="onInit();">
+  <!--#include virtual="/incl/page_top.shtml" -->
+  <h2><span id="custFWTxt"></span></h2>
+  <div class="normal_text fixedWidth row">
+    <span id="infoTxt"></span>
+  </div>
+  <h3><span id="genCustFWTxt"></span></h3>
+  <div class="listButtons">
+    <input type="button" class="btnNormal" onclick="javascript:generateFirmware()" onmouseover="return showStatus(genFWBtnStatTxt)" onmouseout="return showStatus('')" id="generateBtn" />
+  </div>
+<!--#include virtual="/incl/page_footer.shtml" -->

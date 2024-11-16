@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<language_xml>
+	<pwdRoot>
+		<pageTitle type="title">Opciones de sistema/Usuarios</pageTitle>
+		<defLang type="msgAsText">Español</defLang>
+		<pswMustConAlert type="alert">La contraseña debe tener al menos un carácter.</pswMustConAlert>
+		<maxPcAlert1 type="alert">El máximo es de </maxPcAlert1>
+		<maxPcAlert2 type="alert">caracteres en la contraseña.</maxPcAlert2>
+		<pwdConfAlert type="alert">Los valores de '&#34;Contraseña&#34; y &#34;Confirmar contraseña&#34; no coinciden. Introdúzcalos de nuevo.</pwdConfAlert>
+		<loadingTxt type="msg">Creando certificado temporal y configurando HTTPS.&#60;br&#62;Espere...</loadingTxt>
+		<creCerBtnStatTxt type="msg">Crear un certificado de autofirma.</creCerBtnStatTxt>
+		<okBtnStatTxt type="msg">Guardar nueva contraseña de root.</okBtnStatTxt>
+		<creCerTxt type="text">Establecer contraseña a través de HTTPS</creCerTxt>
+		<secConTxt type="text">La configuración segura de la contraseña de root a través de HTTPS requiere un certificado que se creará automáticamente.</secConTxt>
+		<creCerBtnTxt type="button" buttonid="pwdR_CreCerBtn">Utilizar HTTPS</creCerBtnTxt>
+		<usrSetTxt type="text">Establecer contraseña de root</usrSetTxt>
+		<usHttpTxt type="msgAsText">usando HTTP</usHttpTxt>
+		<usHttpsTxt type="msgAsText">usando HTTPS</usHttpsTxt>
+		<usrNaTxt type="text">Nombre de usuario:</usrNaTxt>
+		<pwdTxt type="text">Contraseña (máximo</pwdTxt>
+		<pwdTxt2 type="text">caracteres):</pwdTxt2>
+		<confPwdTxt type="text">Confirmar contraseña:</confPwdTxt>
+		<okBtn type="button" buttonid="pwdR_okBtn">Aceptar</okBtn>
+		<infoTxt type="text">La contraseña del usuario administrador root que viene por defecto deberá cambiarse antes de poder usar el producto.&#60;br&#62;&#60;br&#62; Si la contraseña para root se pierde, el producto debe restablecerse a los valores predeterminados de fábrica pulsando el botón que se encuentra en la carcasa del producto. Para más información, consulte la documentación de usuario.</infoTxt>
+		<ciphWrn type="text">&#60;strong&#62;NOTA: &#60;/strong&#62;Está utilizando un firmware que admite la mejora de la seguridad de la contraseña del usuario. Consulte la documentación en línea para conocer consideraciones importantes acerca de los posibles problemas de compatibilidad entre versiones de firmware anteriores.</ciphWrn>
+		<onvifTxt type="text">ONVIF se desactivará.&#60;br&#62;Para activar ONVIF vaya a Configuración &#62; Opciones de sistema &#62; Seguridad &#62; ONVIF</onvifTxt>
+	</pwdRoot>
+</language_xml>

@@ -1,0 +1,522 @@
+<script language="javascript" type="text/javascript">
+<!--
+  var langObjEventsRecip = new Language("incl_servers", "recipients");
+  langObjEventsRecip.init(false, true);
+
+  var AddBtnStatTxt = langObjEventsRecip.getText("addBtnStatTxt");
+  var ViewBtnStatTxt = langObjEventsRecip.getText("viewBtnStatTxt");
+  var CopBtnStatTxt = langObjEventsRecip.getText("copBtnStatTxt");
+  var RemBtnStatTxt = langObjEventsRecip.getText("remBtnStatTxt");
+  var emptyOptionAlertTxt = langObjEventsRecip.getText("selAlert");
+
+  function onInit()
+  {
+    createSelect();
+    getRecipientTemplates();
+    getRecipientList();
+    getActionConfigs();
+    getActionRules();
+  }
+  addLoadEvent( onInit );
+
+  var _list_obj;
+  function createSelect()
+  {
+    var headers = [ langObjEventsRecip.getText("nameTxt"), 
+                    langObjEventsRecip.getText("typeTxt"), 
+                    langObjEventsRecip.getText("addrTxt"), 
+                    langObjEventsRecip.getText("uplPaTxt"),
+                    langObjEventsRecip.getText("usrNameTxt") ];
+    var list_container = document.getElementById("idListContainer");
+    _list_obj = new select_input_class(list_container, headers);
+    _list_obj.setColumnWidths(["123px", "56px", "139px", "123px","106px"]);
+    _list_obj.setSortByColumn(1);
+    _list_obj.ondblclick = ondblclickRecipient;
+    _list_obj.drawTable();
+  }
+  
+  function ondblclickRecipient()
+  {
+    setupItem("view");
+  }
+
+  function recipientReloadList( newRecipientId )
+  {
+    getRecipientList();
+    getActionConfigs();
+    getActionRules();
+  }
+
+  var actionNameSpaces = new SOAPClientNS();
+  actionNameSpaces.add("aa", "http://www.axis.com/vapix/ws/action1" );
+  actionNameSpaces.add("wsnt", "http://docs.oasis-open.org/wsn/b-2" );
+  var wsdlUrl = "/wsdl/vapix/ActionService.wsdl";
+
+  function getRecipientTemplates()
+  {
+    var params = new SOAPClientParameters();
+    var now = new Date();
+    var timestamp = "?timestamp="+now.getTime();
+    var url = "/vapix/services"+timestamp;
+    var method = "aa:GetRecipientTemplates";
+
+    SOAPClient.invoke( wsdlUrl, url, actionNameSpaces, method, params, false, loadRecipientsTemplates );
+  }
+
+  var templates = new Array();
+  function loadRecipientsTemplates( responseObj )
+  {
+    if( responseObj )
+    {
+      var recipientTemplateParent = responseObj.RecipientTemplates;
+      if( recipientTemplateParent )
+      {
+        var recipientTemplateArr = recipientTemplateParent.RecipientTemplate;
+        if( recipientTemplateArr )
+        {
+          if( recipientTemplateArr.constructor != Array )
+          {
+            recipientTemplateArr = new Array( recipientTemplateArr );
+          }
+          var len = recipientTemplateArr.length;
+          for( var i = 0; i < len; i++ )
+          {
+            addRecipientTemplate( recipientTemplateArr[i] );
+          }
+        }
+      }
+    }//if response
+  }
+
+  function addRecipientTemplate( templateObj )
+  {
+    if( templateObj )
+    {
+      var id = templateObj.TemplateToken;
+      var type = String( id ).replace( "com.axis.recipient.", "" );
+      var name = type;
+      if( type == "ftp" )
+      {
+        name = langObjEventsRecip.getText("ftpTxt");
+      }
+      else if( type == "http" )
+      {
+        name = langObjEventsRecip.getText("httpTxt");
+      }
+      else if( type == "https" )
+      {
+        name = langObjEventsRecip.getText("httpsTxt");
+      }
+      else if( type == "smtp" )
+      {
+        name = langObjEventsRecip.getText("smtpTxt");
+      }
+      else if( type == "tcp" )
+      {
+        name = langObjEventsRecip.getText("tcpTxt");
+      }
+      else if( type == "networkshare" )
+      {
+        name = langObjEventsRecip.getText("nsTxt");
+      }
+      templates[ id ] = { type:type, name:name, obj:templateObj };
+    }
+  }
+
+  function getRecipientList()
+  {
+    var params = new SOAPClientParameters();
+    var now = new Date();
+    var timestamp = "?timestamp="+now.getTime();
+    var url = "/vapix/services"+timestamp;
+    var method = "aa:GetRecipientConfigurations";
+
+    SOAPClient.invoke( wsdlUrl, url, actionNameSpaces, method, params, false, loadRecipientsList );
+  }
+
+  function loadRecipientsList( responseObj )
+  {
+    _list_obj.clear();
+
+    if( responseObj )
+    {
+      var recipientParent = responseObj.RecipientConfigurations;
+      if( recipientParent )
+      {
+        var recipientArr = recipientParent.RecipientConfiguration;
+        if( recipientArr )
+        {
+          if( recipientArr.constructor != Array )
+          {
+            recipientArr = new Array( recipientArr );
+          }
+          var len = recipientArr.length;
+          recipientArr.sort( sortByObjectName );
+          for( var i = 0; i < len; i++ )
+            addRecipientOption( recipientArr[ i ] );
+        }
+      }
+    }//if response
+
+    _list_obj.drawTable();
+  }
+
+  var configArray = new Array();
+  function addRecipientOption( configObj )
+  {
+    if( !configObj ) {
+      return false;
+    }
+    var templateId = configObj.TemplateToken;
+    var typeStr = "-";
+    if( templates[ templateId ] ) {
+      typeStr = templates[ templateId ].name;
+    }
+    var recipientName = ((configObj.Name)?configObj.Name:"");
+    var address = "-";
+    var shareid = "";
+    var path = "-";
+    var uploadpath = "";
+    var username = "";
+    var errorMsg = "";
+    if( !configObj.Parameters ) {
+      return false;
+    }
+    var params = configObj.Parameters.Parameter;
+    if( !params ) {
+      return false;
+    }
+    if( params.constructor != Array ) {
+      params = new Array( params );
+    }
+    var len = params.length;
+    var param;
+    for(var i = 0; i < len; i++ ) {
+      param = params[i];
+      if( param.Name == "host" ||
+          param.Name == "address" ||
+          param.Name == "upload_url" ||
+          param.Name == "email_to" ) {
+        address = param.Value;
+      }
+      else if( param.Name == "upload_path" ) {
+        uploadpath = param.Value;
+      }
+      else if( param.Name == "login" ||
+               param.Name == "username" ) {
+        username = ((param.Value != "" )?param.Value:"-");
+      }
+      else if( param.Name == "share_id" ) {
+        var share = getShare(param.Value);
+        if( share === null ) {
+          errorMsg = "Invalid recipient: Share does not exist.";
+          continue;
+        }
+        address = share.getAttribute("Address");
+        shareid = share.getAttribute("Share");
+        username = share.getAttribute("User");
+        username = ( username !== "" ? username : "-" );
+      }
+    }
+
+    if( errorMsg !== "" ) {
+      recipientName = "<div class=\"generalError\">" + recipientName + "</div>";
+    }
+    if( shareid !== "" && uploadpath !== "" ) {
+      path = shareid + "/" + uploadpath;
+    }
+    else if( shareid !== "" ) {
+      path = shareid;
+    }
+    else if( uploadpath !== "" ) {
+      path = uploadpath;
+    }
+
+    var rowArr = [recipientName,
+                  typeStr,
+                  address,
+                  path,
+                  username];
+
+    _list_obj.addRow(rowArr, configObj.ConfigurationID, errorMsg);
+
+    configArray[ configObj.ConfigurationID ] = configObj;
+
+    return true;
+  }
+
+  function getShare(shareId)
+  {
+    var xmlNode;
+    var now = new Date();
+    var timestamp = now.getTime();
+    var url = "/axis-cgi/disks/networkshare/list.cgi?schemaversion=1.0&shareid="+shareId+"&timestamp="+timestamp;
+
+    var listXml = sendAction(url);
+
+    if(listXml)
+      xmlNode = listXml.selectSingleNode("//NetworkShare");
+
+    return xmlNode;
+  }
+
+  function removeShare(shareId)
+  {
+    var retVal = false;
+    var xmlNode;
+    var now = new Date();
+    var timestamp = now.getTime();
+    var url = "/axis-cgi/disks/networkshare/remove.cgi?schemaversion=1.0&shareid="+shareId+"&timestamp="+timestamp;
+
+    var listXml = sendAction(url);
+
+    if(listXml)
+      retVal = (listXml.selectSingleNode("//GeneralSuccess") ? true : false);
+
+    return retVal;
+  }
+
+  var ajaxRequest = AxisConnectionFactory.createAjaxConnection();
+  function sendAction(action)
+  {
+    AxisConnectionFactory.sendSync(["GET", action], null, ajaxRequest);
+    var result = (ajaxRequest.getStatus() == 200 ? ajaxRequest.getResponseXml() : null);
+    return result;
+  }
+
+  function getActionConfigs()
+  {
+    var params = new SOAPClientParameters();
+    var now = new Date();
+    var timestamp = "?timestamp="+now.getTime();
+    var url = "/vapix/services"+timestamp;
+    var method = "aa:GetActionConfigurations";
+
+    SOAPClient.invoke( wsdlUrl, url, actionNameSpaces, method, params, false, loadActionConfigs );
+  }
+
+  var usedRecipients;
+  var actionConfigs;
+  function loadActionConfigs( responseObj )
+  {
+    usedRecipients = new Array();
+    if( responseObj )
+    {
+      actionConfigs = new Array();
+      var actionParent = responseObj.ActionConfigurations;
+      if( actionParent )
+      {
+        var actionConfigObj = actionParent.ActionConfiguration;
+        if( actionConfigObj )
+        {
+          if( actionConfigObj.constructor != Array )
+          {
+            actionConfigObj = new Array( actionConfigObj );
+          }
+          var len = actionConfigObj.length;
+          for( var i = 0; i < len; i++ )
+          {
+            if( actionConfigObj[i].Recipient )
+            {
+              actionConfigs[ actionConfigObj[i].ConfigurationID ] = actionConfigObj[i].Recipient;
+            }
+          }
+        }
+      }
+    }//if response
+  }
+
+  function getActionRules()
+  {
+    var params = new SOAPClientParameters();
+    var now = new Date();
+    var timestamp = "?timestamp="+now.getTime();
+    var url = "/vapix/services"+timestamp;
+    var method = "aa:GetActionRules";
+
+    SOAPClient.invoke( wsdlUrl, url, actionNameSpaces, method, params, false, loadActionRules );
+  }
+
+  function loadActionRules( responseObj )
+  {
+    if( responseObj )
+    {
+      var actionParent = responseObj.ActionRules;
+      if( actionParent )
+      {
+        var actionRule = actionParent.ActionRule;
+        if( actionRule )
+        {
+          if( actionRule.constructor != Array )
+          {
+            actionRule = new Array( actionRule );
+          }
+          var len = actionRule.length;
+          for( var i = 0; i < len; i++ )
+          {
+            var actionRuleName = ((actionRule[ i ].Name)?actionRule[ i ].Name:"");
+            var id = actionConfigs[ actionRule[ i ].PrimaryAction ] || actionConfigs[ actionRule[ i ].FailoverAction ];
+            if( id )
+            {
+              if( !usedRecipients[ id ] )
+              {
+                usedRecipients[ id ] = new Array();
+              }
+              usedRecipients[ id ].push( actionRuleName );
+            }
+          }
+        }
+      }
+    }//if response
+  }
+
+  function setupItem( action )
+  {
+    var btnEl = document.getElementById(action+"Btn");
+    btnEl.disabled = true;
+
+    var url = "/operator/recipient_setup.shtml?doAction="+action;
+    
+    if( action != "add" )
+    {
+      if( _list_obj.selectedIndex < 0 )
+      {
+        alert( emptyOptionAlertTxt );
+        btnEl.disabled = false;
+        return false;
+      }
+
+      var recId = _list_obj.selectedValue;
+
+      var recipientObj = configArray[ recId ];
+      var recipientName = ((recipientObj.Name)?recipientObj.Name:"");
+
+      url += "&recipientId="+recId+"&name="+escape( recipientName )+"&template="+recipientObj.TemplateToken;
+
+      if( recipientObj.Parameters )
+      {
+        var params = recipientObj.Parameters.Parameter;
+        if( params )
+        {
+          if( params.constructor != Array )
+          {
+            params = new Array( params );
+          }
+          var len = params.length;
+          for(var i = 0; i < len; i++ )
+          {
+            url +="&"+params[i].Name+"="+escape( params[i].Value );
+          }
+        }
+      }
+    }
+    else if( _list_obj.length >= 10 )
+    {
+      alert( langObjEventsRecip.getText("maxAlert") );
+      btnEl.disabled = false;
+      return;
+    }
+    var now = new Date();
+    openPopUp( url + '&timestamp=' + now.getTime(), 'RecipientSetup', 400 , 550);
+    btnEl.disabled = false;
+  }
+
+  function removeItem()
+  {
+    var btnEl = document.getElementById("removeBtn");
+    btnEl.disabled = true;
+
+    if( _list_obj.selectedIndex < 0 )
+    {
+      alert( emptyOptionAlertTxt );
+      btnEl.disabled = false;
+      return false;
+    }
+      
+    var recId = _list_obj.selectedValue;
+    var nameValue = configArray[ recId ].Name;
+
+    if( usedRecipients[ recId ] )
+    {
+      var alertMsg = langObjEventsRecip.getText("remUsedAlert1")+"\n\n";
+      alertMsg += langObjEventsRecip.getText("remUsedAlert2")+" \""+nameValue+"\" ";
+      alertMsg += langObjEventsRecip.getText("remUsedAlert3")+"\n";
+      alertMsg += " - "+usedRecipients[ recId ].join("\n - ");
+      alert( alertMsg );
+
+      btnEl.disabled = false;
+      return;
+    }
+
+    if( confirm( langObjEventsRecip.getText("remSerConfirm")+" \""+nameValue+"\"?"))
+    {
+
+      if(configArray[ recId ].TemplateToken.indexOf("networkshare") != -1)
+      {
+        var shareId = "";
+
+        if( configArray[ recId ].Parameters )
+        {
+          var params = configArray[ recId ].Parameters.Parameter;
+          if( params )
+          {
+            if( params.constructor != Array )
+            {
+              params = new Array( params );
+            }
+            for(var i=0; i < params.length; i++)
+            {
+              if( params[i].Name == "share_id" )
+              {
+                shareId = params[i].Value;
+                break;
+              }
+            }
+          }
+        }
+
+        if(shareId != "")
+        {
+          if( !removeShare(shareId) )
+          {
+            alert( langObjEventsRecip.getText("remShareRecpAlert") );
+            return;
+          }
+        }
+      }
+
+      var params = new SOAPClientParameters();
+      params.add("ConfigurationID", recId );
+
+      var now = new Date();
+      var timestamp = "?timestamp="+now.getTime();
+
+      var url = "/vapix/services"+timestamp;
+      var method = "aa:RemoveRecipientConfiguration";
+      SOAPClient.invoke( wsdlUrl, url, actionNameSpaces, method, params, true, onRemoveItem );
+    }
+    else
+    {
+      btnEl.disabled = false;
+    }
+  }
+
+  function onRemoveItem( responseObj )
+  {
+    if( responseObj )
+    {
+      if( responseObj.name == "Error" )
+      {
+        var errorMsg = ( ( responseObj.description )?responseObj.description:(responseObj.fileName)?responseObj.fileName:responseObj.message );
+        alert( errorMsg );
+        document.getElementById("removeBtn").disabled = false;
+        return;
+      }
+    }//if response
+
+    document.getElementById("removeBtn").disabled = false;
+    getRecipientList();
+  }
+
+// -->
+</script>

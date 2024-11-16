@@ -1,0 +1,59 @@
+<!--#set var="helpURL" val="javascript:launch('/help/action_rules_h.shtml')" -->
+<!--#set var="WizardFormAction" val="noAction" -->
+
+<!--#set var="activeMenu" val="event" -->
+<!--#set var="activePage" val="actionRules" -->
+
+<!--#include virtual="/incl/page_header.shtml" -->
+
+  <!--#set var="skipPTZ" val="no" -->
+  
+  <script src="/incl/soapclient.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->" language="javascript" type="text/javascript"></script>
+  <script src="/incl/select_input_class.js?ver=<!--#echo var="root_Properties_Firmware_Version" option="encoding:url" -->" language="javascript" type="text/javascript"></script>
+
+  <script type="text/javascript" language="javascript">
+  <!-- 
+    var langObjEvTyActRules = new Language("event_types", "action_rules");
+    addLoadEvent( function(){ langObjEvTyActRules.init(); } );
+  
+    <!--#include virtual="/incl/topic_list.shtml" -->
+  // -->
+  </script>
+  
+  <!--#include virtual="/incl/action_rules.shtml" -->
+
+</head>
+<body>
+  <!--#if expr="$skipPTZ = no" -->
+      <form name="presetPosForm" action="" method="post" onsubmit="return false;">
+            <!--#include virtual="/sm/sm.srv?action=get_htmlform&get=root.PTZ.Preset.P0.HomePosition&format=hiddenhtmlform" -->
+            <!--#include virtual="/sm/sm.srv?action=get_htmlform&getgroup=root.PTZ.Preset.P0.Position&format=hiddenhtmlform" -->
+      </form>
+        <form name="guardtourForm" action="" method="post" onsubmit="return false;">
+          <!--#include virtual="/sm/sm.srv?action=get_htmlform&getgroup=root.GuardTour&format=hiddenhtmlform" -->
+        </form>
+  <!--#endif -->
+
+  <!--#set var="pageWidth" val="829" -->
+  <!--#include virtual="/incl/page_top.shtml" -->
+
+  <h2><span id="actionRulesTxt"></span></h2>
+  
+  <a href="<!--#echo var="helpURL" option="encoding:url" -->" id="helpLink"><img height="27" width="27" src="/pics/help.gif" border="0" alt="" id="hlpPic"/></a>
+
+  <h3><span id="actionRulesLiTxt"></span></h3>
+  <div class="normal_text">
+    <div id="idListContainer" class="selectList" style="width: 580px"></div>
+    <div class="listButtons">
+      <input type="button" value="" class="btnNormal" onclick="javascript:setupRule('add')" onmouseover="return showStatus(AddBtnStatTxt)" onmouseout="return showStatus('')" id="addBtn" />
+      <input type="button" value="" class="btnNormal" onclick="javascript:setupRule('copy')" onmouseover="return showStatus(CopyBtnStatTxt)" onmouseout="return showStatus('')" id="copyBtn" />
+      <input type="button" value="" class="btnNormal" onclick="javascript:setupRule('modify');" onmouseover="return showStatus(ModBtnStatTxt)" onmouseout="return showStatus('')" id="modifyBtn" />
+      <input type="button" value="" class="btnNormal" onclick="javascript:removeRule()" onmouseover="return showStatus(RemBtnStatTxt)" onmouseout="return showStatus('')" id="removeBtn" />
+    </div>
+    <div id="eventConvert" style="display: none; padding-top:20px;">
+      <h3 style="color: #ff0000;"><span id="convAttTxt"></span></h3>
+      <span id="convTxt1"></span><br>
+      <span id="convTxt2"></span>&nbsp;<input type="button" value="" class="btnNormal" onclick="javascript:convertEvents()" onmouseover="return showStatus(ConvertBtnStatTxt)" onmouseout="return showStatus('')" id="convertBtn" />
+    </div>
+  </div>
+<!--#include virtual="/incl/page_footer.shtml" -->

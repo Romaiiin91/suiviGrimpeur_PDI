@@ -1,0 +1,316 @@
+<!--#include virtual="/sm/sm.srv?action=get&group=Brand.ProdNbr,Serial.PurposePort0,NetworkLED.Usage,PTZ.CamPorts,PTZ.SerDrivers,Properties.LocalStorage.ContinuousRecording" -->
+
+
+
+  <!--#set var="io_support" val="no" -->
+
+  <!--#if expr="_$root_NetworkLED_Usage != _" -->
+    <!--#set var="ledsettings" value="yes" -->
+  <!--#else -->
+    <!--#set var="ledsettings" value="no" -->
+  <!--#endif -->
+
+
+  <!--#include virtual="/sm/sm.srv?action=get&group=PTZ" -->
+  <!--#set var="COMport" val="$(root_PTZ_CamPorts_Cam1Port)" -->
+
+  <!--#set var="panTiltEnabled" val="yes" -->
+
+<!--#set var="backButton" val="yes" -->
+<!--#set var="forwardButton" val="yes" -->
+<!--#set var="hideContent" val="yes" -->
+
+<!--#include virtual="/incl/nbr_to_camnbr.shtml" -->
+
+<!--#include virtual="/incl/popup_header.shtml" -->
+
+<script language="JavaScript">
+<!--
+var langObjGTOC = new Language("general_h", "toc");
+
+function globalLanguageVars()
+{
+	document.getElementById("titleId").innerHTML = langObjGTOC.getText("titleTxt");
+}
+// -->
+</script>
+
+</head>
+<body onload="langObjGTOC.init()">
+  <!--#include virtual="/incl/help_top.shtml" -->
+  
+
+      <h2><span id="subTitleVideo1"></span></h2>
+
+      <div class="row">
+        <a href="videostream_h.shtml"><span id="vidStrSet"></span></a>
+      </div>
+
+        <div class="reuseLast">
+          <a href="streamprofilelist_h.shtml"><span id="strPro"></span></a>
+        </div>
+        <div class="reuseLast">
+          <a href="streamprofile_h.shtml"><span id="profSet"></span></a>
+        </div>
+
+        <div class="reuseLast">
+          <a href="advanced_h.shtml"><span id="lightConSet"></span></a>
+        </div>
+
+
+
+            <div class="reuseLast">
+              <a href="overlay_h.shtml"><span id="ovrImSet1"></span></a>
+            </div>
+            <div class="reuseLast">
+              <a href="privacy_mask_h.shtml"><span id="priMasks1"></span></a>
+            </div>
+
+
+
+
+
+    <div class="emptyRow"></div>
+    <h2><span id="subTitleLiveViewConf2"></span></h2>
+
+    <div class="row">
+      <a href="layout_h.shtml"><span id="layout2"></span></a>
+    </div>
+
+
+
+    <div class="emptyRow"></div>
+
+    <h2><span id="subTitlePTZ"></span></h2>
+
+      <div class="row">
+        <a href="ptz_h.shtml"><span id="prePos2"></span></a>
+      </div>
+      <div class="reuseLast">
+        <a href="autotracking_h.shtml"><span id="autTrack"></span></a>
+      </div>
+      <div class="reuseLast">
+        <a href="autotracking_ExAr_h.shtml"><span id="autTrackEA"></span></a>
+      </div>
+      <div class="reuseLast">
+        <a href="autotracking_MaLi_h.shtml"><span id="autTrackML"></span></a>
+      </div>
+      <div class="reuseLast">
+        <a href="guardTour_h.shtml"><span id="grdTour"></span></a>
+      </div>
+      <div class="reuseLast">
+        <a href="osdi_h.shtml"><span id="osdi"></span></a>
+      </div>
+      <div class="reuseLast">
+        <a href="add_osdi_h.shtml"><span id="addOsdi"></span></a>
+      </div>
+        <div class="reuseLast">
+          <a href="mechLimits_h.shtml"><span id="limits1"></span></a>
+        </div>
+    
+    <div class="reuseLast">
+      <a href="panel_view_h.shtml"><span id="ctrPan"></span></a>
+    </div>
+
+      <!--#set var="showOSD" val="no" -->
+        <!--#if expr="$root_PTZ_Support_S1_OSDMenu = true" --><!--#set var="showOSD" val="yes" --><!--#endif -->
+      <!--#if expr="$showOSD = yes" -->
+        <div class="reuseLast">
+          <a href="/help/ptz/main.shtml?port=<!--#echo var="COMport" option="encoding:url" -->&index=<!--#echo var="camnbr" option="encoding:url" -->"><span id="oSD1"></span></a>
+        </div>
+      <!--#endif -->
+
+      <div class="reuseLast">
+        <a href="ptzQueue_h.shtml"><span id="ctrlQ"></span></a>
+      </div>
+
+<div class="emptyRow"></div>
+  <h2><span id="subTitleDetectors"></span></h2> 
+
+
+      <div class="reuseLast">
+        <a href="motion_h.shtml"><span id="motDet"></span></a>
+      </div>
+
+
+
+
+  <div class="emptyRow"></div>
+  <h2><span id="subTitleEmbeddedApplications"></span></h2>
+    <div class="row">
+      <a href="packages_h.shtml"><span id="embeddedApplicationsmod"></span></a>
+    </div>
+
+    <div class="emptyRow"></div>
+    <h2><span id="subTitleEvs"></span></h2>
+
+    <div class="row">
+      <a href="action_rules_h.shtml"><span id="actionRules"></span></a>
+    </div>
+  
+    <div class="reuseLast">
+      <a href="recipients_h.shtml"><span id="recipients"></span></a>
+    </div>
+  
+    <div class="reuseLast">
+      <a href="schedules_h.shtml"><span id="schedules"></span></a>
+    </div>
+
+    <div class="reuseLast">
+      <a href="recurrences_h.shtml"><span id="recurrences"></span></a>
+    </div>
+
+    <div class="reuseLast">
+      <a href="filenames_h.shtml"><span id="fileNameFmts"></span></a>
+    </div>
+
+    <div class="emptyRow"></div>
+    <h2><span id="subTitleRec"></span></h2>
+    <div class="reuseLast">
+      <a href="recordingList_h.shtml"><span id="recordlist"></span></a>
+    </div>
+  
+    <!--#if expr="$root_Properties_LocalStorage_ContinuousRecording = yes" -->
+      <div class="reuseLast">
+        <a href="continuously_h.shtml"><span id="recordCont"></span></a>
+      </div>
+    <!--#endif -->
+
+
+    <div class="emptyRow"></div>
+    <h2><span id="subTitleLang"></span></h2>
+    <div class="reuseLast">
+      <a href="languages_h.shtml"><span id="langPage"></span></a>
+    </div>
+
+  <div class="emptyRow"></div>
+  <h2><span id="subTitleSysOpts"></span></h2>
+
+    <div class="row">
+      <a href="users_h.shtml"><span id="secUsrLst"></span></a>
+    </div>
+  
+    <div class="reuseLast">
+      <a href="users_set_h.shtml"><span id="secUsers"></span></a>
+    </div>
+
+    <div class="reuseLast">
+      <a href="onvif_users_h.shtml"><span id="secONVIF"></span></a>
+    </div>
+
+    <div class="reuseLast">
+      <a href="restrictIP_h.shtml"><span id="secIPAdrFilt"></span></a>
+    </div>
+  
+    <div class="reuseLast">
+      <a href="restrictIP_setup_h.shtml"><span id="secAddFiltIPAdr"></span></a>
+    </div>
+    <div class="reuseLast">
+      <a href="https_h.shtml"><span id="secHTTPS"></span></a>
+    </div>
+    <div class="reuseLast">
+      <a href="8021x_h.shtml"><span id="sec8021x"></span></a>
+    </div>
+  <div class="emptyRow"></div>
+
+  <div class="row">
+    <a href="date_h.shtml"><span id="dateTimeSet"></span></a>
+  </div>
+  <div class="emptyRow"></div>
+
+  <div class="row">
+    <a href="tcpip_h.shtml"><span id="netBasTCPIP"></span></a>
+  </div>
+
+  <div class="reuseLast">
+    <a href="advanced_tcpip_h.shtml"><span id="netAdvTCPIP"></span></a>
+  </div>
+
+  <div class="reuseLast">
+    <a href="internetDyn_DNS_h.shtml"><span id="netDynDNS"></span></a>
+  </div>
+
+<!--
+    <div class="reuseLast">
+      <a href="advanced_tcpip_h.shtml#nat"><span id="netNATTraSet"></span></a>
+    </div>
+-->
+
+  
+  
+    <div class="reuseLast">
+      <a href="socks_h.shtml"><span id="netSOCKSSet"></span></a>
+    </div>
+  
+    <div class="reuseLast">
+      <a href="qos_h.shtml"><span id="netQOSSet"></span></a>
+    </div>
+  
+<!--
+    <div class="reuseLast">
+      <a href="smtp_h.shtml"><span id="netSMTPSet"></span></a>
+    </div>
+-->  
+
+    <div class="reuseLast">
+      <a href="snmp_h.shtml"><span id="netSNMPSet"></span></a>
+    </div>
+  
+    <div class="reuseLast">
+      <a href="UPnP_h.shtml"><span id="netUPnPSet"></span></a>
+      
+    </div>
+
+    <div class="reuseLast">
+      <a href="rtp_h.shtml"><span id="netRTPH264Set"></span></a>
+    </div>
+
+    <div class="reuseLast">
+      <a href="bonjour_h.shtml"><span id="netBonjourSet"></span></a>
+    </div>
+    <div class="emptyRow"></div>
+
+          <div class="row">
+            <a href="storagelist_h.shtml"><span id="overview"></span></a>
+          </div>
+          <div class="reuseLast">
+            <a href="disk_management_h.shtml"><span id="sDCard"></span></a>
+          </div>
+          <div class="reuseLast">
+            <a href="diskmgmt_nas_h.shtml"><span id="nAS"></span></a>
+          </div>
+  
+  <div class="emptyRow"></div>
+  
+  <!--#if expr="$io_support = yes" -->
+    <div class="row">
+      <a href="ioports_h.shtml"><span id="iOPorts"></span></a>
+    </div>
+  <!--#endif -->
+
+
+
+<!--#if expr="$io_support = yes" -->
+    <div class="reuseLast">
+      <a href="portStatus_h.shtml"><span id="portStatus"></span></a>
+    </div>
+    <div class="emptyRow"></div>
+<!--#endif -->
+
+  <div class="row">
+    <a href="maintenance_h.shtml"><span id="maint"></span></a>
+  </div>
+  <div class="emptyRow"></div>
+
+  <div class="row">
+    <a href="troubleshoot_h.shtml"><span id="troubleshooting"></span></a>
+  </div>
+  <div class="emptyRow"></div>
+
+  <div class="row">
+    <a href="scripting_h.shtml"><span id="advScript"></span></a>
+  </div>
+  <div class="emptyRow"></div>
+
+
+<!--#include virtual="/incl/help_footer.shtml" -->

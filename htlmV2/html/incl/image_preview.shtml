@@ -1,0 +1,264 @@
+<!-- image_preview.shtml -->
+<!--#include virtual="/incl/nbr_to_camnbr.shtml" -->
+<DIV ID="filterinstallocation"></DIV>
+<DIV STYLE="display: none;" ID="image_preview_video_view_div">
+  <SCRIPT SRC="/incl/activeX.js"></SCRIPT>
+  <SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript">
+  <!--
+  var File = "/axis-cgi/mjpg/video.cgi?";
+  File += "camera=<!--#echo var="camnbr" option="encoding:url" -->";
+<!--#set var="resolution" val="CIF" -->
+  File += "&resolution=<!--#echo var="resolution" option="encoding:url" -->";
+
+  var stopFile = File;
+
+  <!--#set var="size" val="1" -->
+  <!--#set var="external" val="no" -->
+  <!--#set var="UseAudio" val="no" -->
+  <!--#set var="UseRel" val="no" -->
+  <!--#set var="useWithCam" val="no" -->
+  <!--#set var="ptzgui" val="no" -->
+  <!--#set var="root_Layout_ShowAMCToolbar" val="no" -->
+
+  <!--#set var="imagesize_opts" val="" -->
+  <!--#if expr="_$resolution != _" --><!--#set var="imagesize_opts" val="$imagesize_opts$&resolution=$resolution$" --><!--#endif -->
+  <!--#include virtual="/axis-cgi/view/imagesize.cgi?format=ssi&camera=$camnbr$$imagesize_opts$&rotation=0" -->
+  <!--#if expr="_$resolution != _" --><!--#set var="resolution" val="$img_width$x$img_height$" --><!--#endif -->
+  <!--#include virtual="/incl/video.shtml" -->
+  video(File);
+  // -->
+  </SCRIPT>
+</DIV>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript">
+<!--
+function image_preview_init()
+{
+  var frm = document.getElementsByName("WizardForm");
+  frm[0].target = "videosave";
+
+  var inputs = frm[0].getElementsByTagName("INPUT");
+  for (var i = 0; i < inputs.length; i++)
+  {
+    inputs[i].oldValue = inputs[i].value;
+    inputs[i].lastValue = inputs[i].value;
+    if (typeof inputs[i].onchange != 'function') {
+      inputs[i].onchange = image_preview_onChange;
+    } else {
+      oldonchange = inputs[i].onchange;
+      inputs[i].onchange = function() {
+        oldonchange();
+        image_preview_onChange();
+      }
+    }
+    if (typeof inputs[i].onkeypress != 'function') {
+      inputs[i].onkeypress = image_preview_onKeyPress;
+    } else {
+      oldonkeypress = inputs[i].onkeypress;
+      inputs[i].onkeypress = function() {
+        oldonkeypress();
+        image_preview_onKeyPress();
+      }
+    }
+  }
+
+  var select = frm[0].getElementsByTagName("SELECT");
+  for (var i = 0; i < select.length; i++)
+  {
+    select[i].oldIndex = select[i].selectedIndex;
+    select[i].lastIndex = select[i].selectedIndex;
+    if (typeof select[i].onchange != 'function') {
+      select[i].onchange = image_preview_onChange;
+    } else {
+      oldonchange = select[i].onchange;
+      select[i].onchange = function() {
+        oldonchange();
+        image_preview_onChange();
+      }
+    }
+  }
+}
+
+function image_preview_onChange()
+{
+  if (!image_preview_valuesSetByScript)
+  {
+    stopStartStream(stopFile);
+    image_preview_update();
+    image_preview_dirty = true;
+  }
+}
+
+function image_preview_onKeyPress()
+{
+  try
+  {
+    if (window.event && window.event.keyCode == 0x0D)
+      image_preview_onChange();
+  } catch (e) {}
+
+  try
+  {
+    if (event.keyCode == 0x0D)
+      image_preview_onChange();
+  } catch (e) {}
+}
+
+var colorAdjustStatus = AxisConnectionFactory.createAjaxConnection();
+
+function image_preview_update()
+{
+  var now        = new Date();
+  var timestamp  = now.getTime();
+  var updFrm     = document.getElementById("image_preview_update_frame");
+  var nbr        = <!--#echo var="nbr" option="encoding:javascript" -->;
+  var camnbr     = <!--#echo var="camnbr" option="encoding:javascript" -->;
+
+  var contrast   = document.getElementsByName("root_ImageSource_I" + nbr + "_Video_Contrast")[0];
+  var saturation = document.getElementsByName("root_ImageSource_I" + nbr + "_Video_Saturation")[0];
+  var brightness = document.getElementsByName("root_ImageSource_I" + nbr + "_Video_Brightness")[0];
+<!--#if expr="$(root_ImageSource_I$nbr$_Video_Sharpness) != " -->
+  var sharpness  = document.getElementsByName("root_ImageSource_I" + nbr + "_Video_Sharpness")[0];
+<!--#endif -->
+<!--#if expr="$(root_ImageSource_I$nbr$_Video_LocalContrast) != " -->
+  var localcontrast  = document.getElementsByName("root_ImageSource_I" + nbr + "_Video_LocalContrast")[0];
+<!--#endif -->
+<!--#if expr="$(root_ImageSource_I$nbr$_Video_NoiseReduction) != " -->
+  var noisereduction = document.getElementsByName("root_ImageSource_I" + nbr + "_Video_NoiseReduction")[0];
+<!--#endif -->
+
+
+  if (contrast && parseInt(contrast.value, 10) != null && parseInt(contrast.value, 10) >= 0 && contrast.value != contrast.lastValue) {
+    contrast.lastValue = contrast.value;
+    AxisConnectionFactory.sendSync(["GET", "/axis-cgi/image_color_adjust.cgi?param=Contrast&value=" + parseInt(contrast.value, 10) + "&camera=" + camnbr + "&timestamp=" + timestamp], "", colorAdjustStatus);
+  }
+
+  if (saturation && parseInt(saturation.value, 10) != null && parseInt(saturation.value, 10) >= 0 && saturation.value != saturation.lastValue) {
+    saturation.lastValue = saturation.value;
+    AxisConnectionFactory.sendSync(["GET", "/axis-cgi/image_color_adjust.cgi?param=Saturation&value=" + parseInt(saturation.value, 10) + "&camera=" + camnbr + "&timestamp=" + timestamp], "", colorAdjustStatus);
+  }
+
+  if (brightness && parseInt(brightness.value, 10) != null && parseInt(brightness.value, 10) >= 0 && brightness.value != brightness.lastValue) {
+    brightness.lastValue = brightness.value;
+    AxisConnectionFactory.sendSync(["GET", "/axis-cgi/image_color_adjust.cgi?param=Brightness&value=" + parseInt(brightness.value, 10) + "&camera=" + camnbr + "&timestamp=" + timestamp], "", colorAdjustStatus);
+  }
+
+<!--#if expr="$(root_ImageSource_I$nbr$_Video_Sharpness) != " -->
+  if (sharpness && parseInt(sharpness.value, 10) != null && parseInt(sharpness.value, 10) >= 0 && sharpness.value != sharpness.lastValue) {
+    sharpness.lastValue = sharpness.value;
+    colorAdjustStatus.open("GET", "/axis-cgi/image_color_adjust.cgi?param=Sharpness&value=" + parseInt(sharpness.value, 10)  + "&camera=" + camnbr + "&timestamp=" + timestamp, false);
+    colorAdjustStatus.send("");
+  }
+<!--#endif -->
+
+<!--#if expr="$(root_ImageSource_I$nbr$_Video_LocalContrast) != " -->
+  if (localcontrast && parseInt(localcontrast.value, 10) != null && parseInt(localcontrast.value, 10) >= 0 && localcontrast.value != localcontrast.lastValue) {
+    localcontrast.lastValue = localcontrast.value;
+    colorAdjustStatus.open("GET", "/axis-cgi/image_color_adjust.cgi?param=LocalContrast&value=" + parseInt(localcontrast.value, 10) + "&camera=" + camnbr + "&timestamp=" + timestamp, false);
+    colorAdjustStatus.send("");
+  }
+<!--#endif -->
+
+<!--#if expr="$(root_ImageSource_I$nbr$_Video_NoiseReduction) != " -->
+  if (noisereduction && parseInt(noisereduction.value, 10) != null && parseInt(noisereduction.value, 10) >= 0 && noisereduction.value != noisereduction.lastValue) {
+    noisereduction.lastValue = noisereduction.value;
+    colorAdjustStatus.open("GET", "/axis-cgi/image_color_adjust.cgi?param=NoiseReduction&value=" + parseInt(noisereduction.value, 10)  + "&camera=" + camnbr + "&timestamp=" + timestamp, false);
+    colorAdjustStatus.send("");
+  }
+<!--#endif -->
+}
+
+var image_preview_firstTimeToggled = true;
+function image_preview_toggleVideo()
+{
+  var showDiv = document.getElementById("image_preview_video_view_div");
+  var outerTbl = document.getElementsByTagName("TABLE");
+
+  if (image_preview_firstTimeToggled)
+  {
+    outerTbl[1].rows[0].cells[1].colSpan = 7;
+    outerTbl[1].rows[outerTbl[1].rows.length - 3].cells[3].colSpan = 5;
+
+    var emptyCell = outerTbl[1].rows[1].insertCell(outerTbl[1].rows[1].cells.length - 2);
+    emptyCell.id = "image_preview_emptyCell";
+    emptyCell.rowSpan = 4;
+    emptyCell.width = 1;
+    emptyCell.innerHTML = "<IMG SRC=\"/pics/blank.gif\" WIDTH=1 HEIGHT=1 BORDER=0 ALT=\"\">";
+
+    var videoCell = outerTbl[1].rows[1].insertCell(outerTbl[1].rows[1].cells.length - 2);
+    videoCell.id = "image_preview_videoCell";
+    videoCell.rowSpan = 4;
+    videoCell.appendChild(showDiv);
+
+    image_preview_firstTimeToggled = false;
+  }
+
+  if (showDiv.style.display == "none")
+  {
+    showDiv.style.display = "inline";
+    stopStartStream(File);
+  }
+  else
+  {
+    stopStartStream(stopFile);
+    showDiv.style.display = "none";
+  }
+}
+
+function image_preview_addVideoTo(videoContainer)
+{
+  var showDiv = document.getElementById("image_preview_video_view_div");
+  document.getElementById(videoContainer).appendChild(showDiv);
+  showDiv.style.display = "inline";
+}
+
+function image_preview_saveForm()
+{
+  var frm = document.getElementsByName("WizardForm");
+
+  var inputs = frm[0].getElementsByTagName("INPUT");
+  for (var i = 0; i < inputs.length; i++)
+    inputs[i].oldValue = inputs[i].value;
+
+  var selects = frm[0].getElementsByTagName("SELECT");
+  for (var i = 0; i < selects.length; i++)
+    selects[i].oldIndex = selects[i].selectedIndex;
+  frm[0].submit();
+}
+
+function image_preview_resetForm()
+{
+  if (image_preview_dirty)
+  {
+    z = true;
+    var frm = document.getElementsByName("WizardForm");
+
+    var inputs = frm[0].getElementsByTagName("INPUT");
+    for (var i = 0; i < inputs.length; i++)
+    {
+      if(inputs[i].type != "button")
+        inputs[i].value = inputs[i].oldValue;
+    }
+
+    var selects = frm[0].getElementsByTagName("SELECT");
+    for (var i = 0; i < selects.length; i++)
+      selects[i].selectedIndex = selects[i].oldIndex;
+
+    image_preview_dirty = false;
+    image_preview_valuesSetByScript = false;
+
+    image_preview_update();
+  }
+}
+
+function image_preview_unloadForm()
+{
+  image_preview_resetForm();
+}
+
+var image_preview_dirty = false;
+var image_preview_valuesSetByScript = false;
+
+image_preview_init()
+-->
+</SCRIPT>
+<!-- END image_preview.shtml -->
