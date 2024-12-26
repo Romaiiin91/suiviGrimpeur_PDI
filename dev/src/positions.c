@@ -40,7 +40,17 @@ static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, voi
   return realsize;
 }
 
-void enregistrerPosition(){ //https://curl.se/libcurl/c/getinmemory.html
+
+
+double recupererValeur(const char *data, const char *key){
+    char *deb = strstr(data, key);
+    if (deb) return atof(deb+strlen(key)+1); // recuperer ce qu'il y a pres key=
+    return 0.0;
+}
+
+positionPTZ recupererPosition(char * voie){
+    positionPTZ pos = {NULL, 0.0, 0.0, 0.0};
+
     CURL *curl_handle;
     CURLcode res;
     struct MemoryStruct chunk;
@@ -61,8 +71,6 @@ void enregistrerPosition(){ //https://curl.se/libcurl/c/getinmemory.html
     curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);  // send all data to this function  */
     curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&chunk);           // we pass our 'chunk' struct to the callback function */
     
-    /* some servers do not like requests that are made without a user-agent
-        field, so we provide one */
     curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
     
     
@@ -73,24 +81,13 @@ void enregistrerPosition(){ //https://curl.se/libcurl/c/getinmemory.html
         fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
     }
     else {
-        positionPTZ pos;
-        //pos = (positionPTZ *) malloc(sizeof(positionPTZ));
+        DEBUG_PRINT("Data recupererPosition : %s\n", chunk.memory);
         pos.pan = recupererValeur(chunk.memory, "pan");
         pos.tilt = recupererValeur(chunk.memory, "tilt");
         pos.zoom = recupererValeur(chunk.memory, "zoom");
 
-    
-        printw("Entrer un numéro de voie :");
 
-        // // Utiliser un buffer pour lire l'entrée utilisateur
-        char input[5];
-        echo();
-        getnstr(input, sizeof(input) - 1);  // Lire la saisie utilisateur avec affichage
-        noecho();  // Revenir au mode sans affichage automatique
-
-        pos.numVoie = atoi(input); 
-        addPositionFile(pos);
-        
+        pos.numVoie = voie; // risque de planter avec l'affectation des char *
     }
     
     // Nettoyage
@@ -98,63 +95,28 @@ void enregistrerPosition(){ //https://curl.se/libcurl/c/getinmemory.html
     free(chunk.memory);
     curl_global_cleanup();
 
-}
+    return pos;
 
 
-double recupererValeur(const char *data, const char *key){
-    char *deb = strstr(data, key);
-    if (deb) return atof(deb+strlen(key)+1); // recuperer ce qu'il y a pres key=
-    return 0.0;
 }
 
 void addPositionFile(const positionPTZ pos){
-    FILE *fichier;
-      CHECK_NULL(fichier = fopen(FILEPATH_POSITIONS, "a"), "fopen()");
-
-    fprintf(fichier, "%02d;%.4f;%.4f;%.4f\n", pos.numVoie, pos.pan, pos.tilt, pos.zoom);
-    fclose(fichier);
-
-    char cmd[100];
-    sprintf(cmd, "sort %s -o %s", FILEPATH_POSITIONS, FILEPATH_POSITIONS);
-    system(cmd);
-}
-
-void supprimerPositionFile(){
-    FILE *fichier_origine, *fichier_temp;
-    int numVoieSuppr;
-
-    printw("Entrer un numéro de voie :");
-
-    // Utiliser un buffer pour lire l'entrée utilisateur
-    char input[5];
-    echo();
-    getnstr(input, sizeof(input) - 1);  // Lire la saisie utilisateur avec affichage
-    noecho();  // Revenir au mode sans affichage automatique
-
-    numVoieSuppr = atoi(input);
-
-    CHECK_NULL(fichier_origine = fopen(FILEPATH_POSITIONS, "r"), "fopen");
-    CHECK_NULL(fichier_temp = fopen("temp.txt", "w"), "fopen");
-
-    char line[LONGUEUR_LIGNE_FILE];
-    char lineCopy[LONGUEUR_LIGNE_FILE];
-
-    while (fgets(line, sizeof(line), fichier_origine) != NULL) {
-        
-        strcpy(lineCopy, line);
-
-        if (atoi(strtok(lineCopy, ";")) != numVoieSuppr){
-            fputs(line, fichier_temp);
-        }
+    json_t *root = json_load_file(FILEPATH_POSITIONS, 0, NULL);
+    if (!root) {
+        root = json_object();
     }
 
-    fclose(fichier_origine);
-    fclose(fichier_temp);
+    json_t *position_array = json_array();
+    json_array_append_new(position_array, json_real(pos.pan));
+    json_array_append_new(position_array, json_real(pos.tilt));
+    json_array_append_new(position_array, json_real(pos.zoom));
 
-    // Remplacer l'ancien fichier par le nouveau
-    remove(FILEPATH_POSITIONS);
-    rename("temp.txt", FILEPATH_POSITIONS);
+    json_object_set_new(root, pos.numVoie, position_array);
+    json_dump_file(root, FILEPATH_POSITIONS, JSON_INDENT(4));
+    json_decref(root);
 }
+
+
 
 void allerPosition(positionPTZ pos){
     // Url
@@ -182,111 +144,79 @@ void allerPosition(positionPTZ pos){
     curl_global_cleanup();
 }
 
-void choixPosition(){
-    positionPTZ *positions;
-    int nbPositions=0;
-    char line[LONGUEUR_LIGNE_FILE];
 
-    CHECK_NULL(positions = (positionPTZ *) malloc(1), "malloc(positions)"); // Initialisation de la mémoire
 
-    FILE *fichier;
-    CHECK_NULL(fichier = fopen(FILEPATH_POSITIONS, "r"), "fopen()");
-
-    while (fgets(line, sizeof(line), fichier) != NULL)
-    {
-        CHECK_NULL(positions = (positionPTZ *) realloc(positions, sizeof(positionPTZ)*(nbPositions+1)), "realloc(positions)");
-
-        positions[nbPositions].numVoie = atoi(strtok(line, ";"));
-        positions[nbPositions].pan = atof(strtok(NULL, ";"));
-        positions[nbPositions].tilt = atof(strtok(NULL, ";"));
-        positions[nbPositions].zoom = atof(strtok(NULL, ";"));
-        nbPositions++;
+int addRoute(char * voie){
+    DEBUG_PRINT("Ajout de la voie n°%s\n", voie);
+    positionPTZ pos = recupererPosition(voie);
+    if (pos.numVoie == NULL) {
+        fprintf(stderr, "Erreur lors de la recuperation de valeurs de PTZ\n");
+        return 1;
     }
+    addPositionFile(pos);
 
-    fclose(fichier);
-
-#ifdef DEBUG
-    DEBUG_PRINT("Affichage des voies disponibles:\n");
-    for (int i = 0; i<nbPositions; i++){
-        DEBUG_PRINT("\tnumVoie=%d: pan=%.4f, tilt=%.4f, zoom=%.4f\n", positions[i].numVoie, positions[i].pan, positions[i].tilt, positions[i].zoom);
-    }
-#endif
-
-
-    char choix[nbPositions][10];
-    for (int i =0; i <nbPositions; i++){
-        sprintf(choix[i], "Voie %d", positions[i].numVoie);
-    }
-
-
-
-     // Initialisation de ncurses
-    ITEM **my_items;
-    MENU *my_menu;
-    int c;
-
+    return 0;
+}
+int removeRoute(char * voie){
+    DEBUG_PRINT("Suppression de la voie n°%s\n", voie);
     
-
-    my_items = (ITEM **)calloc(nbPositions + 1, sizeof(ITEM *)); // +1 pour le NULL final
-
-    for (int i = 0; i < nbPositions; i++) my_items[i] = new_item(choix[i], "");
-    my_items[nbPositions] = (ITEM *)NULL; // Marquer la fin des éléments
-
-    // Créer le menu
-    my_menu = new_menu((ITEM **)my_items);
-    mvprintw(LINES - 2, 0, "Appuyez sur 'q' pour quitter");
-    post_menu(my_menu);
-    refresh();
-
-   while ((c = getch()) != 'q') {
-        switch (c) {
-            case KEY_DOWN:
-                menu_driver(my_menu, REQ_DOWN_ITEM);
-                break;
-            case KEY_UP:
-                menu_driver(my_menu, REQ_UP_ITEM);
-                break;
-            case 10: // Touche 'Enter'
-                allerPosition(positions[item_index(current_item(my_menu))]);
-                break;
-        }
-        refresh();
-
-
+    // Charger le fichier JSON
+    json_error_t error;
+    json_t *root = json_load_file(FILEPATH_POSITIONS, 0, &error);
+    if (!root) {
+        fprintf(stderr, "Erreur lors du chargement : %s\n", error.text);
+        return 1;
     }
 
-    // Nettoyage
-    unpost_menu(my_menu);
-    free_menu(my_menu);
-    for (int i = 0; i < nbPositions; ++i) free_item(my_items[i]);
-    free(my_items);
-    
+    // Supprimer une clé
 
+    if (json_object_del(root, voie) != 0) {
+        fprintf(stderr, "Erreur : impossible de supprimer la clé '%s'\n", voie);
+        return 1;
+    } else {
+        DEBUG_PRINT("Clé '%s' supprimée avec succès.\n", voie);
+    }
 
-    free(positions);
+    // Sauvegarder le fichier JSON modifié
+    if (json_dump_file(root, FILEPATH_POSITIONS, JSON_INDENT(4)) != 0) {
+        fprintf(stderr, "Erreur lors de l'écriture dans le fichier\n");
+        json_decref(root);
+        return 1;
+    }
+
+    // Nettoyer
+    json_decref(root);
+    DEBUG_PRINT("Fichier JSON mis à jour avec succès.\n");
+    return 0;
+
+}
+int showRoute(char * voie){
+    DEBUG_PRINT("Affichage de la voie n°%s\n", voie);
+    json_error_t error;
+    json_t *root = json_load_file(FILEPATH_POSITIONS, 0, &error);
+    if (!root) {
+        fprintf(stderr, "Erreur lors du chargement : %s\n", error.text);
+        return 1;
+    }
+
+    json_t *position_array = json_object_get(root, voie);
+    if (!json_is_array(position_array)) {
+        fprintf(stderr, "Erreur : la clé '%s' n'est pas un tableau\n", voie);
+        json_decref(root);
+        return 1;
+    }
+
+    positionPTZ pos;
+    pos.numVoie = voie;
+    pos.pan = json_real_value(json_array_get(position_array, 0));
+    pos.tilt = json_real_value(json_array_get(position_array, 1));
+    pos.zoom = json_real_value(json_array_get(position_array, 2));
+
+    json_decref(root);
+
+    DEBUG_PRINT("Voie: %s, Pan: %.4f, Tilt: %.4f, Zoom: %.4f\n", pos.numVoie, pos.pan, pos.tilt, pos.zoom);
+    allerPosition(pos);
+    return 0;
 }
 
 
-
-
-// int main(int argc, char const *argv[])
-// {
-
-//     // // Initialisation de ncurses
-//     // initscr();
-//     // cbreak();
-//     // noecho();
-//     // keypad(stdscr, TRUE);
-//     // //mvprintw(LINES - 2, 0, "Appuyez sur 'q' pour quitter");
-//     // refresh();
-
-//     //enregistrerPosition();
-//     //supprimerPositionFile();
-//     // choixPosition();
-    
-//     // // Fin de ncurses
-//     // endwin();
-    
-
-//     return 0;
-// }

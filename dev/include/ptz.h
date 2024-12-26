@@ -30,7 +30,6 @@
 /*            P R O T O T Y P E S    D E    F O N C T I O N S               */
 /* ------------------------------------------------------------------------ */
 
-void deplacement();
 void requetePTZ(const char *cmd, const char *val);
 
 

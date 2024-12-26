@@ -1,70 +1,225 @@
-[15912] Démarrage du programme
-	[15912] --> Début du processus fils de Detection [15948]
-	[15948] --> Début de la detection
-http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
-Affichage des argument de detection:
-	args[0] = /home/romain/Documents/PDI/dev/bin/detection
-	args[1] = http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
-	args[2] = (null)
-	args[3] = A����_
-	[15912] --> Arrêt du fils de PID: 15948
-[16692] Démarrage du programme
-	[16692] --> Début du processus fils de Detection [16753]
-	[16753] --> Début de la detection
-http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
-Affichage des argument de detection:
-	args[0] = /home/romain/Documents/PDI/dev/bin/detectionDEBUG
-	args[1] = 
-	
-	args[2] = (null)
-	args[3] = A����_
-	[16692] --> Arrêt du fils de PID: 16753
-Debut detection sur url : http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720
-[17153] Démarrage du programme
-	[17153] --> Début du processus fils de Detection [17196]
-	[17196] --> Début de la detection
-http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
-Affichage des argument de detection:
-	args[0] = /home/romain/Documents/PDI/dev/bin/detectionDEBUG
-	args[1] = http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
-	args[2] = (null)
-	args[3] = A����_
-	[17153] --> Arrêt du fils de PID: 17196
-[17341] Démarrage du programme
-	[17341] --> Début du processus fils de Detection [17360]
-	[17360] --> Début de la detection
-http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
-Affichage des argument de detection:
-	args[0] = /home/romain/Documents/PDI/dev/bin/detectionDEBUG
-	args[1] = http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
-	args[2] = (null)
-Debut detection sur url : http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
-	[17341] --> Arrêt du fils de PID: 17360
-[17460] Démarrage du programme
-	[17460] --> Début du processus fils de Detection [17480]
-	[17480] --> Début de la detection
-http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
-Affichage des argument de detection:
-	args[0] = /home/romain/Documents/PDI/dev/bin/detectionDEBUG
-	args[1] = http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
-	args[2] = (null)
-Debut detection sur url : http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
-[18548] Démarrage du programme
-	[18548] --> Début du processus fils de Detection [18585]
-	[18585] --> Début de la detection
-http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
-Affichage des argument de detection:
-	args[0] = /home/romain/Documents/PDI/dev/bin/detectionDEBUG
-	args[1] = http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
-	args[2] = (null)
-Debut detection sur le lien : http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
-[7822] Démarrage du programme
-	[7822] --> Début du processus fils de Detection [7864]
-	[7864] --> Début de la detection
-http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
-Affichage des argument de detection:
-	args[0] = /home/romain/Documents/PDI/dev/bin/detectionDEBUG
-	args[1] = http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
-	args[2] = (null)
-Debut detection sur le lien : http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
-	[7822] --> Arrêt du fils de PID: 7864
+[15876] Démarrage du programme
+[15927] Démarrage du programme
+	[15927] --> SIGUSR1 recu... 
+PID du CGI : 16018, Champs1 : rout et champs2 : rem&id=46
+Route - Action : rem, Voie : 46
+Suppression de la voie n°46
+Status : 1
+[16119] Démarrage du programme
+	[16119] --> SIGUSR1 recu... 
+PID du CGI : 16173, Champs1 : rout et champs2 : rem&id=46
+Route - Action : rem, Voie : 46
+Suppression de la voie n°46
+Status : 1
+[16230] Démarrage du programme
+	[16230] --> SIGUSR1 recu... 
+PID du CGI : 16254, Champs1 : rout et champs2 : rem&id=46
+Route - Action : rem, Voie : 46
+Suppression de la voie n°46
+Status : 1
+[17500] Démarrage du programme
+	[17500] --> SIGUSR1 recu... 
+PID du CGI : 17579, Champs1 : rout et champs2 : add&id=89
+Route - Action : add, Voie : 89
+Ajout de la voie n°89
+Status : 0
+[18530] Démarrage du programme
+	[18530] --> SIGUSR1 recu... 
+PID du CGI : 18585, Champs1 : rout et champs2 : shw&id=46
+Route - Action : shw, Voie : 46
+Affichage de la voie n°46
+Status : 1
+	[18530] --> SIGUSR1 recu... 
+PID du CGI : 18614, Champs1 : rout et champs2 : shw&id=47
+Route - Action : shw, Voie : 47
+Affichage de la voie n°47
+Status : 0
+[20173] Démarrage du programme
+	[20173] --> SIGUSR1 recu... 
+PID du CGI : 20255, Champs1 : reco et champs2 : on
+Status : 1549222080
+[20173] --> Fin du programme
+[20328] Démarrage du programme
+	[20328] --> SIGUSR1 recu... 
+PID du CGI : 20390, Champs1 : reco et champs2 : on
+Status : 577279488
+	[20328] --> Début du processus fils de capture [20391]
+Url de capture : http://serveur:serveur@192.168.1.224/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
+Affichage des argument de ffmpeg:
+	args[0] = ffmpeg
+	args[1] = -y
+	args[2] = -loglevel
+	args[3] = 0
+	args[4] = -i
+	args[5] = http://serveur:serveur@192.168.1.224/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
+	args[6] = -c
+	args[7] = copy
+	args[8] = ./videos/test.mp4
+	args[9] = (null)
+	[20328] --> Arrêt du fils de PID: 20391
+[20895] Démarrage du programme
+	[20895] --> SIGUSR1 recu... 
+PID du CGI : 20951, Champs1 : reco et champs2 : on
+Status : 963953968
+	[20895] --> Début du processus fils de capture [20952]
+Url de capture : http://serveur:serveur@192.168.1.224/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
+Affichage des argument de ffmpeg:
+	args[0] = ffmpeg
+	args[1] = -y
+	args[2] = -loglevel
+	args[3] = 0
+	args[4] = -i
+	args[5] = http://serveur:serveur@192.168.1.224/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
+	args[6] = -c
+	args[7] = copy
+	args[8] = ./videos/test.mp4
+	args[9] = (null)
+	[20895] --> Arrêt du fils de PID: 20952
+[21260] Démarrage du programme
+	[21260] --> SIGUSR1 recu... 
+PID du CGI : 21294, Champs1 : reco et champs2 : on
+Status : -955442640
+	[21260] --> Début du processus fils de capture [21295]
+Url de capture : http://serveur:serveur@192.168.1.224/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
+Affichage des argument de ffmpeg:
+	args[0] = ffmpeg
+	args[1] = -y
+	args[2] = -loglevel
+	args[3] = 0
+	args[4] = -i
+	args[5] = http://serveur:serveur@192.168.1.224/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
+	args[6] = -c
+	args[7] = copy
+	args[8] = ./videos/test.mp4
+	args[9] = (null)
+	[21260] --> Arrêt du fils de PID: 21295
+	[21260] --> SIGUSR1 recu... 
+PID du CGI : 21371, Champs1 : rout et champs2 : add&id=89
+Route - Action : add, Voie : 89
+Ajout de la voie n°89
+http://serveur:serveur@192.168.1.224/axis-cgi/com/ptz.cgi?query=position
+Status : 1
+[22681] Démarrage du programme
+	[22681] --> SIGUSR1 recu... 
+PID du CGI : 22704, Champs1 : reco et champs2 : on
+Status : -1621564576
+	[22681] --> Début du processus fils de capture [22705]
+Url de capture : http://serveur:serveur@192.168.1.224/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
+Affichage des argument de ffmpeg:
+	args[0] = ffmpeg
+	args[1] = -y
+	args[2] = -loglevel
+	args[3] = 0
+	args[4] = -i
+	args[5] = http://serveur:serveur@192.168.1.224/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
+	args[6] = -c
+	args[7] = copy
+	args[8] = ./videos/test.mp4
+	args[9] = (null)
+	[22681] --> Arrêt du fils de PID: 22705
+[23064] Démarrage du programme
+	[23064] --> SIGUSR1 recu... 
+PID du CGI : 23092, Champs1 : reco et champs2 : on
+Status : -1504996592
+	[23064] --> Début du processus fils de capture [23093]
+Url de capture : http://serveur:serveur@192.168.1.224/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
+Affichage des argument de ffmpeg:
+	args[0] = ffmpeg
+	args[1] = -y
+	args[2] = -loglevel
+	args[3] = 0
+	args[4] = -i
+	args[5] = http://serveur:serveur@192.168.1.224/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
+	args[6] = -c
+	args[7] = copy
+	args[8] = ./videos/test.mp4
+	args[9] = (null)
+	[23064] --> Arrêt du fils de PID: 23093
+pidCaptrue : 23093, pidDetection : 0
+[23403] Démarrage du programme
+pidCaptrue : 0, pidDetection : 0
+bye : pidCaptrue : 0, pidDetection : 0
+[23403] --> Fin du programme
+[23445] Démarrage du programme
+	[23445] --> SIGUSR1 recu... 
+PID du CGI : 23473, Champs1 : detc et champs2 : on
+Status : 1059458784
+	[23445] --> SIGUSR1 recu... 
+PID du CGI : 23495, Champs1 : reco et champs2 : on
+Status : 1059458784
+	[23445] --> Début du processus fils de capture [23496]
+Url de capture : http://serveur:serveur@192.168.1.224/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
+Affichage des argument de ffmpeg:
+	args[0] = ffmpeg
+	args[1] = -y
+	args[2] = -loglevel
+	args[3] = 0
+	args[4] = -i
+	args[5] = http://serveur:serveur@192.168.1.224/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
+	args[6] = -c
+	args[7] = copy
+	args[8] = ./videos/test.mp4
+	args[9] = (null)
+	[23445] --> Arrêt du fils de PID: 23496
+pidCaptrue : 23496, pidDetection : 0
+bye : pidCaptrue : 23496, pidDetection : 0
+[23757] Démarrage du programme
+	[23757] --> SIGUSR1 recu... 
+PID du CGI : 23785, Champs1 : reco et champs2 : on
+Status : 1575479296
+	[23757] --> Début du processus fils de capture [23786]
+Url de capture : http://serveur:serveur@192.168.1.224/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
+Affichage des argument de ffmpeg:
+	args[0] = ffmpeg
+	args[1] = -y
+	args[2] = -loglevel
+	args[3] = 0
+	args[4] = -i
+	args[5] = http://serveur:serveur@192.168.1.224/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
+	args[6] = -c
+	args[7] = copy
+	args[8] = ./videos/test.mp4
+	args[9] = (null)
+	[23757] --> Arrêt du fils de PID: 23786
+bye : pidCaptrue : 23786, pidDetection : 0
+[24088] Démarrage du programme
+	[24088] --> SIGUSR1 recu... 
+PID du CGI : 24112, Champs1 : reco et champs2 : on
+Status : 1881264528
+	[24088] --> Début du processus fils de capture [24113]
+Url de capture : http://serveur:serveur@192.168.1.224/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
+Affichage des argument de ffmpeg:
+	args[0] = ffmpeg
+	args[1] = -y
+	args[2] = -loglevel
+	args[3] = 0
+	args[4] = -i
+	args[5] = http://serveur:serveur@192.168.1.224/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
+	args[6] = -c
+	args[7] = copy
+	args[8] = ./videos/test.mp4
+	args[9] = (null)
+	[24088] --> Arrêt du fils de PID: 24113
+bye : pidCaptrue : -1, pidDetection : 0
+[24088] --> Fin du programme
+[26293] Démarrage du programme
+	[26293] --> SIGUSR1 recu... 
+PID du CGI : 26382, Champs1 : rout et champs2 : rem&id=29
+Route - Action : rem, Voie : 29
+Suppression de la voie n°29
+Clé '29' supprimée avec succès.
+Fichier JSON mis à jour avec succès.
+Status : 0
+	[26293] --> SIGUSR1 recu... 
+PID du CGI : 26551, Champs1 : reco et champs2 : off
+Status : 0
+	[26293] --> SIGUSR1 recu... 
+PID du CGI : 26557, Champs1 : rout et champs2 : rem&id=29
+Route - Action : rem, Voie : 29
+Suppression de la voie n°29
+Status : 1
+	[26293] --> SIGUSR1 recu... 
+PID du CGI : 26585, Champs1 : rout et champs2 : rem&id=29
+Route - Action : rem, Voie : 29
+Suppression de la voie n°29
+Status : 1

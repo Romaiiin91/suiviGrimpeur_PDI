@@ -10,21 +10,21 @@
 /* ------------------------------------------------------------------------ */
 
 #include <utils.h>
-
+#include <jansson.h>
 
 /* ------------------------------------------------------------------------ */
 /*              C O N S T A N T E S     S Y M B O L I Q U E S               */
 /* ------------------------------------------------------------------------ */
 
 #define LONGUEUR_LIGNE_FILE     35
-#define FILEPATH_POSITIONS      "./positionsEnregistrees.tkt"
+#define FILEPATH_POSITIONS      "/home/romain/Documents/PDI/dev/serveur/positionsEnregistrees.json"
 
 /* ------------------------------------------------------------------------ */
 /*              D É F I N I T I O N S   D E   T Y P E S                     */
 /* ------------------------------------------------------------------------ */
 
 typedef struct{
-    int numVoie;
+    char * numVoie;
     double pan, tilt, zoom;
 } positionPTZ;
 
@@ -47,6 +47,8 @@ void choixPosition();
 double recupererValeur(const char *data, const char *key);
 void supprimerPositionFile();
 
-
+int addRoute(char * voie);
+int removeRoute(char * voie);
+int showRoute(char * voie);
 
 

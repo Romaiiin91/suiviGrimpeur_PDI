@@ -4,7 +4,9 @@
         "types.h": "c",
         "sigset_t.h": "c",
         "__sigset_t.h": "c",
-        "signum.h": "c"
+        "signum.h": "c",
+        "stdio.h": "c",
+        "ptz.h": "c"
     },
     "cSpell.ignoreWords": [
         "requete"

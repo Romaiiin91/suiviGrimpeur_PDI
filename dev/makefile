@@ -2,13 +2,13 @@ CFLAGS= -Wall
 CFLAGS+=-I./include
 CSTFLAGS =-DDEBUG
 
-LIBS= -lncurses
-LIBS+= -lmenu
-LIBS+= -lcurl
+LIBS= -lcurl
+LIBS+= -ljansson
+LIBS+= -lpthread
 
 SRC = $(wildcard ./src/*.c)
 
-all: bin/main bin/mainDEBUG bin/detection bin/detectionDEBUG serveur
+all: bin/main bin/mainDEBUG bin/detection bin/detectionDEBUG serveurDEBUG
 
 bin/detection: src/detection.cpp
 	@g++ $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4`
@@ -16,8 +16,11 @@ bin/detection: src/detection.cpp
 bin/detectionDEBUG: src/detection.cpp
 	@g++ $(CSTFLAGS) $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4`
 
-execDetection:
+execDetection: 
 	./bin/detection "http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25"
+
+exec: bin/mainDEBUG serveurDEBUG
+	sudo -u www-data ./bin/mainDEBUG
 
 bin/main: $(SRC) 
 	@gcc $(CFLAGS) $^ -o $@ $(LIBS)
@@ -29,11 +32,18 @@ bin/mainDEBUG: $(SRC)
 bin/positions: src/positions.c
 	@gcc $(CFLAGS) $^ -o $@ $(LIBS)
 
-serveur: serveur/main.c
-	@gcc $^ -o serveur/main.cgi
+serveur: serveur/action.c
+	@gcc -Wall -I./serveur $^ -o serveur/action.cgi -lpthread
+
+serveurDEBUG: serveur/action.c
+	@gcc -Wall $(CSTFLAGS) -I./serveur $^ -o serveur/action.cgi -lpthread
 
 clean:
 	@rm -f ./bin/*
+
+cleanServeur:
+	@rm -f ./serveur/*.cgi
+
 
 
 

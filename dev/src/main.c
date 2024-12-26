@@ -30,30 +30,19 @@
 /* ------------------------------------------------------------------------ */
 
 pid_t pidCapture, pidDetection;
-
-char *choices[] = {
-    "Lancer l'enregistrement", 
-    "Stopper l'enregistrement", 
-    "Mouvement",
-    "Enregistrer cette position pour une voie",
-    "Supprimer une voie",
-    "Allez a une voie", 
-    "Lancer la detection", 
-    (char *) NULL,
-}; 
-
-
+sem_t *semFichierOrdre;
 
 /* ------------------------------------------------------------------------ */
 /*            P R O T O T Y P E S    D E    F O N C T I O N S               */
 /* ------------------------------------------------------------------------ */
 
 void bye();
-void processusCapture(const char *outputVideoFile);
+void processusCapture(char * outputVideoFile);
 void processusDetection();
 static void signalHandler(int numSig);
-void displayMenu(MENU *myMenu);
-void resetMenu(MENU *myMenu);
+void gestionOrdres();
+void ack(int status, pid_t pidCgi);
+
 
 
 /* ------------------------------------------------------------------------ */
@@ -63,6 +52,20 @@ void resetMenu(MENU *myMenu);
 int main(int argc, char const *argv[])
 {
     DEBUG_PRINT("[%d] Démarrage du programme\n", getpid());
+
+    // Ouverture du sémaphore nommé pour la communication avec le CGI
+
+    CHECK_NULL(semFichierOrdre = sem_open("semFichierOrdre", O_CREAT, 0644, 1), "sem_open");
+
+    
+    
+    // Sauvegarde du numero de PID
+    FILE *fpid;
+    CHECK_NULL(fpid = fopen(PATH_FPID, "w+"), "fopen(fpid)"); 
+    fprintf(fpid, "%d\n", getpid());                              
+    fflush(fpid);                                                   
+    fclose(fpid); 
+
     //Installation du gestionnaire de fin d'exécution du programme
 	atexit(bye);
 
@@ -73,166 +76,47 @@ int main(int argc, char const *argv[])
     newAction.sa_flags = 0;
     CHECK(sigaction(SIGINT, &newAction, NULL), "sigaction (SIGINT)");
     CHECK(sigaction(SIGCHLD, &newAction, NULL), "sigaction (SIGCHLD)");
-
-
- 
-    char outputVideoFile[22]="./videos/test.mp4";
-    pid_t pidFils;
+    CHECK(sigaction(SIGUSR1, &newAction, NULL), "sigaction (SIGUSR1)");
     
-	
-     // Initialisation de ncurses
-    ITEM **my_items;
-    MENU *myMenu;
-    int c;
-
-    initscr();
-    cbreak();
-    noecho();
-    keypad(stdscr, TRUE);
-
-    // Création des items du menu
-    int n_choices = ARRAY_SIZE(choices) - 1; // -1 pour exclure NULL
-
-    my_items = (ITEM **)calloc(n_choices + 1, sizeof(ITEM *)); // +1 pour le NULL final
-
-    for (int i = 0; i < n_choices; i++) my_items[i] = new_item(choices[i], "");
-    my_items[n_choices] = (ITEM *)NULL; // Marquer la fin des éléments
-
-    // Créer le menu
-    myMenu = new_menu((ITEM **)my_items);
-    mvprintw(LINES - 2, 0, "Appuyez sur 'q' pour quitter");
-    post_menu(myMenu);
-    refresh();
-
-   while ((c = getch()) != 'q') {
-        switch (c) {
-            case KEY_DOWN:
-                menu_driver(myMenu, REQ_DOWN_ITEM);
-                break;
-            case KEY_UP:
-                menu_driver(myMenu, REQ_UP_ITEM);
-                break;
-            case 10: // Touche 'Enter'
-                {
-                    int itemSelectIndex = item_index(current_item(myMenu));
-
-                    switch (itemSelectIndex)
-                    {
-                    case 0:
-                        CHECK(pidFils = fork(), "fork(pidCapture)");
-                        if (pidFils == 0) {
-                            processusCapture(outputVideoFile);
-                        } else {
-                            pidCapture = pidFils;
-                        }
-                        mvprintw(LINES - 3, 0, "Enregistrement en cours");      
-                        break;
-                    case 1:
-                        if (pidCapture > 0) {
-                            kill(pidCapture, SIGTERM); // Arrête le processus de capture
-                            pidCapture = -1;
-                        }
-                        mvprintw(LINES - 3, 0, "                                          ");
-                        break;
-                    case 2:
-                        mvprintw(LINES - 4, 0, "Option de déplacement sélectionnée,(q pour quitter)");
-                        mvprintw(LINES - 5, 0, "Flèches pour naviguer et page UP/DOWN pour le zoom");
-                        deplacement();
-                        mvprintw(LINES - 4, 0, "                                                         ");
-                        mvprintw(LINES - 5, 0, "                                                         ");
-                        break;
-                    case 3:
-                        resetMenu(myMenu);
-                        enregistrerPosition();
-                        displayMenu(myMenu);
-
-                        break;
-                    case 4:
-                        resetMenu(myMenu);
-                        supprimerPositionFile();
-                        displayMenu(myMenu);
-
-                        break;
-                    case 5:
-                        resetMenu(myMenu);
-                        choixPosition();
-                        displayMenu(myMenu);
-
-                        break;
-                    case 6:
-                        CHECK(pidFils = fork(), "fork(pidDetection)");
-                        if (pidFils == 0) {
-                            processusDetection();
-                        } else {
-                            pidDetection = pidFils;
-                        }    
-                        break;
-                    default:
-                        break;
-                    }
-                }
-                break;
-        }
-        refresh();
-    }
-
-    // Nettoyage
-    unpost_menu(myMenu);
-    free_menu(myMenu);
-    for (int i = 0; i < n_choices; ++i) {
-        free_item(my_items[i]);
-    }
-    free(my_items);
-    
-    
-
+    while(1) pause();
 
     return 0;
 }
 
 
-void processusCapture(const char *outputVideoFile){
+void processusCapture(char * outputVideoFile){
     DEBUG_PRINT("\t[%d] --> Début du processus fils de capture [%d]\n", getppid(), getpid());
-    DEBUG_PRINT("\t[%d] --> Début de la capture\n", getpid());
     char url[256];
     sprintf(url, "%s@%s/%s", ENTETE_HTTP, IP, SCRIPT_VIDEO);
-    DEBUG_PRINT("%s\n", url);
+    DEBUG_PRINT("Url de capture : %s\n", url);
 
     // Url du flux video; -y force overwrite
     const char * args[NB_ARGS_VIDEO+1] = {"ffmpeg", "-y", "-loglevel", "0",  "-i", url, "-c", "copy", outputVideoFile, NULL};
 
-#ifdef DEBUG
     DEBUG_PRINT("Affichage des argument de ffmpeg:\n");
     for (int i = 0; i<NB_ARGS_VIDEO;i++){
         DEBUG_PRINT("\targs[%d] = %s\n", i, args[i]);
     }
-#endif
 
     execvp("ffmpeg", (char * const *) args);
+
+    
 
 }
 
 void processusDetection(){
     DEBUG_PRINT("\t[%d] --> Début du processus fils de Detection [%d]\n", getppid(), getpid());
-    DEBUG_PRINT("\t[%d] --> Début de la detection\n", getpid());
 
     char url[256];
     sprintf(url, "%s@%s/%s", ENTETE_HTTP, IP, SCRIPT_VIDEO);
-    DEBUG_PRINT("%s\n", url);
+    DEBUG_PRINT("Url de detection : %s\n", url);
+  
 
-    // Url du flux video; -y force overwrite
-    
-    //const char * args[3] = {"/home/romain/Documents/PDI/dev/bin/detection", url, NULL};
-
-#ifdef DEBUG
     const char * args[3] = {"/home/romain/Documents/PDI/dev/bin/detectionDEBUG", url, NULL};
     DEBUG_PRINT("Affichage des argument de detection:\n");
     for (int i = 0; i<3;i++){
         DEBUG_PRINT("\targs[%d] = %s\n", i, args[i]);
     }
-#else 
-    const char * args[3] = {"/home/romain/Documents/PDI/dev/bin/detection", url, NULL};
-#endif
  
     execvp(args[0], (char * const *) args);
 
@@ -251,43 +135,128 @@ static void signalHandler(int numSig)
                 int status;
 
                 // Boucle pour récupérer tous les fils terminés, afin d'éviter les processus zombies
-                while ((pid = waitpid(-1, &status, WNOHANG)) > 0) DEBUG_PRINT("\t[%d] --> Arrêt du fils de PID: %d\n", getpid(), pid);
-
-
+                while ((pid = waitpid(-1, &status, WNOHANG)) > 0) {
+                    DEBUG_PRINT("\t[%d] --> Arrêt du fils de PID: %d\n", getpid(), pid);
+                    if (pid == pidCapture) pidCapture = -1;
+                    if (pid == pidDetection) pidDetection = -1;
+                }
             }
             break;
+        case SIGUSR1:
+            DEBUG_PRINT("\t[%d] --> SIGUSR1 recu... \n", getpid());
+            gestionOrdres();
+            break;  
         default :
             printf (" Signal %d non traité \n", numSig );
             break ;
     }
 }
 
+void gestionOrdres(){
+    FILE *fOrder;
+    char champs1[5]="";
+    char champs2[100] ="";
+    int status, pidCgi;
+
+
+    sem_wait(semFichierOrdre);
+
+    CHECK_NULL(fOrder = fopen(PATH_FILE_ORDRE, "r"), "fopen(fichierOrdre)");
+    fscanf(fOrder, "%d-%[^=]=%s", &pidCgi, champs1, champs2);
+    fclose(fOrder);
+
+    sem_post(semFichierOrdre);
+
+    DEBUG_PRINT("PID du CGI : %d, Champs1 : %s et champs2 : %s\n", pidCgi, champs1, champs2);
+
+    if (strcmp(champs1, "move")==0){
+        requetePTZ(champs1, champs2);
+    }
+
+    pid_t pidFils = -1;
+
+    if (strcmp(champs1, "reco")==0){ // For record
+        char outputVideoFile[50] = "./videos/test.mp4"; // Recuperer le nom du fichier de la requete
+
+
+        if (strcmp(champs2, "on") == 0){
+            CHECK(pidFils = fork(), "fork(pidCapture)");
+            if (pidFils == 0) {
+                processusCapture(outputVideoFile);
+            }
+            else pidCapture = pidFils;
+        }
+        else {
+            if (pidCapture > 0) {
+                status = kill(pidCapture, SIGTERM); // Arrête le processus de capture
+                pidCapture = -1;
+            }
+        }
+    }
+
+    if (strcmp(champs1, "detc")==0){
+        if (strcmp(champs2, "on")){
+            CHECK(pidFils = fork(), "fork(pidDetection)");
+            if (pidFils == 0) processusDetection();
+            else pidDetection = pidFils;
+                        
+        }
+        else {
+            if (pidDetection > 0) {
+                status = kill(pidDetection, SIGTERM); // Arrête le processus de capture
+                pidDetection = -1;
+            }
+        }
+    }
+
+    // si je ne ctrl + s le .json, je ne peux pas voir les changements dans le fichier malgré que le cgi fasse des modifs ca ne se met pas à jour sur le serveur appache
+
+    if (strcmp(champs1, "rout")==0){
+        char action[4], voie[10];
+        sscanf(champs2, "%[^&]&id=%s", action, voie);
+        DEBUG_PRINT("Route - Action : %s, Voie : %s\n", action, voie);
+        
+        
+
+        if (strcmp(action, "add") == 0) status = addRoute(voie);
+        else if (strcmp(action, "rem")==0) status = removeRoute(voie);
+        else status = showRoute(voie);
+    }
+
+    DEBUG_PRINT("Status : %d\n", status);
+    ack(status, pidCgi);
+    
+}
+
+void ack(int status, pid_t pidCgi){
+    FILE *fOrder;
+
+    sem_wait(semFichierOrdre);
+
+    CHECK_NULL(fOrder = fopen(PATH_FILE_ORDRE, "w+"), "fopen(fichierOrdre)");
+    fprintf(fOrder, "%d\n", status);
+    fflush(fOrder);
+    fclose(fOrder);
+
+    sem_post(semFichierOrdre);
+
+    kill(pidCgi, SIGUSR1);
+}
+
 
 void bye(){
-
+    DEBUG_PRINT("bye : pidCaptrue : %d, pidDetection : %d\n", pidCapture, pidDetection);  
 	if (pidCapture>0){ // Si le fils est encore en exécution
 		kill(pidCapture, SIGTERM); // Arret du fils 
 		pause(); // Attente de la fin du fils et que le signal SIGCHLD soit levé.
 	}
     if (pidDetection>0){ // Si le fils est encore en exécution
-		kill(pidCapture, SIGTERM); // Arret du fils 
+		kill(pidDetection, SIGTERM); // Arret du fils 
 		pause(); // Attente de la fin du fils et que le signal SIGCHLD soit levé.
 	}
 
-    // Fin de ncurses
-    endwin();
-	
+    sem_close(semFichierOrdre);
+
+    DEBUG_PRINT("[%d] --> Fin du programme\n", getpid());
 }
 
-void resetMenu(MENU *myMenu){
-    unpost_menu(myMenu);
-    clear();
-    refresh();
-}
-
-void displayMenu(MENU *myMenu){
-    clear();
-    post_menu(myMenu);
-    mvprintw(LINES - 2, 0, "Appuyez sur 'q' pour quitter");
-    refresh();
-}

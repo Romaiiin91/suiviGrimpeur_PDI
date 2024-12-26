@@ -22,34 +22,6 @@
 /* ------------------------------------------------------------------------ */
 
 
-void deplacement(){
-    int c;
-    
-
-    while ((c = getch()) != 'q') {
-        switch (c) {
-            case KEY_DOWN:
-                requetePTZ("move","down");
-                break;
-            case KEY_UP:
-                requetePTZ("move","up");
-                break;
-            case KEY_LEFT:
-                requetePTZ("move","left");
-                break;
-            case KEY_RIGHT:
-                requetePTZ("move","right");
-                break;
-            case KEY_PPAGE:
-                requetePTZ("rzoom","500");
-                break;
-            case KEY_NPAGE:
-                requetePTZ("rzoom","-500");
-                break;
-        }
-}
-}
-
 void requetePTZ(const char * cmd, const char *val){
 
     // URL

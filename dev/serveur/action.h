@@ -5,9 +5,9 @@
 /* ------------------------------------------------------------------------ */
 
 
-#ifndef __UTIL_H
+#ifndef __ACTION_H
 
-#define __UTIL_H
+#define __ACTION_H
 
 /* ------------------------------------------------------------------------ */
 /*                   E N T Ê T E S    S T A N D A R D S                     */
@@ -23,13 +23,6 @@
 #include <bits/sigaction.h> // Include pour evider les erreurs sur vscode 
 #include <bits/types/sigset_t.h>
 
-// Processus
-#include <sys/wait.h>
-
-
-// Requetes http
-#include <curl/curl.h>
-
 // Semaphore
 #include <semaphore.h>
 #include <fcntl.h>
@@ -40,14 +33,8 @@
 /*              C O N S T A N T E S     S Y M B O L I Q U E S               */
 /* ------------------------------------------------------------------------ */
 
-#define ENTETE_HTTP         "http://serveur:serveur"
-#define IP                  "192.168.1.224"
-#define SCRIPT_VIDEO        "axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25"
-#define SCRIPT_PTZ          "axis-cgi/com/ptz.cgi"
 #define PATH_FILE_ORDRE     "/home/romain/Documents/PDI/dev/fichierOrdre"
 #define PATH_FPID           "/home/romain/Documents/PDI/dev/bin/suiviGrimpeur.pid"
-
-
 
 
 /* ------------------------------------------------------------------------ */
@@ -85,7 +72,7 @@
 #ifdef DEBUG
     #define DEBUG_PRINT(msg, ...) do {                                      \
         FILE *log_file;                                                     \
-        CHECK_NULL(log_file = fopen("debug.log", "a"), "fopen(debug.log)"); \
+        CHECK_NULL(log_file = fopen("/home/romain/Documents/PDI/dev/debugCgi.log", "a"), "fopen(debugCgi.log)"); \
         fprintf(log_file, msg, ##__VA_ARGS__);                              \
         fflush(log_file);                                                   \
         fclose(log_file);                                                   \
@@ -93,6 +80,14 @@
 #else
     #define DEBUG_PRINT(msg, ...) // Ne fait rien si DEBUG n'est pas défini
 #endif
+
+
+/* ------------------------------------------------------------------------ */
+/*            P R O T O T Y P E S    D E    F O N C T I O N S               */
+/* ------------------------------------------------------------------------ */
+
+static void signalHandler(int numSig);
+void retourHTTP();
 
     
 #endif
