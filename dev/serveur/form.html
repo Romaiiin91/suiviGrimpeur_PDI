@@ -2,35 +2,84 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Interface avec liste déroulante</title>
+    <title>Suivi d'un grimpeur</title>
+    <link rel="icon" href="icone.ico" type="image/x-icon">
     <script src="jquery.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h2 {
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        .button-group {
+            margin-bottom: 20px;
+        }
+        input[type="button"] {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        input[type="button"]:hover {
+            background-color: #0056b3;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+    </style>
 </head>
 <body>
-    
+    <div class="container">
+        <!-- Boutons -->
+        <h2>Déplacement</h2>
+        <div class="button-group">
+            <input type="button" value="Up" onclick="up();"/> 
+            <input type="button" value="Down" onclick="down();"/> 
+            <input type="button" value="Left" onclick="left();"/> 
+            <input type="button" value="Right" onclick="right();"/> 
+        </div>
 
-    <!-- Boutons -->
-    <h2>Déplacement</h2>
-    <input type="button" value="Up" onclick="up();"/> 
-    <input type="button" value="Down" onclick="down();"/> 
-    <input type="button" value="Left" onclick="left();"/> 
-    <input type="button" value="Right" onclick="right();"/> 
-	<!-- Faire les zoom -->
+        <h2>Enregistrement</h2>
+        <div class="button-group">
+            <input type="button" value="Commencer l'enregistrement" onclick="startRecord();"/> 
+            <input type="button" value="Stop l'enregistrement" onclick="stopRecord();"/> 
+        </div>
 
+        <h2>Détection</h2>
+        <div class="button-group">
+            <input type="button" value="Commencer la détection" onclick="startDetection();"/> 
+            <input type="button" value="Stop la détection" onclick="stopDetection();"/> 
+        </div>
 
-	<h2>Enregistrement</h2>
-    <input type="button" value="Commencer l'enregistrement" onclick="startRecord();"/> 
-    <input type="button" value="Stop l'enregistrement" onclick="stopRecord();"/> 
-
-	<h2>Détection</h2>
-    <input type="button" value="Commencer la détection" onclick="startDetection();"/> 
-    <input type="button" value="Stop la détection" onclick="stopDetection();"/> 
-
-	<!-- Positions -->
-	<h2>Voies</h2>
-	<select id="dropdown"></select>
-	<input type="button" value="Sauvegarder la position de caméra" onclick="addRoute();"/> 
-    <input type="button" value="Supprimer la voie sélectionnée" onclick="removeRoute();"/> 
-	<input type="button" value="Afficher la voie sélectionnée cette voie" onclick="showRoute();"/>
+        <!-- Positions -->
+        <h2>Voies</h2>
+        <select id="dropdown"></select>
+        <div class="button-group">
+            <input type="button" value="Sauvegarder la position de caméra" onclick="addRoute();"/> 
+            <input type="button" value="Supprimer la voie sélectionnée" onclick="removeRoute();"/> 
+            <input type="button" value="Afficher la voie sélectionnée" onclick="showRoute();"/>
+        </div>
+    </div>
 
     <script>
         function envoi() {
@@ -48,7 +97,6 @@
 
         // Charger et afficher les options
         function loadOptions() {
-            
             // Clear existing options
             const dropdown = document.getElementById("dropdown");
             dropdown.innerHTML = ''; // Reset the dropdown content
@@ -65,19 +113,18 @@
                 console.error("Erreur de chargement des options.");
             });
         }
-		function addRoute() {
+        function addRoute() {
             // Demander un numéro à l'utilisateur
-			const number = prompt("Entrez un numéro de voie :");
+            const number = prompt("Entrez un numéro de voie :");
 
-			// Vérifier si l'utilisateur a entré quelque chose
-			if (number !== null && number.trim() !== "") {
-				console.log("Numéro saisi :", number);
-				$.get("action.cgi", { rout: "add", id: number});
+            // Vérifier si l'utilisateur a entré quelque chose
+            if (number !== null && number.trim() !== "") {
+                console.log("Numéro saisi :", number);
+                $.get("action.cgi", { rout: "add", id: number});
 
-			} else alert("Action annulée ou numéro invalide.");
-
+            } else alert("Action annulée ou numéro invalide.");
         }
-		function removeRoute() {
+        function removeRoute() {
             const dropdown = document.getElementById("dropdown");
             const selectedKey = dropdown.value;
             console.log(`Voie selectionnee : ${selectedKey}`);

@@ -1,4 +1,3 @@
 dev/videos/
-dev/debug.log
+dev/*.log
 dev/bin/
-dev/debugCgi.log

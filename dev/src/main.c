@@ -245,7 +245,6 @@ void ack(int status, pid_t pidCgi){
 
 
 void bye(){
-    DEBUG_PRINT("bye : pidCaptrue : %d, pidDetection : %d\n", pidCapture, pidDetection);  
 	if (pidCapture>0){ // Si le fils est encore en exécution
 		kill(pidCapture, SIGTERM); // Arret du fils 
 		pause(); // Attente de la fin du fils et que le signal SIGCHLD soit levé.
@@ -253,7 +252,7 @@ void bye(){
     if (pidDetection>0){ // Si le fils est encore en exécution
 		kill(pidDetection, SIGTERM); // Arret du fils 
 		pause(); // Attente de la fin du fils et que le signal SIGCHLD soit levé.
-	}
+	} 
 
     sem_close(semFichierOrdre);
 
