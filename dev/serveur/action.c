@@ -3,6 +3,11 @@
 sem_t *semFichierOrdre;
 
 int main(void) {
+	DEBUG_PRINT("[%d] Démarrage du programme CGI\n", getpid());
+	//Installation du gestionnaire de fin d'exécution du programme
+	atexit(bye);
+
+
 	char buffer[200];
 
 	struct sigaction newAction;
@@ -10,12 +15,14 @@ int main(void) {
     CHECK(sigemptyset(&newAction.sa_mask ), " sigemptyset ()");
     newAction.sa_flags = 0;
     CHECK(sigaction(SIGUSR1, &newAction, NULL), "sigaction (SIGUSR1)");
+	
+	DEBUG_PRINT("Recu : %s\n","debut");
 
 	CHECK_NULL(semFichierOrdre = sem_open("semFichierOrdre", 0), "sem_open");
 
 
 	printf("Content-type:text/html\n");
-	//printf("Location:form.html\n"); // redirection 
+	// printf("Location:form.html\n"); // redirection 
 	printf("\n"); 
 
 	
@@ -32,6 +39,11 @@ int main(void) {
 	   
 	// traitements à terminer ! 
 
+	DEBUG_PRINT("Recu : %s\n",buffer);
+	DEBUG_PRINT("PID action.c %d\n", getpid());
+	int value;
+    sem_getvalue(semFichierOrdre, &value);
+	DEBUG_PRINT("Valeur du sémaphore %d\n", value); 
 	
 	FILE *fOrder;
 
@@ -43,9 +55,6 @@ int main(void) {
 	fclose(fOrder);
 
 	sem_post(semFichierOrdre);
-
-	DEBUG_PRINT("Recu : %s\n",buffer);
-	DEBUG_PRINT("PID action.c %d\n", getpid());
 
 
 	FILE *fpid;
@@ -100,4 +109,11 @@ void retourHTTP(){
         printf("<html><body>Erreur lors de l'exécution de l'action</body></html>\n");
     }
 
+}
+
+
+void bye(){
+    sem_close(semFichierOrdre);
+
+    DEBUG_PRINT("[%d] --> Fin du programme CGI\n", getpid());
 }

@@ -57,6 +57,10 @@ int main(int argc, char const *argv[])
 
     CHECK_NULL(semFichierOrdre = sem_open("semFichierOrdre", O_CREAT, 0644, 1), "sem_open");
 
+
+	int value;
+    sem_getvalue(semFichierOrdre, &value);
+	DEBUG_PRINT("Valeur du sémaphore %d\n", value); 
     
     
     // Sauvegarde du numero de PID
@@ -91,7 +95,9 @@ void processusCapture(char * outputVideoFile){
     DEBUG_PRINT("Url de capture : %s\n", url);
 
     // Url du flux video; -y force overwrite
-    const char * args[NB_ARGS_VIDEO+1] = {"ffmpeg", "-y", "-loglevel", "0",  "-i", url, "-c", "copy", outputVideoFile, NULL};
+    // -loglevel 0 pour ne pas afficher les logs
+    // -loglevel 32 pour afficher les logs complet (attention au droit d'écriture dans le dossier)
+    const char * args[NB_ARGS_VIDEO+1] = {"ffmpeg", "-y", "-loglevel", "0",  "-i", url, "-c", "copy", outputVideoFile, NULL}; 
 
     DEBUG_PRINT("Affichage des argument de ffmpeg:\n");
     for (int i = 0; i<NB_ARGS_VIDEO;i++){
@@ -171,6 +177,10 @@ void gestionOrdres(){
 
     if (strcmp(champs1, "move")==0){
         requetePTZ(champs1, champs2);
+    }
+
+    if (strcmp(champs1, "zoom")==0){
+        requetePTZ("rzoom", champs2);
     }
 
     pid_t pidFils = -1;

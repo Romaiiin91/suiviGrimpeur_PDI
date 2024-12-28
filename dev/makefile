@@ -44,6 +44,10 @@ clean:
 cleanServeur:
 	@rm -f ./serveur/*.cgi
 
+resetLog:
+	@echo 2> ./debug.log
+	@echo 2> ./debugCgi.log
+
 
 
 

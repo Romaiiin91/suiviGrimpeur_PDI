@@ -1,225 +1,24 @@
-[15876] Démarrage du programme
-[15927] Démarrage du programme
-	[15927] --> SIGUSR1 recu... 
-PID du CGI : 16018, Champs1 : rout et champs2 : rem&id=46
-Route - Action : rem, Voie : 46
-Suppression de la voie n°46
-Status : 1
-[16119] Démarrage du programme
-	[16119] --> SIGUSR1 recu... 
-PID du CGI : 16173, Champs1 : rout et champs2 : rem&id=46
-Route - Action : rem, Voie : 46
-Suppression de la voie n°46
-Status : 1
-[16230] Démarrage du programme
-	[16230] --> SIGUSR1 recu... 
-PID du CGI : 16254, Champs1 : rout et champs2 : rem&id=46
-Route - Action : rem, Voie : 46
-Suppression de la voie n°46
-Status : 1
-[17500] Démarrage du programme
-	[17500] --> SIGUSR1 recu... 
-PID du CGI : 17579, Champs1 : rout et champs2 : add&id=89
-Route - Action : add, Voie : 89
-Ajout de la voie n°89
+[27961] Démarrage du programme
+Valeur du sémaphore 1
+	[27961] --> SIGUSR1 recu... 
+PID du CGI : 28163, Champs1 : zoom et champs2 : 500
+http://serveur:serveur@192.168.1.48/axis-cgi/com/ptz.cgi?rzoom=500
 Status : 0
-[18530] Démarrage du programme
-	[18530] --> SIGUSR1 recu... 
-PID du CGI : 18585, Champs1 : rout et champs2 : shw&id=46
-Route - Action : shw, Voie : 46
-Affichage de la voie n°46
-Status : 1
-	[18530] --> SIGUSR1 recu... 
-PID du CGI : 18614, Champs1 : rout et champs2 : shw&id=47
-Route - Action : shw, Voie : 47
-Affichage de la voie n°47
+	[27961] --> SIGUSR1 recu... 
+PID du CGI : 28166, Champs1 : zoom et champs2 : -500
+http://serveur:serveur@192.168.1.48/axis-cgi/com/ptz.cgi?rzoom=-500
+Status : -1056702837
+	[27961] --> SIGUSR1 recu... 
+PID du CGI : 28226, Champs1 : rout et champs2 : shw&id=48
+Route - Action : shw, Voie : 48
+Affichage de la voie n°48
+Voie: 48, Pan: -0.0067, Tilt: -48.9993, Zoom: 1.0000
+http://serveur:serveur@192.168.1.48/axis-cgi/com/ptz.cgi?pan=-0.0067&tilt=-48.9993&zoom=1.0000
 Status : 0
-[20173] Démarrage du programme
-	[20173] --> SIGUSR1 recu... 
-PID du CGI : 20255, Champs1 : reco et champs2 : on
-Status : 1549222080
-[20173] --> Fin du programme
-[20328] Démarrage du programme
-	[20328] --> SIGUSR1 recu... 
-PID du CGI : 20390, Champs1 : reco et champs2 : on
-Status : 577279488
-	[20328] --> Début du processus fils de capture [20391]
-Url de capture : http://serveur:serveur@192.168.1.224/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
-Affichage des argument de ffmpeg:
-	args[0] = ffmpeg
-	args[1] = -y
-	args[2] = -loglevel
-	args[3] = 0
-	args[4] = -i
-	args[5] = http://serveur:serveur@192.168.1.224/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
-	args[6] = -c
-	args[7] = copy
-	args[8] = ./videos/test.mp4
-	args[9] = (null)
-	[20328] --> Arrêt du fils de PID: 20391
-[20895] Démarrage du programme
-	[20895] --> SIGUSR1 recu... 
-PID du CGI : 20951, Champs1 : reco et champs2 : on
-Status : 963953968
-	[20895] --> Début du processus fils de capture [20952]
-Url de capture : http://serveur:serveur@192.168.1.224/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
-Affichage des argument de ffmpeg:
-	args[0] = ffmpeg
-	args[1] = -y
-	args[2] = -loglevel
-	args[3] = 0
-	args[4] = -i
-	args[5] = http://serveur:serveur@192.168.1.224/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
-	args[6] = -c
-	args[7] = copy
-	args[8] = ./videos/test.mp4
-	args[9] = (null)
-	[20895] --> Arrêt du fils de PID: 20952
-[21260] Démarrage du programme
-	[21260] --> SIGUSR1 recu... 
-PID du CGI : 21294, Champs1 : reco et champs2 : on
-Status : -955442640
-	[21260] --> Début du processus fils de capture [21295]
-Url de capture : http://serveur:serveur@192.168.1.224/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
-Affichage des argument de ffmpeg:
-	args[0] = ffmpeg
-	args[1] = -y
-	args[2] = -loglevel
-	args[3] = 0
-	args[4] = -i
-	args[5] = http://serveur:serveur@192.168.1.224/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
-	args[6] = -c
-	args[7] = copy
-	args[8] = ./videos/test.mp4
-	args[9] = (null)
-	[21260] --> Arrêt du fils de PID: 21295
-	[21260] --> SIGUSR1 recu... 
-PID du CGI : 21371, Champs1 : rout et champs2 : add&id=89
-Route - Action : add, Voie : 89
-Ajout de la voie n°89
-http://serveur:serveur@192.168.1.224/axis-cgi/com/ptz.cgi?query=position
-Status : 1
-[22681] Démarrage du programme
-	[22681] --> SIGUSR1 recu... 
-PID du CGI : 22704, Champs1 : reco et champs2 : on
-Status : -1621564576
-	[22681] --> Début du processus fils de capture [22705]
-Url de capture : http://serveur:serveur@192.168.1.224/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
-Affichage des argument de ffmpeg:
-	args[0] = ffmpeg
-	args[1] = -y
-	args[2] = -loglevel
-	args[3] = 0
-	args[4] = -i
-	args[5] = http://serveur:serveur@192.168.1.224/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
-	args[6] = -c
-	args[7] = copy
-	args[8] = ./videos/test.mp4
-	args[9] = (null)
-	[22681] --> Arrêt du fils de PID: 22705
-[23064] Démarrage du programme
-	[23064] --> SIGUSR1 recu... 
-PID du CGI : 23092, Champs1 : reco et champs2 : on
-Status : -1504996592
-	[23064] --> Début du processus fils de capture [23093]
-Url de capture : http://serveur:serveur@192.168.1.224/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
-Affichage des argument de ffmpeg:
-	args[0] = ffmpeg
-	args[1] = -y
-	args[2] = -loglevel
-	args[3] = 0
-	args[4] = -i
-	args[5] = http://serveur:serveur@192.168.1.224/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
-	args[6] = -c
-	args[7] = copy
-	args[8] = ./videos/test.mp4
-	args[9] = (null)
-	[23064] --> Arrêt du fils de PID: 23093
-pidCaptrue : 23093, pidDetection : 0
-[23403] Démarrage du programme
-pidCaptrue : 0, pidDetection : 0
-bye : pidCaptrue : 0, pidDetection : 0
-[23403] --> Fin du programme
-[23445] Démarrage du programme
-	[23445] --> SIGUSR1 recu... 
-PID du CGI : 23473, Champs1 : detc et champs2 : on
-Status : 1059458784
-	[23445] --> SIGUSR1 recu... 
-PID du CGI : 23495, Champs1 : reco et champs2 : on
-Status : 1059458784
-	[23445] --> Début du processus fils de capture [23496]
-Url de capture : http://serveur:serveur@192.168.1.224/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
-Affichage des argument de ffmpeg:
-	args[0] = ffmpeg
-	args[1] = -y
-	args[2] = -loglevel
-	args[3] = 0
-	args[4] = -i
-	args[5] = http://serveur:serveur@192.168.1.224/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
-	args[6] = -c
-	args[7] = copy
-	args[8] = ./videos/test.mp4
-	args[9] = (null)
-	[23445] --> Arrêt du fils de PID: 23496
-pidCaptrue : 23496, pidDetection : 0
-bye : pidCaptrue : 23496, pidDetection : 0
-[23757] Démarrage du programme
-	[23757] --> SIGUSR1 recu... 
-PID du CGI : 23785, Champs1 : reco et champs2 : on
-Status : 1575479296
-	[23757] --> Début du processus fils de capture [23786]
-Url de capture : http://serveur:serveur@192.168.1.224/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
-Affichage des argument de ffmpeg:
-	args[0] = ffmpeg
-	args[1] = -y
-	args[2] = -loglevel
-	args[3] = 0
-	args[4] = -i
-	args[5] = http://serveur:serveur@192.168.1.224/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
-	args[6] = -c
-	args[7] = copy
-	args[8] = ./videos/test.mp4
-	args[9] = (null)
-	[23757] --> Arrêt du fils de PID: 23786
-bye : pidCaptrue : 23786, pidDetection : 0
-[24088] Démarrage du programme
-	[24088] --> SIGUSR1 recu... 
-PID du CGI : 24112, Champs1 : reco et champs2 : on
-Status : 1881264528
-	[24088] --> Début du processus fils de capture [24113]
-Url de capture : http://serveur:serveur@192.168.1.224/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
-Affichage des argument de ffmpeg:
-	args[0] = ffmpeg
-	args[1] = -y
-	args[2] = -loglevel
-	args[3] = 0
-	args[4] = -i
-	args[5] = http://serveur:serveur@192.168.1.224/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25
-	args[6] = -c
-	args[7] = copy
-	args[8] = ./videos/test.mp4
-	args[9] = (null)
-	[24088] --> Arrêt du fils de PID: 24113
-bye : pidCaptrue : -1, pidDetection : 0
-[24088] --> Fin du programme
-[26293] Démarrage du programme
-	[26293] --> SIGUSR1 recu... 
-PID du CGI : 26382, Champs1 : rout et champs2 : rem&id=29
-Route - Action : rem, Voie : 29
-Suppression de la voie n°29
-Clé '29' supprimée avec succès.
-Fichier JSON mis à jour avec succès.
+	[27961] --> SIGUSR1 recu... 
+PID du CGI : 28227, Champs1 : rout et champs2 : shw&id=70
+Route - Action : shw, Voie : 70
+Affichage de la voie n°70
+Voie: 70, Pan: 0.0000, Tilt: 0.0000, Zoom: 0.0000
+http://serveur:serveur@192.168.1.48/axis-cgi/com/ptz.cgi?pan=0.0000&tilt=0.0000&zoom=0.0000
 Status : 0
-	[26293] --> SIGUSR1 recu... 
-PID du CGI : 26551, Champs1 : reco et champs2 : off
-Status : 0
-	[26293] --> SIGUSR1 recu... 
-PID du CGI : 26557, Champs1 : rout et champs2 : rem&id=29
-Route - Action : rem, Voie : 29
-Suppression de la voie n°29
-Status : 1
-	[26293] --> SIGUSR1 recu... 
-PID du CGI : 26585, Champs1 : rout et champs2 : rem&id=29
-Route - Action : rem, Voie : 29
-Suppression de la voie n°29
-Status : 1

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2024.9.13)  21 OCT 2024 16:21
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2024.9.13)  28 DEC 2024 20:17
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -936,8 +936,7 @@ Package csquotes Info: Checking for multilingual support...
 Package csquotes Info: ... found 'babel' package.
 Package csquotes Info: Adjusting default style.
 Package csquotes Info: Redefining alias 'default' -> 'french'.
-
-No file cahierDesCharges.aux.
+ (/home/romain/Documents/PDI/CahierDesCharges/cahierDesCharges.aux)
 \openout1 = `cahierDesCharges.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 99.
@@ -957,7 +956,7 @@ LaTeX Font Info:    ... okay on input line 99.
 LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 99.
 LaTeX Font Info:    ... okay on input line 99.
 LaTeX Font Info:    Trying to load font information for T1+lmr on input line 99.
-(/usr/share/texmf/tex/latex/lm/t1lmr.fd
+ (/usr/share/texmf/tex/latex/lm/t1lmr.fd
 File: t1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Info: Redefining \degres on input line 99.
@@ -1189,8 +1188,8 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
  ) 
 Here is how much of TeX's memory you used:
- 41049 strings out of 481239
- 958679 string characters out of 5920377
+ 41051 strings out of 481239
+ 958807 string characters out of 5920377
  1485565 words of memory out of 5000000
  55524 multiletter control sequences out of 15000+600000
  602835 words of font info for 67 fonts, out of 8000000 for 9000
@@ -1201,7 +1200,7 @@ pdfTeX warning (dest): name{Hfootnote.2} has been referenced but does not exist,
 pdfTeX warning (dest): name{Hfootnote.1} has been referenced but does not exist, replaced by a fixed one
 
 {/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-ec.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-ts1.enc}</usr/share/texmf/fonts/type1/public/lm/lmbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx12.pfb></usr/share/texmf/fonts/type1/public/lm/lmcsc10.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf/fonts/type1/public/lm/lmr12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr8.pfb></usr/share/texmf/fonts/type1/public/lm/lmr9.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/public/lm/lmri12.pfb></usr/share/texmf/fonts/type1/public/lm/lmro10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb>
-Output written on /home/romain/Documents/PDI/CahierDesCharges/cahierDesCharges.pdf (7 pages, 7469704 bytes).
+Output written on /home/romain/Documents/PDI/CahierDesCharges/cahierDesCharges.pdf (7 pages, 7469780 bytes).
 PDF statistics:
  159 PDF objects out of 1000 (max. 8388607)
  103 compressed objects within 2 object streams

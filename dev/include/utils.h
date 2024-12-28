@@ -41,7 +41,7 @@
 /* ------------------------------------------------------------------------ */
 
 #define ENTETE_HTTP         "http://serveur:serveur"
-#define IP                  "192.168.1.224"
+#define IP                  "192.168.1.48"
 #define SCRIPT_VIDEO        "axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25"
 #define SCRIPT_PTZ          "axis-cgi/com/ptz.cgi"
 #define PATH_FILE_ORDRE     "/home/romain/Documents/PDI/dev/fichierOrdre"

@@ -16,15 +16,36 @@
             color: #333;
         }
         .container {
-            max-width: 600px;
+            /* max-width: 800px; */
             margin: 0 auto;
             background: #fff;
             padding: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .video-container {
+            flex: 0 0 80%;
+            min-width: 300px;
+            margin-right: 20px;
+        }
+        .button-group-container {
+            flex: 0 0 10%;
+            /* min-width: 200px; */
+        }
+        .button-group-directions {
+            margin-bottom: 20px;
+            flex-direction: column;
         }
         .button-group {
             margin-bottom: 20px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
         }
         input[type="button"] {
             background-color: #007BFF;
@@ -46,38 +67,65 @@
             border-radius: 5px;
             border: 1px solid #ccc;
         }
+        .container-enregistrement {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .enregistrement-group, .detection-group, .routes-group {
+            flex: 1;
+            min-width: 200px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Vidéo -->
+        <div class="video-container">
+            <!-- voir pour la recuperation de l'ip -->
+            <img src="http://192.168.1.48/mjpg/video.mjpg?resolution=1280x720&fps=25&compression=25" 
+                alt="Flux Vidéo en Direct">
+        </div>
+
         <!-- Boutons -->
-        <h2>Déplacement</h2>
-        <div class="button-group">
-            <input type="button" value="Up" onclick="up();"/> 
-            <input type="button" value="Down" onclick="down();"/> 
-            <input type="button" value="Left" onclick="left();"/> 
-            <input type="button" value="Right" onclick="right();"/> 
+        <div class="button-group-container">
+            <h2>Contrôle de la caméra</h2>
+            <div class="button-group">
+                <input type="button" value="Up" onclick="up();"/> 
+                <input type="button" value="Down" onclick="down();"/> 
+                <input type="button" value="Left" onclick="left();"/> 
+                <input type="button" value="Right" onclick="right();"/> 
+                <input type="button" value="Zoom-In" onclick="zoomIn();"/> 
+                <input type="button" value="Zoom-Out" onclick="zoomOut();"/>
+            </div>
+        </div>
+    </div>
+
+    <div class="container container-enregistrement">
+        <div class="enregistrement-group">
+            <h2>Enregistrement</h2>
+            <div class="button-group">
+                <input type="button" value="Commencer l'enregistrement" onclick="startRecord();"/> 
+                <input type="button" value="Stop l'enregistrement" onclick="stopRecord();"/> 
+            </div>
         </div>
 
-        <h2>Enregistrement</h2>
-        <div class="button-group">
-            <input type="button" value="Commencer l'enregistrement" onclick="startRecord();"/> 
-            <input type="button" value="Stop l'enregistrement" onclick="stopRecord();"/> 
+        <div class="detection-group">
+            <h2>Détection</h2>
+            <div class="button-group">
+                <input type="button" value="Commencer la détection" onclick="startDetection();"/> 
+                <input type="button" value="Stop la détection" onclick="stopDetection();"/> 
+            </div>
         </div>
 
-        <h2>Détection</h2>
-        <div class="button-group">
-            <input type="button" value="Commencer la détection" onclick="startDetection();"/> 
-            <input type="button" value="Stop la détection" onclick="stopDetection();"/> 
-        </div>
-
-        <!-- Positions -->
-        <h2>Voies</h2>
-        <select id="dropdown"></select>
-        <div class="button-group">
-            <input type="button" value="Sauvegarder la position de caméra" onclick="addRoute();"/> 
-            <input type="button" value="Supprimer la voie sélectionnée" onclick="removeRoute();"/> 
-            <input type="button" value="Afficher la voie sélectionnée" onclick="showRoute();"/>
+        <div class="routes-group">
+            <h2>Voies</h2>
+            <select id="dropdown"></select>
+            <div class="button-group">
+                <input type="button" value="Sauvegarder la position de caméra" onclick="addRoute();"/> 
+                <input type="button" value="Supprimer la voie sélectionnée" onclick="removeRoute();"/> 
+                <input type="button" value="Afficher la voie sélectionnée" onclick="showRoute();"/>
+            </div>
         </div>
     </div>
 
@@ -90,6 +138,8 @@
         function down() { console.log("move down"); $.get("action.cgi", {move: "down"}); }
         function left() { console.log("move left"); $.get("action.cgi", {move: "left"}); }
         function right() { console.log("move right"); $.get("action.cgi", {move: "right"}); }
+        function zoomIn() { console.log("zoom in"); $.get("action.cgi", {zoom: "500"}); }
+        function zoomOut() { console.log("zoom out"); $.get("action.cgi", {zoom: "-500"}); }
         function startRecord() { console.log("record on"); $.get("action.cgi", {reco: "on"}); }
         function stopRecord() { console.log("record off"); $.get("action.cgi", {reco: "off"}); }
         function startDetection() { console.log("detection on"); $.get("action.cgi", {detc: "on"}); }

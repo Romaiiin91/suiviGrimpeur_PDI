@@ -88,6 +88,7 @@
 
 static void signalHandler(int numSig);
 void retourHTTP();
+void bye();
 
     
 #endif

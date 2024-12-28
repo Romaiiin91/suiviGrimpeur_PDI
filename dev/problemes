@@ -1,2 +1,3 @@
 - Renvoyer un status pour l'execution des fils (capture et detection)
 - Actualisation de la liste de voies disponibles json ( si je ne ctrl + s le .json, je ne peux pas voir les changements dans le fichier malgré que le cgi fasse des modifs ca ne se met pas à jour sur le serveur appache)
+- Noir et blanc sur la camera j'capte aps trop pourquoi et comment
