@@ -1,0 +1,8 @@
+# TODO List
+
+- [x] Creation du nom de la video tt seul, ajout des champs sur la page web
+- [~] Algorithme pour replacer la caméra tt seul
+- [x] Page web pour visionner les videos
+- [x] Lancer l'algo de detection depuis la page web
+- [ ] Indicateur du status du serveurs (attendre pour la réponse HTTP)
+- [ ] Faire des librairies dynamiques de ptz et positions

@@ -18,7 +18,7 @@
 /*              C O N S T A N T E S     S Y M B O L I Q U E S               */
 /* ------------------------------------------------------------------------ */
 
-#define NB_ARGS_VIDEO       10
+#define NB_ARGS_VIDEO       14
 
 /* ------------------------------------------------------------------------ */
 /*              D É F I N I T I O N S   D E   T Y P E S                     */
@@ -58,9 +58,9 @@ int main(int argc, char const *argv[])
     CHECK_NULL(semFichierOrdre = sem_open("semFichierOrdre", O_CREAT, 0644, 1), "sem_open");
 
 
-	int value;
-    sem_getvalue(semFichierOrdre, &value);
-	DEBUG_PRINT("Valeur du sémaphore %d\n", value); 
+	// int value;
+    // sem_getvalue(semFichierOrdre, &value);
+	// DEBUG_PRINT("Valeur du sémaphore %d\n", value); 
     
     
     // Sauvegarde du numero de PID
@@ -97,7 +97,8 @@ void processusCapture(char * outputVideoFile){
     // Url du flux video; -y force overwrite
     // -loglevel 0 pour ne pas afficher les logs
     // -loglevel 32 pour afficher les logs complet (attention au droit d'écriture dans le dossier)
-    const char * args[NB_ARGS_VIDEO+1] = {"ffmpeg", "-y", "-loglevel", "0",  "-i", url, "-c", "copy", outputVideoFile, NULL}; 
+    const char * args[NB_ARGS_VIDEO+1] = {"ffmpeg", "-y", "-loglevel", "0",  "-i", url, "-c:v", "libx264", "-crf", "23", "-preset", "medium", "-an",  outputVideoFile, NULL}; 
+
 
     DEBUG_PRINT("Affichage des argument de ffmpeg:\n");
     for (int i = 0; i<NB_ARGS_VIDEO;i++){
@@ -117,13 +118,16 @@ void processusDetection(){
     sprintf(url, "%s@%s/%s", ENTETE_HTTP, IP, SCRIPT_VIDEO);
     DEBUG_PRINT("Url de detection : %s\n", url);
   
-
+#ifdef DEBUG
     const char * args[3] = {"/home/romain/Documents/PDI/dev/bin/detectionDEBUG", url, NULL};
+#else
+    const char * args[3] = {"/home/romain/Documents/PDI/dev/bin/detection", url, NULL};
+#endif
     DEBUG_PRINT("Affichage des argument de detection:\n");
     for (int i = 0; i<3;i++){
         DEBUG_PRINT("\targs[%d] = %s\n", i, args[i]);
     }
- 
+
     execvp(args[0], (char * const *) args);
 
 }
@@ -186,10 +190,26 @@ void gestionOrdres(){
     pid_t pidFils = -1;
 
     if (strcmp(champs1, "reco")==0){ // For record
-        char outputVideoFile[50] = "./videos/test.mp4"; // Recuperer le nom du fichier de la requete
+        char outputVideoFile[255] = "./videos/test.mp4"; // Recuperer le nom du fichier de la requete
 
+        char action[4], donnees[255];
+        sscanf(champs2, "%[^&]&%s", action, donnees);
+        DEBUG_PRINT("Record - Action : %s, Données : %s\n", action, donnees);
 
-        if (strcmp(champs2, "on") == 0){
+        if (strcmp(action, "on") == 0){
+
+            char prenom[25], nom[25], voie[10];
+            sscanf(donnees, "nom=%[^&]&prenom=%[^&]&voie=%s", nom, prenom, voie);
+            DEBUG_PRINT("Record - Nom : %s, Prenom : %s, Voie : %s\n", nom, prenom, voie);
+            time_t now = time(NULL);
+            struct tm *t = localtime(&now);
+            char dateTime[15];
+            strftime(dateTime, sizeof(dateTime)-1, "%Y%m%d_%H%M", t);
+
+            // Création du nom du fichier de sortie
+            sprintf(outputVideoFile, "%s/%s_%s_%s_voie%s.mp4", PATH_VIDEOS, dateTime, nom, prenom, voie);
+            DEBUG_PRINT("Nom du fichier de sortie : %s\n", outputVideoFile);
+
             CHECK(pidFils = fork(), "fork(pidCapture)");
             if (pidFils == 0) {
                 processusCapture(outputVideoFile);
@@ -205,7 +225,7 @@ void gestionOrdres(){
     }
 
     if (strcmp(champs1, "detc")==0){
-        if (strcmp(champs2, "on")){
+        if (strcmp(champs2, "on") == 0 ){
             CHECK(pidFils = fork(), "fork(pidDetection)");
             if (pidFils == 0) processusDetection();
             else pidDetection = pidFils;
@@ -232,6 +252,21 @@ void gestionOrdres(){
         else if (strcmp(action, "rem")==0) status = removeRoute(voie);
         else status = showRoute(voie);
     }
+
+    if (strcmp(champs1, "supp")==0){
+        char filepath[255];
+        // Securite sur le nom du fichier pour eviter la suppression de fichier en dehors du dossier PATH_VIDEOS
+        if (strstr(champs2, "..") != NULL || strchr(champs2, '/') != NULL) {
+            DEBUG_PRINT("Tentative de suppression d'un fichier en dehors du dossier PATH_VIDEOS : %s\n", champs2);
+            status = -1;
+        } else {
+        sprintf(filepath, "%s/%s", PATH_VIDEOS, champs2);
+        
+        DEBUG_PRINT("Suppression du fichier : %s\n", filepath);
+        status = remove(filepath);
+        }
+    }
+        
 
     DEBUG_PRINT("Status : %d\n", status);
     ack(status, pidCgi);

@@ -15,9 +15,8 @@ int main(void) {
     CHECK(sigemptyset(&newAction.sa_mask ), " sigemptyset ()");
     newAction.sa_flags = 0;
     CHECK(sigaction(SIGUSR1, &newAction, NULL), "sigaction (SIGUSR1)");
-	
-	DEBUG_PRINT("Recu : %s\n","debut");
 
+	// Ouverture du sémaphore nommé pour synchroniser l'accès au fichier de copie des ordres
 	CHECK_NULL(semFichierOrdre = sem_open("semFichierOrdre", 0), "sem_open");
 
 
@@ -40,10 +39,12 @@ int main(void) {
 	// traitements à terminer ! 
 
 	DEBUG_PRINT("Recu : %s\n",buffer);
-	DEBUG_PRINT("PID action.c %d\n", getpid());
-	int value;
-    sem_getvalue(semFichierOrdre, &value);
-	DEBUG_PRINT("Valeur du sémaphore %d\n", value); 
+	
+	// DEBUG_PRINT("PID action.c %d\n", getpid());
+
+	// int value;
+    // sem_getvalue(semFichierOrdre, &value);
+	// DEBUG_PRINT("Valeur du sémaphore %d\n", value); 
 	
 	FILE *fOrder;
 
@@ -103,8 +104,8 @@ void retourHTTP(){
     // Envoyer la réponse HTTP
     printf("Content-type: text/html\n\n");
     if (status == 0) {
-		// Ici je veux raffraichir la liste si besoin mais je comprends pas comment faire
-        printf("<html><body>Action exécutée avec succès</body></html>\n");
+		// Ici je veux rafraîchir la liste si besoin mais je comprends pas comment faire et le tableau
+        printf("<html><body>Action exécutée avec succès</body>\n <script>location.reload();</script></html>\n");
     } else {
         printf("<html><body>Erreur lors de l'exécution de l'action</body></html>\n");
     }

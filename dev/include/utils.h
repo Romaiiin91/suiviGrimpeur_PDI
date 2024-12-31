@@ -46,6 +46,7 @@
 #define SCRIPT_PTZ          "axis-cgi/com/ptz.cgi"
 #define PATH_FILE_ORDRE     "/home/romain/Documents/PDI/dev/fichierOrdre"
 #define PATH_FPID           "/home/romain/Documents/PDI/dev/bin/suiviGrimpeur.pid"
+#define PATH_VIDEOS         "/home/romain/Documents/PDI/dev/serveur/videos"
 
 
 

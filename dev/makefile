@@ -10,16 +10,19 @@ SRC = $(wildcard ./src/*.c)
 
 all: bin/main bin/mainDEBUG bin/detection bin/detectionDEBUG serveurDEBUG
 
-bin/detection: src/detection.cpp
-	@g++ $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4`
+bin/detection: src/detection.cpp src/ptz.c
+	@g++ $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4` -lcurl
 
-bin/detectionDEBUG: src/detection.cpp
-	@g++ $(CSTFLAGS) $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4`
+bin/detectionDEBUG: src/detection.cpp src/ptz.c
+	@g++ $(CSTFLAGS) $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4` -lcurl
 
-execDetection: 
-	./bin/detection "http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25"
+execDetection: ./bin/detection
+	./bin/detection "videos/videoEntrainementDev.mp4"
 
-exec: bin/mainDEBUG serveurDEBUG
+DetectionDirect: ./bin/detection
+	./bin/detection "http://serveur:serveur@192.168.1.48/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25"
+
+exec: bin/mainDEBUG serveurDEBUG bin/detectionDEBUG
 	sudo -u www-data ./bin/mainDEBUG
 
 bin/main: $(SRC) 
