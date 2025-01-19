@@ -2,3 +2,5 @@ dev/videos/
 dev/serveur/videos/
 dev/*.log
 dev/bin/
+*.zip
+dev/serveur/videos.zip
