@@ -105,7 +105,7 @@ void retourHTTP(){
     printf("Content-type: text/html\n\n");
     if (status == 0) {
 		// Ici je veux rafraîchir la liste si besoin mais je comprends pas comment faire et le tableau
-        printf("<html><body>Action exécutée avec succès</body>\n <script>location.reload();</script></html>\n");
+        printf("<html><body>Action exécutée avec succès</body>\n");
     } else {
         printf("<html><body>Erreur lors de l'exécution de l'action</body></html>\n");
     }

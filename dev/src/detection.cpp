@@ -83,7 +83,7 @@ int main(int argc, char const *argv[])
 
         
         // Si la camera bouge je change l'amge de reference sinon ca reste la meme
-        if (frame_count  == 0) {
+        if (frame_count  % 25 == 0) {
             frameReference = gray.clone();
         }
         //cv::imshow("Frame Reference", frameReference);
@@ -102,8 +102,8 @@ int main(int argc, char const *argv[])
         // Appliquer la détection seulement toutes les 5 images
         if (frame_count % 5 == 0) {
     
-            // hog.detectMultiScale(small_frame, detectionsNormal);
-            // hog.detectMultiScale(gray, detectionsGray);
+            hog.detectMultiScale(small_frame, detectionsNormal);
+            hog.detectMultiScale(gray, detectionsGray);
             hog.detectMultiScale(thresh, detectionsThresh);
 
 
@@ -115,25 +115,25 @@ int main(int argc, char const *argv[])
                 rect.height *= 2;
                 // std::cout << "Detection normal : x=" << rect.x << ", y=" << rect.y << ", w=" << rect.width << ", h=" << rect.height << ", area=" << rect.area() << std::endl;
 
-                if (rect.area() < AREA_MAX* TOLERANCE_MIN){
-                    // Voir si on peut pas calculer le zoom en fonction du rapport des aires
-                    requetePTZ("rzoom", "500");
-                }
-                if (rect.area() > AREA_MAX* TOLERANCE_MAX){
-                    requetePTZ("rzoom", "-500");
-                }
-                if (rect.x < WIDTH * (1-TOLERANCE_MAX)){
-                    requetePTZ("move", "right");
-                }
-                if (rect.x > WIDTH*TOLERANCE_MAX){
-                    requetePTZ("move", "left");
-                }
-                if (rect.y < HEIGHT*(1-TOLERANCE_MAX)){
-                    requetePTZ("move", "down");
-                }
-                if (rect.y > HEIGHT*TOLERANCE_MAX){
-                    requetePTZ("move", "up");
-                }
+                // if (rect.area() < AREA_MAX* TOLERANCE_MIN){
+                //     // Voir si on peut pas calculer le zoom en fonction du rapport des aires
+                //     requetePTZ("rzoom", "500");
+                // }
+                // if (rect.area() > AREA_MAX* TOLERANCE_MAX){
+                //     requetePTZ("rzoom", "-500");
+                // }
+                // if (rect.x < WIDTH * (1-TOLERANCE_MAX)){
+                //     requetePTZ("move", "right");
+                // }
+                // if (rect.x > WIDTH*TOLERANCE_MAX){
+                //     requetePTZ("move", "left");
+                // }
+                // if (rect.y < HEIGHT*(1-TOLERANCE_MAX)){
+                //     requetePTZ("move", "down");
+                // }
+                // if (rect.y > HEIGHT*TOLERANCE_MAX){
+                //     requetePTZ("move", "up");
+                // }
 
 
                 cv::rectangle(frame, rect, cv::Scalar(0, 255, 0), 2);
@@ -142,22 +142,22 @@ int main(int argc, char const *argv[])
 
         }
 
-        // // Dessiner des rectangles autour des détections
-        // for (const auto& rect : detectionsNormal) { // Rouge
-        //     cv::rectangle(small_frame, rect, cv::Scalar(0, 0, 255), 2);
-        // }
+        // Dessiner des rectangles autour des détections
+        for (const auto& rect : detectionsNormal) { // Rouge
+            cv::rectangle(small_frame, rect, cv::Scalar(0, 0, 255), 2);
+        }
 
-        // for (const auto& rect : detectionsGray) { // bleu
-        //     cv::rectangle(small_frame, rect, cv::Scalar(255, 0, 0), 2);
-        //     cv::rectangle(gray, rect, cv::Scalar(255, 0, 0), 2);
-        // }
-        // cv::imshow("Gray", gray);
+        for (const auto& rect : detectionsGray) { // bleu
+            cv::rectangle(small_frame, rect, cv::Scalar(255, 0, 0), 2);
+            cv::rectangle(gray, rect, cv::Scalar(255, 0, 0), 2);
+        }
+        cv::imshow("Gray", gray);
 
         for (const auto& rect : detectionsThresh) { //vert
             cv::rectangle(small_frame, rect, cv::Scalar(0, 255, 0), 2);
-            // cv::rectangle(thresh, rect, cv::Scalar(0, 255, 0), 2);
+            cv::rectangle(thresh, rect, cv::Scalar(0, 255, 0), 2);
         }
-        // cv::imshow("Thresh", thresh); 
+        cv::imshow("Thresh", thresh); 
 
         // Afficher le résultat
         cv::imshow("Détection de personnes", small_frame);

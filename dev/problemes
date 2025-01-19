@@ -5,3 +5,8 @@
 - Gestion des droits peut etre nouveau groupe mais besoin de conseil pour bonnes pratiques
 - Webresponsive comment faire? 
 - Besoin de se connecter a l'interface avant pour avoir la video sur la page web
+
+- Si ce probleme arrive lors de l'execution de la detection depuis la page index.html: """No protocol specified
+Unable to init server: Impossible de se connecter : Connexion refusée"""
+
+Alors il faut executer la commande suivante: ```xhost +SI:localuser:www-data``` ou ```xhost +local:www-data``` et vreifier que www-data est bien dans la liste donné par la commande xhost

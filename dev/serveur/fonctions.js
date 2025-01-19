@@ -31,7 +31,7 @@ function loadOptions() {
     dropdown.innerHTML = ''; // Reset the dropdown content
 
     // Fetch JSON data
-    $.getJSON("positionsEnregistrees.json", function (data) {
+    $.getJSON("positionsEnregistrees.json", {t:Math.random()}, function (data) {
         for (let key in data) {
             const option = document.createElement("option");
             option.value = key;
@@ -49,7 +49,11 @@ function addRoute() {
     // Vérifier si l'utilisateur a entré quelque chose
     if (number !== null && number.trim() !== "") {
         console.log("Numéro saisi :", number);
-        $.get("action.cgi", { rout: "add", id: number});
+        $.get("action.cgi", { rout: "add", id: number}, function(rep){
+            console.log("MAJ du json");
+            loadOptions();
+
+        });
 
     } else alert("Action annulée ou numéro invalide.");
 }
