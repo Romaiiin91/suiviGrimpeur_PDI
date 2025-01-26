@@ -6,3 +6,5 @@
 - [x] Lancer l'algo de detection depuis la page web
 - [ ] Indicateur du status du serveurs (attendre pour la réponse HTTP)
 - [ ] Faire des librairies dynamiques de ptz et positions
+- [ ] alarm sur la fin des cgi de 10s 
+- [ ] Fonction pour bouger la camera plus finement que "up"

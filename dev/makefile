@@ -19,6 +19,13 @@ bin/detectionDEBUG: src/detection.cpp src/ptz.c
 execDetection: ./bin/detection
 	./bin/detection "videos/videoEntrainementDev.mp4"
 
+
+bin/detectionV2: src/detectionV2.cpp src/ptz.c
+	@g++ $(CSTFLAGS) $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4` -lcurl
+
+detectionTest : ./bin/detectionV2
+	./bin/detectionV2 "serveur/videos/20250109_2148_2_2_voie1.mp4"
+
 DetectionDirect: ./bin/detection
 	./bin/detection "http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25"
 

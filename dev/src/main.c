@@ -97,7 +97,10 @@ void processusCapture(char * outputVideoFile){
     // Url du flux video; -y force overwrite
     // -loglevel 0 pour ne pas afficher les logs
     // -loglevel 32 pour afficher les logs complet (attention au droit d'écriture dans le dossier)
-    const char * args[NB_ARGS_VIDEO+1] = {"ffmpeg", "-y", "-loglevel", "0",  "-i", url, "-c:v", "libx264", "-crf", "23", "-preset", "medium", "-an",  outputVideoFile, NULL}; 
+    const char * args[NB_ARGS_VIDEO+1] = {"ffmpeg", "-y", "-loglevel", "0",  "-i", url, "-c:v", "libx264", "-crf", "23", "-preset", "medium", "-an", "-r", "25",  outputVideoFile, NULL}; 
+
+    // Nouveau : -r 25 pour forcer le nombre d'image par seconde à 25
+    // -vsync cfr pour forcer la sync vert a un framerate cst
 
 
     DEBUG_PRINT("Affichage des argument de ffmpeg:\n");
