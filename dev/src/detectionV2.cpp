@@ -57,6 +57,8 @@ int main(int argc, char const *argv[])
 
     double a = 0.3; // Correcteur filtre exponential moving average
 
+    int tps = 0;
+
     std::string mvmt = "";
 
     cv::Mat frame, small_frame, frameDelta, thresh, frameReference, gray, moitieHaute;
@@ -87,7 +89,7 @@ int main(int argc, char const *argv[])
 
         
         // Remettre à zéro l'image de référence toutes les 25 images ou lors d'un mouvement de camera
-        if (frame_count  % 25 == 0 ||  resetFrameReference == 1) {
+        if (frame_count  % 3 == 0 ||  resetFrameReference == 1) {
             frameReference = gray.clone();
             resetFrameReference = 0;
         }
@@ -178,7 +180,7 @@ m.m20, m.m11, m.m02 : Moments d'ordre deux, qui sont utilisés pour calculer des
 
             if (cY < 60) {
                 // Bouger la camera vers le haut
-                std::cout << "Bouger la camera vers le haut" << std::endl;
+                //std::cout << "Bouger la camera vers le haut" << std::endl;
                 // requetePTZ("move", "up"); 
                 mvmt = "haut";
 
@@ -191,19 +193,25 @@ m.m20, m.m11, m.m02 : Moments d'ordre deux, qui sont utilisés pour calculer des
             // std::cout << "Les deux barycentres ne sont pas confondus" << std::endl;
            
            
-            d_cY = abs(cY - old_cY);
-            d_cY2 = abs(cY2 - old_cY2);
+            // d_cY = abs(cY - old_cY);
+            // d_cY2 = abs(cY2 - old_cY2);
             
+            // std::cout << "d_cY : " << abs(d_cY - d_cY2) << std::endl;    
+
             double esp = 10;
 
             if (d_cY2 > (1 + esp) * d_cY){
-                std::cout << "Le grimpeur va vers le haut" << std::endl;
+                // std::cout << "Le grimpeur va vers le haut" << std::endl;
                 mvmt = "haut";
             }
             else mvmt = "";
        }
 
-       
+        d_cY = abs(cY - old_cY);
+        d_cY2 = abs(cY2 - old_cY2);
+        tps += 40;
+        std::cout << tps << "," << cY << ","<< cY2 << "," << cY2- cY << "," << cv::countNonZero(thresh) << std::endl;
+
         
 
         // Afficher le barycentre sur l'image
@@ -212,14 +220,14 @@ m.m20, m.m11, m.m02 : Moments d'ordre deux, qui sont utilisés pour calculer des
 
 
         // Afficher du nb de point blanc sur la moitie haute de l'image sur l'image
-        // cv::putText(moitieHaute, (std::string) "nb px blancs haut : " + std::to_string(cv::countNonZero(moitieHaute)), cv::Point(10, 30), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255), 2);
+         // cv::putText(moitieHaute, (std::string) "nb px blancs haut : " + std::to_string(cv::countNonZero(thresh)), cv::Point(10, 30), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255), 2);
 
         cv::putText(small_frame, mvmt, cv::Point(10, 30), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255), 2);
 
 
         // Afficher l'image
         cv::imshow("Thresh", thresh);
-        // cv::imshow("Moitie haute", moitieHaute);
+        //cv::imshow("Moitie haute", moitieHaute);
 
         cv::imshow("Barycentre", small_frame); 
         
@@ -231,7 +239,7 @@ m.m20, m.m11, m.m02 : Moments d'ordre deux, qui sont utilisés pour calculer des
         old_cY2 = cY2;
 
         // Attendre 40 ms entre chaque image (1000 ms / 25 FPS) et quitter avec la touche 'q'
-        if (cv::waitKey(20) == 'q') {
+        if (cv::waitKey(40) == 'q') {
             break;
         }
     }

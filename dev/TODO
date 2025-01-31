@@ -8,3 +8,8 @@
 - [ ] Faire des librairies dynamiques de ptz et positions
 - [ ] alarm sur la fin des cgi de 10s 
 - [ ] Fonction pour bouger la camera plus finement que "up"
+- [ ] Detecter quand est le debut, et quand est la fin
+
+- utiliser que le point du haut 
+
+- fichier pour regler les parametres qui peuvent etre amene a etre svt midifies
