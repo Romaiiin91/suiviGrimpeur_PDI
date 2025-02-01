@@ -8,28 +8,28 @@ LIBS+= -lpthread
 
 SRC = $(wildcard ./src/*.c)
 
-all: bin/main bin/mainDEBUG bin/detection bin/detectionDEBUG serveurDEBUG
+all: bin/main bin/mainDEBUG ./bin/detectionV2 serveurDEBUG
 
 bin/detection: src/detection.cpp src/ptz.c
-	@g++ $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4` -lcurl
+	@g++ $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4` $(LIBS)
 
 bin/detectionDEBUG: src/detection.cpp src/ptz.c
-	@g++ $(CSTFLAGS) $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4` -lcurl
+	@g++ $(CSTFLAGS) $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4` $(LIBS)
 
 execDetection: ./bin/detection
 	./bin/detection "videos/videoEntrainementDev.mp4"
 
 
 bin/detectionV2: src/detectionV2.cpp src/ptz.c
-	@g++ $(CSTFLAGS) $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4` -lcurl
+	@g++ $(CSTFLAGS) $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4` $(LIBS)
 
 detectionTest : ./bin/detectionV2
 	./bin/detectionV2 "serveur/videos/20250109_2148_2_2_voie1.mp4"
 
-DetectionDirect: ./bin/detection
-	./bin/detection "http://serveur:serveur@192.168.1.12/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25"
+DetectionDirect: ./bin/detectionV2
+	./bin/detectionV2 "http://serveur:serveur@192.168.1.13/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25"
 
-exec: bin/mainDEBUG serveurDEBUG bin/detectionDEBUG
+exec: bin/mainDEBUG serveurDEBUG ./bin/detectionV2
 	sudo -u www-data ./bin/mainDEBUG
 
 bin/main: $(SRC) 
@@ -48,7 +48,7 @@ serveur: serveur/action.c
 serveurDEBUG: serveur/action.c
 	@gcc -Wall $(CSTFLAGS) -I./serveur $^ -o serveur/action.cgi -lpthread
 
-clean:
+clean: resetLog
 	@rm -f ./bin/*
 
 cleanServeur:

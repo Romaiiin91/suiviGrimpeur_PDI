@@ -18,7 +18,7 @@
 /*              C O N S T A N T E S     S Y M B O L I Q U E S               */
 /* ------------------------------------------------------------------------ */
 
-#define NB_ARGS_VIDEO       14
+#define NB_ARGS_VIDEO       21
 
 /* ------------------------------------------------------------------------ */
 /*              D É F I N I T I O N S   D E   T Y P E S                     */
@@ -65,7 +65,7 @@ int main(int argc, char const *argv[])
     
     // Sauvegarde du numero de PID
     FILE *fpid;
-    CHECK_NULL(fpid = fopen(PATH_FPID, "w+"), "fopen(fpid)"); 
+    CHECK_NULL(fpid = fopen(PATH_FPID, "w"), "fopen(fpid)"); 
     fprintf(fpid, "%d\n", getpid());                              
     fflush(fpid);                                                   
     fclose(fpid); 
@@ -97,10 +97,38 @@ void processusCapture(char * outputVideoFile){
     // Url du flux video; -y force overwrite
     // -loglevel 0 pour ne pas afficher les logs
     // -loglevel 32 pour afficher les logs complet (attention au droit d'écriture dans le dossier)
-    const char * args[NB_ARGS_VIDEO+1] = {"ffmpeg", "-y", "-loglevel", "0",  "-i", url, "-c:v", "libx264", "-crf", "23", "-preset", "medium", "-an", "-r", "25",  outputVideoFile, NULL}; 
+    const char * args[NB_ARGS_VIDEO] = {"ffmpeg", "-y", "-loglevel", "32", "-fflags", "+genpts",  "-i", url, "-c:v", "libx264", "-crf", "23", "-preset", "medium", "-an", "-r", "25", "-vsync", "cfr",  outputVideoFile, NULL}; 
 
-    // Nouveau : -r 25 pour forcer le nombre d'image par seconde à 25
-    // -vsync cfr pour forcer la sync vert a un framerate cst
+    /*
+        "ffmpeg",                       // args[0] : Nom de l'exécutable
+        "-y",                           // args[1] : Overwrite output files
+        "-loglevel",                    // args[2] : Option pour le niveau de log
+        "32",                           // args[3] : Niveau de log (32 = fatal seulement)
+        "-i",                           // args[4] : Option pour l'entrée
+        "http://serveur:serveur@192.168.1.13/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25",                // args[5] : URL d'entrée
+        "-c:v",                         // args[6] : Option pour le codec vidéo
+        "libx264",                      // args[7] : Codec vidéo (H.264)
+        "-crf",                         // args[8] : Option pour la qualité (Constant Rate Factor)
+        "23",                           // args[9] : Valeur CRF (23 est une bonne qualité)
+        "-preset",                      // args[10] : Option pour la vitesse d'encodage
+        "medium",                       // args[11] : Vitesse d'encodage (medium est un bon compromis)
+        "-an",                          // args[12] : Désactive l'audio
+        "-r",                           // args[13] : Option pour les FPS
+        "25",                           // args[14] : FPS de sortie
+        "./serveur/videos/20250201_2228_x_x_voie1.mp4", // args[15] : Fichier de sortie
+        NULL                            // Fin des arguments
+    };
+    
+    */
+
+    /*
+    Forcer une cadence d'images constante avec -r.
+    Synchroniser les frames avec -vsync vfr ou -vsync cfr.
+    Générer de nouveaux timestamps avec -fflags +genpts.
+    -use_wallclock_as_timestamps 1 pour utiliser l'horloge système comme timestamps.
+    Lire en temps réel avec -re (pour les flux en direct).
+    Redéfinir les FPS avec -vf fps=fps=25.
+    */
 
 
     DEBUG_PRINT("Affichage des argument de ffmpeg:\n");
@@ -122,15 +150,15 @@ void processusDetection(){
     DEBUG_PRINT("Url de detection : %s\n", url);
   
 #ifdef DEBUG
-    const char * args[3] = {"/home/romain/Documents/PDI/dev/bin/detectionDEBUG", url, NULL};
+    const char * args[3] = {"./bin/detectionV2", url, NULL};
 #else
-    const char * args[3] = {"/home/romain/Documents/PDI/dev/bin/detection", url, NULL};
+    const char * args[3] = {"./bin/detectionV2", url, NULL};
 #endif
     DEBUG_PRINT("Affichage des argument de detection:\n");
     for (int i = 0; i<3;i++){
         DEBUG_PRINT("\targs[%d] = %s\n", i, args[i]);
     }
-
+    // system("pwd");
     execvp(args[0], (char * const *) args);
 
 }
@@ -174,7 +202,7 @@ void gestionOrdres(){
 
     sem_wait(semFichierOrdre);
 
-    CHECK_NULL(fOrder = fopen(PATH_FILE_ORDRE, "r"), "fopen(fichierOrdre)");
+    CHECK_NULL(fOrder = fopen(PATH_FILE_ORDRE, "r"), "fopen(fichierOrdre)"); 
     fscanf(fOrder, "%d-%[^=]=%s", &pidCgi, champs1, champs2);
     fclose(fOrder);
 
@@ -183,11 +211,29 @@ void gestionOrdres(){
     DEBUG_PRINT("PID du CGI : %d, Champs1 : %s et champs2 : %s\n", pidCgi, champs1, champs2);
 
     if (strcmp(champs1, "move")==0){
-        requetePTZ(champs1, champs2);
+        char dir[4], angle[5], newAngle[6];
+        sscanf(champs2, "%[^&]&prec=%s", dir, angle);
+        DEBUG_PRINT("Move - dir : %s, angle : %s\n", dir, angle);
+        
+        if (strcmp(dir, "up")==0) requetePTZ("rtilt", angle);
+        else if (strcmp(dir, "down")==0) {
+            sprintf(newAngle, "-%s", angle);
+            requetePTZ("rtilt", newAngle);
+        }
+        
+        else if (strcmp(dir, "left")==0) requetePTZ("rpan", angle);
+        else if (strcmp(dir, "right")==0){
+            sprintf(newAngle, "-%s", angle);
+            requetePTZ("rpan", newAngle);
+        }
     }
 
     if (strcmp(champs1, "zoom")==0){
-        requetePTZ("rzoom", champs2);
+        float zoom = atof(champs2);
+        zoom = 588 * zoom - 587; // min de zoom = 1 et max = 9999 et zoom = 0.1 à 18
+        sprintf(champs2, "%.0f", zoom);
+        
+        requetePTZ("zoom", champs2);
     }
 
     pid_t pidFils = -1;
@@ -303,6 +349,7 @@ void bye(){
 	} 
 
     sem_close(semFichierOrdre);
+    sem_unlink("semFichierOrdre");
 
     DEBUG_PRINT("[%d] --> Fin du programme\n", getpid());
 }

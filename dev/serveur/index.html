@@ -6,6 +6,7 @@
     <link rel="icon" href="icone.ico" type="image/x-icon">
     <script src="jquery.js"></script>
     <script src="fonctions.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -17,24 +18,26 @@
             color: #333;
         }
         .container {
-            /* max-width: 800px; */
-            margin: 0 auto;
-            background: #fff;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
             display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
+            justify-content: center;
+            align-items: flex-start;
+            flex-wrap: nowrap;
         }
+
         .video-container {
-            flex: 0 0 80%;
-            min-width: 300px;
-            margin-right: 20px;
+            flex: 0 1 auto;
         }
+
         .button-group-container {
-            flex: 0 0 10%;
-            /* min-width: 200px; */
+            flex: 0 1 auto;
+            position: sticky;
+            top: 20px; /* Ajuste selon ton besoin */
+            align-self: flex-start;
+            margin-left: 20px;
+        }
+        .button-group-container h2 {
+            text-align: center;
+            width: 100%;
         }
         .button-group-directions {
             margin-bottom: 20px;
@@ -53,7 +56,7 @@
             color: white;
             border: none;
             padding: 10px 20px;
-            margin: 5px;
+            margin: 2px;
             cursor: pointer;
             border-radius: 5px;
             transition: background-color 0.3s;
@@ -77,6 +80,50 @@
             flex: 1;
             min-width: 200px;
         }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 2px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        button i {
+            font-size: 20px; /* Ajustez la taille des icônes */
+        }
+
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 100%;
+            margin-bottom: 3px;
+        }
+
+        .label-value-container {
+            display: flex;
+            align-items: center; /* Aligne le label et la valeur sur la même ligne */
+            gap: 10px; /* Espace entre le label et la valeur */
+            margin-bottom: 10px; /* Espace entre le label/valeur et le slider */
+            margin-top: 30px;
+        }
+
+        .slider-wrapper {
+            width: 100%; /* Le slider prend toute la largeur */
+        }
+
+        #slider-value-container {
+            white-space: nowrap; /* Empêche la valeur de passer à la ligne */
+        }
+
+
     </style>
 </head>
 <body>
@@ -84,23 +131,53 @@
         <!-- Vidéo -->
         <div class="video-container">
             <!-- voir pour la recuperation de l'ip -->
-            <img src="http://192.168.1.12/mjpg/video.mjpg?resolution=1280x720&fps=25&compression=25" 
+            <img src="http://192.168.1.13/mjpg/video.mjpg?resolution=1280x720&fps=25&compression=25" 
                 alt="Flux Vidéo en Direct">
-
-            
-
         </div>
 
         <!-- Boutons -->
         <div class="button-group-container">
             <h2>Contrôle de la caméra</h2>
             <div class="button-group">
-                <input type="button" value="Up" onclick="up();"/> 
-                <input type="button" value="Down" onclick="down();"/> 
-                <input type="button" value="Left" onclick="left();"/> 
-                <input type="button" value="Right" onclick="right();"/> 
-                <input type="button" value="Zoom-In" onclick="zoomIn();"/> 
-                <input type="button" value="Zoom-Out" onclick="zoomOut();"/>
+                
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <button onclick="up();" style="margin-bottom: 3px;"><i class="fas fa-arrow-up"></i></button> 
+                    <div style="display: flex; justify-content: center; gap: 3px;">
+                        <button onclick="left();"><i class="fas fa-arrow-left"></i></button> 
+                        <button onclick="right();"><i class="fas fa-arrow-right"></i></button> 
+                    </div>
+                    <button onclick="down();" style="margin-top: 3px;"><i class="fas fa-arrow-down"></i></button> 
+                </div>
+                
+
+                <div class="slider-container">
+                    <div class="label-value-container">
+                        <label for="precision">Précision :</label>
+                        <span id="slider-value-container">
+                            <span id="precision-value">15</span>°
+                        </span>
+                    </div>
+                    <div class="slider-wrapper">
+                        <input type="range" id="precision" name="precision" min="0" max="30" step="0.1" value="15" oninput="updatePrecisionValue(this.value)">
+                    </div>
+                </div>
+
+
+                <!-- <input type="button" value="Zoom" onclick="zoomIn();"/>  -->
+                <!-- <input type="button" value="Zoom-Out" onclick="zoomOut();"/> -->
+                <div class="slider-container">
+                    <div class="label-value-container">
+                        <label for="zoom">Zoom :</label>
+                        <span id="slider-value-container">
+                            <span id="zoom-value">1</span>x
+                        </span>
+                    </div>
+                    <div class="slider-wrapper">
+                        <input type="range" id="zoom" name="zoom" min="1" max="18" step="0.1" value="1" oninput="updateZoomValue(this.value)" onmouseup="zoomUpdate();">
+                    </div>
+                </div>
+
+               
             </div>
         </div>
     </div>

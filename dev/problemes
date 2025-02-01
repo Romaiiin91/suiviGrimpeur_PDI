@@ -1,7 +1,7 @@
 - Renvoyer un status pour l'execution des fils (capture et detection)
 - Actualisation de la liste de voies disponibles json ( si je ne ctrl + s le .json, je ne peux pas voir les changements dans le fichier malgré que le cgi fasse des modifs ca ne se met pas à jour sur le serveur appache)
 - Noir et blanc sur la camera j'capte aps trop pourquoi et comment
-- Oblige d'executer avec l'utilisateur www-data pour le droit ecrire dans le ficher d'ordre (le plus simple) et pour le fpid (acces a positions enregistres trop galeres)
+- Oblige d'executer avec l'utilisateur www-data pour le droit ecrire dans le ficher d'ordre (le plus simple) et pour le fpid (acces a positions enregistres trop galeres) et les sem_open et ficheir debug
 - Gestion des droits peut etre nouveau groupe mais besoin de conseil pour bonnes pratiques
 - Webresponsive comment faire? 
 - Besoin de se connecter a l'interface avant pour avoir la video sur la page web

@@ -33,8 +33,8 @@
 /*              C O N S T A N T E S     S Y M B O L I Q U E S               */
 /* ------------------------------------------------------------------------ */
 
-#define PATH_FILE_ORDRE     "/home/romain/Documents/PDI/dev/fichierOrdre"
-#define PATH_FPID           "/home/romain/Documents/PDI/dev/bin/suiviGrimpeur.pid"
+#define PATH_FILE_ORDRE     "../bin/fichierOrdre"
+#define PATH_FPID           "../bin/suiviGrimpeur.pid"
 
 
 /* ------------------------------------------------------------------------ */
@@ -72,13 +72,13 @@
 #ifdef DEBUG
     #define DEBUG_PRINT(msg, ...) do {                                      \
         FILE *log_file;                                                     \
-        CHECK_NULL(log_file = fopen("/home/romain/Documents/PDI/dev/debugCgi.log", "a"), "fopen(debugCgi.log)"); \
+        CHECK_NULL(log_file = fopen("../debugCgi.log", "a"), "fopen(debugCgi.log)"); \
         fprintf(log_file, msg, ##__VA_ARGS__);                              \
         fflush(log_file);                                                   \
         fclose(log_file);                                                   \
     } while (0)
 #else
-    #define DEBUG_PRINT(msg, ...) // Ne fait rien si DEBUG n'est pas défini
+    #define DEBUG_PRINT(msg, ...); // Ne fait rien si DEBUG n'est pas défini
 #endif
 
 

@@ -14,6 +14,7 @@
 #include <iostream>
 #include <opencv2/objdetect.hpp>
 #include <ptz.h>
+#include <jansson.h>
 
 /* ------------------------------------------------------------------------ */
 /*              C O N S T A N T E S     S Y M B O L I Q U E S               */

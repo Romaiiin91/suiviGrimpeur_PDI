@@ -28,7 +28,7 @@ int main(void) {
 
 	if (getenv("QUERY_STRING") != NULL)
 	{
-		strcpy(buffer, getenv("QUERY_STRING"));
+		strcpy(buffer, getenv("QUERY_STRING")); 
 		
 	}
 	else {
@@ -49,8 +49,7 @@ int main(void) {
 	FILE *fOrder;
 
 	sem_wait(semFichierOrdre);
-
-	CHECK_NULL(fOrder = fopen(PATH_FILE_ORDRE, "w+"), "fopen(fichierOrdre)");
+	CHECK_NULL(fOrder = fopen(PATH_FILE_ORDRE, "w"), "fopen(fichierOrdre)");
 	fprintf(fOrder, "%d-%s\n", getpid(), buffer);
 	fflush(fOrder);
 	fclose(fOrder);
@@ -78,19 +77,23 @@ int main(void) {
 	
 }
 
-static void signalHandler(int numSig)
-{ 
+static void signalHandler(int numSig){ 
     switch(numSig) {
         case SIGUSR1:
             DEBUG_PRINT("\t[%d] --> SIGUSR1 recu... \n", getpid());
             retourHTTP();
             break;  
+		case SIGALRM:// A faire 
+			DEBUG_PRINT("\t[%d] --> SIGALRM recu... \n", getpid());
+			printf("Content-Type: text/plain\n\n");
+            printf("Timeout: Aucun signal SIGUSR1 reçu dans les 5 secondes.\n");
+			break;
         default :
             printf (" Signal %d non traité \n", numSig );
             break ;
     }
 }
-
+ 
 void retourHTTP(){
     FILE *fOrder;
 	int status;

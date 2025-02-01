@@ -41,12 +41,12 @@
 /* ------------------------------------------------------------------------ */
 
 #define ENTETE_HTTP         "http://serveur:serveur"
-#define IP                  "192.168.1.12"
+#define IP                  "192.168.1.13"
 #define SCRIPT_VIDEO        "axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25"
 #define SCRIPT_PTZ          "axis-cgi/com/ptz.cgi"
-#define PATH_FILE_ORDRE     "/home/romain/Documents/PDI/dev/fichierOrdre"
-#define PATH_FPID           "/home/romain/Documents/PDI/dev/bin/suiviGrimpeur.pid"
-#define PATH_VIDEOS         "/home/romain/Documents/PDI/dev/serveur/videos"
+#define PATH_FILE_ORDRE     "./bin/fichierOrdre"
+#define PATH_FPID           "./bin/suiviGrimpeur.pid"
+#define PATH_VIDEOS         "./serveur/videos"
 
 
 
