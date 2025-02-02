@@ -70,6 +70,12 @@ int main(int argc, char const *argv[])
     fflush(fpid);                                                   
     fclose(fpid); 
 
+    FILE *fpidCapture;
+    CHECK_NULL(fpidCapture = fopen("./bin/processCapture.pid", "w"), "fopen(fpid)");
+    fprintf(fpidCapture, "-1\n");
+    fflush(fpidCapture);
+    fclose(fpidCapture);
+
     //Installation du gestionnaire de fin d'exécution du programme
 	atexit(bye);
 
@@ -93,6 +99,12 @@ void processusCapture(char * outputVideoFile){
     char url[256];
     sprintf(url, "%s@%s/%s", ENTETE_HTTP, IP, SCRIPT_VIDEO);
     DEBUG_PRINT("Url de capture : %s\n", url);
+
+    FILE *fpidCapture;
+    CHECK_NULL(fpidCapture = fopen("./bin/processCapture.pid", "w"), "fopen(fpid)");
+    fprintf(fpidCapture, "%d\n", getpid());
+    fflush(fpidCapture);
+    fclose(fpidCapture);
 
     // Url du flux video; -y force overwrite
     // -loglevel 0 pour ne pas afficher les logs
@@ -150,9 +162,9 @@ void processusDetection(){
     DEBUG_PRINT("Url de detection : %s\n", url);
   
 #ifdef DEBUG
-    const char * args[3] = {"./bin/detectionV2", url, NULL};
+    const char * args[3] = {"./bin/detectionDEBUG", url, NULL};
 #else
-    const char * args[3] = {"./bin/detectionV2", url, NULL};
+    const char * args[3] = {"./bin/detection", url, NULL};
 #endif
     DEBUG_PRINT("Affichage des argument de detection:\n");
     for (int i = 0; i<3;i++){
@@ -177,9 +189,27 @@ static void signalHandler(int numSig)
 
                 // Boucle pour récupérer tous les fils terminés, afin d'éviter les processus zombies
                 while ((pid = waitpid(-1, &status, WNOHANG)) > 0) {
-                    DEBUG_PRINT("\t[%d] --> Arrêt du fils de PID: %d\n", getpid(), pid);
-                    if (pid == pidCapture) pidCapture = -1;
-                    if (pid == pidDetection) pidDetection = -1;
+                    // DEBUG_PRINT("\t[%d] --> Arrêt du fils de PID: %d\n", getpid(), pid);
+                    
+                    if (WIFEXITED(status)) {
+                        int received = WEXITSTATUS(status);
+                        DEBUG_PRINT("\t[%d] --> Arrêt du fils de PID: %d, status : %d\n", getpid(), pid, received);
+                        
+                        
+                        if (pid == pidCapture){
+                            pidCapture = -1;
+                        }
+                        DEBUG_PRINT("pidCapture : %d, pidDetection : %d, pidEnTraitement : %d\n", pidCapture, pidDetection, pid);
+                        
+                        if (pid == pidDetection){ // Si detection s'arrete, on arrete la capture
+                            DEBUG_PRINT("Arret de la capture demande\n"); 
+                            if (pidCapture > 0) kill(pidCapture, SIGTERM);
+                            pidDetection = -1;
+
+                        } 
+                    }
+            
+                    
                 }
             }
             break;
@@ -258,6 +288,7 @@ void gestionOrdres(){
             // Création du nom du fichier de sortie
             sprintf(outputVideoFile, "%s/%s_%s_%s_voie%s.mp4", PATH_VIDEOS, dateTime, nom, prenom, voie);
             DEBUG_PRINT("Nom du fichier de sortie : %s\n", outputVideoFile);
+            
 
             CHECK(pidFils = fork(), "fork(pidCapture)");
             if (pidFils == 0) {
@@ -268,7 +299,7 @@ void gestionOrdres(){
         else {
             if (pidCapture > 0) {
                 status = kill(pidCapture, SIGTERM); // Arrête le processus de capture
-                pidCapture = -1;
+                // pidCapture = -1; // Se met à jour a la reception du signal SIGCHLD
             }
         }
     }
@@ -282,8 +313,10 @@ void gestionOrdres(){
         }
         else {
             if (pidDetection > 0) {
-                status = kill(pidDetection, SIGTERM); // Arrête le processus de capture
-                pidDetection = -1;
+                status = kill(pidDetection, SIGINT); // Arrête le processus de capture
+                // pidDetection = -1; // Se met à jour a la reception du signal SIGCHLD
+
+
             }
         }
     }

@@ -93,7 +93,10 @@ function removeRoute() {
     const dropdown = document.getElementById("dropdown");
     const selectedKey = dropdown.value;
     console.log(`Voie selectionnee : ${selectedKey}`);
-    $.get("action.cgi", {rout: "rem", id: selectedKey });
+    $.get("action.cgi", {rout: "rem", id: selectedKey}, function(rep){
+        console.log("MAJ du json");
+        loadOptions();
+    });
 
     // acknowledgment 
 }

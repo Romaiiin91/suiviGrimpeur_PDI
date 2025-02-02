@@ -10,20 +10,22 @@
 /* ------------------------------------------------------------------------ */
 
 #include <detection.hpp>
+#include <csignal>
+
 
 /* ------------------------------------------------------------------------ */
 /*                 V A R I A B L E S    G L O B A L E S                     */
 /* ------------------------------------------------------------------------ */
 
-#define AREA_MAX 921600
 #define WIDTH 1280
 #define HEIGHT 720
-#define TOLERANCE_MIN 0.1
-#define TOLERANCE_MAX 0.9
+
+bool detectionEnCours = true;
 
 /* ------------------------------------------------------------------------ */
 /*            D E F I N I T I O N   D E    F O N C T I O N S                */
 /* ------------------------------------------------------------------------ */
+
 
 
 
@@ -33,6 +35,49 @@ int main(int argc, char const *argv[])
         DEBUG_PRINT("Pas url video");
         exit(EXIT_FAILURE);
     }
+
+
+    // Installation du gestionnaire de signaux pour géré l'arrêt du programme
+    struct sigaction newAction;
+    newAction.sa_handler = signalHandler;
+    CHECK(sigemptyset(&newAction.sa_mask ), " sigemptyset ()");
+    newAction.sa_flags = 0;
+    CHECK(sigaction(SIGINT, &newAction, NULL), "sigaction (SIGINT)");
+
+
+    // Charger les paramètres depuis le fichier JSON
+    json_error_t error;
+    json_t *root = json_load_file("src/paramDetection.json", 0, &error);
+
+    if (!root) {
+        std::cerr << "Erreur de lecture du fichier JSON: " << error.text << std::endl;
+        return 1;
+    }
+
+    int framesBetweenReference = json_integer_value(json_object_get(root, "framesBetweenReferences"));
+    int verticalThreshold = json_integer_value(json_object_get(root, "verticalThreshold"));
+    int horizontalThreshold = json_integer_value(json_object_get(root, "horizontalThreshold"));
+
+    float coefAverageMovingFilter = json_real_value(json_object_get(root, "coefAverageMovingFilter"));
+    int coefGaussianBlur = json_integer_value(json_object_get(root, "coefGaussianBlur"));
+    int heightResize = json_integer_value(json_object_get(root, "heightResize"));
+    int widthResize = json_integer_value(json_object_get(root, "widthResize"));
+    int cropRatioDetectionAreaWidth = json_integer_value(json_object_get(root, "cropRatioDetectionAreaWidth"));
+    int waitTimeMs = json_integer_value(json_object_get(root, "waitTimeMs"));
+
+    float increasePTZ = json_real_value(json_object_get(root, "increasePTZ"));
+
+    json_decref(root);
+
+    int widthDetectionArea = (cropRatioDetectionAreaWidth - 2) * widthResize/cropRatioDetectionAreaWidth;
+
+    FILE *fvideo;
+    CHECK_NULL(fvideo = fopen("./bin/frameFirstMove", "w"), "fopen(frameFirstMove)");
+    fprintf(fvideo, "0\n"); // Reset du fichier
+    fflush(fvideo);
+    fclose(fvideo);
+
+
 
     // Ouvrir la capture vidéo avec l'URL
     cv::VideoCapture cap(argv[1]);
@@ -46,18 +91,22 @@ int main(int argc, char const *argv[])
 
     // Forcer les FPS et la résolution
     cap.set(cv::CAP_PROP_FPS, 25);           // Définir les FPS à 25
-    cap.set(cv::CAP_PROP_FRAME_WIDTH, 1280);  // Largeur à 1280
-    cap.set(cv::CAP_PROP_FRAME_HEIGHT, 720);  // Hauteur à 720
+    cap.set(cv::CAP_PROP_FRAME_WIDTH, WIDTH);  // Largeur à 1280
+    cap.set(cv::CAP_PROP_FRAME_HEIGHT, HEIGHT);  // Hauteur à 720
 
-    // Initialiser le détecteur HOG pour la détection de personnes
-    cv::HOGDescriptor hog;
-    hog.setSVMDetector(cv::HOGDescriptor::getDefaultPeopleDetector());
+    
+    int frame_count = 0, resetFrameReference = 0;
+    cv::Moments m, mDetectionArea;
+    double cX_detectionArea = widthDetectionArea/2, cY_detectionArea = heightResize/2;
+   
 
-    int frame_count = 0;
-    std::vector<cv::Rect> detectionsNormal, detectionsGray, detectionsThresh;
+    std::string mvmtVert = "", mvmtHoriz = "";
+    cv::Mat frame, frameDelta, thresh, frameReference, gray, detectionArea;
 
-    cv::Mat frame, small_frame, frameDelta, thresh, frameReference, gray;
-    while (true) {
+    bool firstMove = false;
+    int frameFirstMove = 0;
+    
+    while (detectionEnCours) {
         // Lire une image
         cap >> frame;
 
@@ -67,109 +116,120 @@ int main(int argc, char const *argv[])
             break;
         }
 
-        // Redimensionner l'image à une taille plus petite (ex : 640x360)
-        cv::resize(frame, small_frame, cv::Size(640, 360));
-
-        
-        // // Convertir l'image en niveaux de gris pour améliorer la détection
-        cv::cvtColor(small_frame, gray, cv::COLOR_BGR2GRAY);
-        // Appliquer une égalisation d'histogramme pour améliorer le contraste
-        
-
-        // Appliquer un flou gaussien pour réduire le bruit
-        cv::Size ksize(21, 21);
-        cv::GaussianBlur(gray, gray, ksize, 0);
+        cv::resize(frame, frame, cv::Size(widthResize, heightResize));
+        cv::cvtColor(frame, gray, cv::COLOR_BGR2GRAY);
+        cv::equalizeHist(gray, gray); 
+        cv::GaussianBlur(gray, gray, cv::Size(coefGaussianBlur, coefGaussianBlur), 0);
         
 
         
-        // Si la camera bouge je change l'amge de reference sinon ca reste la meme
-        if (frame_count  % 25 == 0) {
+        // Remettre à zéro l'image de référence toutes les x images ou lors d'un mouvement de camera
+        if (frame_count  % framesBetweenReference == 0 ||  resetFrameReference == 1) {
             frameReference = gray.clone();
+            resetFrameReference = 0;
         }
+
         //cv::imshow("Frame Reference", frameReference);
 
 
-        cv::absdiff(frameReference, gray, frameDelta);
-        //cv::imshow("Frame Delta", frameDelta);
-
-        cv::threshold(frameDelta, thresh, 25, 255, cv::THRESH_BINARY);
+        cv::absdiff(frameReference, gray, thresh);
+        cv::threshold(thresh, thresh, 25, 255, cv::THRESH_BINARY);
         cv::dilate(thresh, thresh, cv::Mat(), cv::Point(-1, -1), 2);
          
 
-        cv::equalizeHist(gray, gray); 
-        
+        // Forcer le reset de l'image de reference si trop de pixel blanc
+        if (cv::countNonZero(thresh) > 30000 ) {
+            resetFrameReference = 1;
+        }
+        else {
+            // Zone de detection
 
-        // Appliquer la détection seulement toutes les 5 images
-        if (frame_count % 5 == 0) {
-    
-            hog.detectMultiScale(small_frame, detectionsNormal);
-            hog.detectMultiScale(gray, detectionsGray);
-            hog.detectMultiScale(thresh, detectionsThresh);
+            detectionArea = thresh.rowRange(0, heightResize/2);
+            detectionArea = detectionArea.colRange(widthResize/cropRatioDetectionAreaWidth, widthResize -  widthResize/cropRatioDetectionAreaWidth);
+            
+            if (cv::countNonZero(detectionArea) > 1000) {
+                // Moitie haute de l'image
+                
 
+                mDetectionArea = cv::moments(detectionArea, true);
+            
 
-            if (!detectionsThresh.empty()) {
-                auto rect = detectionsThresh[0];
-                rect.x *= 2;
-                rect.y *= 2;
-                rect.width *= 2;
-                rect.height *= 2;
-                // std::cout << "Detection normal : x=" << rect.x << ", y=" << rect.y << ", w=" << rect.width << ", h=" << rect.height << ", area=" << rect.area() << std::endl;
+                cX_detectionArea = coefAverageMovingFilter * ((mDetectionArea.m00 > 1) ? mDetectionArea.m10 / mDetectionArea.m00 : cX_detectionArea ) + (1-coefAverageMovingFilter) * cX_detectionArea;
 
-                // if (rect.area() < AREA_MAX* TOLERANCE_MIN){
-                //     // Voir si on peut pas calculer le zoom en fonction du rapport des aires
-                //     requetePTZ("rzoom", "500");
-                // }
-                // if (rect.area() > AREA_MAX* TOLERANCE_MAX){
-                //     requetePTZ("rzoom", "-500");
-                // }
-                // if (rect.x < WIDTH * (1-TOLERANCE_MAX)){
-                //     requetePTZ("move", "right");
-                // }
-                // if (rect.x > WIDTH*TOLERANCE_MAX){
-                //     requetePTZ("move", "left");
-                // }
-                // if (rect.y < HEIGHT*(1-TOLERANCE_MAX)){
-                //     requetePTZ("move", "down");
-                // }
-                // if (rect.y > HEIGHT*TOLERANCE_MAX){
-                //     requetePTZ("move", "up");
-                // }
+                cY_detectionArea = coefAverageMovingFilter * ((mDetectionArea.m00 > 1) ? mDetectionArea.m01 / mDetectionArea.m00 : cY_detectionArea ) + (1-coefAverageMovingFilter) * cY_detectionArea;
 
+                if (cY_detectionArea < heightResize / verticalThreshold){
+                    mvmtVert = "Monte";
+                     
+                    #ifndef VIDEO 
+                    requetePTZ("rtilt", std::to_string(increasePTZ).c_str());   
+                    resetFrameReference = 1;
+                    #endif
+ 
+                    if (!firstMove) {
+                        frameFirstMove = frame_count;
+                        firstMove = true;
 
-                cv::rectangle(frame, rect, cv::Scalar(0, 255, 0), 2);
-                cv::imshow("Detection normal", frame);
+                        //std::cout << "frame first move : " << frameFirstMove << std::endl;
+                    }
+                   
+                }
+                else {
+                    mvmtVert = "";
+                }
+                
+                
+
+                if (cX_detectionArea < widthDetectionArea / horizontalThreshold){
+                    mvmtHoriz= "Gauche";
+
+                    #ifndef VIDEO
+                    requetePTZ("rpan", std::to_string(-1*increasePTZ).c_str());
+                    #endif
+                    resetFrameReference = 1;
+                }
+                else if (cX_detectionArea > widthDetectionArea - widthDetectionArea / horizontalThreshold){
+                    mvmtHoriz = "Droite";
+
+                    #ifndef VIDEO
+                    requetePTZ("rpan", std::to_string(increasePTZ).c_str());
+                    resetFrameReference = 1;
+                    #endif
+                }
+                else {
+                    mvmtHoriz = "";
+                }
+                
             }
-
         }
-
-        // Dessiner des rectangles autour des détections
-        for (const auto& rect : detectionsNormal) { // Rouge
-            cv::rectangle(small_frame, rect, cv::Scalar(0, 0, 255), 2);
-        }
-
-        for (const auto& rect : detectionsGray) { // bleu
-            cv::rectangle(small_frame, rect, cv::Scalar(255, 0, 0), 2);
-            cv::rectangle(gray, rect, cv::Scalar(255, 0, 0), 2);
-        }
-        cv::imshow("Gray", gray);
-
-        for (const auto& rect : detectionsThresh) { //vert
-            cv::rectangle(small_frame, rect, cv::Scalar(0, 255, 0), 2);
-            cv::rectangle(thresh, rect, cv::Scalar(0, 255, 0), 2);
-        }
-        cv::imshow("Thresh", thresh); 
-
-        // Afficher le résultat
-        cv::imshow("Détection de personnes", small_frame);
-
         
+       
         
+
+        // Afficher le barycentre sur l'image
+        cv::circle(frame, cv::Point(cX_detectionArea + widthResize/cropRatioDetectionAreaWidth, cY_detectionArea), 5, cv::Scalar(0, 255, 0), -1);
+
+
+        // Afficher du nb de point blanc sur la moitie haute de l'image sur l'image
+        cv::putText(thresh, (std::string) "nb px blancs Area : " + std::to_string(cv::countNonZero(detectionArea)), cv::Point(10, 30), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255), 2);
+
+        cv::putText(frame, mvmtVert, cv::Point(10, 30), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255), 2);
+        cv::putText(frame, mvmtHoriz, cv::Point(500, 30), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255), 2);
+
+
+        // Afficher l'image
+        cv::imshow("Thresh", thresh);
+        // cv::imshow("Moitie haute", detectionArea);
+
+        cv::imshow("Barycentre", frame); 
         
 
         frame_count++;
+        
+        
 
         // Attendre 40 ms entre chaque image (1000 ms / 25 FPS) et quitter avec la touche 'q'
-        if (cv::waitKey(10) == 'q') {
+        if (cv::waitKey(waitTimeMs) == 'q') {
             break;
         }
     }
@@ -179,6 +239,28 @@ int main(int argc, char const *argv[])
     cv::destroyAllWindows();
 
     DEBUG_PRINT("Fin de la détection.\n");
+    std::cout << "frame first move : " << frameFirstMove << std::endl;
+
     
+    CHECK_NULL(fvideo = fopen("./bin/frameFirstMove", "w"), "fopen(frameFirstMove)");
+    fprintf(fvideo, "%d\n", frameFirstMove);
+    fflush(fvideo);
+    fclose(fvideo);
+
+
+    exit(EXIT_SUCCESS);
     return 0;
+}
+
+static void signalHandler(int numSig)
+{ 
+    switch(numSig) {
+        case SIGINT : // traitement de SIGINT
+            DEBUG_PRINT("\t[%d] --> Arrêt du programme de detection en cours...\n", getpid());
+            detectionEnCours = false;
+            break;
+        default :
+            printf (" Signal %d non traité \n", numSig );
+            break ;
+    }
 }

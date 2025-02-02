@@ -1,15 +1,17 @@
 # TODO List
 
 - [x] Creation du nom de la video tt seul, ajout des champs sur la page web
-- [~] Algorithme pour replacer la caméra tt seul
+- [x] Algorithme pour replacer la caméra tt seul
 - [x] Page web pour visionner les videos
 - [x] Lancer l'algo de detection depuis la page web
-- [ ] Indicateur du status du serveurs (attendre pour la réponse HTTP)
+- [x] Indicateur du status du serveurs (attendre pour la réponse HTTP)
 - [ ] Faire des librairies dynamiques de ptz et positions
 - [ ] alarm sur la fin des cgi de 10s 
-- [ ] Fonction pour bouger la camera plus finement que "up"
-- [ ] Detecter quand est le debut, et quand est la fin
+- [x] Fonction pour bouger la camera plus finement que "up"
 
-- utiliser que le point du haut 
+- [ ] Zoom si l'écran n'est pas assez rempli 
 
-- fichier pour regler les parametres qui peuvent etre amene a etre svt midifies  
+- [ ] Detecter quand est le debut, comment faire si on est en manuel ??????
+- [ ] Arrêt auto quand c'est la fin, quand l'arrêt est demande ? 
+        - Quand le tilt est a une valeur max
+        - Quand le barycentre de l'image complete est dans les 60px du bas.

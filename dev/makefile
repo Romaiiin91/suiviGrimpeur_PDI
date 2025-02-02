@@ -16,20 +16,19 @@ bin/detection: src/detection.cpp src/ptz.c
 bin/detectionDEBUG: src/detection.cpp src/ptz.c
 	@g++ $(CSTFLAGS) $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4` $(LIBS)
 
-execDetection: ./bin/detection
-	./bin/detection "videos/videoEntrainementDev.mp4"
 
 
-bin/detectionV2: src/detectionV2.cpp src/ptz.c
-	@g++ $(CSTFLAGS) $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4` $(LIBS)
 
-detectionTest : ./bin/detectionV2
-	./bin/detectionV2 "serveur/videos/20250109_2148_2_2_voie1.mp4"
+bin/detectionVIDEO: src/detection.cpp src/ptz.c
+	@g++ $(CSTFLAGS) -DVIDEO $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4` $(LIBS)
 
-DetectionDirect: ./bin/detectionV2
-	./bin/detectionV2 "http://serveur:serveur@192.168.1.13/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25"
+detectionTest : ./bin/detectionVIDEO
+	./bin/detectionVIDEO "serveur/videos/20250109_2148_2_2_voie1.mp4"
 
-exec: bin/mainDEBUG serveurDEBUG ./bin/detectionV2
+DetectionDirect: ./bin/detectionDEBUG
+	./bin/detectionDEBUG "http://serveur:serveur@192.168.1.13/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25"
+
+execDEBUG: bin/mainDEBUG serveurDEBUG ./bin/detectionDEBUG
 	sudo -u www-data ./bin/mainDEBUG
 
 bin/main: $(SRC) 

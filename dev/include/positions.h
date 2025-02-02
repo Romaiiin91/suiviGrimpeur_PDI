@@ -17,7 +17,7 @@
 /* ------------------------------------------------------------------------ */
 
 #define LONGUEUR_LIGNE_FILE     35
-#define FILEPATH_POSITIONS      "/home/romain/Documents/PDI/dev/serveur/positionsEnregistrees.json"
+#define FILEPATH_POSITIONS      "./serveur/positionsEnregistrees.json"
 
 /* ------------------------------------------------------------------------ */
 /*              D É F I N I T I O N S   D E   T Y P E S                     */

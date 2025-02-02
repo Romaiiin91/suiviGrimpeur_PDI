@@ -1,13 +1,16 @@
 {
     "coefGaussianBlur": 35,
     "framesBetweenReferences": 5,
-    "coefAveringMovingFilter": 0.3,
+    "coefAverageMovingFilter": 0.3,
+
     "verticalThreshold": 6,
     "horizontalThreshold": 6,
     "increasePTZ" : 5.0,
+    
     "widthResize": 640,
     "heightResize": 360,
     "cropRatioDetectionAreaWidth": 4,
+    
     "waitTimeMs": 10
 
 }
