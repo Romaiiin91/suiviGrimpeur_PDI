@@ -17,8 +17,6 @@ bin/detectionDEBUG: src/detection.cpp src/ptz.c
 	@g++ $(CSTFLAGS) $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4` $(LIBS)
 
 
-
-
 bin/detectionVIDEO: src/detection.cpp src/ptz.c
 	@g++ $(CSTFLAGS) -DVIDEO $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4` $(LIBS)
 

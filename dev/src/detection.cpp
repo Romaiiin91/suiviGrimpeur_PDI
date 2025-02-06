@@ -11,6 +11,8 @@
 
 #include <detection.hpp>
 #include <csignal>
+#include <thread>
+#include <chrono>
 
 
 /* ------------------------------------------------------------------------ */
@@ -64,6 +66,7 @@ int main(int argc, char const *argv[])
     int widthResize = json_integer_value(json_object_get(root, "widthResize"));
     int cropRatioDetectionAreaWidth = json_integer_value(json_object_get(root, "cropRatioDetectionAreaWidth"));
     int waitTimeMs = json_integer_value(json_object_get(root, "waitTimeMs"));
+    int numberFrameBetweenMove = json_integer_value(json_object_get(root, "numberFrameBetweenMove"));
 
     float increasePTZ = json_real_value(json_object_get(root, "increasePTZ"));
 
@@ -102,6 +105,8 @@ int main(int argc, char const *argv[])
 
     std::string mvmtVert = "", mvmtHoriz = "";
     cv::Mat frame, frameDelta, thresh, frameReference, gray, detectionArea;
+
+    int lastFrameMove = 0;
 
     bool firstMove = false;
     int frameFirstMove = 0;
@@ -158,48 +163,56 @@ int main(int argc, char const *argv[])
 
                 cY_detectionArea = coefAverageMovingFilter * ((mDetectionArea.m00 > 1) ? mDetectionArea.m01 / mDetectionArea.m00 : cY_detectionArea ) + (1-coefAverageMovingFilter) * cY_detectionArea;
 
-                if (cY_detectionArea < heightResize / verticalThreshold){
-                    mvmtVert = "Monte";
-                     
-                    #ifndef VIDEO 
-                    requetePTZ("rtilt", std::to_string(increasePTZ).c_str());   
-                    resetFrameReference = 1;
-                    #endif
- 
-                    if (!firstMove) {
-                        frameFirstMove = frame_count;
-                        firstMove = true;
+                /*------------------------------------------------------------------------ */
+                /*                      D E T E C T I O N   D U   M O U V E M E N T        */
+                /*------------------------------------------------------------------------ */
 
-                        //std::cout << "frame first move : " << frameFirstMove << std::endl;
+                // premier if equivalent attente entre chaque mouvement
+                if (frame_count - lastFrameMove > numberFrameBetweenMove){
+                    if (cY_detectionArea < heightResize / verticalThreshold){
+                        mvmtVert = "Monte";
+                        
+                        #ifndef VIDEO 
+                        requetePTZ("rtilt", std::to_string(increasePTZ).c_str());
+                        lastFrameMove = frame_count;
+                        resetFrameReference = 1;
+                        #endif
+    
+                        if (!firstMove) {
+                            frameFirstMove = frame_count;
+                            firstMove = true;
+
+                            //std::cout << "frame first move : " << frameFirstMove << std::endl;
+                        }
+                    
                     }
-                   
-                }
-                else {
-                    mvmtVert = "";
-                }
-                
-                
+                    else {
+                        mvmtVert = "";
+                    }
 
-                if (cX_detectionArea < widthDetectionArea / horizontalThreshold){
-                    mvmtHoriz= "Gauche";
+                    if (cX_detectionArea < widthDetectionArea / horizontalThreshold){
+                        mvmtHoriz= "Gauche";
 
-                    #ifndef VIDEO
-                    requetePTZ("rpan", std::to_string(-1*increasePTZ).c_str());
-                    #endif
-                    resetFrameReference = 1;
-                }
-                else if (cX_detectionArea > widthDetectionArea - widthDetectionArea / horizontalThreshold){
-                    mvmtHoriz = "Droite";
+                        #ifndef VIDEO
+                        requetePTZ("rpan", std::to_string(-1*increasePTZ).c_str());
+                        lastFrameMove = frame_count;
+                        resetFrameReference = 1;
+                        #endif
+                        
+                    }
+                    else if (cX_detectionArea > widthDetectionArea - widthDetectionArea / horizontalThreshold){
+                        mvmtHoriz = "Droite";
 
-                    #ifndef VIDEO
-                    requetePTZ("rpan", std::to_string(increasePTZ).c_str());
-                    resetFrameReference = 1;
-                    #endif
+                        #ifndef VIDEO
+                        requetePTZ("rpan", std::to_string(increasePTZ).c_str());
+                        lastFrameMove = frame_count;
+                        resetFrameReference = 1;
+                        #endif
+                    }
+                    else {
+                        mvmtHoriz = "";
+                    }
                 }
-                else {
-                    mvmtHoriz = "";
-                }
-                
             }
         }
         
