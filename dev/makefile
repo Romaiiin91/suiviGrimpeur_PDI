@@ -24,7 +24,7 @@ detectionTest : ./bin/detectionVIDEO
 	./bin/detectionVIDEO "serveur/videos/20250109_2148_2_2_voie1.mp4"
 
 DetectionDirect: ./bin/detectionDEBUG
-	./bin/detectionDEBUG "http://serveur:serveur@192.168.1.13/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25"
+	./bin/detectionDEBUG "http://serveur:serveur@192.168.0.4/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25"
 
 execDEBUG: bin/mainDEBUG serveurDEBUG ./bin/detectionDEBUG
 	sudo -u www-data ./bin/mainDEBUG

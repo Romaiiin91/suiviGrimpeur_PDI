@@ -71,6 +71,7 @@ int main(void) {
 
 	CHECK(kill(pid, SIGUSR1), "kill(pid, SIGUSR1)");
 
+	alarm(5);
 	pause(); // attendre le signal SIGUSR1
 	
 	return 0;

@@ -11,7 +11,10 @@
 
 - [ ] Zoom si l'écran n'est pas assez rempli 
 
-- [ ] Detecter quand est le debut, comment faire si on est en manuel ??????
+- [ ] Detecter quand est le debut, comment faire si on est en manuel ?????? --> bouton qui fait les deux en meme temps.
 - [ ] Arrêt auto quand c'est la fin, quand l'arrêt est demande ? 
         - Quand le tilt est a une valeur max
         - Quand le barycentre de l'image complete est dans les 60px du bas.
+        - Quand il y a r, pendant x frames --> fin
+
+Enregistrer une seule fois le flux et faire les 4 travails sur l'image a partir de ce segment mémoire.

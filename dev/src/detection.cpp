@@ -57,7 +57,7 @@ int main(int argc, char const *argv[])
     }
 
     int framesBetweenReference = json_integer_value(json_object_get(root, "framesBetweenReferences"));
-    int verticalThreshold = json_integer_value(json_object_get(root, "verticalThreshold"));
+    float verticalThreshold = json_real_value(json_object_get(root, "verticalThreshold"));
     int horizontalThreshold = json_integer_value(json_object_get(root, "horizontalThreshold"));
 
     float coefAverageMovingFilter = json_real_value(json_object_get(root, "coefAverageMovingFilter"));
@@ -69,6 +69,10 @@ int main(int argc, char const *argv[])
     int numberFrameBetweenMove = json_integer_value(json_object_get(root, "numberFrameBetweenMove"));
 
     float increasePTZ = json_real_value(json_object_get(root, "increasePTZ"));
+    float increaseZoom = json_real_value(json_object_get(root, "increaseZoom"));
+
+    int nbPixelMinZoom = json_integer_value(json_object_get(root, "nbPixelMinZoom"));
+    int nbPixelMaxZoom = json_integer_value(json_object_get(root, "nbPixelMaxZoom"));
 
     json_decref(root);
 
@@ -122,6 +126,7 @@ int main(int argc, char const *argv[])
         }
 
         cv::resize(frame, frame, cv::Size(widthResize, heightResize));
+        cv::rotate(frame, frame, cv::ROTATE_180); // car a l'envers
         cv::cvtColor(frame, gray, cv::COLOR_BGR2GRAY);
         cv::equalizeHist(gray, gray); 
         cv::GaussianBlur(gray, gray, cv::Size(coefGaussianBlur, coefGaussianBlur), 0);
@@ -169,7 +174,7 @@ int main(int argc, char const *argv[])
 
                 // premier if equivalent attente entre chaque mouvement
                 if (frame_count - lastFrameMove > numberFrameBetweenMove){
-                    if (cY_detectionArea < heightResize / verticalThreshold){
+                    if (cY_detectionArea < 360.0 / verticalThreshold){
                         mvmtVert = "Monte";
                         
                         #ifndef VIDEO 
@@ -212,6 +217,12 @@ int main(int argc, char const *argv[])
                     else {
                         mvmtHoriz = "";
                     }
+
+                    // Baisser la zone de detc apres le premier ou 2e mvt vers le haut 
+                    
+                    
+                    // Zoom point le plus bas de l'image et point le plus haut, ecart entre les deux
+                    
                 }
             }
         }
