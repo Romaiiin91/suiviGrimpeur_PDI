@@ -12,6 +12,12 @@
 #include <utils.h>
 #include <positions.h>
 #include <ptz.h>
+#include <grp.h>
+#include <sys/stat.h>
+#include <semaphore.h>
+#include <unistd.h>
+#include <grp.h>
+#include <errno.h>
 
 
 /* ------------------------------------------------------------------------ */
@@ -29,19 +35,22 @@
 /*                 V A R I A B L E S    G L O B A L E S                     */
 /* ------------------------------------------------------------------------ */
 
-pid_t pidCapture, pidDetection;
+pid_t pidCapture, pidDetection, pidEcritureMemoire;
 sem_t *semFichierOrdre;
+sem_t *semReaders, *semWriter;
 
 /* ------------------------------------------------------------------------ */
 /*            P R O T O T Y P E S    D E    F O N C T I O N S               */
 /* ------------------------------------------------------------------------ */
 
 void bye();
+void processusEcritureMemoire();
 void processusCapture(char * outputVideoFile);
 void processusDetection();
 static void signalHandler(int numSig);
 void gestionOrdres();
 void ack(int status, pid_t pidCgi);
+void init_semaphores();
 
 
 
@@ -54,8 +63,18 @@ int main(int argc, char const *argv[])
     DEBUG_PRINT("[%d] Démarrage du programme\n", getpid());
 
     // Ouverture du sémaphore nommé pour la communication avec le CGI
+    init_semaphores();
 
-    CHECK_NULL(semFichierOrdre = sem_open("semFichierOrdre", O_CREAT, 0644, 1), "sem_open");
+    //Installation du gestionnaire de fin d'exécution du programme
+	atexit(bye);
+
+    int pidFils;
+    CHECK(pidFils = fork(), "fork(pidEcritureMemoire)");
+    if (pidFils == 0) {
+        processusEcritureMemoire();
+    }
+    else pidEcritureMemoire = pidFils;
+
 
 
 	// int value;
@@ -70,14 +89,8 @@ int main(int argc, char const *argv[])
     fflush(fpid);                                                   
     fclose(fpid); 
 
-    FILE *fpidCapture;
-    CHECK_NULL(fpidCapture = fopen("./bin/processCapture.pid", "w"), "fopen(fpid)");
-    fprintf(fpidCapture, "-1\n");
-    fflush(fpidCapture);
-    fclose(fpidCapture);
 
-    //Installation du gestionnaire de fin d'exécution du programme
-	atexit(bye);
+    
 
 	// Installation du gestionnaire de signaux pour géré le ctrl c et la fin d'un fils.
     struct sigaction newAction;
@@ -94,63 +107,59 @@ int main(int argc, char const *argv[])
 }
 
 
-void processusCapture(char * outputVideoFile){
-    DEBUG_PRINT("\t[%d] --> Début du processus fils de capture [%d]\n", getppid(), getpid());
-    char url[256];
-    sprintf(url, "%s@%s/%s", ENTETE_HTTP, IP, SCRIPT_VIDEO);
-    DEBUG_PRINT("Url de capture : %s\n", url);
 
-    FILE *fpidCapture;
-    CHECK_NULL(fpidCapture = fopen("./bin/processCapture.pid", "w"), "fopen(fpid)");
-    fprintf(fpidCapture, "%d\n", getpid());
-    fflush(fpidCapture);
-    fclose(fpidCapture);
+void init_semaphores() {
+    // Créer ou ouvrir les sémaphores
+    CHECK_NULL(semReaders = sem_open(SEM_READERS, O_CREAT, 0666, 0), "main: sem_open(semReaders)");  // Compter les lecteurs actifs
+    CHECK_NULL(semWriter = sem_open(SEM_WRITER, O_CREAT, 0666, 1), "main: sem_open(semWriter)");   // Contrôler l'accès exclusif de l'écrivain
+    CHECK_NULL(semFichierOrdre = sem_open("semFichierOrdre", O_CREAT, 0666, 1), "main: sem_open(semFichierOrdre)"); // Contrôler l'accès exclusif au fichier d'ordre
 
-    // Url du flux video; -y force overwrite
-    // -loglevel 0 pour ne pas afficher les logs
-    // -loglevel 32 pour afficher les logs complet (attention au droit d'écriture dans le dossier)
-    const char * args[NB_ARGS_VIDEO] = {"ffmpeg", "-y", "-loglevel", "32", "-fflags", "+genpts",  "-i", url, "-c:v", "libx264", "-crf", "23", "-preset", "medium", "-an", "-r", "25", "-vsync", "cfr",  outputVideoFile, NULL}; 
-
-    /*
-        "ffmpeg",                       // args[0] : Nom de l'exécutable
-        "-y",                           // args[1] : Overwrite output files
-        "-loglevel",                    // args[2] : Option pour le niveau de log
-        "32",                           // args[3] : Niveau de log (32 = fatal seulement)
-        "-i",                           // args[4] : Option pour l'entrée
-        "http://serveur:serveur@192.168.1.13/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25",                // args[5] : URL d'entrée
-        "-c:v",                         // args[6] : Option pour le codec vidéo
-        "libx264",                      // args[7] : Codec vidéo (H.264)
-        "-crf",                         // args[8] : Option pour la qualité (Constant Rate Factor)
-        "23",                           // args[9] : Valeur CRF (23 est une bonne qualité)
-        "-preset",                      // args[10] : Option pour la vitesse d'encodage
-        "medium",                       // args[11] : Vitesse d'encodage (medium est un bon compromis)
-        "-an",                          // args[12] : Désactive l'audio
-        "-r",                           // args[13] : Option pour les FPS
-        "25",                           // args[14] : FPS de sortie
-        "./serveur/videos/20250201_2228_x_x_voie1.mp4", // args[15] : Fichier de sortie
-        NULL                            // Fin des arguments
-    };
     
-    */
+    // gid_t group_gid = getgrnam("suiviGrimpeur")->gr_gid;
+    // printf("GID : %d\n", group_gid);
+    // chown("/dev/shm/sem.semWriter", -1, group_gid); //, "fchown(semReaders)");
+    // chown("/dev/shm/sem.semReaders", -1, group_gid);
 
-    /*
-    Forcer une cadence d'images constante avec -r.
-    Synchroniser les frames avec -vsync vfr ou -vsync cfr.
-    Générer de nouveaux timestamps avec -fflags +genpts.
-    -use_wallclock_as_timestamps 1 pour utiliser l'horloge système comme timestamps.
-    Lire en temps réel avec -re (pour les flux en direct).
-    Redéfinir les FPS avec -vf fps=fps=25.
-    */
+}
 
+void processusEcritureMemoire(){
+    DEBUG_PRINT("\t[%d] --> Début du processus fils de Ecriture Memoire [%d]\n", getppid(), getpid());
 
-    DEBUG_PRINT("Affichage des argument de ffmpeg:\n");
-    for (int i = 0; i<NB_ARGS_VIDEO;i++){
+    char url[256];
+    //sprintf(url, "%s@%s/%s", ENTETE_HTTP, IP, SCRIPT_VIDEO);
+    sprintf(url, "%s", "/home/romain/Documents/suiviGrimpeur_PDI/dev/serveur/videos/20250109_2148_2_2_voie1.mp4");
+    DEBUG_PRINT("Url de detection : %s\n", url);
+  
+#ifdef DEBUG
+    const char * args[3] = {"./bin/ecritureMemoireDEBUG", url, NULL};
+#else
+    const char * args[3] = {"./bin/ecritureMemoire", url, NULL};
+#endif
+    DEBUG_PRINT("Affichage des argument d'écriture mémoire:\n");
+    for (int i = 0; i<3;i++){
         DEBUG_PRINT("\targs[%d] = %s\n", i, args[i]);
     }
+    // system("pwd");
+    execvp(args[0], (char * const *) args);
+}
 
-    execvp("ffmpeg", (char * const *) args);
-
+void processusCapture(char * outputVideoFile){
+    DEBUG_PRINT("\t[%d] --> Début du processus fils de capture [%d]\n", getppid(), getpid());
     
+    
+  
+#ifdef DEBUG
+    const char * args[3] = {"./bin/ecritureMemoireDEBUG", outputVideoFile, NULL};
+#else
+    const char * args[3] = {"./bin/ecritureMemoire", outputVideoFile, NULL};
+#endif
+    DEBUG_PRINT("Affichage des argument de capture video:\n");
+    for (int i = 0; i<3;i++){
+        DEBUG_PRINT("\targs[%d] = %s\n", i, args[i]);
+    }
+    // system("pwd");
+    execvp(args[0], (char * const *) args);
+   
 
 }
 
@@ -189,17 +198,18 @@ static void signalHandler(int numSig)
 
                 // Boucle pour récupérer tous les fils terminés, afin d'éviter les processus zombies
                 while ((pid = waitpid(-1, &status, WNOHANG)) > 0) {
-                    // DEBUG_PRINT("\t[%d] --> Arrêt du fils de PID: %d\n", getpid(), pid);
+                    DEBUG_PRINT("\t[%d] --> Arrêt du fils de PID: %d\n", getpid(), pid);
                     
                     if (WIFEXITED(status)) {
                         int received = WEXITSTATUS(status);
                         DEBUG_PRINT("\t[%d] --> Arrêt du fils de PID: %d, status : %d\n", getpid(), pid, received);
                         
+                        DEBUG_PRINT("pidCapture : %d, pidDetection : %d, pidEcritureMemoire : %d, pidEnTraitement : %d\n", pidCapture, pidDetection, pidEcritureMemoire, pid);
                         
                         if (pid == pidCapture){
                             pidCapture = -1;
                         }
-                        DEBUG_PRINT("pidCapture : %d, pidDetection : %d, pidEnTraitement : %d\n", pidCapture, pidDetection, pid);
+                        
                         
                         if (pid == pidDetection){ // Si detection s'arrete, on arrete la capture
                             DEBUG_PRINT("Arret de la capture demande\n"); 
@@ -207,6 +217,9 @@ static void signalHandler(int numSig)
                             pidDetection = -1;
 
                         } 
+                        if (pid == pidEcritureMemoire){
+                            pidEcritureMemoire = -1;
+                        }
                     }
             
                     
@@ -370,7 +383,6 @@ void ack(int status, pid_t pidCgi){
     kill(pidCgi, SIGUSR1);
 }
 
-
 void bye(){
 	if (pidCapture>0){ // Si le fils est encore en exécution
 		kill(pidCapture, SIGTERM); // Arret du fils 
@@ -380,9 +392,18 @@ void bye(){
 		kill(pidDetection, SIGTERM); // Arret du fils 
 		pause(); // Attente de la fin du fils et que le signal SIGCHLD soit levé.
 	} 
+    if (pidEcritureMemoire>0){ // Si le fils est encore en exécution
+		kill(pidEcritureMemoire, SIGTERM); // Arret du fils 
+		pause(); // Attente de la fin du fils et que le signal SIGCHLD soit levé.
+	} 
 
     sem_close(semFichierOrdre);
     sem_unlink("semFichierOrdre");
+    sem_close(semReaders);
+    sem_close(semWriter);
+    sem_unlink(SEM_READERS);
+    sem_unlink(SEM_WRITER);
+    
 
     DEBUG_PRINT("[%d] --> Fin du programme\n", getpid());
 }

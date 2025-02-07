@@ -48,6 +48,16 @@
 #define PATH_FPID           "./bin/suiviGrimpeur.pid"
 #define PATH_VIDEOS         "./serveur/videos"
 
+#define SHM_NAME "/shm_image"
+#define WIDTH 1280
+#define HEIGHT 720
+#define CHANNELS 3
+#define FRAME_SIZE (WIDTH * HEIGHT * CHANNELS)
+#define SHM_FRAME_SIZE ((FRAME_SIZE + sysconf(_SC_PAGE_SIZE) - 1) / sysconf(_SC_PAGE_SIZE)) * sysconf(_SC_PAGE_SIZE) 
+
+#define SEM_READERS "/semReaders"
+#define SEM_WRITER  "/semWriter"
+
 
 
 

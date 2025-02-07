@@ -8,14 +8,17 @@ LIBS+= -lpthread
 
 SRC = $(wildcard ./src/*.c)
 
-all: bin/main bin/mainDEBUG ./bin/detectionV2 serveurDEBUG
+all: bin/detection bin/detectionDEBUG ./bin/detectionVIDEO bin/main bin/mainDEBUG action actionDEBUG video videoDEBUG bin/ecritureMemoire bin/ecritureMemoireDEBUG bin/enregistrementVideo bin/enregistrementVideoDEBUG
+
+###########################
+#		DETECTION		  #
+###########################																
 
 bin/detection: src/detection.cpp src/ptz.c
 	@g++ $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4` $(LIBS)
 
 bin/detectionDEBUG: src/detection.cpp src/ptz.c
 	@g++ $(CSTFLAGS) $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4` $(LIBS)
-
 
 bin/detectionVIDEO: src/detection.cpp src/ptz.c
 	@g++ $(CSTFLAGS) -DVIDEO $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4` $(LIBS)
@@ -26,24 +29,67 @@ detectionTest : ./bin/detectionVIDEO
 DetectionDirect: ./bin/detectionDEBUG
 	./bin/detectionDEBUG "http://serveur:serveur@192.168.0.4/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25"
 
-execDEBUG: bin/mainDEBUG serveurDEBUG ./bin/detectionDEBUG
-	sudo -u www-data ./bin/mainDEBUG
 
-bin/main: $(SRC) 
+###########################
+#		   MAIN			  #
+###########################	
+
+
+bin/main: src/main.c src/positions.c src/ptz.c 
 	@gcc $(CFLAGS) $^ -o $@ $(LIBS)
 
-bin/mainDEBUG: $(SRC)
+bin/mainDEBUG: src/main.c src/positions.c src/ptz.c 
 	@touch ./debug.log
 	@gcc $(CSTFLAGS) $(CFLAGS) $^ -o $@ $(LIBS)
 
-bin/positions: src/positions.c
+execDEBUG: bin/mainDEBUG serveurDEBUG bin/detectionDEBUG bin/ecritureMemoireDEBUG bin/enregistrementVideoDEBUG
+	sudo -u www-data ./bin/mainDEBUG
+
+
+###########################
+#		 SERVEUR		  #
+###########################	
+
+
+action: serveur/action.c
+	@gcc $(CFLAGS) -I./serveur $^ -o serveur/action.cgi -lpthread
+
+actionDEBUG: serveur/action.c
+	@gcc $(CSTFLAGS) $(CFLAGS) -I./serveur $^ -o serveur/action.cgi -lpthread
+
+video: serveur/video.cpp
+	@g++ $(CFLAGS) -I./serveur $^ -o serveur/video.cgi `pkg-config --cflags --libs opencv4` -lpthread -ljpeg
+
+videoDEBUG: serveur/video.cpp
+	@g++ $(CSTFLAGS) $(CFLAGS) -I./serveur $^ -o serveur/video.cgi `pkg-config --cflags --libs opencv4` -lpthread -ljpeg
+
+serveurDEBUG : actionDEBUG videoDEBUG
+
+###########################
+#		 Mémoire		  #
+###########################	
+
+bin/ecritureMemoire: src/ecritureMemoire.cpp
+	g++ $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4` 
+
+bin/ecritureMemoireDEBUG: src/ecritureMemoire.cpp
+	g++ $(CFLAGS) $(CSTFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4` 
+
+###########################
+#	   ENREGISTREMENT	  #
+###########################	
+
+
+bin/enregistrementVideo: src/enregistrementVideo.c
 	@gcc $(CFLAGS) $^ -o $@ $(LIBS)
 
-serveur: serveur/action.c
-	@gcc -Wall -I./serveur $^ -o serveur/action.cgi -lpthread
+bin/enregistrementVideoDEBUG: src/enregistrementVideo.c
+	@gcc $(CFLAGS) $(CSTFLAGS) $^ -o $@ $(LIBS)
 
-serveurDEBUG: serveur/action.c
-	@gcc -Wall $(CSTFLAGS) -I./serveur $^ -o serveur/action.cgi -lpthread
+
+###########################
+#		 CLEAN			  #
+###########################	
 
 clean: resetLog
 	@rm -f ./bin/*
