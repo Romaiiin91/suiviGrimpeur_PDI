@@ -39,7 +39,7 @@ int main(int argc, char * argv[]) {
     // commande ffmpeg
     char cmd[256];
     // sprintf(cmd, "%s %s %s %s %s %s %s %s %s %s %s %s %s", "ffmpeg", "-y", "-loglevel 32", "-f rawvideo", "-pix_fmt bgr24", "-s 1280x720", "-r 25", "-i pipe:0", "-c:v libx264", "-preset medium", "-an", argc > 1 ? argv[1]:"serveur/videos/output.mp4");
-    sprintf(cmd, "%s %s %s %s %s %s %s %s %s %s %s %s %s %s", "ffmpeg", "-y", "-loglevel 32", "-f rawvideo", "-pixel_format bgr24", "-s 1280x720", "-r 25", "-i pipe:0",  "-c:v libx264", "-preset medium", "-pix_fmt yuv420p", "-crf 23", "-an", argc > 1 ? argv[1] : "serveur/videos/output.mp4");
+    sprintf(cmd, "%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s", "ffmpeg", "-y", "-loglevel 32", "-f rawvideo", "-fflags +discardcorrupt", "-pixel_format bgr24", "-s 1280x720", "-r 25", "-i pipe:0",  "-c:v libx264", "-preset medium", "-pix_fmt yuv420p", "-crf 23", "-an", argc > 1 ? argv[1] : "serveur/videos/output.mp4");
     
     DEBUG_PRINT("Commande FFMPEG : \"%s\"\n", cmd);
 
@@ -51,26 +51,25 @@ int main(int argc, char * argv[]) {
 
         
     
-        /*
-        "ffmpeg",                       // args[0] : Nom de l'exécutable
-        "-y",                           // args[1] : Overwrite output files
-        "-loglevel 32",                    // args[2] : Option pour le niveau de log
-        -f rawvideo",                   // args[4] : Option pour l'entrée
-        "-i ",                           // args[4] : Option pour l'entrée
-        "http://serveur:serveur@192.168.1.13/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25",                // args[5] : URL d'entrée
-        "-c:v",                         // args[6] : Option pour le codec vidéo
-        "libx264",                      // args[7] : Codec vidéo (H.264)
-        "-crf",                         // args[8] : Option pour la qualité (Constant Rate Factor)
-        "23",                           // args[9] : Valeur CRF (23 est une bonne qualité)
-        "-preset",                      // args[10] : Option pour la vitesse d'encodage
-        "medium",                       // args[11] : Vitesse d'encodage (medium est un bon compromis)
-        "-an",                          // args[12] : Désactive l'audio
-        "-r",                           // args[13] : Option pour les FPS
-        "25",                           // args[14] : FPS de sortie
-        -vsync", "cfr",                // args[15] : Synchronisation des frames
-        "./serveur/videos/20250201_2228_x_x_voie1.mp4", // args[15] : Fichier de sortie
-    
+    /*
+        Commande ffmpeg pour l'enregistrement vidéo :
+
+        -y                                                      // Écrase le fichier de sortie sans confirmation
+        -loglevel 32                                            // Définit le niveau de journalisation à "warning"
+        -f rawvideo                                             // Spécifie que l'entrée est une vidéo brute sans en-tête
+        -fflags +discardcorrupt                                 // Ignore les images corrompues
+        -pixel_format bgr24                                     // Format de l'entrée en BGR 24 bits
+        -s 1280x720                                             // Définit la résolution d'entrée à 1280x720
+        -r 25                                                   // Débit d'images (FPS) : 25
+        -i pipe:0                                               // L'entrée provient du pipe standard (stdin)
+        -c:v libx264                                            // Codec vidéo H.264 pour la sortie
+        -preset medium                                          // Compromis entre vitesse et qualité d'encodage
+        -pix_fmt yuv420p                                        // Format de pixel YUV 4:2:0 pour compatibilité
+        -crf 23                                                 // Qualité de compression (23 = bonne qualité par défaut)
+        -an                                                     // Désactive l'audio
+        ./serveur/videos/20250208_2319_nom_prenom_voie.mp4      // Fichier de sortie (nom de fichier personnalisé)
     */
+
 
 
 

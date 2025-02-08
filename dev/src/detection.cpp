@@ -23,6 +23,7 @@
 #define HEIGHT 720
 
 bool detectionEnCours = true;
+int exitStatus = 0;
 
 /* ------------------------------------------------------------------------ */
 /*            D E F I N I T I O N   D E    F O N C T I O N S                */
@@ -54,26 +55,35 @@ int main(int argc, char const *argv[])
 
     if (!root) {
         std::cerr << "Erreur de lecture du fichier JSON: " << error.text << std::endl;
-        return 1;
+        exit(EXIT_FAILURE);
     }
 
     int framesBetweenReference = json_integer_value(json_object_get(root, "framesBetweenReferences"));
     float verticalThreshold = json_real_value(json_object_get(root, "verticalThreshold"));
-    int horizontalThreshold = json_integer_value(json_object_get(root, "horizontalThreshold"));
+    float horizontalThreshold = json_real_value(json_object_get(root, "horizontalThreshold"));
 
     float coefAverageMovingFilter = json_real_value(json_object_get(root, "coefAverageMovingFilter"));
     int coefGaussianBlur = json_integer_value(json_object_get(root, "coefGaussianBlur"));
     int heightResize = json_integer_value(json_object_get(root, "heightResize"));
     int widthResize = json_integer_value(json_object_get(root, "widthResize"));
-    int cropRatioDetectionAreaWidth = json_integer_value(json_object_get(root, "cropRatioDetectionAreaWidth"));
+    int nbMoveBeforeChangeDetectionArea = json_integer_value(json_object_get(root, "nbMoveBeforeChangeDetectionArea"));
+    
+    
+    int cropRatioDetectionArea = json_integer_value(json_object_get(root, "cropRatioDetectionArea")); // 3 cetait bien
+    
     int waitTimeMs = json_integer_value(json_object_get(root, "waitTimeMs"));
     int numberFrameBetweenMove = json_integer_value(json_object_get(root, "numberFrameBetweenMove"));
+    int numberFrameWithoutMove = json_integer_value(json_object_get(root, "numberFrameWithoutMove"));
 
     float increasePTZ = json_real_value(json_object_get(root, "increasePTZ"));
     
     json_decref(root);
 
-    int widthDetectionArea = (cropRatioDetectionAreaWidth - 2) * widthResize/cropRatioDetectionAreaWidth;
+    int widthDetectionArea = (cropRatioDetectionArea - 2) * widthResize/cropRatioDetectionArea;
+    int heightDetectionArea = (cropRatioDetectionArea - 2) * heightResize/cropRatioDetectionArea;
+
+    float floatHeightDetectionArea = heightDetectionArea*1.0;
+    float floatWidthDetectionArea = widthDetectionArea*1.0;
 
     FILE *fvideo;
     CHECK_NULL(fvideo = fopen("./bin/frameFirstMove", "w"), "fopen(frameFirstMove)");
@@ -90,7 +100,7 @@ int main(int argc, char const *argv[])
     // Vérifier si la capture est ouverte
     if (!cap.isOpened()) {
         std::cerr << "Erreur: Impossible d'ouvrir le flux vidéo." << std::endl;
-        return -1;
+        exit(EXIT_FAILURE);
     }
 
     // Forcer les FPS et la résolution
@@ -119,18 +129,23 @@ int main(int argc, char const *argv[])
     
     int frame_count = 0, resetFrameReference = 0;
     cv::Moments m, mDetectionArea;
-    double cX_detectionArea = widthDetectionArea/2, cY_detectionArea = heightResize/2;
+    double cX_detectionArea = widthResize/2, cY_detectionArea = heightResize/2;
    
 
     std::string mvmtVert = "", mvmtHoriz = "";
     cv::Mat frame, frameDelta, thresh, frameReference, gray, detectionArea;
 
-    int lastFrameMove = 0;
+    int lastFrameMoveCam = 0;
+    int lastFrameWithMovement = 0;
 
-    bool firstMove = false;
+    int nbMoveUp = 0;
     int frameFirstMove = 0;
     
-    while (detectionEnCours) {
+
+
+    int abscisseDetectionAreaTop = 0, abscisseDetectionAreaBottom = 0;
+    
+    while (detectionEnCours && frame_count < INT_MAX) {
 
         #ifdef VIDEO
         // Lire une image
@@ -185,7 +200,7 @@ int main(int argc, char const *argv[])
 
         
         // Remettre à zéro l'image de référence toutes les x images ou lors d'un mouvement de camera
-        if (frame_count  % framesBetweenReference == 0 ||  resetFrameReference == 1) {
+        if (frame_count % framesBetweenReference == 0 || resetFrameReference == 1) {
             frameReference = gray.clone();
             resetFrameReference = 0;
         }
@@ -201,22 +216,33 @@ int main(int argc, char const *argv[])
         // Forcer le reset de l'image de reference si trop de pixel blanc
         if (cv::countNonZero(thresh) > 30000 ) {
             resetFrameReference = 1;
+            #ifdef VIDEO
+            ++nbMoveUp;
+            #endif
         }
         else {
             // Zone de detection
-
-            detectionArea = thresh.rowRange(0, heightResize/2);
-            detectionArea = detectionArea.colRange(widthResize/cropRatioDetectionAreaWidth, widthResize -  widthResize/cropRatioDetectionAreaWidth);
             
-            if (cv::countNonZero(detectionArea) > 1000) {
-                // Moitie haute de l'image
-                
+
+            if (nbMoveUp < nbMoveBeforeChangeDetectionArea){
+                abscisseDetectionAreaTop = 0;
+                abscisseDetectionAreaBottom = heightResize/2;
+            }
+            else {
+                abscisseDetectionAreaTop = heightResize/cropRatioDetectionArea;
+                abscisseDetectionAreaBottom = heightResize - heightResize/cropRatioDetectionArea;
+            }
+
+            detectionArea = thresh.rowRange(abscisseDetectionAreaTop, abscisseDetectionAreaBottom);
+            detectionArea = detectionArea.colRange(widthResize/cropRatioDetectionArea, widthResize -  widthResize/cropRatioDetectionArea);
+            
+            if (cv::countNonZero(detectionArea) >1000) {
+                lastFrameWithMovement = frame_count;
 
                 mDetectionArea = cv::moments(detectionArea, true);
             
 
                 cX_detectionArea = coefAverageMovingFilter * ((mDetectionArea.m00 > 1) ? mDetectionArea.m10 / mDetectionArea.m00 : cX_detectionArea ) + (1-coefAverageMovingFilter) * cX_detectionArea;
-
                 cY_detectionArea = coefAverageMovingFilter * ((mDetectionArea.m00 > 1) ? mDetectionArea.m01 / mDetectionArea.m00 : cY_detectionArea ) + (1-coefAverageMovingFilter) * cY_detectionArea;
 
                 /*------------------------------------------------------------------------ */
@@ -224,44 +250,49 @@ int main(int argc, char const *argv[])
                 /*------------------------------------------------------------------------ */
 
                 // premier if equivalent attente entre chaque mouvement
-                if (frame_count - lastFrameMove > numberFrameBetweenMove){
-                    if (cY_detectionArea < 360.0 / verticalThreshold){
+                if (frame_count - lastFrameMoveCam > numberFrameBetweenMove){
+
+                    // std::cout << "cy detection area : " << cY_detectionArea << " heightResize / verticalThreshold : " << heightResize / verticalThreshold << std::endl;
+                    
+                    if (cY_detectionArea < floatHeightDetectionArea / verticalThreshold){
+                        // std::cout << "cy detection area : " << cY_detectionArea << " heightResize / verticalThreshold : " << heightResize / verticalThreshold << std::endl;
                         mvmtVert = "Monte";
                         
                         #ifndef VIDEO 
                         requetePTZ("rtilt", std::to_string(increasePTZ).c_str());
-                        lastFrameMove = frame_count;
+                        lastFrameMoveCam = frame_count;
                         resetFrameReference = 1;
                         #endif
     
-                        if (!firstMove) {
+                        if (nbMoveUp == 0){ 
                             frameFirstMove = frame_count;
-                            firstMove = true;
-
                             //std::cout << "frame first move : " << frameFirstMove << std::endl;
                         }
+
+                        ++nbMoveUp;
                     
                     }
                     else {
                         mvmtVert = "";
                     }
 
-                    if (cX_detectionArea < widthDetectionArea / horizontalThreshold){
+                    if (cX_detectionArea < floatWidthDetectionArea / horizontalThreshold){
                         mvmtHoriz= "Gauche";
 
                         #ifndef VIDEO
                         requetePTZ("rpan", std::to_string(-1*increasePTZ).c_str());
-                        lastFrameMove = frame_count;
+                        lastFrameMoveCam = frame_count;
                         resetFrameReference = 1;
                         #endif
                         
                     }
-                    else if (cX_detectionArea > widthDetectionArea - widthDetectionArea / horizontalThreshold){
+
+                    else if (cX_detectionArea > floatWidthDetectionArea - floatWidthDetectionArea / horizontalThreshold){
                         mvmtHoriz = "Droite";
 
                         #ifndef VIDEO
                         requetePTZ("rpan", std::to_string(increasePTZ).c_str());
-                        lastFrameMove = frame_count;
+                        lastFrameMoveCam = frame_count;
                         resetFrameReference = 1;
                         #endif
                     }
@@ -275,27 +306,44 @@ int main(int argc, char const *argv[])
                 }
             }
         }
+
+        if ((frame_count - lastFrameWithMovement) > numberFrameWithoutMove){
+            detectionEnCours = false;
+            exitStatus = 1;
+        }
         
        
+        #ifdef DEBUG
         
 
         // Afficher le barycentre sur l'image
-        cv::circle(frame, cv::Point(cX_detectionArea + widthResize/cropRatioDetectionAreaWidth, cY_detectionArea), 5, cv::Scalar(0, 255, 0), -1);
+        cv::circle(frame, cv::Point(cX_detectionArea + widthResize/cropRatioDetectionArea, cY_detectionArea + abscisseDetectionAreaTop), 5, cv::Scalar(0, 255, 0), -1);
 
 
         // Afficher du nb de point blanc sur la moitie haute de l'image sur l'image
-        // cv::putText(thresh, (std::string) "nb px blancs Area : " + std::to_string(cv::countNonZero(detectionArea)), cv::Point(10, 30), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255), 2);
+        cv::putText(thresh, (std::string) "nb px blancs Area : " + std::to_string(cv::countNonZero(detectionArea)), cv::Point(10, 30), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255), 2);
 
         cv::putText(frame, mvmtVert, cv::Point(10, 30), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255), 2);
         cv::putText(frame, mvmtHoriz, cv::Point(500, 30), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255), 2);
 
 
         // Afficher l'image
-        // cv::imshow("Thresh", thresh);
-        // cv::imshow("Moitie haute", detectionArea);
+        //cv::imshow("Thresh", thresh);
+        
+
+        cv::rectangle(frame, cv::Point(widthResize/cropRatioDetectionArea, abscisseDetectionAreaTop), cv::Point(widthResize -  widthResize/cropRatioDetectionArea, abscisseDetectionAreaBottom), cv::Scalar(0, 255, 0), 2);
+        
+        cv::line(frame, cv::Point(0, heightDetectionArea / verticalThreshold + abscisseDetectionAreaTop ), cv::Point(widthResize, heightDetectionArea / verticalThreshold + abscisseDetectionAreaTop), cv::Scalar(0, 0, 255), 2);
+        
+        cv::line(frame, cv::Point(widthResize/cropRatioDetectionArea + widthDetectionArea / horizontalThreshold, 0), cv::Point(widthResize/cropRatioDetectionArea + widthDetectionArea / horizontalThreshold, heightResize), cv::Scalar(0, 0, 255), 2);
+
+        cv::line(frame, cv::Point(widthResize/cropRatioDetectionArea + widthDetectionArea - widthDetectionArea / horizontalThreshold, 0), cv::Point(widthResize/cropRatioDetectionArea + widthDetectionArea - widthDetectionArea / horizontalThreshold, heightResize), cv::Scalar(0, 0, 255), 2);
+
+        // cv::imshow("Detection Area ", detectionArea);
 
         cv::imshow("Barycentre", frame); 
         
+        #endif
 
         frame_count++;
         
@@ -321,8 +369,8 @@ int main(int argc, char const *argv[])
      sem_close(semMutex);
      #endif
 
-
     cv::destroyAllWindows();
+    
 
     DEBUG_PRINT("Fin de la détection.\n");
     std::cout << "frame first move : " << frameFirstMove << std::endl;
@@ -334,7 +382,7 @@ int main(int argc, char const *argv[])
     fclose(fvideo);
 
 
-    exit(EXIT_SUCCESS);
+    exit(exitStatus);
     return 0;
 }
 
@@ -344,6 +392,7 @@ static void signalHandler(int numSig)
         case SIGINT : // traitement de SIGINT
             DEBUG_PRINT("\t[%d] --> Arrêt du programme de detection en cours...\n", getpid());
             detectionEnCours = false;
+            exitStatus = 2;
             break;
         default :
             printf (" Signal %d non traité \n", numSig );

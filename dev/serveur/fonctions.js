@@ -44,9 +44,15 @@ function zoomUpdate() {
 // }
 function startRecord() { 
     console.log("record on");
-    const nom = document.getElementById("nom").value;
-    const prenom = document.getElementById("prenom").value;
+
+    nom = document.getElementById("nom").value;
+    prenom = document.getElementById("prenom").value;
+
+    nom = nom.trim() == "" ? "nom" : nom;
+    prenom = prenom.trim() == "" ? "prenom" : prenom;
+
     const dropdown = document.getElementById("dropdown");
+
     $.get("action.cgi", {reco: "on", nom: nom, prenom: prenom, voie: dropdown.value});
 }
 function stopRecord() { console.log("record off"); $.get("action.cgi", {reco: "off"}); }
@@ -55,6 +61,22 @@ function startDetection() {
     $.get("action.cgi", {detc: "on"}); 
 }
 function stopDetection() { console.log("detection off"); $.get("action.cgi", {detc: "off"}); }
+
+function startEnregistrement(){
+    console.log("enregistrement on");
+    nom = document.getElementById("nom").value;
+    prenom = document.getElementById("prenom").value;
+
+    nom = nom.trim() == "" ? "nom" : nom;
+    prenom = prenom.trim() == "" ? "prenom" : prenom;
+
+    const dropdown = document.getElementById("dropdown");
+
+    $.get("action.cgi", {enrg: "on", nom: nom, prenom: prenom, voie: dropdown.value});
+}
+
+
+
 
 // Charger et afficher les options
 function loadOptions() {

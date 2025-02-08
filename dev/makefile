@@ -24,7 +24,7 @@ bin/detectionVIDEO: src/detection.cpp src/ptz.c
 	@g++ $(CSTFLAGS) -DVIDEO $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4` $(LIBS)
 
 detectionTest : ./bin/detectionVIDEO
-	./bin/detectionVIDEO "serveur/videos/20250109_2148_2_2_voie1.mp4"
+	./bin/detectionVIDEO "serveur/videos/20250109_2148_2_2_voie1_resize.mp4"
 
 DetectionDirect: ./bin/detectionDEBUG
 	./bin/detectionDEBUG "http://serveur:serveur@192.168.0.4/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25"
@@ -43,6 +43,7 @@ bin/mainDEBUG: src/main.c src/positions.c src/ptz.c
 	@gcc $(CSTFLAGS) $(CFLAGS) $^ -o $@ $(LIBS)
 
 execDEBUG: bin/mainDEBUG serveurDEBUG bin/detectionDEBUG bin/ecritureMemoireDEBUG bin/enregistrementVideoDEBUG
+	xhost +SI:localuser:www-data
 	sudo -u www-data ./bin/mainDEBUG
 
 

@@ -126,9 +126,9 @@ void processusEcritureMemoire(){
     DEBUG_PRINT("\t[%d] --> Début du processus fils de Ecriture Memoire [%d]\n", getppid(), getpid());
 
     char url[256];
-    //sprintf(url, "%s@%s/%s", ENTETE_HTTP, IP, SCRIPT_VIDEO);
-    sprintf(url, "%s", "/home/romain/Documents/suiviGrimpeur_PDI/dev/serveur/videos/20250109_2148_2_2_voie1.mp4");
-    DEBUG_PRINT("Url de detection : %s\n", url);
+    sprintf(url, "%s@%s/%s", ENTETE_HTTP, IP, SCRIPT_VIDEO);
+    // sprintf(url, "%s", "/home/romain/Documents/suiviGrimpeur_PDI/dev/serveur/videos/20250109_2148_2_2_voie1.mp4");
+    // DEBUG_PRINT("Url de detection : %s\n", url);
   
 #ifdef DEBUG
     const char * args[3] = {"./bin/ecritureMemoireDEBUG", url, NULL};
@@ -199,22 +199,24 @@ static void signalHandler(int numSig)
                 // Boucle pour récupérer tous les fils terminés, afin d'éviter les processus zombies
                 while ((pid = waitpid(-1, &status, WNOHANG)) > 0) {
                     DEBUG_PRINT("\t[%d] --> Arrêt du fils de PID: %d\n", getpid(), pid);
+                    DEBUG_PRINT("pidCapture : %d, pidDetection : %d, pidEcritureMemoire : %d, pidEnTraitement : %d\n", pidCapture, pidDetection, pidEcritureMemoire, pid);
                     
                     if (WIFEXITED(status)) {
                         int received = WEXITSTATUS(status);
                         DEBUG_PRINT("\t[%d] --> Arrêt du fils de PID: %d, status : %d\n", getpid(), pid, received);
                         
-                        DEBUG_PRINT("pidCapture : %d, pidDetection : %d, pidEcritureMemoire : %d, pidEnTraitement : %d\n", pidCapture, pidDetection, pidEcritureMemoire, pid);
+                        
                         
                         // if (pid == pidCapture){
                         //     pidCapture = -1;
                         // }
                         
                         
-                        if (pid == pidDetection){ // Si detection s'arrete, on arrete la capture
+                        if (pid == pidDetection && received == 1){ // Si detection s'arrete, on arrete la capture
+                            pidDetection = -1;
                             DEBUG_PRINT("Arret de la capture demande\n"); 
                             if (pidCapture > 0) kill(pidCapture, SIGTERM);
-                            pidDetection = -1;
+                            
 
                         } 
                         if (pid == pidEcritureMemoire){
@@ -337,6 +339,41 @@ void gestionOrdres(){
 
             }
         }
+    }
+
+    if (strcmp(champs1, "enrg")==0){
+        char outputVideoFile[255] = "./videos/test.mp4"; // Recuperer le nom du fichier de la requete
+
+        char action[4], donnees[255];
+        sscanf(champs2, "%[^&]&%s", action, donnees);
+        DEBUG_PRINT("Record - Action : %s, Données : %s\n", action, donnees);
+
+        if (strcmp(action, "on") == 0){
+
+            char prenom[25], nom[25], voie[10];
+            sscanf(donnees, "nom=%[^&]&prenom=%[^&]&voie=%s", nom, prenom, voie);
+            DEBUG_PRINT("Record - Nom : %s, Prenom : %s, Voie : %s\n", nom, prenom, voie);
+            time_t now = time(NULL);
+            struct tm *t = localtime(&now);
+            char dateTime[15];
+            strftime(dateTime, sizeof(dateTime)-1, "%Y%m%d_%H%M", t);
+
+            // Création du nom du fichier de sortie
+            sprintf(outputVideoFile, "%s/%s_%s_%s_voie%s.mp4", PATH_VIDEOS, dateTime, nom, prenom, voie);
+            DEBUG_PRINT("Nom du fichier de sortie : %s\n", outputVideoFile);
+            
+
+            CHECK(pidFils = fork(), "fork(pidCapture)");
+            if (pidFils == 0) {
+                processusCapture(outputVideoFile);
+            }
+            else pidCapture = pidFils;
+
+            CHECK(pidFils = fork(), "fork(pidDetection)");
+            if (pidFils == 0) processusDetection();
+            else pidDetection = pidFils;
+        }
+
     }
 
     // si je ne ctrl + s le .json, je ne peux pas voir les changements dans le fichier malgré que le cgi fasse des modifs ca ne se met pas à jour sur le serveur appache

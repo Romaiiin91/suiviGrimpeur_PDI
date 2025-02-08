@@ -5,7 +5,11 @@
     <title>Suivi d'un grimpeur</title>
     <link rel="icon" href="icone.ico" type="image/x-icon">
     <script src="jquery.js"></script>
-    <script src="fonctions.js"></script>
+    <script>
+        var script = document.createElement("script");
+        script.src = "fonctions.js?v=" + new Date().getTime();
+        document.head.appendChild(script);
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
@@ -132,7 +136,13 @@
         <div class="video-container">
             <!-- voir pour la recuperation de l'ip maison 192.168.1.13-->
             <!-- <img src="http://192.168.0.4/mjpg/video.mjpg?resolution=1280x720&fps=25&compression=25" alt="Flux Vidéo en Direct"> -->
-            <img src="video.cgi" alt="Image en temps réel">
+            <img id="videoStream" src="" alt="Image en temps réel">
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    var img = document.getElementById("videoStream");
+                    img.src = "video.cgi?timestamp=" + new Date().getTime();
+                });
+            </script>
         </div>
 
         <!-- Boutons -->
@@ -184,10 +194,9 @@
 
     <div class="container container-enregistrement">
         <div class="enregistrement-group">
-            <h2>Enregistrement</h2>
+            <h2>Enregistrement</h2> 
             <div class="button-group">
-                <input type="button" value="Commencer l'enregistrement" onclick="startRecord();"/> 
-                <input type="button" value="Stop l'enregistrement" onclick="stopRecord();"/> 
+                <input type="button" value="Commencer l'enregistrement" onclick="startEnregistrement();"/> 
                 <input type="button" value="Voir vidéos" onclick="window.location.href='videos.html';"/>
             </div>
             <div style="display: flex; align-items: center; margin-bottom: 10px;">
@@ -201,13 +210,7 @@
             </div>
         </div>
 
-        <div class="detection-group">
-            <h2>Détection</h2>
-            <div class="button-group">
-                <input type="button" value="Commencer la détection" onclick="startDetection();"/> 
-                <input type="button" value="Stop la détection" onclick="stopDetection();"/> 
-            </div>
-        </div>
+       
 
         <div class="routes-group">
             <h2>Voies</h2>
@@ -218,6 +221,17 @@
                 <input type="button" value="Afficher la voie sélectionnée" onclick="showRoute();"/>
             </div>
         </div>
+
+        <div class="detection-group">
+            <h2>Fonction seules</h2>
+            <div class="button-group">
+                <input type="button" value="Commencer la détection" onclick="startDetection();"/> 
+                <input type="button" value="Stopper la détection" onclick="stopDetection();"/> 
+                <input type="button" value="Commencer la capture" onclick="startRecord();"/> 
+                <input type="button" value="Stopper la capture" onclick="stopRecord();"/> 
+            </div>
+        </div>
+
     </div>
 </body>
 </html>
