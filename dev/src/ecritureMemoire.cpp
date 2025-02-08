@@ -53,7 +53,7 @@ int main(int argc, char * argv[]) {
     // Vérifier si la capture est ouverte
     if (!cap.isOpened()) {
         std::cerr << "Erreur: Impossible d'ouvrir le flux vidéo." << std::endl;
-        return -1;
+        exit(EXIT_FAILURE);
     }
 
     cap.set(cv::CAP_PROP_FPS, 25);           // Définir les FPS à 25
@@ -78,21 +78,11 @@ int main(int argc, char * argv[]) {
         // Copier les données dans la mémoire partagée
         std::memcpy(virtAddr, frame.data, SHM_FRAME_SIZE);
 
-        sem_post(semReaders);  // Débloquer l'accès en écriture
+        sem_post(semWriter);  // Débloquer l'accès en écriture
 
-        /*
-        // Attendre que les lecteurs aient fini de lire avant de pouvoir réécrire
-    sem_wait(sem_writer);  // Attendre que tous les lecteurs aient terminé leur lecture avant de pouvoir réécrire
-  
-  // Attendre que tous les lecteurs aient fini avant d'écrire dans la mémoire partagée
-    sem_wait(sem_readers);  // Attendre que le nombre de lecteurs soit à zéro ou que l'écrivain ait libéré l'accès
-
-    // Copier les données dans la mémoire partagée
-    std::memcpy(virtAddr, frame.data, SHM_FRAME_SIZE);
-
-    // Signaler que l'écriture est terminée, les lecteurs peuvent reprendre
-    sem_post(sem_writer);  // Signaler aux lecteurs que l'écrivain a terminé son écriture
-        */
+        if (cv::waitKey(40) == 'q') {
+            break;
+        }
     }
 
     cap.release();

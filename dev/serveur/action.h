@@ -70,7 +70,7 @@
 
 
 #ifdef DEBUG
-    #define DEBUG_PRINT(msg, ...) do {                                      \
+    #define DEBUG_CGI_PRINT(msg, ...) do {                                      \
         FILE *log_file;                                                     \
         CHECK_NULL(log_file = fopen("../debugCgi.log", "a"), "fopen(debugCgi.log)"); \
         fprintf(log_file, msg, ##__VA_ARGS__);                              \
@@ -78,7 +78,7 @@
         fclose(log_file);                                                   \
     } while (0)
 #else
-    #define DEBUG_PRINT(msg, ...); // Ne fait rien si DEBUG n'est pas défini
+    #define DEBUG_CGI_PRINT(msg, ...); // Ne fait rien si DEBUG n'est pas défini
 #endif
 
 

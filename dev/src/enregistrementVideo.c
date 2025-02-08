@@ -1,10 +1,4 @@
-
-#include <sys/mman.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/mman.h>
-#include <fcntl.h>
-#include <unistd.h>
+#include <stdio.h>
 
 #include <utils.h>
 
@@ -19,8 +13,8 @@ int main(int argc, char * argv[]) {
 
     int shm_fd;
     void* virtAddr;
-    sem_t *semReaders, *semWriter;
-
+    sem_t *semReaders, *semWriter, *semMutex;
+    int reader_count;
     
     
     // Installation du gestionnaire de signaux pour géré l'arrêt du programme
@@ -35,6 +29,7 @@ int main(int argc, char * argv[]) {
     // Overture des semaphores
     CHECK_NULL(semReaders = sem_open(SEM_READERS, 0), "enregistrementVideo: sem_open(semReaders)");
     CHECK_NULL(semWriter = sem_open(SEM_WRITER, 0), "enregistrementVideo: sem_open(semWriter)");
+    CHECK_NULL(semMutex = sem_open(SEM_MUTEX, 0), "enregistrementVideo: sem_open(semMutex)");
 
     // Ouvrir la mémoire partagée
     CHECK(shm_fd = shm_open(SHM_NAME, O_CREAT | O_RDWR, 0666), "enregistrementVideo: shm_open(SHM_NAME)");
@@ -79,21 +74,43 @@ int main(int argc, char * argv[]) {
 
     while (enregistrementEnCours) {
 
-        // Attendre que l'écrivain ait terminé son travail avant de lire la mémoire partagée
-        sem_wait(semWriter); 
+        sem_wait(semMutex);  // Acquérir le sémaphore de synchronisation
 
-        // Signaler qu'un lecteur a commencé à lire
-        sem_post(semReaders); 
+        // Incrémenter le nombre de lecteurs
+        
+        sem_getvalue(semReaders, &reader_count);
+        if (reader_count == 0) {
+            sem_wait(semWriter);  // Bloquer le rédacteur si c'est le premier lecteur
+        }
+        sem_post(semReaders);  // Incrémenter le compteur de lecteurs
 
+        sem_post(semMutex);  // Relâcher le sémaphore de synchronisation
+
+        
+        
+        
         // Lire l’image de la mémoire partagée
         fwrite(virtAddr, 1, SHM_FRAME_SIZE, ffmpeg);
 
-        // Attendre que tous les autres lecteurs aient fini de lire avant de laisser l'écrivain reprendre
-        sem_wait(semReaders); 
 
-        // Signaler à l'écrivain qu'un lecteur a terminé sa lecture
-        sem_post(semWriter); 
 
+
+        sem_wait(semMutex);  // Acquérir le sémaphore de synchronisation
+
+        // Décrémenter le nombre de lecteurs
+        sem_wait(semReaders);  // Décrémenter le compteur de lecteurs
+        sem_getvalue(semReaders, &reader_count);
+        if (reader_count == 0) {
+            sem_post(semWriter);  // Débloquer le rédacteur si c'est le dernier lecteur
+        }
+
+        sem_post(semMutex);  // Relâcher le sémaphore de synchronisation
+
+
+        /*
+        Le sémaphore mutex_sem est utilisé pour protéger les variables partagées, comme le compteur de lecteurs (reader_count), afin d'éviter que plusieurs processus ne modifient cette variable en même temps. Sans mutex_sem, il y a un risque que deux lecteurs incrémentent ou décrémentent reader_count simultanément, ce qui pourrait entraîner des incohérences.
+
+        */
     }
 
     // Fermer les ressources
@@ -104,7 +121,7 @@ int main(int argc, char * argv[]) {
     // Fermer les sémaphores
     sem_close(semReaders);
     sem_close(semWriter);
-
+    sem_close(semMutex);
     
     exit(EXIT_SUCCESS);
     return 0;

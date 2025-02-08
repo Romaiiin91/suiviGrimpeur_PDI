@@ -34,6 +34,7 @@
 #include <semaphore.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <sys/mman.h>
 
 
 /* ------------------------------------------------------------------------ */
@@ -57,7 +58,7 @@
 
 #define SEM_READERS "/semReaders"
 #define SEM_WRITER  "/semWriter"
-
+#define SEM_MUTEX   "/semMutex"
 
 
 

@@ -33,6 +33,8 @@ bool detectionEnCours = true;
 
 int main(int argc, char const *argv[])
 {
+    DEBUG_CGI_PRINT("[%d] Démarrage de detection video\n", getpid());
+
     if (argc < 2) {
         DEBUG_PRINT("Pas url video");
         exit(EXIT_FAILURE);
@@ -45,7 +47,6 @@ int main(int argc, char const *argv[])
     CHECK(sigemptyset(&newAction.sa_mask ), " sigemptyset ()");
     newAction.sa_flags = 0;
     CHECK(sigaction(SIGINT, &newAction, NULL), "sigaction (SIGINT)");
-
 
     // Charger les paramètres depuis le fichier JSON
     json_error_t error;
@@ -69,11 +70,7 @@ int main(int argc, char const *argv[])
     int numberFrameBetweenMove = json_integer_value(json_object_get(root, "numberFrameBetweenMove"));
 
     float increasePTZ = json_real_value(json_object_get(root, "increasePTZ"));
-    float increaseZoom = json_real_value(json_object_get(root, "increaseZoom"));
-
-    int nbPixelMinZoom = json_integer_value(json_object_get(root, "nbPixelMinZoom"));
-    int nbPixelMaxZoom = json_integer_value(json_object_get(root, "nbPixelMaxZoom"));
-
+    
     json_decref(root);
 
     int widthDetectionArea = (cropRatioDetectionAreaWidth - 2) * widthResize/cropRatioDetectionAreaWidth;
@@ -84,7 +81,7 @@ int main(int argc, char const *argv[])
     fflush(fvideo);
     fclose(fvideo);
 
-
+    #ifdef VIDEO
 
     // Ouvrir la capture vidéo avec l'URL
     cv::VideoCapture cap(argv[1]);
@@ -101,6 +98,24 @@ int main(int argc, char const *argv[])
     cap.set(cv::CAP_PROP_FRAME_WIDTH, WIDTH);  // Largeur à 1280
     cap.set(cv::CAP_PROP_FRAME_HEIGHT, HEIGHT);  // Hauteur à 720
 
+    #else
+
+    int shm_fd;
+    void* virtAddr;
+    sem_t *semReaders, *semWriter, *semMutex;
+    int reader_count;
+
+    // Overture des semaphores
+    CHECK_NULL(semReaders = sem_open(SEM_READERS, 0), "video.cgi: sem_open(semReaders)");
+    CHECK_NULL(semWriter = sem_open(SEM_WRITER, 0), "video.cgi: sem_open(semWriter)");
+    CHECK_NULL(semMutex = sem_open(SEM_MUTEX, 0), "video.cgi: sem_open(semMutex)");
+
+    // Ouvrir la mémoire partagée
+    CHECK(shm_fd = shm_open(SHM_NAME, O_CREAT | O_RDWR, 0666), "video.cgi: shm_open(SHM_NAME)");
+    CHECK(ftruncate(shm_fd, SHM_FRAME_SIZE), "video.cgi: ftruncate(shm_fd)");   
+    CHECK_NULL(virtAddr = mmap(0, SHM_FRAME_SIZE, PROT_WRITE, MAP_SHARED, shm_fd, 0), "video.cgi: mmap(virtAddr)");
+    
+    #endif
     
     int frame_count = 0, resetFrameReference = 0;
     cv::Moments m, mDetectionArea;
@@ -116,6 +131,8 @@ int main(int argc, char const *argv[])
     int frameFirstMove = 0;
     
     while (detectionEnCours) {
+
+        #ifdef VIDEO
         // Lire une image
         cap >> frame;
 
@@ -124,6 +141,41 @@ int main(int argc, char const *argv[])
             std::cerr << "Erreur: Image vide capturée." << std::endl;
             break;
         }
+
+        #else
+
+        sem_wait(semMutex);  // Acquérir le sémaphore de synchronisation
+ 
+        // Incrémenter le nombre de lecteurs
+        
+        sem_getvalue(semReaders, &reader_count);
+        if (reader_count == 0) {
+            sem_wait(semWriter);  // Bloquer le rédacteur si c'est le premier lecteur
+        }
+        sem_post(semReaders);  // Incrémenter le compteur de lecteurs
+
+        sem_post(semMutex);  // Relâcher le sémaphore de synchronisation
+
+
+
+        // Lire les données de la mémoire partagée
+        frame  = cv::Mat(HEIGHT, WIDTH, CV_8UC3, virtAddr);
+       
+
+        sem_wait(semMutex);  // Acquérir le sémaphore de synchronisation
+
+        // Décrémenter le nombre de lecteurs
+        sem_wait(semReaders);  // Décrémenter le compteur de lecteurs
+        sem_getvalue(semReaders, &reader_count);
+        if (reader_count == 0) {
+            sem_post(semWriter);  // Débloquer le rédacteur si c'est le dernier lecteur
+        }
+
+        sem_post(semMutex);  // Relâcher le sémaphore de synchronisation
+        
+        #endif
+
+
 
         cv::resize(frame, frame, cv::Size(widthResize, heightResize));
         cv::rotate(frame, frame, cv::ROTATE_180); // car a l'envers
@@ -221,8 +273,6 @@ int main(int argc, char const *argv[])
                     // Baisser la zone de detc apres le premier ou 2e mvt vers le haut 
                     
                     
-                    // Zoom point le plus bas de l'image et point le plus haut, ecart entre les deux
-                    
                 }
             }
         }
@@ -235,7 +285,7 @@ int main(int argc, char const *argv[])
 
 
         // Afficher du nb de point blanc sur la moitie haute de l'image sur l'image
-        cv::putText(thresh, (std::string) "nb px blancs Area : " + std::to_string(cv::countNonZero(detectionArea)), cv::Point(10, 30), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255), 2);
+        // cv::putText(thresh, (std::string) "nb px blancs Area : " + std::to_string(cv::countNonZero(detectionArea)), cv::Point(10, 30), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255), 2);
 
         cv::putText(frame, mvmtVert, cv::Point(10, 30), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255), 2);
         cv::putText(frame, mvmtHoriz, cv::Point(500, 30), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255), 2);
@@ -259,7 +309,20 @@ int main(int argc, char const *argv[])
     }
 
     // Libérer la capture
+    #ifdef VIDEO
     cap.release();
+    #else
+     // Fermer les ressources
+     munmap(virtAddr, SHM_FRAME_SIZE);
+     close(shm_fd);
+ 
+     // Fermer les sémaphores
+     sem_close(semReaders);
+     sem_close(semWriter);
+     sem_close(semMutex);
+     #endif
+
+
     cv::destroyAllWindows();
 
     DEBUG_PRINT("Fin de la détection.\n");

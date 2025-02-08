@@ -7,16 +7,13 @@
     "horizontalThreshold": 6,
     
     "increasePTZ" : -1.0,
-    "increaseZoom": 500,
     
     "widthResize": 640,
     "heightResize": 360,
     "cropRatioDetectionAreaWidth": 4,
     
     "waitTimeMs": 40,
-    "numberFrameBetweenMove":25,
+    "numberFrameBetweenMove":25
 
-    "nbPixelMinZoom":2000,
-    "nbPixelMaxZoom":4000
 
 }

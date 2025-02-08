@@ -37,7 +37,7 @@
 
 pid_t pidCapture, pidDetection, pidEcritureMemoire;
 sem_t *semFichierOrdre;
-sem_t *semReaders, *semWriter;
+sem_t *semReaders, *semWriter, *semMutex;
 
 /* ------------------------------------------------------------------------ */
 /*            P R O T O T Y P E S    D E    F O N C T I O N S               */
@@ -110,10 +110,10 @@ int main(int argc, char const *argv[])
 
 void init_semaphores() {
     // Créer ou ouvrir les sémaphores
-    CHECK_NULL(semReaders = sem_open(SEM_READERS, O_CREAT, 0666, 0), "main: sem_open(semReaders)");  // Compter les lecteurs actifs
-    CHECK_NULL(semWriter = sem_open(SEM_WRITER, O_CREAT, 0666, 1), "main: sem_open(semWriter)");   // Contrôler l'accès exclusif de l'écrivain
-    CHECK_NULL(semFichierOrdre = sem_open("semFichierOrdre", O_CREAT, 0666, 1), "main: sem_open(semFichierOrdre)"); // Contrôler l'accès exclusif au fichier d'ordre
-
+    CHECK_NULL(semReaders = sem_open(SEM_READERS, O_CREAT, 0664, 0), "main: sem_open(semReaders)");  // Compter les lecteurs actifs
+    CHECK_NULL(semWriter = sem_open(SEM_WRITER, O_CREAT, 0664, 1), "main: sem_open(semWriter)");   // Contrôler l'accès exclusif de l'écrivain
+    CHECK_NULL(semFichierOrdre = sem_open("semFichierOrdre", O_CREAT, 0664, 1), "main: sem_open(semFichierOrdre)"); // Contrôler l'accès exclusif au fichier d'ordre
+    CHECK_NULL(semMutex = sem_open(SEM_MUTEX, O_CREAT, 0664, 1), "main: sem_open(semMutex)"); // Contrôler l'accès exclusif à la mémoire partagée
     
     // gid_t group_gid = getgrnam("suiviGrimpeur")->gr_gid;
     // printf("GID : %d\n", group_gid);
@@ -149,9 +149,9 @@ void processusCapture(char * outputVideoFile){
     
   
 #ifdef DEBUG
-    const char * args[3] = {"./bin/ecritureMemoireDEBUG", outputVideoFile, NULL};
+    const char * args[3] = {"./bin/enregistrementVideoDEBUG", outputVideoFile, NULL};
 #else
-    const char * args[3] = {"./bin/ecritureMemoire", outputVideoFile, NULL};
+    const char * args[3] = {"./bin/enregistrementVideo", outputVideoFile, NULL};
 #endif
     DEBUG_PRINT("Affichage des argument de capture video:\n");
     for (int i = 0; i<3;i++){
@@ -400,9 +400,11 @@ void bye(){
     sem_close(semFichierOrdre);
     sem_unlink("semFichierOrdre");
     sem_close(semReaders);
-    sem_close(semWriter);
     sem_unlink(SEM_READERS);
+    sem_close(semWriter);
     sem_unlink(SEM_WRITER);
+    sem_close(semMutex);
+    sem_unlink(SEM_MUTEX);
     
 
     DEBUG_PRINT("[%d] --> Fin du programme\n", getpid());
