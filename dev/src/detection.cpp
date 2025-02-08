@@ -178,7 +178,6 @@ int main(int argc, char const *argv[])
 
 
         cv::resize(frame, frame, cv::Size(widthResize, heightResize));
-        cv::rotate(frame, frame, cv::ROTATE_180); // car a l'envers
         cv::cvtColor(frame, gray, cv::COLOR_BGR2GRAY);
         cv::equalizeHist(gray, gray); 
         cv::GaussianBlur(gray, gray, cv::Size(coefGaussianBlur, coefGaussianBlur), 0);
@@ -292,7 +291,7 @@ int main(int argc, char const *argv[])
 
 
         // Afficher l'image
-        cv::imshow("Thresh", thresh);
+        // cv::imshow("Thresh", thresh);
         // cv::imshow("Moitie haute", detectionArea);
 
         cv::imshow("Barycentre", frame); 

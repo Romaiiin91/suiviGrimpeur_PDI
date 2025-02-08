@@ -80,7 +80,7 @@ int main(int argc, char * argv[]) {
 
         sem_post(semWriter);  // Débloquer l'accès en écriture
 
-        if (cv::waitKey(40) == 'q') {
+        if (cv::waitKey(35) == 'q') {
             break;
         }
     }

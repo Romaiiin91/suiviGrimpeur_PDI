@@ -206,9 +206,9 @@ static void signalHandler(int numSig)
                         
                         DEBUG_PRINT("pidCapture : %d, pidDetection : %d, pidEcritureMemoire : %d, pidEnTraitement : %d\n", pidCapture, pidDetection, pidEcritureMemoire, pid);
                         
-                        if (pid == pidCapture){
-                            pidCapture = -1;
-                        }
+                        // if (pid == pidCapture){
+                        //     pidCapture = -1;
+                        // }
                         
                         
                         if (pid == pidDetection){ // Si detection s'arrete, on arrete la capture
@@ -220,6 +220,11 @@ static void signalHandler(int numSig)
                         if (pid == pidEcritureMemoire){
                             pidEcritureMemoire = -1;
                         }
+                    }
+
+                    // La capture nee renvoie pas de status
+                    if (pid == pidCapture){
+                        pidCapture = -1;
                     }
             
                     

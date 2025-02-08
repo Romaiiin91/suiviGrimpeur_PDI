@@ -6,7 +6,7 @@
     "verticalThreshold": 1.5,
     "horizontalThreshold": 6,
     
-    "increasePTZ" : -1.0,
+    "increasePTZ" : 1.0,
     
     "widthResize": 640,
     "heightResize": 360,

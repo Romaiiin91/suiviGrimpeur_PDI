@@ -38,7 +38,9 @@ int main(int argc, char * argv[]) {
 
     // commande ffmpeg
     char cmd[256];
-    sprintf(cmd, "%s %s %s %s %s %s %s %s %s %s %s %s %s", "ffmpeg", "-y", "-loglevel 32", "-f rawvideo", "-pix_fmt bgr24", "-s 1280x720", "-r 25", "-i pipe:0", "-c:v libx264", "-crf 23", "-preset medium", "-an", argc > 1 ? argv[1]:"serveur/videos/output.mp4");
+    // sprintf(cmd, "%s %s %s %s %s %s %s %s %s %s %s %s %s", "ffmpeg", "-y", "-loglevel 32", "-f rawvideo", "-pix_fmt bgr24", "-s 1280x720", "-r 25", "-i pipe:0", "-c:v libx264", "-preset medium", "-an", argc > 1 ? argv[1]:"serveur/videos/output.mp4");
+    sprintf(cmd, "%s %s %s %s %s %s %s %s %s %s %s %s %s %s", "ffmpeg", "-y", "-loglevel 32", "-f rawvideo", "-pixel_format bgr24", "-s 1280x720", "-r 25", "-i pipe:0",  "-c:v libx264", "-preset medium", "-pix_fmt yuv420p", "-crf 23", "-an", argc > 1 ? argv[1] : "serveur/videos/output.mp4");
+    
     DEBUG_PRINT("Commande FFMPEG : \"%s\"\n", cmd);
 
 
@@ -111,6 +113,7 @@ int main(int argc, char * argv[]) {
         Le sémaphore mutex_sem est utilisé pour protéger les variables partagées, comme le compteur de lecteurs (reader_count), afin d'éviter que plusieurs processus ne modifient cette variable en même temps. Sans mutex_sem, il y a un risque que deux lecteurs incrémentent ou décrémentent reader_count simultanément, ce qui pourrait entraîner des incohérences.
 
         */
+       usleep(39000); // 25 FPS
     }
 
     // Fermer les ressources
@@ -131,7 +134,7 @@ static void signalHandler(int numSig)
 { 
     switch(numSig) {
         case SIGINT : // traitement de SIGINT
-            DEBUG_PRINT("\t[%d] --> Arrêt du programme d'écriture en cours...\n", getpid());
+            DEBUG_PRINT("\t[%d] --> Arrêt du programme d'enregistrement video en cours...\n", getpid());
             enregistrementEnCours = 0;
             break;
         default :

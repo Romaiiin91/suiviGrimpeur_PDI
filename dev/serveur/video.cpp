@@ -142,12 +142,14 @@ int main() {
         // Envoyer les données JPEG
         fwrite(jpeg_data, 1, jpeg_size, stdout);
         fflush(stdout); // Forcer l'envoi des données
+        // Libérer la mémoire allouée pour les données JPEG
+        free(jpeg_data);
+        jpeg_data = NULL; // Réinitialiser le pointeur pour éviter les accès invalides
 
-    
+        usleep(39000); // 25 FPS
     }
 
-    // Libérer la mémoire allouée pour les données JPEG
-    free(jpeg_data);
+ 
 
     // Fermer les ressources
     munmap(virtAddr, SHM_FRAME_SIZE);

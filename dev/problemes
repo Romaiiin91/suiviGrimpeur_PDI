@@ -11,3 +11,8 @@
 Unable to init server: Impossible de se connecter : Connexion refusée"""
 
 Alors il faut executer la commande suivante: ```xhost +SI:localuser:www-data``` ou ```xhost +local:www-data``` et vreifier que www-data est bien dans la liste donné par la commande xhost
+
+
+La capture nee renvoie pas de status
+
+Groupe suiGrimpeur ne fonctionne pas pour les semaphores
