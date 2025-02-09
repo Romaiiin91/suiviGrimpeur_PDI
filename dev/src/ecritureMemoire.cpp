@@ -20,8 +20,8 @@ int main(int argc, char * argv[]) {
 
     int shm_fd;
     void* virtAddr;
-    sem_t *semReaders, *semWriter;
-
+    sem_t *semReaders, *semWriter, *semNewFrame, *semActiveReaders;
+    int readers;
     
     
     // Installation du gestionnaire de signaux pour géré l'arrêt du programme
@@ -36,6 +36,8 @@ int main(int argc, char * argv[]) {
     // Overture des semaphores
     CHECK_NULL(semReaders = sem_open(SEM_READERS, 0), "ecritureMemoire: sem_open(semReaders)");
     CHECK_NULL(semWriter = sem_open(SEM_WRITER, 0), "ecritureMemoire: sem_open(semWriter)");
+    CHECK_NULL(semNewFrame = sem_open(SEM_NEW_FRAME, 0), "ecritureMemoire: sem_open(semNewFrame)");
+    CHECK_NULL(semActiveReaders = sem_open(SEM_ACTIVE_READERS, 0), "ecritureMemoire: sem_open(semActiveReaders)");
 
     // Ouvrir la mémoire partagée
     CHECK(shm_fd = shm_open(SHM_NAME, O_CREAT | O_RDWR, 0666), "ecritureMemoire: shm_open(SHM_NAME)");
@@ -63,11 +65,9 @@ int main(int argc, char * argv[]) {
     cv::Mat frame;
     
     while (ecritureEnCours) {
-        cap >> frame;
-
-        // Vérifier si l'image est vide (fin du flux)
-        if (frame.empty()) {
-            std::cerr << "Erreur: Image vide capturée." << std::endl;
+        
+        if (!cap.read(frame)) {
+            std::cerr << "Erreur: Impossible de capturer une image." << std::endl;
             break;
         }
 
@@ -80,8 +80,11 @@ int main(int argc, char * argv[]) {
 
         sem_post(semWriter);  // Débloquer l'accès en écriture
 
-        if (cv::waitKey(35) == 'q') {
-            break;
+        
+        sem_getvalue(semActiveReaders, &readers);
+
+        for (int i = 0; i < readers; i++) {
+            sem_post(semNewFrame);
         }
     }
 
@@ -93,6 +96,8 @@ int main(int argc, char * argv[]) {
     // Fermer les sémaphores
     sem_close(semReaders);
     sem_close(semWriter);
+    sem_close(semNewFrame);
+    sem_close(semActiveReaders);
 
     exit(EXIT_SUCCESS);
 

@@ -67,18 +67,22 @@ int main() {
 
     int shm_fd;
     void* virtAddr;
-    sem_t *semReaders, *semWriter, *semMutex;
+    sem_t *semReaders, *semWriter, *semMutex, *semNewFrame, *semActiveReaders;
     int reader_count;
 
     cv::Mat frame(HEIGHT, WIDTH, CV_8UC3);
     cv::Mat frameRGB;   
-    unsigned char* jpeg_data = NULL;
+
     unsigned long jpeg_size = 0;
+    unsigned char* jpeg_buffer; // Taille maximale possible
+    CHECK_NULL(jpeg_buffer = (unsigned char*) malloc(WIDTH * HEIGHT * CHANNELS), "video.cgi: malloc(jpeg_buffer)");
 
     // Overture des semaphores
     CHECK_NULL(semReaders = sem_open(SEM_READERS, 0), "video.cgi: sem_open(semReaders)");
     CHECK_NULL(semWriter = sem_open(SEM_WRITER, 0), "video.cgi: sem_open(semWriter)");
     CHECK_NULL(semMutex = sem_open(SEM_MUTEX, 0), "video.cgi: sem_open(semMutex)");
+    CHECK_NULL(semNewFrame = sem_open(SEM_NEW_FRAME, 0), "video.cgi: sem_open(semNewFrame)");
+    CHECK_NULL(semActiveReaders = sem_open(SEM_ACTIVE_READERS, 0), "video.cgi: sem_open(semActiveReaders)");
 
     // Ouvrir la mémoire partagée
     CHECK(shm_fd = shm_open(SHM_NAME, O_CREAT | O_RDWR, 0666), "video.cgi: shm_open(SHM_NAME)");
@@ -89,9 +93,12 @@ int main() {
     printf("Content-Type: multipart/x-mixed-replace; boundary=--myboundary\r\n\r\n");
 
  
+    // Incrémenter le compteur de lecteurs actifs
+    sem_post(semActiveReaders);
 
     // Boucle pour envoyer les images en continu
     while (true) {
+        sem_wait(semNewFrame);  // Attendre une nouvelle image
 
         sem_wait(semMutex);  // Acquérir le sémaphore de synchronisation
  
@@ -107,8 +114,8 @@ int main() {
 
 
 
-        // Lire les données de la mémoire partagée
-        frame = cv::Mat(HEIGHT, WIDTH, CV_8UC3, virtAddr);
+        // Mettre à jour les données de la matrice frame
+        memcpy(frame.data, virtAddr, SHM_FRAME_SIZE);
        
 
         sem_wait(semMutex);  // Acquérir le sémaphore de synchronisation
@@ -122,33 +129,28 @@ int main() {
 
         sem_post(semMutex);  // Relâcher le sémaphore de synchronisation
         
-        //cv::imshow("Frame", frame);
-
-        
-        
-
-
+   
         // Convertir de BGR à RGB
         cv::cvtColor(frame, frameRGB, cv::COLOR_BGR2RGB);
 
         // Encoder l'image en JPEG
-        encode_jpeg(frameRGB.data, WIDTH, HEIGHT, CHANNELS, &jpeg_data, &jpeg_size);
+        encode_jpeg(frameRGB.data, WIDTH, HEIGHT, CHANNELS, &jpeg_buffer, &jpeg_size);
 
         // Envoyer l'en-tête de la partie
         printf("--myboundary\r\n");
         printf("Content-Type: image/jpeg\r\n");
         printf("Content-Length: %lu\r\n\r\n", jpeg_size);
-
-        // Envoyer les données JPEG
-        fwrite(jpeg_data, 1, jpeg_size, stdout);
+        
+        fwrite(jpeg_buffer, 1, jpeg_size, stdout);
         fflush(stdout); // Forcer l'envoi des données
-        // Libérer la mémoire allouée pour les données JPEG
-        free(jpeg_data);
-        jpeg_data = NULL; // Réinitialiser le pointeur pour éviter les accès invalides
 
-        usleep(39000); // 25 FPS
+        // usleep(39000); // 25 FPS
     }
 
+    // Décrémenter le compteur de lecteurs actifs à la fin de l'exécution du lecteur
+    sem_wait(semActiveReaders);
+
+    free(jpeg_buffer);
  
 
     // Fermer les ressources
@@ -159,8 +161,11 @@ int main() {
     sem_close(semReaders);
     sem_close(semWriter);
     sem_close(semMutex);
-
+    sem_close(semNewFrame);
+    sem_close(semActiveReaders);
     
+    DEBUG_CGI_PRINT("[%d] Fin du cgi video\n", getpid());
+
     exit(EXIT_SUCCESS);
     return 0;
 }

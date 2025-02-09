@@ -59,7 +59,8 @@
 #define SEM_READERS "/semReaders"
 #define SEM_WRITER  "/semWriter"
 #define SEM_MUTEX   "/semMutex"
-
+#define SEM_NEW_FRAME "/semNewFrame"
+#define SEM_ACTIVE_READERS "/semActiveReaders"
 
 
 /* ------------------------------------------------------------------------ */

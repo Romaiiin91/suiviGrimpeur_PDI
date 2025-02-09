@@ -13,7 +13,6 @@
     "heightResize": 360,
     "cropRatioDetectionArea": 4,
     
-    "waitTimeMs": 40,
     "numberFrameBetweenMove": 25,
     "numberFrameWithoutMove": 125
 

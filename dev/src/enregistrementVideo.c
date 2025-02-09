@@ -13,7 +13,7 @@ int main(int argc, char * argv[]) {
 
     int shm_fd;
     void* virtAddr;
-    sem_t *semReaders, *semWriter, *semMutex;
+    sem_t *semReaders, *semWriter, *semMutex, *semNewFrame, *semActiveReaders;
     int reader_count;
     
     
@@ -30,6 +30,8 @@ int main(int argc, char * argv[]) {
     CHECK_NULL(semReaders = sem_open(SEM_READERS, 0), "enregistrementVideo: sem_open(semReaders)");
     CHECK_NULL(semWriter = sem_open(SEM_WRITER, 0), "enregistrementVideo: sem_open(semWriter)");
     CHECK_NULL(semMutex = sem_open(SEM_MUTEX, 0), "enregistrementVideo: sem_open(semMutex)");
+    CHECK_NULL(semNewFrame = sem_open(SEM_NEW_FRAME, 0), "enregistrementVideo: sem_open(semNewFrame)");
+    CHECK_NULL(semActiveReaders = sem_open(SEM_ACTIVE_READERS, 0), "enregistrementVideo: sem_open(semActiveReaders)");
 
     // Ouvrir la mémoire partagée
     CHECK(shm_fd = shm_open(SHM_NAME, O_CREAT | O_RDWR, 0666), "enregistrementVideo: shm_open(SHM_NAME)");
@@ -70,10 +72,15 @@ int main(int argc, char * argv[]) {
         ./serveur/videos/20250208_2319_nom_prenom_voie.mp4      // Fichier de sortie (nom de fichier personnalisé)
     */
 
+    // Incrémenter le compteur de lecteurs actifs
+    sem_post(semActiveReaders);
+
 
 
 
     while (enregistrementEnCours) {
+
+        sem_wait(semNewFrame);  // Attendre une nouvelle image
 
         sem_wait(semMutex);  // Acquérir le sémaphore de synchronisation
 
@@ -110,10 +117,12 @@ int main(int argc, char * argv[]) {
 
         /*
         Le sémaphore mutex_sem est utilisé pour protéger les variables partagées, comme le compteur de lecteurs (reader_count), afin d'éviter que plusieurs processus ne modifient cette variable en même temps. Sans mutex_sem, il y a un risque que deux lecteurs incrémentent ou décrémentent reader_count simultanément, ce qui pourrait entraîner des incohérences.
-
         */
-       usleep(39000); // 25 FPS
+       
     }
+
+    // Décrémenter le compteur de lecteurs actifs à la fin de l'exécution du lecteur
+    sem_wait(semActiveReaders);
 
     // Fermer les ressources
     pclose(ffmpeg);
@@ -124,6 +133,8 @@ int main(int argc, char * argv[]) {
     sem_close(semReaders);
     sem_close(semWriter);
     sem_close(semMutex);
+    sem_close(semNewFrame);
+    sem_close(semActiveReaders);
     
     exit(EXIT_SUCCESS);
     return 0;

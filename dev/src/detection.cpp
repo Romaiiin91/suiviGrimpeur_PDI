@@ -36,11 +36,7 @@ int main(int argc, char const *argv[])
 {
     DEBUG_CGI_PRINT("[%d] Démarrage de detection video\n", getpid());
 
-    if (argc < 2) {
-        DEBUG_PRINT("Pas url video");
-        exit(EXIT_FAILURE);
-    }
-
+    
 
     // Installation du gestionnaire de signaux pour géré l'arrêt du programme
     struct sigaction newAction;
@@ -71,7 +67,6 @@ int main(int argc, char const *argv[])
     
     int cropRatioDetectionArea = json_integer_value(json_object_get(root, "cropRatioDetectionArea")); // 3 cetait bien
     
-    int waitTimeMs = json_integer_value(json_object_get(root, "waitTimeMs"));
     int numberFrameBetweenMove = json_integer_value(json_object_get(root, "numberFrameBetweenMove"));
     int numberFrameWithoutMove = json_integer_value(json_object_get(root, "numberFrameWithoutMove"));
 
@@ -93,6 +88,11 @@ int main(int argc, char const *argv[])
 
     #ifdef VIDEO
 
+    if (argc < 2) {
+        DEBUG_PRINT("Pas url video");
+        exit(EXIT_FAILURE);
+    }
+
     // Ouvrir la capture vidéo avec l'URL
     cv::VideoCapture cap(argv[1]);
     DEBUG_PRINT("Debut detection sur le lien : %s\n", argv[1]);
@@ -112,13 +112,18 @@ int main(int argc, char const *argv[])
 
     int shm_fd;
     void* virtAddr;
-    sem_t *semReaders, *semWriter, *semMutex;
+    sem_t *semReaders, *semWriter, *semMutex, *semNewFrame, *semActiveReaders;
     int reader_count;
 
     // Overture des semaphores
     CHECK_NULL(semReaders = sem_open(SEM_READERS, 0), "video.cgi: sem_open(semReaders)");
     CHECK_NULL(semWriter = sem_open(SEM_WRITER, 0), "video.cgi: sem_open(semWriter)");
     CHECK_NULL(semMutex = sem_open(SEM_MUTEX, 0), "video.cgi: sem_open(semMutex)");
+    CHECK_NULL(semNewFrame = sem_open(SEM_NEW_FRAME, 0), "video.cgi: sem_open(semNewFrame)");
+    CHECK_NULL(semActiveReaders = sem_open(SEM_ACTIVE_READERS, 0), "video.cgi: sem_open(semActiveReaders)");
+
+    // Incrémenter le compteur de lecteurs actifs
+    sem_post(semActiveReaders);
 
     // Ouvrir la mémoire partagée
     CHECK(shm_fd = shm_open(SHM_NAME, O_CREAT | O_RDWR, 0666), "video.cgi: shm_open(SHM_NAME)");
@@ -158,6 +163,8 @@ int main(int argc, char const *argv[])
         }
 
         #else
+
+        sem_wait(semNewFrame);  // Attendre une nouvelle image
 
         sem_wait(semMutex);  // Acquérir le sémaphore de synchronisation
  
@@ -307,7 +314,7 @@ int main(int argc, char const *argv[])
             }
         }
 
-        if ((frame_count - lastFrameWithMovement) > numberFrameWithoutMove){
+        if ((frame_count - lastFrameWithMovement) > numberFrameWithoutMove && nbMoveUp > 0){
             detectionEnCours = false;
             exitStatus = 1;
         }
@@ -323,8 +330,10 @@ int main(int argc, char const *argv[])
         // Afficher du nb de point blanc sur la moitie haute de l'image sur l'image
         cv::putText(thresh, (std::string) "nb px blancs Area : " + std::to_string(cv::countNonZero(detectionArea)), cv::Point(10, 30), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255), 2);
 
+
         cv::putText(frame, mvmtVert, cv::Point(10, 30), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255), 2);
         cv::putText(frame, mvmtHoriz, cv::Point(500, 30), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255), 2);
+        cv::putText(frame, std::to_string(frame_count - lastFrameWithMovement) , cv::Point(10, 350), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255), 2);
 
 
         // Afficher l'image
@@ -346,28 +355,40 @@ int main(int argc, char const *argv[])
         #endif
 
         frame_count++;
-        
-        
 
-        // Attendre 40 ms entre chaque image (1000 ms / 25 FPS) et quitter avec la touche 'q'
-        if (cv::waitKey(waitTimeMs) == 'q') {
-            break;
+        #ifdef VIDEO
+        if (cv::waitKey(40) == 'q') { // 25 fps
+            detectionEnCours = false;
+            exitStatus = 2;
         }
+        #else
+        if (cv::waitKey(5) == 'q') { // en attente du semaphore
+            detectionEnCours = false;
+            exitStatus = 2;
+        }
+        #endif
+        
     }
 
     // Libérer la capture
     #ifdef VIDEO
     cap.release();
     #else
-     // Fermer les ressources
-     munmap(virtAddr, SHM_FRAME_SIZE);
-     close(shm_fd);
- 
-     // Fermer les sémaphores
-     sem_close(semReaders);
-     sem_close(semWriter);
-     sem_close(semMutex);
-     #endif
+    // Décrémenter le compteur de lecteurs actifs à la fin de l'exécution du lecteur
+    sem_wait(semActiveReaders);
+
+    // Fermer les ressources
+    munmap(virtAddr, SHM_FRAME_SIZE);
+    close(shm_fd);
+
+    // Fermer les sémaphores
+    sem_close(semReaders);
+    sem_close(semWriter);
+    sem_close(semMutex);
+    sem_close(semNewFrame);
+    sem_close(semActiveReaders);
+
+    #endif
 
     cv::destroyAllWindows();
     

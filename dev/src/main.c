@@ -37,7 +37,7 @@
 
 pid_t pidCapture, pidDetection, pidEcritureMemoire;
 sem_t *semFichierOrdre;
-sem_t *semReaders, *semWriter, *semMutex;
+sem_t *semReaders, *semWriter, *semMutex, *semNewFrame, *semActiveReaders;
 
 /* ------------------------------------------------------------------------ */
 /*            P R O T O T Y P E S    D E    F O N C T I O N S               */
@@ -114,12 +114,9 @@ void init_semaphores() {
     CHECK_NULL(semWriter = sem_open(SEM_WRITER, O_CREAT, 0664, 1), "main: sem_open(semWriter)");   // Contrôler l'accès exclusif de l'écrivain
     CHECK_NULL(semFichierOrdre = sem_open("semFichierOrdre", O_CREAT, 0664, 1), "main: sem_open(semFichierOrdre)"); // Contrôler l'accès exclusif au fichier d'ordre
     CHECK_NULL(semMutex = sem_open(SEM_MUTEX, O_CREAT, 0664, 1), "main: sem_open(semMutex)"); // Contrôler l'accès exclusif à la mémoire partagée
-    
-    // gid_t group_gid = getgrnam("suiviGrimpeur")->gr_gid;
-    // printf("GID : %d\n", group_gid);
-    // chown("/dev/shm/sem.semWriter", -1, group_gid); //, "fchown(semReaders)");
-    // chown("/dev/shm/sem.semReaders", -1, group_gid);
-
+    CHECK_NULL(semNewFrame = sem_open(SEM_NEW_FRAME, O_CREAT, 0664, 0), "main: sem_open(semNewFrame)"); // Signaler l'arrivée d'une nouvelle image
+    CHECK_NULL(semActiveReaders = sem_open(SEM_ACTIVE_READERS, O_CREAT, 0664, 0), "main: sem_open(semActiveReaders)"); // Compter les lecteurs actifs
+   
 }
 
 void processusEcritureMemoire(){
@@ -166,17 +163,15 @@ void processusCapture(char * outputVideoFile){
 void processusDetection(){
     DEBUG_PRINT("\t[%d] --> Début du processus fils de Detection [%d]\n", getppid(), getpid());
 
-    char url[256];
-    sprintf(url, "%s@%s/%s", ENTETE_HTTP, IP, SCRIPT_VIDEO);
-    DEBUG_PRINT("Url de detection : %s\n", url);
+    
   
 #ifdef DEBUG
-    const char * args[3] = {"./bin/detectionDEBUG", url, NULL};
+    const char * args[2] = {"./bin/detectionDEBUG",  NULL};
 #else
-    const char * args[3] = {"./bin/detection", url, NULL};
+    const char * args[2] = {"./bin/detection",  NULL};
 #endif
     DEBUG_PRINT("Affichage des argument de detection:\n");
-    for (int i = 0; i<3;i++){
+    for (int i = 0; i<2;i++){
         DEBUG_PRINT("\targs[%d] = %s\n", i, args[i]);
     }
     // system("pwd");
@@ -447,6 +442,10 @@ void bye(){
     sem_unlink(SEM_WRITER);
     sem_close(semMutex);
     sem_unlink(SEM_MUTEX);
+    sem_close(semNewFrame);
+    sem_unlink(SEM_NEW_FRAME);  
+    sem_close(semActiveReaders);
+    sem_unlink(SEM_ACTIVE_READERS);
     
 
     DEBUG_PRINT("[%d] --> Fin du programme\n", getpid());
