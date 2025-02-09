@@ -6,8 +6,19 @@
     <link rel="icon" href="icone.ico" type="image/x-icon">
     <script src="jquery.js"></script>
     <script>
+        // Créez un élément script pour charger "fonctions.js"
         var script = document.createElement("script");
         script.src = "fonctions.js?v=" + new Date().getTime();
+
+        // Ajoutez l'écouteur d'événement "load" à l'objet window
+        window.addEventListener("load", function() {
+            // Appelez la fonction loadOptions une fois que tout est chargé
+            loadOptions();
+             // Appelez la fonction updateVideoStream pour mettre à jour l'image
+             updateVideoStream();
+        });
+
+        // Ajoutez le script au head pour qu'il soit chargé
         document.head.appendChild(script);
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -137,12 +148,7 @@
             <!-- voir pour la recuperation de l'ip maison 192.168.1.13-->
             <!-- <img src="http://192.168.0.4/mjpg/video.mjpg?resolution=1280x720&fps=25&compression=25" alt="Flux Vidéo en Direct"> -->
             <img id="videoStream" src="" alt="Image en temps réel">
-            <script>
-                document.addEventListener("DOMContentLoaded", function () {
-                    var img = document.getElementById("videoStream");
-                    img.src = "video.cgi?timestamp=" + new Date().getTime();
-                });
-            </script>
+            
         </div>
 
         <!-- Boutons -->
@@ -219,6 +225,7 @@
                 <input type="button" value="Sauvegarder la position de caméra" onclick="addRoute();"/> 
                 <input type="button" value="Supprimer la voie sélectionnée" onclick="removeRoute();"/> 
                 <input type="button" value="Afficher la voie sélectionnée" onclick="showRoute();"/>
+                
             </div>
         </div>
 

@@ -71,11 +71,21 @@ function startEnregistrement(){
     prenom = prenom.trim() == "" ? "prenom" : prenom;
 
     const dropdown = document.getElementById("dropdown");
+    voie = dropdown.value;
+    voie = voie.trim() == "" ? "0" : voie;
+    
 
-    $.get("action.cgi", {enrg: "on", nom: nom, prenom: prenom, voie: dropdown.value});
+    $.get("action.cgi", {enrg: "on", nom: nom, prenom: prenom, voie: voie});
 }
-
-
+// update video stream
+function updateVideoStream() {
+    var img = document.getElementById("videoStream");
+    if (img) {
+        img.src = "video.cgi?timestamp=" + new Date().getTime();
+    } else {
+        console.error("L'élément avec l'ID 'videoStream' n'a pas été trouvé.");
+    }
+}
 
 
 // Charger et afficher les options
@@ -85,7 +95,7 @@ function loadOptions() {
     dropdown.innerHTML = ''; // Reset the dropdown content
 
     // Fetch JSON data
-    $.getJSON("positionsEnregistrees.json", {t:Math.random()}, function (data) {
+    $.getJSON("positionsEnregistrees.json", {timestamp:new Date().getTime()}, function (data) {
         for (let key in data) {
             const option = document.createElement("option");
             option.value = key;
@@ -129,6 +139,4 @@ function showRoute() {
     $.get("action.cgi", {rout:"shw", id: selectedKey});
 }
 
-// Charger les options au démarrage
-document.addEventListener("DOMContentLoaded", loadOptions);
 
