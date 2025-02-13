@@ -3,7 +3,7 @@
 sem_t *semFichierOrdre;
 
 int main(void) {
-	DEBUG_PRINT("[%d] Démarrage du programme CGI\n", getpid());
+	DEBUG_CGI_PRINT("[%d] Démarrage du programme CGI\n", getpid());
 	//Installation du gestionnaire de fin d'exécution du programme
 	atexit(bye);
 
@@ -38,13 +38,13 @@ int main(void) {
 	   
 	// traitements à terminer ! 
 
-	DEBUG_PRINT("Recu : %s\n",buffer);
+	DEBUG_CGI_PRINT("Recu : %s\n",buffer);
 	
-	// DEBUG_PRINT("PID action.c %d\n", getpid());
+	// DEBUG_CGI_PRINT("PID action.c %d\n", getpid());
 
 	// int value;
     // sem_getvalue(semFichierOrdre, &value);
-	// DEBUG_PRINT("Valeur du sémaphore %d\n", value); 
+	// DEBUG_CGI_PRINT("Valeur du sémaphore %d\n", value); 
 	
 	FILE *fOrder;
 
@@ -67,7 +67,7 @@ int main(void) {
 	fclose(fpid); 
 
 	int pid = atoi(buffer);
-	DEBUG_PRINT("PID : %d\n", pid); 
+	DEBUG_CGI_PRINT("PID : %d\n", pid); 
 
 	CHECK(kill(pid, SIGUSR1), "kill(pid, SIGUSR1)");
 
@@ -81,11 +81,11 @@ int main(void) {
 static void signalHandler(int numSig){ 
     switch(numSig) {
         case SIGUSR1:
-            DEBUG_PRINT("\t[%d] --> SIGUSR1 recu... \n", getpid());
+            DEBUG_CGI_PRINT("\t[%d] --> SIGUSR1 recu... \n", getpid());
             retourHTTP();
             break;  
 		case SIGALRM:// A faire 
-			DEBUG_PRINT("\t[%d] --> SIGALRM recu... \n", getpid());
+			DEBUG_CGI_PRINT("\t[%d] --> SIGALRM recu... \n", getpid());
 			printf("Content-Type: text/plain\n\n");
             printf("Timeout: Aucun signal SIGUSR1 reçu dans les 5 secondes.\n");
 			break;
@@ -120,5 +120,5 @@ void retourHTTP(){
 void bye(){
     sem_close(semFichierOrdre);
 
-    DEBUG_PRINT("[%d] --> Fin du programme CGI\n", getpid());
+    DEBUG_CGI_PRINT("[%d] --> Fin du programme CGI\n", getpid());
 }

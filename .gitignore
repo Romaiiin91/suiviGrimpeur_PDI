@@ -1,7 +1,9 @@
 dev/videos/
 dev/serveur/videos/
+dev/serveur/*.cgi
 dev/*.log
 dev/bin/*
+dev/bin/mainDEBUG
 *.zip
 dev/serveur/videos.zip
 .vscode/

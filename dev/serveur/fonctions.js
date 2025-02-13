@@ -44,9 +44,15 @@ function zoomUpdate() {
 // }
 function startRecord() { 
     console.log("record on");
-    const nom = document.getElementById("nom").value;
-    const prenom = document.getElementById("prenom").value;
+
+    nom = document.getElementById("nom").value;
+    prenom = document.getElementById("prenom").value;
+
+    nom = nom.trim() == "" ? "nom" : nom;
+    prenom = prenom.trim() == "" ? "prenom" : prenom;
+
     const dropdown = document.getElementById("dropdown");
+
     $.get("action.cgi", {reco: "on", nom: nom, prenom: prenom, voie: dropdown.value});
 }
 function stopRecord() { console.log("record off"); $.get("action.cgi", {reco: "off"}); }
@@ -56,6 +62,32 @@ function startDetection() {
 }
 function stopDetection() { console.log("detection off"); $.get("action.cgi", {detc: "off"}); }
 
+function startEnregistrement(){
+    console.log("enregistrement on");
+    nom = document.getElementById("nom").value;
+    prenom = document.getElementById("prenom").value;
+
+    nom = nom.trim() == "" ? "nom" : nom;
+    prenom = prenom.trim() == "" ? "prenom" : prenom;
+
+    const dropdown = document.getElementById("dropdown");
+    voie = dropdown.value;
+    voie = voie.trim() == "" ? "0" : voie;
+    
+
+    $.get("action.cgi", {enrg: "on", nom: nom, prenom: prenom, voie: voie});
+}
+// update video stream
+function updateVideoStream() {
+    var img = document.getElementById("videoStream");
+    if (img) {
+        img.src = "video.cgi?timestamp=" + new Date().getTime();
+    } else {
+        console.error("L'élément avec l'ID 'videoStream' n'a pas été trouvé.");
+    }
+}
+
+
 // Charger et afficher les options
 function loadOptions() {
     // Clear existing options
@@ -63,7 +95,7 @@ function loadOptions() {
     dropdown.innerHTML = ''; // Reset the dropdown content
 
     // Fetch JSON data
-    $.getJSON("positionsEnregistrees.json", {t:Math.random()}, function (data) {
+    $.getJSON("positionsEnregistrees.json", {timestamp:new Date().getTime()}, function (data) {
         for (let key in data) {
             const option = document.createElement("option");
             option.value = key;
@@ -107,6 +139,4 @@ function showRoute() {
     $.get("action.cgi", {rout:"shw", id: selectedKey});
 }
 
-// Charger les options au démarrage
-document.addEventListener("DOMContentLoaded", loadOptions);
 

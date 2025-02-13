@@ -34,6 +34,7 @@
 #include <semaphore.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <sys/mman.h>
 
 
 /* ------------------------------------------------------------------------ */
@@ -41,14 +42,25 @@
 /* ------------------------------------------------------------------------ */
 
 #define ENTETE_HTTP         "http://serveur:serveur"
-#define IP                  "192.168.0.4" // 1.13
+#define IP                  "192.168.1.13" // 1.13
 #define SCRIPT_VIDEO        "axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25"
 #define SCRIPT_PTZ          "axis-cgi/com/ptz.cgi"
 #define PATH_FILE_ORDRE     "./bin/fichierOrdre"
 #define PATH_FPID           "./bin/suiviGrimpeur.pid"
 #define PATH_VIDEOS         "./serveur/videos"
 
+#define SHM_NAME "/shm_image"
+#define WIDTH 1280
+#define HEIGHT 720
+#define CHANNELS 3
+#define FRAME_SIZE (WIDTH * HEIGHT * CHANNELS)
+#define SHM_FRAME_SIZE ((FRAME_SIZE + sysconf(_SC_PAGE_SIZE) - 1) / sysconf(_SC_PAGE_SIZE)) * sysconf(_SC_PAGE_SIZE) 
 
+#define SEM_READERS "/semReaders"
+#define SEM_WRITER  "/semWriter"
+#define SEM_MUTEX   "/semMutex"
+#define SEM_NEW_FRAME "/semNewFrame"
+#define SEM_ACTIVE_READERS "/semActiveReaders"
 
 
 /* ------------------------------------------------------------------------ */
