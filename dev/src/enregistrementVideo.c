@@ -41,7 +41,7 @@ int main(int argc, char * argv[]) {
     // commande ffmpeg
     char cmd[256];
     // sprintf(cmd, "%s %s %s %s %s %s %s %s %s %s %s %s %s", "ffmpeg", "-y", "-loglevel 32", "-f rawvideo", "-pix_fmt bgr24", "-s 1280x720", "-r 25", "-i pipe:0", "-c:v libx264", "-preset medium", "-an", argc > 1 ? argv[1]:"serveur/videos/output.mp4");
-    sprintf(cmd, "%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s", "ffmpeg", "-y", "-loglevel 32", "-f rawvideo", "-fflags +discardcorrupt", "-pixel_format bgr24", "-s 1280x720", "-r 25", "-i pipe:0",  "-c:v libx264", "-preset medium", "-pix_fmt yuv420p", "-crf 23", "-an", argc > 1 ? argv[1] : "serveur/videos/output.mp4");
+    sprintf(cmd, "%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s", "ffmpeg", "-y", "-loglevel 32", "-f rawvideo", "-fflags +discardcorrupt", "-pixel_format bgr24", "-s 1280x720", "-r 25", "-i pipe:0",  "-c:v libx264", "-preset fast", "-pix_fmt yuv420p", "-crf 25", "-an", argc > 1 ? argv[1] : "./data/videos/output.mp4");
     
     DEBUG_PRINT("Commande FFMPEG : \"%s\"\n", cmd);
 
@@ -69,7 +69,7 @@ int main(int argc, char * argv[]) {
         -pix_fmt yuv420p                                        // Format de pixel YUV 4:2:0 pour compatibilité
         -crf 23                                                 // Qualité de compression (23 = bonne qualité par défaut)
         -an                                                     // Désactive l'audio
-        ./serveur/videos/20250208_2319_nom_prenom_voie.mp4      // Fichier de sortie (nom de fichier personnalisé)
+        ./data/videos/20250208_2319_nom_prenom_voie.mp4      // Fichier de sortie (nom de fichier personnalisé)
     */
 
     // Incrémenter le compteur de lecteurs actifs

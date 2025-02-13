@@ -15,3 +15,7 @@ Alors il faut executer la commande suivante: ```xhost +SI:localuser:www-data``` 
 La capture nee renvoie pas de status
 
 Groupe suiGrimpeur ne fonctionne pas pour les semaphores
+
+Deux video. cgi se lancent jsp pourquoi j'ai deux requete reseau
+ffmpeg 267% du cpu
+Le kill sur le main ne fonctionne pas sur le raspberry

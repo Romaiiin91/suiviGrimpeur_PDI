@@ -5,7 +5,8 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/dev/include",
-                "/usr/include/opencv4/**"
+                "/usr/include/opencv4/**",
+                "${workspaceFolder}/dev/server/cgi-bin"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

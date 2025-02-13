@@ -1,9 +1,10 @@
-dev/videos/
-dev/serveur/videos/
-dev/serveur/*.cgi
+dev/data/videos
+dev/server/bin-cgi/*.cgi
 dev/*.log
+dev/log
 dev/bin/*
 dev/bin/mainDEBUG
 *.zip
-dev/serveur/videos.zip
+dev/server/videos.zip
 .vscode/
+dev/google

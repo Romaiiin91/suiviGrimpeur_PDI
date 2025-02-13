@@ -1,8 +1,9 @@
-
+const POSITIONS_JSON_URL = "data/positionsEnregistrees.json";
+const DIR_CGI = "/cgi-bin/"
 
 function envoi() {
     console.log("click sur envoyer");
-    $.get("action.cgi", {data: "toto", dir: "N"});
+    $.get(DIR_CGI + "action.cgi", {data: "toto", dir: "N"});
 }
 
 function updatePrecisionValue(value) {
@@ -15,33 +16,30 @@ function updateZoomValue(value) {
 function up() { 
     console.log("move up"); 
     const precisionValue = document.getElementById('precision').value;
-    $.get("action.cgi", {move: "up", prec: precisionValue}); 
+    $.get(DIR_CGI + "action.cgi", {move: "up", prec: precisionValue}); 
 }
 function down() {    
     console.log("move down"); 
     const precisionValue = document.getElementById('precision').value;
-    $.get("action.cgi", {move: "down", prec: precisionValue}); 
+    $.get(DIR_CGI + "action.cgi", {move: "down", prec: precisionValue}); 
 }
 function left() {    
     console.log("move left");
     const precisionValue = document.getElementById('precision').value;
-    $.get("action.cgi", {move: "left", prec: precisionValue}); 
+    $.get(DIR_CGI + "action.cgi", {move: "left", prec: precisionValue}); 
 }
 function right() {   
     console.log("move right");
     const precisionValue = document.getElementById('precision').value; 
-    $.get("action.cgi", {move: "right", prec: precisionValue}); 
+    $.get(DIR_CGI + "action.cgi", {move: "right", prec: precisionValue}); 
 }
 function zoomUpdate() {  
     console.log("zoom Update"); 
     const zoomValue = document.getElementById('zoom').value;
     console.log("zoomValue :", zoomValue);
-    $.get("action.cgi", {zoom: zoomValue}); 
+    $.get(DIR_CGI + "action.cgi", {zoom: zoomValue}); 
 }
-// function zoomOut() { 
-//     console.log("zoom out"); 
-//     $.get("action.cgi", {zoom: "-500"}); 
-// }
+
 function startRecord() { 
     console.log("record on");
 
@@ -53,14 +51,14 @@ function startRecord() {
 
     const dropdown = document.getElementById("dropdown");
 
-    $.get("action.cgi", {reco: "on", nom: nom, prenom: prenom, voie: dropdown.value});
+    $.get(DIR_CGI + "action.cgi", {reco: "on", nom: nom, prenom: prenom, voie: dropdown.value});
 }
-function stopRecord() { console.log("record off"); $.get("action.cgi", {reco: "off"}); }
+function stopRecord() { console.log("record off"); $.get(DIR_CGI + "action.cgi", {reco: "off"}); }
 function startDetection() { 
     console.log("detection on"); 
-    $.get("action.cgi", {detc: "on"}); 
+    $.get(DIR_CGI + "action.cgi", {detc: "on"}); 
 }
-function stopDetection() { console.log("detection off"); $.get("action.cgi", {detc: "off"}); }
+function stopDetection() { console.log("detection off"); $.get(DIR_CGI + "action.cgi", {detc: "off"}); }
 
 function startEnregistrement(){
     console.log("enregistrement on");
@@ -75,13 +73,13 @@ function startEnregistrement(){
     voie = voie.trim() == "" ? "0" : voie;
     
 
-    $.get("action.cgi", {enrg: "on", nom: nom, prenom: prenom, voie: voie});
+    $.get(DIR_CGI + "action.cgi", {enrg: "on", nom: nom, prenom: prenom, voie: voie});
 }
 // update video stream
 function updateVideoStream() {
     var img = document.getElementById("videoStream");
     if (img) {
-        img.src = "video.cgi?timestamp=" + new Date().getTime();
+        img.src = DIR_CGI + "video.cgi?timestamp=" + new Date().getTime();
     } else {
         console.error("L'élément avec l'ID 'videoStream' n'a pas été trouvé.");
     }
@@ -95,7 +93,7 @@ function loadOptions() {
     dropdown.innerHTML = ''; // Reset the dropdown content
 
     // Fetch JSON data
-    $.getJSON("positionsEnregistrees.json", {timestamp:new Date().getTime()}, function (data) {
+    $.getJSON(POSITIONS_JSON_URL, {timestamp:new Date().getTime()}, function (data) {
         for (let key in data) {
             const option = document.createElement("option");
             option.value = key;
@@ -113,7 +111,7 @@ function addRoute() {
     // Vérifier si l'utilisateur a entré quelque chose
     if (number !== null && number.trim() !== "") {
         console.log("Numéro saisi :", number);
-        $.get("action.cgi", { rout: "add", id: number}, function(rep){
+        $.get(DIR_CGI + "action.cgi", { rout: "add", id: number}, function(rep){
             console.log("MAJ du json");
             loadOptions();
 
@@ -125,7 +123,7 @@ function removeRoute() {
     const dropdown = document.getElementById("dropdown");
     const selectedKey = dropdown.value;
     console.log(`Voie selectionnee : ${selectedKey}`);
-    $.get("action.cgi", {rout: "rem", id: selectedKey}, function(rep){
+    $.get(DIR_CGI + "action.cgi", {rout: "rem", id: selectedKey}, function(rep){
         console.log("MAJ du json");
         loadOptions();
     });
@@ -136,7 +134,7 @@ function showRoute() {
     const dropdown = document.getElementById("dropdown");
     const selectedKey = dropdown.value;
     console.log(`Voie selectionnee : ${selectedKey}`);
-    $.get("action.cgi", {rout:"shw", id: selectedKey});
+    $.get(DIR_CGI + "action.cgi", {rout:"shw", id: selectedKey});
 }
 
 

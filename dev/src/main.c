@@ -9,22 +9,12 @@
 /*                   E N T Ê T E S    S T A N D A R D S                     */
 /* ------------------------------------------------------------------------ */
 
-#include <utils.h>
-#include <positions.h>
-#include <ptz.h>
-#include <grp.h>
-#include <sys/stat.h>
-#include <semaphore.h>
-#include <unistd.h>
-#include <grp.h>
-#include <errno.h>
-
+#include <main.h>
 
 /* ------------------------------------------------------------------------ */
 /*              C O N S T A N T E S     S Y M B O L I Q U E S               */
 /* ------------------------------------------------------------------------ */
 
-#define NB_ARGS_VIDEO       21
 
 /* ------------------------------------------------------------------------ */
 /*              D É F I N I T I O N S   D E   T Y P E S                     */
@@ -39,73 +29,11 @@ pid_t pidCapture, pidDetection, pidEcritureMemoire;
 sem_t *semFichierOrdre;
 sem_t *semReaders, *semWriter, *semMutex, *semNewFrame, *semActiveReaders;
 
-/* ------------------------------------------------------------------------ */
-/*            P R O T O T Y P E S    D E    F O N C T I O N S               */
-/* ------------------------------------------------------------------------ */
-
-void bye();
-void processusEcritureMemoire();
-void processusCapture(char * outputVideoFile);
-void processusDetection();
-static void signalHandler(int numSig);
-void gestionOrdres();
-void ack(int status, pid_t pidCgi);
-void init_semaphores();
-
 
 
 /* ------------------------------------------------------------------------ */
 /*            D E F I N I T I O N   D E    F O N C T I O N S                */
 /* ------------------------------------------------------------------------ */
-
-int main(int argc, char const *argv[])
-{
-    DEBUG_PRINT("[%d] Démarrage du programme\n", getpid());
-
-    // Ouverture du sémaphore nommé pour la communication avec le CGI
-    init_semaphores();
-
-    //Installation du gestionnaire de fin d'exécution du programme
-	atexit(bye);
-
-    int pidFils;
-    CHECK(pidFils = fork(), "fork(pidEcritureMemoire)");
-    if (pidFils == 0) {
-        processusEcritureMemoire();
-    }
-    else pidEcritureMemoire = pidFils;
-
-
-
-	// int value;
-    // sem_getvalue(semFichierOrdre, &value);
-	// DEBUG_PRINT("Valeur du sémaphore %d\n", value); 
-    
-    
-    // Sauvegarde du numero de PID
-    FILE *fpid;
-    CHECK_NULL(fpid = fopen(PATH_FPID, "w"), "fopen(fpid)"); 
-    fprintf(fpid, "%d\n", getpid());                              
-    fflush(fpid);                                                   
-    fclose(fpid); 
-
-
-    
-
-	// Installation du gestionnaire de signaux pour géré le ctrl c et la fin d'un fils.
-    struct sigaction newAction;
-    newAction.sa_handler = signalHandler;
-    CHECK(sigemptyset(&newAction.sa_mask ), " sigemptyset ()");
-    newAction.sa_flags = 0;
-    CHECK(sigaction(SIGINT, &newAction, NULL), "sigaction (SIGINT)");
-    CHECK(sigaction(SIGCHLD, &newAction, NULL), "sigaction (SIGCHLD)");
-    CHECK(sigaction(SIGUSR1, &newAction, NULL), "sigaction (SIGUSR1)");
-    
-    while(1) pause();
-
-    return 0;
-}
-
 
 
 void init_semaphores() {
@@ -124,8 +52,8 @@ void processusEcritureMemoire(){
 
     char url[256];
     sprintf(url, "%s@%s/%s", ENTETE_HTTP, IP, SCRIPT_VIDEO);
-    // sprintf(url, "%s", "/home/romain/Documents/suiviGrimpeur_PDI/dev/serveur/videos/20250109_2148_2_2_voie1.mp4");
-    // DEBUG_PRINT("Url de detection : %s\n", url);
+    // sprintf(url, "%s", "/home/romain/Documents/suiviGrimpeur_PDI/dev/data/videos/20250109_2148_2_2_voie1.mp4");
+    DEBUG_PRINT("Url de detection : %s\n", url);
   
 #ifdef DEBUG
     const char * args[3] = {"./bin/ecritureMemoireDEBUG", url, NULL};
@@ -302,7 +230,7 @@ void gestionOrdres(){
 
             // Création du nom du fichier de sortie
             sprintf(outputVideoFile, "%s/%s_%s_%s_voie%s.mp4", PATH_VIDEOS, dateTime, nom, prenom, voie);
-            DEBUG_PRINT("Nom du fichier de sortie : %s\n", outputVideoFile);
+            DEBUG_PRINT("Nom du fichier de sortie : %s\n", outputVideoFile); 
             
 
             CHECK(pidFils = fork(), "fork(pidCapture)");
@@ -449,5 +377,57 @@ void bye(){
     
 
     DEBUG_PRINT("[%d] --> Fin du programme\n", getpid());
+}
+
+
+int main(int argc, char const *argv[])
+{
+    DEBUG_PRINT("[%d] Démarrage du programme\n", getpid());
+
+    // Ouverture du sémaphore nommé pour la communication avec le CGI
+    init_semaphores();
+
+    //Installation du gestionnaire de fin d'exécution du programme
+	atexit(bye);
+
+    // Sauvegarde du numero de PID
+    FILE *fpid;
+    CHECK_NULL(fpid = fopen(PATH_FPID, "w"), "fopen(fpid)"); 
+    fprintf(fpid, "%d\n", getpid());                              
+    fflush(fpid);                                                   
+    fclose(fpid); 
+ 
+
+
+    int pidFils;
+    CHECK(pidFils = fork(), "fork(pidEcritureMemoire)");
+    if (pidFils == 0) {
+        processusEcritureMemoire();
+    }
+    else pidEcritureMemoire = pidFils;
+
+
+
+	// int value;
+    // sem_getvalue(semFichierOrdre, &value);
+	// DEBUG_PRINT("Valeur du sémaphore %d\n", value); 
+    
+    
+   
+
+    
+
+	// Installation du gestionnaire de signaux pour géré le ctrl c et la fin d'un fils.
+    struct sigaction newAction;
+    newAction.sa_handler = signalHandler;
+    CHECK(sigemptyset(&newAction.sa_mask ), " sigemptyset ()");
+    newAction.sa_flags = 0;
+    CHECK(sigaction(SIGINT, &newAction, NULL), "sigaction (SIGINT)");
+    CHECK(sigaction(SIGCHLD, &newAction, NULL), "sigaction (SIGCHLD)");
+    CHECK(sigaction(SIGUSR1, &newAction, NULL), "sigaction (SIGUSR1)");
+    
+    while(1) pause();
+
+    return 0;
 }
 

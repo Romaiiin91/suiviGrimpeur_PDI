@@ -13,7 +13,11 @@
 #include <cstdio>
 #include <iostream>
 #include <opencv2/objdetect.hpp>
+
+
+
 #include <ptz.h>
+#include <utils.h>
 #include <jansson.h>
 
 /* ------------------------------------------------------------------------ */
@@ -40,42 +44,6 @@
 /* ------------------------------------------------------------------------ */
 /*                      M A C R O - F O N C T I O N S                       */
 /* ------------------------------------------------------------------------ */
-
-
-
-#define CHECK_T(status, msg)                                                 \
-  if (0 != (status))   {                                                     \
-    fprintf(stderr, "pthread erreur : %s avec erreur n°%d\n", msg, status);  \
-    exit (EXIT_FAILURE);                                                     \
-  }
-
-#define CHECK(status, msg)                                                   \
-    if (-1 == (status)) {                                                    \
-        perror(msg);                                                         \
-        exit(EXIT_FAILURE);                                                  \
-    }
-
-#define CHECK_NULL(status, msg)                                              \
-    if (NULL == (status)) {                                                  \
-        perror(msg);                                                         \
-        exit(EXIT_FAILURE);                                                  \
-    }
-
-#define ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
-
-
-#ifdef DEBUG
-    #define DEBUG_CGI_PRINT(msg, ...) do {                                      \
-        FILE *log_file;                                                     \
-        CHECK_NULL(log_file = fopen("debug.log", "a"), "fopen(debug.log)"); \
-        fprintf(log_file, msg, ##__VA_ARGS__);                              \
-        fflush(log_file);                                                   \
-        fclose(log_file);                                                   \
-    } while (0)
-#else
-    #define DEBUG_CGI_PRINT(msg, ...) // Ne fait rien si DEBUG n'est pas défini
-#endif
-
 
 
 /* ------------------------------------------------------------------------ */

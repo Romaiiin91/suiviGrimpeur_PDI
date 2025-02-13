@@ -18,23 +18,19 @@
 #include <unistd.h> 
 #include <string.h>
 
+// Semaphore
+#include <semaphore.h>
+#include <fcntl.h>
+#include <sys/mman.h>
+
 // Signaux
 #include <signal.h>
 #include <bits/sigaction.h> // Include pour evider les erreurs sur vscode 
 #include <bits/types/sigset_t.h>
 
-// Processus
-#include <sys/wait.h>
 
-
-// Requetes http
-#include <curl/curl.h>
-
-// Semaphore
-#include <semaphore.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/mman.h>
+// Chemins
+#include <chemin.h>
 
 
 /* ------------------------------------------------------------------------ */
@@ -45,22 +41,9 @@
 #define IP                  "192.168.1.13" // 1.13
 #define SCRIPT_VIDEO        "axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25"
 #define SCRIPT_PTZ          "axis-cgi/com/ptz.cgi"
-#define PATH_FILE_ORDRE     "./bin/fichierOrdre"
-#define PATH_FPID           "./bin/suiviGrimpeur.pid"
-#define PATH_VIDEOS         "./serveur/videos"
 
-#define SHM_NAME "/shm_image"
-#define WIDTH 1280
-#define HEIGHT 720
-#define CHANNELS 3
-#define FRAME_SIZE (WIDTH * HEIGHT * CHANNELS)
-#define SHM_FRAME_SIZE ((FRAME_SIZE + sysconf(_SC_PAGE_SIZE) - 1) / sysconf(_SC_PAGE_SIZE)) * sysconf(_SC_PAGE_SIZE) 
 
-#define SEM_READERS "/semReaders"
-#define SEM_WRITER  "/semWriter"
-#define SEM_MUTEX   "/semMutex"
-#define SEM_NEW_FRAME "/semNewFrame"
-#define SEM_ACTIVE_READERS "/semActiveReaders"
+
 
 
 /* ------------------------------------------------------------------------ */
@@ -98,7 +81,7 @@
 #ifdef DEBUG
     #define DEBUG_PRINT(msg, ...) do {                                      \
         FILE *log_file;                                                     \
-        CHECK_NULL(log_file = fopen("debug.log", "a"), "fopen(debug.log)"); \
+        CHECK_NULL(log_file = fopen(PATH_LOG, "a"), "fopen(debug.log)"); \
         fprintf(log_file, msg, ##__VA_ARGS__);                              \
         fflush(log_file);                                                   \
         fclose(log_file);                                                   \

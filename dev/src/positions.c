@@ -101,7 +101,7 @@ positionPTZ recupererPosition(char * voie){
 }
 
 void addPositionFile(const positionPTZ pos){
-    json_t *root = json_load_file(FILEPATH_POSITIONS, 0, NULL);
+    json_t *root = json_load_file(PATH_POSITIONS, 0, NULL);
     if (!root) {
         root = json_object();
     }
@@ -112,7 +112,7 @@ void addPositionFile(const positionPTZ pos){
     json_array_append_new(position_array, json_real(pos.zoom));
 
     json_object_set_new(root, pos.numVoie, position_array);
-    json_dump_file(root, FILEPATH_POSITIONS, JSON_INDENT(4));
+    json_dump_file(root, PATH_POSITIONS, JSON_INDENT(4));
     json_decref(root);
 }
 
@@ -162,7 +162,7 @@ int removeRoute(char * voie){
     
     // Charger le fichier JSON
     json_error_t error;
-    json_t *root = json_load_file(FILEPATH_POSITIONS, 0, &error);
+    json_t *root = json_load_file(PATH_POSITIONS, 0, &error);
     if (!root) {
         fprintf(stderr, "Erreur lors du chargement : %s\n", error.text);
         return 1;
@@ -178,7 +178,7 @@ int removeRoute(char * voie){
     }
 
     // Sauvegarder le fichier JSON modifié
-    if (json_dump_file(root, FILEPATH_POSITIONS, JSON_INDENT(4)) != 0) {
+    if (json_dump_file(root, PATH_POSITIONS, JSON_INDENT(4)) != 0) {
         fprintf(stderr, "Erreur lors de l'écriture dans le fichier\n");
         json_decref(root);
         return 1;
@@ -193,11 +193,11 @@ int removeRoute(char * voie){
 int showRoute(char * voie){
     DEBUG_PRINT("Affichage de la voie n°%s\n", voie);
     json_error_t error;
-    json_t *root = json_load_file(FILEPATH_POSITIONS, 0, &error);
+    json_t *root = json_load_file(PATH_POSITIONS, 0, &error);
     if (!root) {
         fprintf(stderr, "Erreur lors du chargement : %s\n", error.text);
         return 1;
-    }
+    } 
 
     json_t *position_array = json_object_get(root, voie);
     if (!json_is_array(position_array)) {

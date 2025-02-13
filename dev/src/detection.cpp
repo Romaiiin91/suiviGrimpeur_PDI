@@ -34,7 +34,7 @@ int exitStatus = 0;
 
 int main(int argc, char const *argv[])
 {
-    DEBUG_CGI_PRINT("[%d] Démarrage de detection video\n", getpid());
+    DEBUG_PRINT("[%d] Démarrage de detection video\n", getpid());
 
     
 
@@ -47,7 +47,7 @@ int main(int argc, char const *argv[])
 
     // Charger les paramètres depuis le fichier JSON
     json_error_t error;
-    json_t *root = json_load_file("src/paramDetection.json", 0, &error);
+    json_t *root = json_load_file(PATH_PARAM_DETECTION, 0, &error);
 
     if (!root) {
         std::cerr << "Erreur de lecture du fichier JSON: " << error.text << std::endl;
@@ -320,7 +320,7 @@ int main(int argc, char const *argv[])
         }
         
        
-        #ifdef DEBUG
+        #ifdef PC
         
 
         // Afficher le barycentre sur l'image

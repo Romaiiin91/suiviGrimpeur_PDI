@@ -5,9 +5,9 @@
 /* ------------------------------------------------------------------------ */
 
 
-#ifndef __ACTION_H
+#ifndef __UTILS_CGI_H
 
-#define __ACTION_H
+#define __UTILS_CGI_H
 
 /* ------------------------------------------------------------------------ */
 /*                   E N T Ê T E S    S T A N D A R D S                     */
@@ -33,8 +33,7 @@
 /*              C O N S T A N T E S     S Y M B O L I Q U E S               */
 /* ------------------------------------------------------------------------ */
 
-#define PATH_FILE_ORDRE     "../bin/fichierOrdre"
-#define PATH_FPID           "../bin/suiviGrimpeur.pid"
+#include <chemin.h>
 
 
 /* ------------------------------------------------------------------------ */
@@ -72,7 +71,7 @@
 #ifdef DEBUG
     #define DEBUG_CGI_PRINT(msg, ...) do {                                      \
         FILE *log_file;                                                     \
-        CHECK_NULL(log_file = fopen("../debugCgi.log", "a"), "fopen(debugCgi.log)"); \
+        CHECK_NULL(log_file = fopen(PATH_LOG_CGI, "a"), "fopen(debugCgi.log)"); \
         fprintf(log_file, msg, ##__VA_ARGS__);                              \
         fflush(log_file);                                                   \
         fclose(log_file);                                                   \
@@ -86,9 +85,6 @@
 /*            P R O T O T Y P E S    D E    F O N C T I O N S               */
 /* ------------------------------------------------------------------------ */
 
-static void signalHandler(int numSig);
-void retourHTTP();
-void bye();
 
     
 #endif

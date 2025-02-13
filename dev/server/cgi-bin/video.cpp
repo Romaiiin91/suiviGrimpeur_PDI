@@ -7,19 +7,8 @@
 #include <string.h>
 #include <opencv2/opencv.hpp>
 
-#include <utils.h>
+#include <utilsCgi.h>
 
-#ifdef DEBUG
-    #define DEBUG_CGI_PRINT(msg, ...) do {                                      \
-        FILE *log_file;                                                     \
-        CHECK_NULL(log_file = fopen("../debugCgi.log", "a"), "fopen(debug.log)"); \
-        fprintf(log_file, msg, ##__VA_ARGS__);                              \
-        fflush(log_file);                                                   \
-        fclose(log_file);                                                   \
-    } while (0)
-#else
-    #define DEBUG_CGI_PRINT(msg, ...) // Ne fait rien si DEBUG n'est pas défini
-#endif
 
 // Fonction pour encoder une image en JPEG
 void encode_jpeg(unsigned char* image_data, int width, int height, int channels, unsigned char** jpeg_data, unsigned long* jpeg_size) {

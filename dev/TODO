@@ -23,3 +23,13 @@
 
 
 - [ ] Maybe : Faire une liste des ordres en attentes. 
+
+- [ ] Mieux gerer les droits sur le raspbeerry et mettre les fichier serveur au bon endroit : 
+        /var/www/html/
+            ├── index.html
+            ├── fonctions.js
+            └── style.css
+
+        /usr/lib/cgi-bin/
+            ├── action.cgi
+            └── action.c

@@ -1,12 +1,20 @@
 CFLAGS= -Wall
 CFLAGS+=-I./include
-CSTFLAGS =-DDEBUG
+CSTFLAGS =-DDEBUG 
+
+ifeq ($(PC), 1)
+	CSTFLAGS +=-DPC
+endif
+
 
 LIBS= -lcurl
 LIBS+= -ljansson
 LIBS+= -lpthread
 
-SRC = $(wildcard ./src/*.c)
+execPC: 
+	xhost +SI:localuser:www-data
+	make ExecDEBUG PC=1
+
 
 all: bin/detection bin/detectionDEBUG ./bin/detectionVIDEO bin/main bin/mainDEBUG action actionDEBUG video videoDEBUG bin/ecritureMemoire bin/ecritureMemoireDEBUG bin/enregistrementVideo bin/enregistrementVideoDEBUG
 
@@ -15,19 +23,19 @@ all: bin/detection bin/detectionDEBUG ./bin/detectionVIDEO bin/main bin/mainDEBU
 ###########################																
 
 bin/detection: src/detection.cpp src/ptz.c
-	@g++ $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4` $(LIBS)
+	g++ $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4` $(LIBS)
 
 bin/detectionDEBUG: src/detection.cpp src/ptz.c
-	@g++ $(CSTFLAGS) $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4` $(LIBS)
+	g++ $(CSTFLAGS) $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4` $(LIBS)
 
 bin/detectionVIDEO: src/detection.cpp src/ptz.c
-	@g++ $(CSTFLAGS) -DVIDEO $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4` $(LIBS)
+	g++ $(CSTFLAGS) -DVIDEO $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4` $(LIBS)
 
 detectionTest : ./bin/detectionVIDEO
-	./bin/detectionVIDEO "serveur/videos/20250109_2148_2_2_voie1_resize.mp4"
+	./bin/detectionVIDEO "server/videos/20250109_2148_2_2_voie1_resize.mp4"
 
 DetectionDirect: ./bin/detectionDEBUG
-	./bin/detectionDEBUG "http://serveur:serveur@192.168.0.4/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25"
+	./bin/detectionDEBUG "http://serveur:serveur@192.168.1.1.4/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25"
 
 
 ###########################
@@ -36,14 +44,18 @@ DetectionDirect: ./bin/detectionDEBUG
 
 
 bin/main: src/main.c src/positions.c src/ptz.c 
-	@gcc $(CFLAGS) $^ -o $@ $(LIBS)
+	gcc $(CFLAGS) $^ -o $@ $(LIBS)
 
 bin/mainDEBUG: src/main.c src/positions.c src/ptz.c 
-	@touch ./debug.log
-	@gcc $(CSTFLAGS) $(CFLAGS) $^ -o $@ $(LIBS)
+	touch ./log/debug.log
+	sudo chown :suiviGrimpeur ./log/debug.log
+	sudo chmod g+w ./log/debug.log
+	touch ./log/debugCgi.log
+	sudo chown :suiviGrimpeur ./log/debugCgi.log
+	sudo chmod g+w ./log/debugCgi.log
+	gcc $(CSTFLAGS) $(CFLAGS) $^ -o $@ $(LIBS)
 
-execDEBUG: bin/mainDEBUG serveurDEBUG bin/detectionDEBUG bin/ecritureMemoireDEBUG bin/enregistrementVideoDEBUG
-	xhost +SI:localuser:www-data
+ExecDEBUG: bin/mainDEBUG serverDEBUG bin/detectionDEBUG bin/ecritureMemoireDEBUG bin/enregistrementVideoDEBUG
 	sudo -u www-data ./bin/mainDEBUG
 
 
@@ -52,19 +64,19 @@ execDEBUG: bin/mainDEBUG serveurDEBUG bin/detectionDEBUG bin/ecritureMemoireDEBU
 ###########################	
 
 
-action: serveur/action.c
-	@gcc $(CFLAGS) -I./serveur $^ -o serveur/action.cgi -lpthread
+action: server/cgi-bin/action.c
+	gcc $(CFLAGS) -I./server/cgi-bin $^ -o server/cgi-bin/action.cgi -lpthread
 
-actionDEBUG: serveur/action.c
-	@gcc $(CSTFLAGS) $(CFLAGS) -I./serveur $^ -o serveur/action.cgi -lpthread
+actionDEBUG: server/cgi-bin/action.c
+	gcc $(CSTFLAGS) $(CFLAGS) -I./server/cgi-bin $^ -o server/cgi-bin/action.cgi -lpthread
 
-video: serveur/video.cpp
-	@g++ $(CFLAGS) -I./serveur $^ -o serveur/video.cgi `pkg-config --cflags --libs opencv4` -lpthread -ljpeg
+video: server/cgi-bin/video.cpp
+	g++ $(CFLAGS) -I./server/cgi-bin $^ -o server/cgi-bin/video.cgi `pkg-config --cflags --libs opencv4` -lpthread -ljpeg
 
-videoDEBUG: serveur/video.cpp
-	@g++ $(CSTFLAGS) $(CFLAGS) -I./serveur $^ -o serveur/video.cgi `pkg-config --cflags --libs opencv4` -lpthread -ljpeg
+videoDEBUG: server/cgi-bin/video.cpp
+	g++ $(CSTFLAGS) $(CFLAGS) -I./server/cgi-bin $^ -o server/cgi-bin/video.cgi `pkg-config --cflags --libs opencv4` -lpthread -ljpeg
 
-serveurDEBUG : actionDEBUG videoDEBUG
+serverDEBUG : actionDEBUG videoDEBUG
 
 ###########################
 #		 Mémoire		  #
@@ -82,10 +94,10 @@ bin/ecritureMemoireDEBUG: src/ecritureMemoire.cpp
 
 
 bin/enregistrementVideo: src/enregistrementVideo.c
-	@gcc $(CFLAGS) $^ -o $@ $(LIBS)
+	gcc $(CFLAGS) $^ -o $@ $(LIBS)
 
 bin/enregistrementVideoDEBUG: src/enregistrementVideo.c
-	@gcc $(CFLAGS) $(CSTFLAGS) $^ -o $@ $(LIBS)
+	gcc $(CFLAGS) $(CSTFLAGS) $^ -o $@ $(LIBS)
 
 
 ###########################
@@ -96,11 +108,11 @@ clean: resetLog
 	@rm -f ./bin/*
 
 cleanServeur:
-	@rm -f ./serveur/*.cgi
+	@rm -f ./server/*.cgi
 
 resetLog:
-	@echo 2> ./debug.log
-	@echo 2> ./debugCgi.log
+	@echo 2> ./log/debug.log
+	@echo 2> ./log/debugCgi.log
 
 
 
