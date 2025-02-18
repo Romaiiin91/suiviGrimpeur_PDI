@@ -1,9 +1,13 @@
 #include <stdio.h>
 
 #include <utils.h>
+#include <jansson.h>
 
+#define VIDEO_TEMP "./data/videos/temp.mp4"
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 static void signalHandler(int numSig);
+void decouperVideo(const char * nomFichier);
 
 int enregistrementEnCours = 1;
 
@@ -41,9 +45,12 @@ int main(int argc, char * argv[]) {
     // commande ffmpeg
     char cmd[256];
     // sprintf(cmd, "%s %s %s %s %s %s %s %s %s %s %s %s %s", "ffmpeg", "-y", "-loglevel 32", "-f rawvideo", "-pix_fmt bgr24", "-s 1280x720", "-r 25", "-i pipe:0", "-c:v libx264", "-preset medium", "-an", argc > 1 ? argv[1]:"serveur/videos/output.mp4");
-    sprintf(cmd, "%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s", "ffmpeg", "-y", "-loglevel 32", "-f rawvideo", "-fflags +discardcorrupt", "-pixel_format bgr24", "-s 1280x720", "-r 25", "-i pipe:0",  "-c:v libx264", "-preset fast", "-pix_fmt yuv420p", "-crf 25", "-an", argc > 1 ? argv[1] : "./data/videos/output.mp4");
+    sprintf(cmd, "%s %s %s %s %s %s %s %s %s %s %s %s %s", "ffmpeg", "-y", "-loglevel 32", "-f rawvideo", "-fflags +discardcorrupt", "-pixel_format bgr24", "-s 1280x720", "-r 25", "-i pipe:0",  "-c:v h264_v4l2m2m"  "-b:v 2M", "-pix_fmt yuv420p", "-an", VIDEO_TEMP);
     
     DEBUG_PRINT("Commande FFMPEG : \"%s\"\n", cmd);
+
+    // Tester avec h264_v4l2m2m et si besoin taskset -c 0,1 ou -thread 2
+    // b:v 2M pour bitrate 2M (en 720p le debit doit etre en 2 et 5 +grand = meilleur qualite)
 
 
 
@@ -135,10 +142,18 @@ int main(int argc, char * argv[]) {
     sem_close(semMutex);
     sem_close(semNewFrame);
     sem_close(semActiveReaders);
+
+
+    // Découper la vidéo pour garder seulement la partie interessante
+    decouperVideo( argc > 1 ? argv[1] : "./data/videos/output.mp4");
+
     
     exit(EXIT_SUCCESS);
     return 0;
 }
+
+
+
 
 static void signalHandler(int numSig)
 { 
@@ -151,4 +166,38 @@ static void signalHandler(int numSig)
             printf (" Signal %d non traité \n", numSig );
             break ;
     }
+}
+
+
+void decouperVideo(const char * nomFichier) {
+    DEBUG_PRINT("Découpage de la vidéo \"%s\"\n", nomFichier);
+    FILE* fvideo;
+    float frameDebut = 0, frameFin = 0;
+
+
+    CHECK_NULL(fvideo = fopen(PATH_FRAMES, "r"), "detection: fopen(PATH_FRAMES)");
+    fscanf(fvideo, "%f\n%f", &frameDebut, &frameFin);
+    fclose(fvideo);
+
+    DEBUG_PRINT("Frame de début : %f\nFrame de fin : %f\n", frameDebut, frameFin);
+
+    // Charger les paramètres depuis le fichier JSON
+    json_error_t error;
+    json_t *root = json_load_file(PATH_PARAM_DETECTION, 0, &error);
+
+    CHECK_NULL(root, "detection: json_load_file(PATH_PARAM_DETECTION)");
+
+    int numberFrameBeforeFirstMove = json_integer_value(json_object_get(root, "numberFrameBeforeFirstMove"));
+    int numberFrameWithoutMove = json_integer_value(json_object_get(root, "numberFrameWithoutMove"));
+
+    json_decref(root);
+
+    frameDebut = MAX(0, frameDebut - numberFrameBeforeFirstMove);
+    frameFin = MAX(frameFin - 0.9*numberFrameWithoutMove, frameDebut + 1);
+
+    char cmd[256];
+    sprintf(cmd, "%s %s %s %s %s %s %s %.2f %s %.2f %s %s", "ffmpeg", "-y", "-loglevel", "32" ,"-i", VIDEO_TEMP, "-ss", frameDebut/25.0, "-to", frameFin/25.0, "-c copy", nomFichier);
+    
+    DEBUG_PRINT("Commande FFMPEG : \"%s\"\n", cmd);
+    system(cmd);
 }

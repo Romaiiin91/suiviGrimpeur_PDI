@@ -10,6 +10,7 @@ endif
 LIBS= -lcurl
 LIBS+= -ljansson
 LIBS+= -lpthread
+LIBS+= -lrt
 
 execPC: 
 	xhost +SI:localuser:www-data
@@ -71,10 +72,10 @@ actionDEBUG: server/cgi-bin/action.c
 	gcc $(CSTFLAGS) $(CFLAGS) -I./server/cgi-bin $^ -o server/cgi-bin/action.cgi -lpthread
 
 video: server/cgi-bin/video.cpp
-	g++ $(CFLAGS) -I./server/cgi-bin $^ -o server/cgi-bin/video.cgi `pkg-config --cflags --libs opencv4` -lpthread -ljpeg
+	g++ $(CFLAGS) -I./server/cgi-bin $^ -o server/cgi-bin/video.cgi `pkg-config --cflags --libs opencv4` -lpthread -ljpeg -lrt
 
 videoDEBUG: server/cgi-bin/video.cpp
-	g++ $(CSTFLAGS) $(CFLAGS) -I./server/cgi-bin $^ -o server/cgi-bin/video.cgi `pkg-config --cflags --libs opencv4` -lpthread -ljpeg
+	g++ $(CSTFLAGS) $(CFLAGS) -I./server/cgi-bin $^ -o server/cgi-bin/video.cgi `pkg-config --cflags --libs opencv4` -lpthread -ljpeg -lrt
 
 serverDEBUG : actionDEBUG videoDEBUG
 
@@ -83,10 +84,10 @@ serverDEBUG : actionDEBUG videoDEBUG
 ###########################	
 
 bin/ecritureMemoire: src/ecritureMemoire.cpp
-	g++ $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4` 
+	g++ $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4` -lrt -lpthread
 
 bin/ecritureMemoireDEBUG: src/ecritureMemoire.cpp
-	g++ $(CFLAGS) $(CSTFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4` 
+	g++ $(CFLAGS) $(CSTFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4` -lrt -lpthread 
 
 ###########################
 #	   ENREGISTREMENT	  #

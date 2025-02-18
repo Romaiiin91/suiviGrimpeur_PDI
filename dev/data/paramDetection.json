@@ -14,7 +14,8 @@
     "cropRatioDetectionArea": 4,
     
     "numberFrameBetweenMove": 25,
-    "numberFrameWithoutMove": 125
+    "numberFrameWithoutMove": 125,
+    "numberFrameBeforeFirstMove": 50
 
 
 }

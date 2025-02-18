@@ -9,6 +9,9 @@
 
 #include <utilsCgi.h>
 
+// Semaphore
+#include <semaphore.h>
+
 
 // Fonction pour encoder une image en JPEG
 void encode_jpeg(unsigned char* image_data, int width, int height, int channels, unsigned char** jpeg_data, unsigned long* jpeg_size) {

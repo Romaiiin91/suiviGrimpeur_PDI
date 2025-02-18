@@ -5,26 +5,28 @@
 #define __CHEMIN_H
 
 #ifdef PC
-#define PATH_FILE_ORDRE     "/home/romain/Documents/suiviGrimpeur_PDI/dev/bin/fichierOrdre"
-#define PATH_FPID           "/home/romain/Documents/suiviGrimpeur_PDI/dev/bin/suiviGrimpeur.pid"
-#define PATH_VIDEOS         "/home/romain/Documents/suiviGrimpeur_PDI/dev/data/videos"
-#define PATH_LOG            "/home/romain/Documents/suiviGrimpeur_PDI/dev/log/debug.log"
-#define PATH_LOG_CGI        "/home/romain/Documents/suiviGrimpeur_PDI/dev/log/debugCgi.log"
-#define PATH_PARAM_DETECTION "/home/romain/Documents/suiviGrimpeur_PDI/dev/data/paramDetection.json"  
+#define PATH_FILE_ORDRE         "/home/romain/Documents/suiviGrimpeur_PDI/dev/bin/fichierOrdre"
+#define PATH_FPID               "/home/romain/Documents/suiviGrimpeur_PDI/dev/bin/suiviGrimpeur.pid"
+#define PATH_VIDEOS             "/home/romain/Documents/suiviGrimpeur_PDI/dev/data/videos"
+#define PATH_LOG                "/home/romain/Documents/suiviGrimpeur_PDI/dev/log/debug.log"
+#define PATH_LOG_CGI            "/home/romain/Documents/suiviGrimpeur_PDI/dev/log/debugCgi.log"
+#define PATH_PARAM_DETECTION    "/home/romain/Documents/suiviGrimpeur_PDI/dev/data/paramDetection.json"  
 
-#define PATH_POSITIONS      "/home/romain/Documents/suiviGrimpeur_PDI/dev/data/positionsEnregistrees.json"
+#define PATH_POSITIONS          "/home/romain/Documents/suiviGrimpeur_PDI/dev/data/positionsEnregistrees.json"
+#define PATH_FRAMES             "/home/romain/Documents/suiviGrimpeur_PDI/dev/bin/frames" 
 
 
 
 #else
 
-#define PATH_FILE_ORDRE     "/home/raspberry/suiviGrimpeur/bin/fichierOrdre"
-#define PATH_FPID           "/home/raspberry/suiviGrimpeur/bin/suiviGrimpeur.pid"
-#define PATH_VIDEOS         "/home/raspberry/suiviGrimpeur/data/videos"
-#define PATH_LOG            "/home/raspberry/suiviGrimpeur/log/debug.log"
-#define PATH_LOG_CGI        "/home/raspberry/suiviGrimpeur/log/debugCgi.log"
-#define PATH_PARAM_DETECTION "/home/raspberry/suiviGrimpeur/data/paramDetection.json"  
-#define PATH_POSITIONS      "/home/raspberry/suiviGrimpeur/data/positionsEnregistrees.json"
+#define PATH_FILE_ORDRE         "/home/pi/suiviGrimpeur/bin/fichierOrdre"
+#define PATH_FPID               "/home/pi/suiviGrimpeur/bin/suiviGrimpeur.pid"
+#define PATH_VIDEOS             "/home/pi/suiviGrimpeur/data/videos"
+#define PATH_LOG                "/home/pi/suiviGrimpeur/log/debug.log"
+#define PATH_LOG_CGI            "/home/pi/suiviGrimpeur/log/debugCgi.log"
+#define PATH_PARAM_DETECTION    "/home/pi/suiviGrimpeur/data/paramDetection.json"  
+#define PATH_POSITIONS          "/home/pi/suiviGrimpeur/data/positionsEnregistrees.json"
+#define PATH_FRAMES             "/home/pi/suiviGrimpeur/bin/frames"
 
 #endif
 
