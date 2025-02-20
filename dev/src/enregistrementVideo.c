@@ -24,9 +24,10 @@ int main(int argc, char * argv[]) {
     // Installation du gestionnaire de signaux pour géré l'arrêt du programme
     struct sigaction newAction;
     newAction.sa_handler = signalHandler;
-    CHECK(sigemptyset(&newAction.sa_mask ), " sigemptyset ()");
+    CHECK(sigemptyset(&newAction.sa_mask ), "enregistrementVideo: sigemptyset ()");
     newAction.sa_flags = 0;
-    CHECK(sigaction(SIGINT, &newAction, NULL), "sigaction (SIGINT)");
+    CHECK(sigaction(SIGINT, &newAction, NULL), "enregistrementVideo: sigaction (SIGINT)");
+    CHECK(sigaction(SIGTERM, &newAction, NULL), "enregistrementVideo: sigaction (SIGTERM)");
     
    
 
@@ -45,7 +46,7 @@ int main(int argc, char * argv[]) {
     // commande ffmpeg
     char cmd[256];
     // sprintf(cmd, "%s %s %s %s %s %s %s %s %s %s %s %s %s", "ffmpeg", "-y", "-loglevel 32", "-f rawvideo", "-pix_fmt bgr24", "-s 1280x720", "-r 25", "-i pipe:0", "-c:v libx264", "-preset medium", "-an", argc > 1 ? argv[1]:"serveur/videos/output.mp4");
-    sprintf(cmd, "%s %s %s %s %s %s %s %s %s %s %s %s %s", "ffmpeg", "-y", "-loglevel 32", "-f rawvideo", "-fflags +discardcorrupt", "-pixel_format bgr24", "-s 1280x720", "-r 25", "-i pipe:0",  "-c:v h264_v4l2m2m"  "-b:v 2M", "-pix_fmt yuv420p", "-an", VIDEO_TEMP);
+    sprintf(cmd, "%s %s %s %s %s %s %s %s %s %s %s %s %s", "ffmpeg", "-y", "-loglevel 32", "-f rawvideo", "-fflags +discardcorrupt+genpts", "-pixel_format bgr24", "-s 1280x720", "-r 25", "-i pipe:0", "-c:v h264_v4l2m2m "  " -b:v 5M ", "-pix_fmt yuv420p", "-an", VIDEO_TEMP);
     
     DEBUG_PRINT("Commande FFMPEG : \"%s\"\n", cmd);
 
@@ -136,6 +137,8 @@ int main(int argc, char * argv[]) {
     munmap(virtAddr, SHM_FRAME_SIZE);
     close(shm_fd);
 
+    printf("\n\n----------------- Fin de l'enregistrement vidéo. -----------------\n\n");
+
     // Fermer les sémaphores
     sem_close(semReaders);
     sem_close(semWriter);
@@ -158,9 +161,13 @@ int main(int argc, char * argv[]) {
 static void signalHandler(int numSig)
 { 
     switch(numSig) {
-        case SIGINT : // traitement de SIGINT
+        case SIGTERM : // traitement de SIGTERM
             DEBUG_PRINT("\t[%d] --> Arrêt du programme d'enregistrement video en cours...\n", getpid());
             enregistrementEnCours = 0;
+            break;
+        case SIGINT : // traitement de SIGINT
+            DEBUG_PRINT("\t[%d] --> Interruption du programme d'enregistrement video en cours...\n", getpid());
+            exit(EXIT_FAILURE);
             break;
         default :
             printf (" Signal %d non traité \n", numSig );
@@ -200,4 +207,6 @@ void decouperVideo(const char * nomFichier) {
     
     DEBUG_PRINT("Commande FFMPEG : \"%s\"\n", cmd);
     system(cmd);
+
+    printf("\n\n----------------- Fin découpage vidéo. -----------------\n\n");
 }

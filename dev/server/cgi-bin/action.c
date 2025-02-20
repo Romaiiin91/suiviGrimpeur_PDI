@@ -154,25 +154,15 @@ int main(void) {
 
 
 	FILE *fpid;
-	int i = 0; 
-	char c;
-	char buff[11];
+	int pid;
 
 	DEBUG_CGI_PRINT("Lecture du PID\n");
 	
 	CHECK_NULL(fpid = fopen(PATH_FPID, "r"), "fopen(fpid)");
-	DEBUG_CGI_PRINT("Fichier ouvert FPDI\n");
-	while((c = fgetc(fpid)) != EOF && i < 10) {
-		DEBUG_CGI_PRINT("Caractere c = %c\n", c);
-		buff[i++]= c; 
-		DEBUG_CGI_PRINT("Buffer : %s\n", buff);
-	}
-	buff[i] = '\0';                                                             
+	// DEBUG_CGI_PRINT("Fichier ouvert FPDI\n");
+	fscanf(fpid, "%d", &pid);                                                   
 	fclose(fpid); 
 
-	DEBUG_CGI_PRINT("Buffer fin : %s\n", buff);
-
-	int pid = atoi(buff);
 	DEBUG_CGI_PRINT("PID : %d\n", pid); 
 
 	CHECK(kill(pid, SIGUSR1), "kill(pid, SIGUSR1)");

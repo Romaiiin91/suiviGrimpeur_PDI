@@ -137,7 +137,7 @@ static void signalHandler(int numSig)
                         
                         if (pid == pidDetection && received == 1){ // Si detection s'arrete, on arrete la capture
                             pidDetection = -1;
-                            DEBUG_PRINT("Arret de la capture demande\n"); 
+                            DEBUG_PRINT("main: Arret de la capture demande\n"); 
                             if (pidCapture > 0) kill(pidCapture, SIGTERM);
                             
 
@@ -256,7 +256,7 @@ void gestionOrdres(){
         }
         else {
             if (pidDetection > 0) {
-                status = kill(pidDetection, SIGINT); // Arrête le processus de capture
+                status = kill(pidDetection, SIGTERM); // Arrête le processus de capture
                 // pidDetection = -1; // Se met à jour a la reception du signal SIGCHLD
 
 

@@ -20,7 +20,12 @@
 - [x] Merge les branches git : Enregistrer une seule fois le flux et faire les 4 travails sur l'image a partir de ce segment mémoire.
 
 - [ ] Mémoire partagée pour l'envoi d'ordre et meilleur optimisation des messages
+- [ ] Page htlm : choix rapide de voie sous les boutons
+- [ ] Faire en sorte que ca se lance au demarrage
+- [ ] Status sur l'écran . 
 
+- [ ] Gerer le stockage max des videos 
+- [ ] Faire une relecture du code avec commentaires
 
 - [ ] Maybe : Faire une liste des ordres en attentes. 
 

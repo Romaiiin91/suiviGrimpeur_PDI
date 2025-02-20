@@ -27,9 +27,10 @@ int main(int argc, char * argv[]) {
     // Installation du gestionnaire de signaux pour géré l'arrêt du programme
     struct sigaction newAction;
     newAction.sa_handler = signalHandler;
-    CHECK(sigemptyset(&newAction.sa_mask ), " sigemptyset ()");
+    CHECK(sigemptyset(&newAction.sa_mask ), "ecritureMemoire: sigemptyset ()");
     newAction.sa_flags = 0;
-    CHECK(sigaction(SIGINT, &newAction, NULL), "sigaction (SIGINT)");
+    CHECK(sigaction(SIGINT, &newAction, NULL), "ecritureMemoire: sigaction (SIGINT)");
+    CHECK(sigaction(SIGTERM, &newAction, NULL), "ecritureMemoire: sigaction (SIGTERM)");
     
    
 
@@ -109,6 +110,11 @@ static void signalHandler(int numSig)
 { 
     switch(numSig) {
         case SIGINT : // traitement de SIGINT
+            DEBUG_PRINT("\t[%d] --> Interruption du programme d'écriture en cours...\n", getpid());
+            //ecritureEnCours = false;
+            exit(EXIT_FAILURE);
+            break;
+        case SIGTERM : // traitement de SIGTERM
             DEBUG_PRINT("\t[%d] --> Arrêt du programme d'écriture en cours...\n", getpid());
             ecritureEnCours = false;
             break;

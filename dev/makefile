@@ -57,7 +57,7 @@ bin/mainDEBUG: src/main.c src/positions.c src/ptz.c
 	gcc $(CSTFLAGS) $(CFLAGS) $^ -o $@ $(LIBS)
 
 ExecDEBUG: bin/mainDEBUG serverDEBUG bin/detectionDEBUG bin/ecritureMemoireDEBUG bin/enregistrementVideoDEBUG
-	sudo -u www-data ./bin/mainDEBUG
+	sudo -u www-data env LD_LIBRARY_PATH=/usr/local/lib ./bin/mainDEBUG
 
 
 ###########################

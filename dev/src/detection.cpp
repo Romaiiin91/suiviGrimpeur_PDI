@@ -34,9 +34,10 @@ int main(int argc, char const *argv[])
     // Installation du gestionnaire de signaux pour géré l'arrêt du programme
     struct sigaction newAction;
     newAction.sa_handler = signalHandler;
-    CHECK(sigemptyset(&newAction.sa_mask), " sigemptyset ()");
+    CHECK(sigemptyset(&newAction.sa_mask), "detectionVideo: sigemptyset ()");
     newAction.sa_flags = 0;
-    CHECK(sigaction(SIGINT, &newAction, NULL), "sigaction (SIGINT)");
+    CHECK(sigaction(SIGINT, &newAction, NULL), "detectionVideo: sigaction (SIGINT)");
+    CHECK(sigaction(SIGTERM, &newAction, NULL), "detectionVideo: sigaction (SIGTERM)");
 
     // Charger les paramètres depuis le fichier JSON
     json_error_t error;
@@ -398,10 +399,14 @@ static void signalHandler(int numSig)
 {
     switch (numSig)
     {
-    case SIGINT: // traitement de SIGINT
+    case SIGTERM: // traitement de SIGINT
         DEBUG_PRINT("\t[%d] --> Arrêt du programme de detection en cours...\n", getpid());
         detectionEnCours = false;
         exitStatus = 2;
+        break;
+    case SIGINT:
+        DEBUG_PRINT("\t[%d] --> Interruption du programme de detection en cours...\n", getpid());
+        exit(EXIT_FAILURE);
         break;
     default:
         printf(" Signal %d non traité \n", numSig);
