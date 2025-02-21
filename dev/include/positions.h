@@ -44,9 +44,9 @@ struct MemoryStruct {
 
 size_t writeMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp);
 void enregistrerPosition();
-void addPositionFile(const positionPTZ pos);
-void allerPosition(positionPTZ pos);
-void choixPosition();
+int addPositionFile(const positionPTZ pos);
+int allerPosition(positionPTZ pos);
+
 double recupererValeur(const char *data, const char *key);
 void supprimerPositionFile();
 

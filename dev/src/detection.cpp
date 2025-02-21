@@ -21,7 +21,7 @@
 #define HEIGHT 720
 
 bool detectionEnCours = true;
-int exitStatus = 0;
+int exitStatus = -1;
 
 /* ------------------------------------------------------------------------ */
 /*            D E F I N I T I O N   D E    F O N C T I O N S                */
@@ -122,7 +122,7 @@ int main(int argc, char const *argv[])
     sem_post(semActiveReaders);
 
     // Ouvrir la mémoire partagée
-    CHECK(shm_fd = shm_open(SHM_NAME, O_CREAT | O_RDWR, 0666), "video.cgi: shm_open(SHM_NAME)");
+    CHECK(shm_fd = shm_open(SHM_IMAGE, O_CREAT | O_RDWR, 0666), "video.cgi: shm_open(SHM_IMAGE)");
     CHECK(ftruncate(shm_fd, SHM_FRAME_SIZE), "video.cgi: ftruncate(shm_fd)");
     CHECK_NULL(virtAddr = mmap(0, SHM_FRAME_SIZE, PROT_WRITE, MAP_SHARED, shm_fd, 0), "video.cgi: mmap(virtAddr)");
 
@@ -350,13 +350,13 @@ int main(int argc, char const *argv[])
         if (cv::waitKey(40) == 'q')
         { // 25 fps
             detectionEnCours = false;
-            exitStatus = 2;
+            exitStatus = 0;
         }
 #else
         if (cv::waitKey(5) == 'q')
         { // en attente du semaphore
             detectionEnCours = false;
-            exitStatus = 2;
+            exitStatus = 0;
         }
 #endif
     }
@@ -402,7 +402,7 @@ static void signalHandler(int numSig)
     case SIGTERM: // traitement de SIGINT
         DEBUG_PRINT("\t[%d] --> Arrêt du programme de detection en cours...\n", getpid());
         detectionEnCours = false;
-        exitStatus = 2;
+        exitStatus = 0;
         break;
     case SIGINT:
         DEBUG_PRINT("\t[%d] --> Interruption du programme de detection en cours...\n", getpid());

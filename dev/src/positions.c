@@ -78,7 +78,7 @@ positionPTZ recupererPosition(char * voie){
     
     /* check for errors */
     if(res != CURLE_OK) {
-        fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+        fprintf(stderr, "recupererPosition - curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
     }
     else {
         DEBUG_PRINT("Data recupererPosition : %s\n", chunk.memory);
@@ -100,10 +100,18 @@ positionPTZ recupererPosition(char * voie){
 
 }
 
-void addPositionFile(const positionPTZ pos){
-    json_t *root = json_load_file(PATH_POSITIONS, 0, NULL);
+int addPositionFile(const positionPTZ pos){
+    // Chargement pas propre du fichier en cas d'erreur
+
+    json_error_t error;
+    json_t *root = json_load_file(PATH_POSITIONS, 0, &error);
+    
     if (!root) {
-        root = json_object();
+        root = json_object(); // Cree le fichier s'il n'existe pas
+        if (!root) {
+            fprintf(stderr, "addPositionFile - Erreur lors de la creation : %s\n", error.text);
+            return -1;
+        } 
     }
 
     json_t *position_array = json_array();
@@ -112,13 +120,21 @@ void addPositionFile(const positionPTZ pos){
     json_array_append_new(position_array, json_real(pos.zoom));
 
     json_object_set_new(root, pos.numVoie, position_array);
-    json_dump_file(root, PATH_POSITIONS, JSON_INDENT(4));
+
+    if (json_dump_file(root, PATH_POSITIONS, JSON_INDENT(4)) != 0) {
+        json_decref(root);
+        return -1;
+    }
+    
     json_decref(root);
+    return 0;
 }
 
 
 
-void allerPosition(positionPTZ pos){
+int allerPosition(positionPTZ pos){
+    int status = 0;
+
     // Url
     char url[256];
     sprintf(url, "%s@%s/%s?pan=%.4f&tilt=%.4f&zoom=%.4f", ENTETE_HTTP, IP, SCRIPT_PTZ, pos.pan, pos.tilt, pos.zoom);
@@ -136,74 +152,83 @@ void allerPosition(positionPTZ pos){
         res = curl_easy_perform(curl);  // Effectuer la requête
 
         // Vérification de la réussite de la requête
-        if (res != CURLE_OK) fprintf(stderr, "Erreur de requête : %s\n", curl_easy_strerror(res));
+        if (res != CURLE_OK) {
+            fprintf(stderr, "allerPosition - Erreur de requête : %s\n", curl_easy_strerror(res));
+            status = -1;
+        }
 
         // Nettoyage
         curl_easy_cleanup(curl);
     }
     curl_global_cleanup();
+
+    return status;
 }
 
 
-
+// Ajout d'une nouvelle voie dans le fichier json
 int addRoute(char * voie){
     DEBUG_PRINT("Ajout de la voie n°%s\n", voie);
     positionPTZ pos = recupererPosition(voie);
     if (pos.numVoie == NULL) {
-        fprintf(stderr, "Erreur lors de la recuperation de valeurs de PTZ\n");
-        return 1;
+        fprintf(stderr, "addRoute - Erreur lors de la recuperation de valeurs de PTZ\n");
+        return -1;
     }
-    addPositionFile(pos);
 
-    return 0;
+    return addPositionFile(pos);
 }
+
+// Suppression d'une voie dans le fichier json
 int removeRoute(char * voie){
     DEBUG_PRINT("Suppression de la voie n°%s\n", voie);
+
+    int status = 0;
     
     // Charger le fichier JSON
     json_error_t error;
     json_t *root = json_load_file(PATH_POSITIONS, 0, &error);
     if (!root) {
         fprintf(stderr, "Erreur lors du chargement : %s\n", error.text);
-        return 1;
+        return -1;
     }
 
     // Supprimer une clé
 
     if (json_object_del(root, voie) != 0) {
-        fprintf(stderr, "Erreur : impossible de supprimer la clé '%s'\n", voie);
-        return 1;
+        fprintf(stderr, "removeRoute - Erreur : impossible de supprimer la clé '%s'\n", voie);
+        status = -1;
     } else {
         DEBUG_PRINT("Clé '%s' supprimée avec succès.\n", voie);
     }
 
     // Sauvegarder le fichier JSON modifié
     if (json_dump_file(root, PATH_POSITIONS, JSON_INDENT(4)) != 0) {
-        fprintf(stderr, "Erreur lors de l'écriture dans le fichier\n");
-        json_decref(root);
-        return 1;
+        fprintf(stderr, "removeRoute - Erreur lors de l'écriture dans le fichier\n");
+        return -1;
     }
 
     // Nettoyer
     json_decref(root);
-    DEBUG_PRINT("Fichier JSON mis à jour avec succès.\n");
-    return 0;
-
+    DEBUG_PRINT("Fichier JSON mis à jour = %d.\n", status);
+    return status;
 }
+
+// Affichage d'une voie depuis le fichier json
 int showRoute(char * voie){
     DEBUG_PRINT("Affichage de la voie n°%s\n", voie);
     json_error_t error;
     json_t *root = json_load_file(PATH_POSITIONS, 0, &error);
+    
     if (!root) {
-        fprintf(stderr, "Erreur lors du chargement : %s\n", error.text);
-        return 1;
+        fprintf(stderr, "showRoute - Erreur lors du chargement : %s\n", error.text);
+        return -1;
     } 
 
     json_t *position_array = json_object_get(root, voie);
     if (!json_is_array(position_array)) {
-        fprintf(stderr, "Erreur : la clé '%s' n'est pas un tableau\n", voie);
+        fprintf(stderr, "showRoute - Erreur : la clé '%s' n'est pas un tableau\n", voie);
         json_decref(root);
-        return 1;
+        return -1;
     }
 
     positionPTZ pos;
@@ -215,8 +240,8 @@ int showRoute(char * voie){
     json_decref(root);
 
     DEBUG_PRINT("Voie: %s, Pan: %.4f, Tilt: %.4f, Zoom: %.4f\n", pos.numVoie, pos.pan, pos.tilt, pos.zoom);
-    allerPosition(pos);
-    return 0;
+    
+    return allerPosition(pos);
 }
 
 

@@ -39,19 +39,21 @@ int main(int argc, char * argv[]) {
     CHECK_NULL(semActiveReaders = sem_open(SEM_ACTIVE_READERS, 0), "enregistrementVideo: sem_open(semActiveReaders)");
 
     // Ouvrir la mémoire partagée
-    CHECK(shm_fd = shm_open(SHM_NAME, O_CREAT | O_RDWR, 0666), "enregistrementVideo: shm_open(SHM_NAME)");
+    CHECK(shm_fd = shm_open(SHM_IMAGE, O_CREAT | O_RDWR, 0666), "enregistrementVideo: shm_open(SHM_IMAGE)");
     CHECK(ftruncate(shm_fd, SHM_FRAME_SIZE), "enregistrementVideo: ftruncate(shm_fd)");   
     CHECK_NULL(virtAddr = mmap(0, SHM_FRAME_SIZE, PROT_WRITE, MAP_SHARED, shm_fd, 0), "enregistrementVideo: mmap(virtAddr)");
 
     // commande ffmpeg
     char cmd[256];
-    // sprintf(cmd, "%s %s %s %s %s %s %s %s %s %s %s %s %s", "ffmpeg", "-y", "-loglevel 32", "-f rawvideo", "-pix_fmt bgr24", "-s 1280x720", "-r 25", "-i pipe:0", "-c:v libx264", "-preset medium", "-an", argc > 1 ? argv[1]:"serveur/videos/output.mp4");
-    sprintf(cmd, "%s %s %s %s %s %s %s %s %s %s %s %s %s", "ffmpeg", "-y", "-loglevel 32", "-f rawvideo", "-fflags +discardcorrupt+genpts", "-pixel_format bgr24", "-s 1280x720", "-r 25", "-i pipe:0", "-c:v h264_v4l2m2m "  " -b:v 5M ", "-pix_fmt yuv420p", "-an", VIDEO_TEMP);
+    #ifdef PC
+    sprintf(cmd, "%s %s %s %s %s %s %s %s %s %s %s %s %s", "ffmpeg", "-y", "-loglevel 32", "-f rawvideo", "-fflags +discardcorrupt+genpts", "-pixel_format bgr24", "-s 1280x720", "-r 25", "-i pipe:0", "-c:v libx264 "  " -preset medium ", "-pix_fmt yuv420p", "-an", VIDEO_TEMP);
     
+    #else
+
+    sprintf(cmd, "%s %s %s %s %s %s %s %s %s %s %s %s %s", "ffmpeg", "-y", "-loglevel 32", "-f rawvideo", "-fflags +discardcorrupt+genpts", "-pixel_format bgr24", "-s 1280x720", "-r 25", "-i pipe:0", "-c:v h264_v4l2m2m "  " -b:v 5M ", "-pix_fmt yuv420p", "-an", VIDEO_TEMP);
+    #endif
     DEBUG_PRINT("Commande FFMPEG : \"%s\"\n", cmd);
 
-    // Tester avec h264_v4l2m2m et si besoin taskset -c 0,1 ou -thread 2
-    // b:v 2M pour bitrate 2M (en 720p le debit doit etre en 2 et 5 +grand = meilleur qualite)
 
 
 
@@ -72,7 +74,7 @@ int main(int argc, char * argv[]) {
         -s 1280x720                                             // Définit la résolution d'entrée à 1280x720
         -r 25                                                   // Débit d'images (FPS) : 25
         -i pipe:0                                               // L'entrée provient du pipe standard (stdin)
-        -c:v libx264                                            // Codec vidéo H.264 pour la sortie
+        -c:v h264_v4l2m2m                                       // Codec vidéo H.264pour gpu pour la sortie
         -preset medium                                          // Compromis entre vitesse et qualité d'encodage
         -pix_fmt yuv420p                                        // Format de pixel YUV 4:2:0 pour compatibilité
         -crf 23                                                 // Qualité de compression (23 = bonne qualité par défaut)

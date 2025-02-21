@@ -41,7 +41,7 @@ int main(int argc, char * argv[]) {
     CHECK_NULL(semActiveReaders = sem_open(SEM_ACTIVE_READERS, 0), "ecritureMemoire: sem_open(semActiveReaders)");
 
     // Ouvrir la mémoire partagée
-    CHECK(shm_fd = shm_open(SHM_NAME, O_CREAT | O_RDWR, 0666), "ecritureMemoire: shm_open(SHM_NAME)");
+    CHECK(shm_fd = shm_open(SHM_IMAGE, O_CREAT | O_RDWR, 0666), "ecritureMemoire: shm_open(SHM_IMAGE)");
     CHECK(ftruncate(shm_fd, SHM_FRAME_SIZE), "ecritureMemoire: ftruncate(shm_fd)");   
     CHECK_NULL(virtAddr = mmap(0, SHM_FRAME_SIZE, PROT_WRITE, MAP_SHARED, shm_fd, 0), "ecritureMemoire: mmap(virtAddr)");
     
@@ -92,7 +92,7 @@ int main(int argc, char * argv[]) {
     cap.release();
     munmap(virtAddr, SHM_FRAME_SIZE);
     close(shm_fd);
-    shm_unlink(SHM_NAME);
+    shm_unlink(SHM_IMAGE);
 
     // Fermer les sémaphores
     sem_close(semReaders);

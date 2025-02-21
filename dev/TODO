@@ -14,22 +14,22 @@
 - [x] Detecter quand est le debut --> écriture de la frame de mouvement dans un fichier
 - [x] Arrêt auto quand c'est la fin, quand il y a rien pendant 125 frames --> la detection arrete l'enregistrement
 
-- [x] Faire une fonction / script qui reencode la video en supprimant les frames du debut avant min(frameFirstMove - x Secondes, 0)
+- [x] Faire une fonction / script qui re-encode la video en supprimant les frames du debut avant min(frameFirstMove - x Secondes, 0)
 
 - [x] Vérifier coté mémoire si c'est ok pour des long enregistrements, Ok si le navigateur web n'est pas hébergé sur la VM
 - [x] Merge les branches git : Enregistrer une seule fois le flux et faire les 4 travails sur l'image a partir de ce segment mémoire.
 
-- [ ] Mémoire partagée pour l'envoi d'ordre et meilleur optimisation des messages
-- [ ] Page htlm : choix rapide de voie sous les boutons
-- [ ] Faire en sorte que ca se lance au demarrage
-- [ ] Status sur l'écran . 
+- [x] Mémoire partagée pour l'envoi d'ordre et meilleur optimisation des messages
+- [x] Page html : choix rapide de voie sous les boutons
+- [ ] Faire en sorte que ca se lance au démarrage
+- [ ] Maybe : Status sur l'écran . 
 
-- [ ] Gerer le stockage max des videos 
+- [ ] Gérer le stockage max des videos 
 - [ ] Faire une relecture du code avec commentaires
 
 - [ ] Maybe : Faire une liste des ordres en attentes. 
 
-- [x] Mieux gerer les droits sur le raspbeerry et mettre les fichier serveur au bon endroit : 
+- [x] Mieux gérer les droits sur le raspberry et mettre les fichier serveur au bon endroit : 
         /var/www/html/
             ├── index.html
             ├── fonctions.js

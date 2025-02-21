@@ -30,12 +30,15 @@
 
 #endif
 
-#define SHM_NAME "/shm_image"
+#define SHM_IMAGE "/shmImage"
 #define WIDTH 1280
 #define HEIGHT 720
 #define CHANNELS 3
 #define FRAME_SIZE (WIDTH * HEIGHT * CHANNELS)
 #define SHM_FRAME_SIZE ((FRAME_SIZE + sysconf(_SC_PAGE_SIZE) - 1) / sysconf(_SC_PAGE_SIZE)) * sysconf(_SC_PAGE_SIZE) 
+
+#define SHM_ORDRE "/shmOrdre"
+#define SHM_ORDRE_SIZE sysconf(_SC_PAGE_SIZE) 
 
 #define SEM_READERS "/semReaders"
 #define SEM_WRITER  "/semWriter"

@@ -14,7 +14,11 @@ LIBS+= -lrt
 
 execPC: 
 	xhost +SI:localuser:www-data
-	make ExecDEBUG PC=1
+	make ExecDEBUG PC=1 -j4
+	sudo -u www-data ./bin/mainDEBUG
+
+execPi: ExecDEBUG
+	sudo -u www-data env LD_LIBRARY_PATH=/usr/local/lib ./bin/mainDEBUG
 
 
 all: bin/detection bin/detectionDEBUG ./bin/detectionVIDEO bin/main bin/mainDEBUG action actionDEBUG video videoDEBUG bin/ecritureMemoire bin/ecritureMemoireDEBUG bin/enregistrementVideo bin/enregistrementVideoDEBUG
@@ -57,7 +61,6 @@ bin/mainDEBUG: src/main.c src/positions.c src/ptz.c
 	gcc $(CSTFLAGS) $(CFLAGS) $^ -o $@ $(LIBS)
 
 ExecDEBUG: bin/mainDEBUG serverDEBUG bin/detectionDEBUG bin/ecritureMemoireDEBUG bin/enregistrementVideoDEBUG
-	sudo -u www-data env LD_LIBRARY_PATH=/usr/local/lib ./bin/mainDEBUG
 
 
 ###########################

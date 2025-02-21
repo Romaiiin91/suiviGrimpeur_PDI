@@ -31,7 +31,8 @@
 /*                 V A R I A B L E S    G L O B A L E S                     */
 /* ------------------------------------------------------------------------ */
 
-sem_t *semFichierOrdre;
+int shmOrdre;
+void* virtAddr;
 
 
 /* ------------------------------------------------------------------------ */
@@ -65,19 +66,15 @@ static void signalHandler(int numSig){
 }
  
 void retourHTTP(){
-    FILE *fOrder;
-	int status;
+	int status = -1;
 
-	sem_wait(semFichierOrdre);
-    CHECK_NULL(fOrder = fopen(PATH_FILE_ORDRE, "r"), "fopen(fichierOrdre)");
-    fscanf(fOrder, "%d", &status);
-    fclose(fOrder);
-	sem_post(semFichierOrdre);
+	// Lecture du status dans le segment mémoire partagé
+	sscanf((char*) virtAddr, "%d", &status);
+	DEBUG_CGI_PRINT("action: Status : %d\n", status);
 
     // Envoyer la réponse HTTP
     printf("Content-type: text/html\n\n");
     if (status == 0) {
-		// Ici je veux rafraîchir la liste si besoin mais je comprends pas comment faire et le tableau
         printf("<html><body>Action exécutée avec succès</body>\n");
     } else {
         printf("<html><body>Erreur lors de l'exécution de l'action</body></html>\n");
@@ -87,9 +84,15 @@ void retourHTTP(){
 
 
 void bye(){
-    sem_close(semFichierOrdre);
+    DEBUG_CGI_PRINT("[%d] --> Fin du programme CGI action\n", getpid());
 
-    DEBUG_CGI_PRINT("[%d] --> Fin du programme CGI\n", getpid());
+	// Fermeture du segment mémoire partagé
+    if (virtAddr != MAP_FAILED) {
+        munmap(virtAddr, SHM_ORDRE_SIZE);
+    }
+    if (shmOrdre != -1) {
+        close(shmOrdre);
+    }
 }
 
 /* ------------------------------------------------------------------------ */
@@ -104,62 +107,46 @@ int main(void) {
 	atexit(bye);
 
 
-	char buffer[200];
+	char buffer[256];
 
 	struct sigaction newAction;
     newAction.sa_handler = signalHandler;
     CHECK(sigemptyset(&newAction.sa_mask ), " sigemptyset ()");
     newAction.sa_flags = 0;
     CHECK(sigaction(SIGUSR1, &newAction, NULL), "sigaction (SIGUSR1)");
-
-	// Ouverture du sémaphore nommé pour synchroniser l'accès au fichier de copie des ordres
-	CHECK_NULL(semFichierOrdre = sem_open("semFichierOrdre", 0), "sem_open");
+	CHECK(sigaction(SIGALRM, &newAction, NULL), "sigaction (SIGALRM)");
 
 
 	printf("Content-type:text/html\n");
-	// printf("Location:form.html\n"); // redirection 
 	printf("\n"); 
 
 	
 
-	if (getenv("QUERY_STRING") != NULL)
-	{
-		strcpy(buffer, getenv("QUERY_STRING")); 
-		
-	}
+	if (getenv("QUERY_STRING") != NULL) strcpy(buffer, getenv("QUERY_STRING")); 
 	else {
 		printf("Aucun caractere reçu\n");
 		return EXIT_FAILURE;
 	}
 	   
-	// traitements à terminer ! 
 
 	DEBUG_CGI_PRINT("Recu : %s\n",buffer);
+
 	
-	DEBUG_CGI_PRINT("PID action.c %d\n", getpid());
+	// Utilisation d'un segment mémoire partagé pour l'ordre
+    CHECK(shmOrdre = shm_open(SHM_ORDRE, O_RDWR, 0666), "action: shm_open(SHM_ORDRE)");
+    CHECK(ftruncate(shmOrdre, SHM_ORDRE_SIZE), "action: ftruncate(shmOrdre)");   
+    CHECK_NULL(virtAddr = mmap(0, SHM_ORDRE_SIZE, PROT_WRITE, MAP_SHARED, shmOrdre, 0), "action: mmap(virtAddr)");
 
-	int value;
-    sem_getvalue(semFichierOrdre, &value);
-	DEBUG_CGI_PRINT("Valeur du sémaphore %d\n", value); 
+	// Ecriture de l'ordre dans le segment mémoire partagé
+	sprintf((char*) virtAddr, "%d-%s", getpid(), buffer);
 	
-	FILE *fOrder;
-
-	sem_wait(semFichierOrdre);
-	CHECK_NULL(fOrder = fopen(PATH_FILE_ORDRE, "w"), "fopen(fichierOrdre)");
-	fprintf(fOrder, "%d-%s\n", getpid(), buffer);
-	fflush(fOrder);
-	fclose(fOrder);
-
-	sem_post(semFichierOrdre);
-
-
+	// Envoi du signal SIGUSR1 au programme principal
 	FILE *fpid;
 	int pid;
 
 	DEBUG_CGI_PRINT("Lecture du PID\n");
 	
 	CHECK_NULL(fpid = fopen(PATH_FPID, "r"), "fopen(fpid)");
-	// DEBUG_CGI_PRINT("Fichier ouvert FPDI\n");
 	fscanf(fpid, "%d", &pid);                                                   
 	fclose(fpid); 
 
@@ -168,7 +155,9 @@ int main(void) {
 	CHECK(kill(pid, SIGUSR1), "kill(pid, SIGUSR1)");
 
 	alarm(5);
-	pause(); // attendre le signal SIGUSR1
+	pause(); // attendre le signal SIGUSR1 ou SIGALARM
+
+
 	
 	return 0;
 	

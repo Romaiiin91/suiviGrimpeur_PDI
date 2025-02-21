@@ -48,7 +48,7 @@
 
 void bye();
 void processusEcritureMemoire();
-void processusCapture(char * outputVideoFile);
+int enregistrerVideo(const char * donnees);
 void processusDetection();
 static void signalHandler(int numSig);
 void gestionOrdres();

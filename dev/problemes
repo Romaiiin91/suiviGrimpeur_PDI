@@ -1,19 +1,16 @@
-- Noir et blanc sur la camera j'capte aps trop pourquoi et comment
+- Noir et blanc sur la camera --> filtre IR 
 
-- Oblige d'executer avec l'utilisateur www-data pour le droit ecrire dans le ficher d'ordre (le plus simple) et pour le fpid (acces a positions enregistres trop galeres) et les sem_open et ficheir debug
+- Oblige d'executer avec l'utilisateur www-data pour le droit écrire dans le ficher d'ordre (le plus simple) et pour le fpid (accès a positions enregistres trop galeres) et les sem_open et fichier debug
 
 
 - Gestion des droits peut etre nouveau groupe mais besoin de conseil pour bonnes pratiques
-- Webresponsive comment faire? 
 
-- Si ce probleme arrive lors de l'execution de la detection depuis la page index.html: """No protocol specified
+
+
+- Si ce problème arrive lors de l'execution de la detection depuis la page index.html: """No protocol specified
 Unable to init server: Impossible de se connecter : Connexion refusée"""
 
-Alors il faut executer la commande suivante: ```xhost +SI:localuser:www-data``` ou ```xhost +local:www-data``` et vreifier que www-data est bien dans la liste donné par la commande xhost
+Alors il faut executer la commande suivante: ```xhost +SI:localuser:www-data``` ou ```xhost +local:www-data``` et verifier que www-data est bien dans la liste donné par la commande xhost
 
-
-La capture nee renvoie pas de status
 
 Groupe suiGrimpeur ne fonctionne pas pour les semaphores
-
-Deux video. cgi se lancent jsp pourquoi j'ai deux requete reseau

@@ -12,6 +12,9 @@
 // Semaphore
 #include <semaphore.h>
 
+// Constantes
+bool affichageEnCours = true;
+
 
 // Fonction pour encoder une image en JPEG
 void encode_jpeg(unsigned char* image_data, int width, int height, int channels, unsigned char** jpeg_data, unsigned long* jpeg_size) {
@@ -54,6 +57,26 @@ void encode_jpeg(unsigned char* image_data, int width, int height, int channels,
     jpeg_destroy_compress(&cinfo);
 }
 
+// Gestionnaire de signal
+static void signalHandler(int numSig)
+{
+    switch (numSig)
+    {
+    case SIGTERM: 
+        DEBUG_CGI_PRINT("\t[%d] --> Arrêt du cgi video en cours...\n", getpid());
+        affichageEnCours = false;
+        break;
+    case SIGINT:
+        DEBUG_CGI_PRINT("\t[%d] --> Interruption du cgi video en cours...\n", getpid());
+        break;
+    
+    default:
+        DEBUG_CGI_PRINT(" Signal %d non traité \n", numSig);
+        break;
+    }
+}
+
+
 int main() {
     DEBUG_CGI_PRINT("[%d] Démarrage du cgi video\n", getpid());
 
@@ -69,6 +92,24 @@ int main() {
     unsigned char* jpeg_buffer; // Taille maximale possible
     CHECK_NULL(jpeg_buffer = (unsigned char*) malloc(WIDTH * HEIGHT * CHANNELS), "video.cgi: malloc(jpeg_buffer)");
 
+    // Installation du gestionnaire de signal
+    struct sigaction newAction;
+    newAction.sa_handler = signalHandler;
+    CHECK(sigemptyset(&newAction.sa_mask ), " sigemptyset ()");
+    newAction.sa_flags = 0;
+    CHECK(sigaction(SIGINT, &newAction, NULL), "sigaction (SIGINT)");
+    CHECK(sigaction(SIGTERM, &newAction, NULL), "sigaction (SIGTERM)");
+    //CHECK(sigaction(SIGPIPE, &newAction, NULL), "sigaction (SIGPIPE)");
+    
+    //Installation du gestionnaire de signal pour tous les signaux jusqu'à 31 sauf ceux qu'on ne peut écouter
+    // for (int sig = 1; sig <= 15; ++sig) {
+    //     if (sig == SIGKILL || sig == SIGSTOP) {
+    //         continue; // Ne pas écouter SIGKILL et SIGSTOP
+    //     }
+    //     DEBUG_CGI_PRINT("Installation du gestionnaire de signal pour le signal %d\n", sig);
+    //     CHECK(sigaction(sig, &newAction, NULL), "sigaction");
+    // }
+
     // Overture des semaphores
     CHECK_NULL(semReaders = sem_open(SEM_READERS, 0), "video.cgi: sem_open(semReaders)");
     CHECK_NULL(semWriter = sem_open(SEM_WRITER, 0), "video.cgi: sem_open(semWriter)");
@@ -77,7 +118,7 @@ int main() {
     CHECK_NULL(semActiveReaders = sem_open(SEM_ACTIVE_READERS, 0), "video.cgi: sem_open(semActiveReaders)");
 
     // Ouvrir la mémoire partagée
-    CHECK(shm_fd = shm_open(SHM_NAME, O_CREAT | O_RDWR, 0666), "video.cgi: shm_open(SHM_NAME)");
+    CHECK(shm_fd = shm_open(SHM_IMAGE, O_CREAT | O_RDWR, 0666), "video.cgi: shm_open(SHM_IMAGE)");
     CHECK(ftruncate(shm_fd, SHM_FRAME_SIZE), "video.cgi: ftruncate(shm_fd)");   
     CHECK_NULL(virtAddr = mmap(0, SHM_FRAME_SIZE, PROT_WRITE, MAP_SHARED, shm_fd, 0), "video.cgi: mmap(virtAddr)");
 
@@ -89,7 +130,7 @@ int main() {
     sem_post(semActiveReaders);
 
     // Boucle pour envoyer les images en continu
-    while (true) {
+    while (affichageEnCours) {
         sem_wait(semNewFrame);  // Attendre une nouvelle image
 
         sem_wait(semMutex);  // Acquérir le sémaphore de synchronisation

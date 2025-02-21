@@ -92,6 +92,9 @@ function loadOptions() {
     const dropdown = document.getElementById("dropdown");
     dropdown.innerHTML = ''; // Reset the dropdown content
 
+    const dropdownFast = document.getElementById("dropdownFast");
+    dropdownFast.innerHTML = ''; // Reset the dropdownFast content
+
     // Fetch JSON data
     $.getJSON(POSITIONS_JSON_URL, {timestamp:new Date().getTime()}, function (data) {
         for (let key in data) {
@@ -99,6 +102,11 @@ function loadOptions() {
             option.value = key;
             option.textContent = `Voie ${key}`;
             dropdown.appendChild(option);
+
+            const optionFast = document.createElement("option");
+            optionFast.value = key;
+            optionFast.textContent = `${key}`;
+            dropdownFast.appendChild(optionFast);
         }
     }).fail(function () {
         console.error("Erreur de chargement des options.");
@@ -137,4 +145,12 @@ function showRoute() {
     $.get(DIR_CGI + "action.cgi", {rout:"shw", id: selectedKey});
 }
 
+function showRouteFast() {
+    const dropdown = document.getElementById("dropdownFast");
+    const selectedKey = dropdown.value;
+    console.log(`Voie selectionnee : ${selectedKey}`);
+    $.get(DIR_CGI + "action.cgi", {rout:"shw", id: selectedKey});
+
+    document.getElementById("dropdown").value = selectedKey;
+}
 

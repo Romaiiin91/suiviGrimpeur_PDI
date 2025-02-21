@@ -45,11 +45,14 @@
 
         .button-group-container {
             flex: 0 1 auto;
+            justify-content: center;
             position: sticky;
             top: 20px; /* Ajuste selon ton besoin */
             align-self: flex-start;
             margin-left: 20px;
         }
+
+        
         .button-group-container h2 {
             text-align: center;
             width: 100%;
@@ -80,12 +83,13 @@
             background-color: #0056b3;
         }
         select {
-            width: 100%;
+            width: 80%;
             padding: 10px;
             margin: 10px 0;
             border-radius: 5px;
             border: 1px solid #ccc;
         }
+        
         .container-enregistrement {
             display: flex;
             flex-wrap: wrap;
@@ -118,7 +122,8 @@
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            width: 100%;
+            justify-content: center;
+            width: 90%;
             margin-bottom: 3px;
         }
 
@@ -136,6 +141,42 @@
 
         #slider-value-container {
             white-space: nowrap; /* Empêche la valeur de passer à la ligne */
+        }
+
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            flex: 1;
+            margin-right: 10px;
+            font-weight: bold;
+            color: #1a1a1a;
+        }
+
+        .form-group input[type="text"] {
+            flex: 2;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+            width: 50%; /* Largeur fixe pour les champs input */
+            
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-group input[type="text"]:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        .form-group input[type="text"]::placeholder {
+            color: #aaa;
+            font-style: italic;
         }
 
 
@@ -189,6 +230,15 @@
                     </div>
                 </div>
 
+                <div style="display: flex; align-items: center; margin-right: 10%; margin-top: 20px;">
+                    <div style="display: flex; justify-content: left; width: 60%;">
+                        <label for="voieAffichee">Voie affichée:</label>
+                    </div>
+                    <div style="display: flex; justify-content: right; width: 40%;">
+                        <select id="dropdownFast" onchange="showRouteFast();"></select>
+                    </div>
+                </div>
+                
                
             </div>
         </div>
@@ -196,26 +246,29 @@
 
     <div class="container container-enregistrement">
         <div class="enregistrement-group">
-            <h2>Enregistrement</h2> 
+            <h2>Enregistrement</h2>
             <div class="button-group">
-                <input type="button" value="Commencer l'enregistrement" onclick="startEnregistrement();"/> 
+                <input type="button" value="Commencer l'enregistrement" onclick="startEnregistrement();"/>
                 <input type="button" value="Voir vidéos" onclick="window.location.href='videos.html';"/>
             </div>
-            <div style="display: flex; align-items: center; margin-bottom: 10px;">
-                <label for="nom" style="flex: 1;">Nom :</label>
-                <input type="text" id="nom" name="nom" placeholder="Entrez le nom" style="flex: 2;">
+            <div class="form-group">
+                <label for="nom">Nom :</label>
+                <input type="text" id="nom" name="nom" placeholder="Entrez le nom">
             </div>
-            <div style="display: flex; align-items: center; margin-bottom: 10px;">
-                <label for="prenom" style="flex: 1;">Prénom :</label>
-                <input type="text" id="prenom" name="prenom" placeholder="Entrez le prénom" style="flex: 2;">
-            </div>
+            <div class="form-group">
+                <label for="prenom">Prénom :</label>
+                <input type="text" id="prenom" name="prenom" placeholder="Entrez le prénom">
             </div>
         </div>
+    </div>
 
-       
+
+        <div style="margin-top: 50px;">
+            <h2>Paramètres avancés</h2>
+        </div>
 
         <div class="routes-group">
-            <h2>Voies</h2>
+            <h3>Voies</h3>
             <select id="dropdown"></select>
             <div class="button-group">
                 <input type="button" value="Sauvegarder la position de caméra" onclick="addRoute();"/> 
@@ -226,7 +279,7 @@
         </div>
 
         <div class="detection-group">
-            <h2>Fonction seules</h2>
+            <h3>Fonction seules</h3>
             <div class="button-group">
                 <input type="button" value="Commencer la détection" onclick="startDetection();"/> 
                 <input type="button" value="Stopper la détection" onclick="stopDetection();"/> 

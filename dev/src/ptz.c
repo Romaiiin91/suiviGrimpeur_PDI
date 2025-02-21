@@ -22,12 +22,14 @@
 /* ------------------------------------------------------------------------ */
 
 
-void requetePTZ(const char * cmd, const char *val){
+int requetePTZ(const char * cmd, const char *val){
 
     // URL
     char url[256];
     sprintf(url, "%s@%s/%s?%s=%s",ENTETE_HTTP, IP, SCRIPT_PTZ, cmd, val);
     DEBUG_PRINT("%s\n", url);
+
+    int status = 0;
 
     CURL *curl;
     CURLcode res;
@@ -40,10 +42,16 @@ void requetePTZ(const char * cmd, const char *val){
         res = curl_easy_perform(curl);  // Effectuer la requête
 
         // Vérification de la réussite de la requête
-        if (res != CURLE_OK) fprintf(stderr, "Erreur de requête : %s\n", curl_easy_strerror(res));
+        if (res != CURLE_OK) {
+            fprintf(stderr, "Erreur de requête : %s\n", curl_easy_strerror(res));
+            status = -1;
+        }
 
         // Nettoyage
         curl_easy_cleanup(curl);
     }
     curl_global_cleanup();
+
+    
+    return status;
 }
