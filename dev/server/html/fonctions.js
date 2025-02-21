@@ -86,8 +86,54 @@ function updateVideoStream() {
 }
 
 
-// Charger et afficher les options
-function loadOptions() {
+// // Charger et afficher les options
+// function loadOptions() {
+//     // Clear existing options
+//     const dropdown = document.getElementById("dropdown");
+//     dropdown.innerHTML = ''; // Reset the dropdown content
+
+//     const dropdownFast = document.getElementById("dropdownFast");
+//     dropdownFast.innerHTML = ''; // Reset the dropdownFast content
+
+//     // Fetch JSON data
+//     $.getJSON(POSITIONS_JSON_URL, {timestamp:new Date().getTime()}, function (data) {
+//         for (let key in data) {
+//             const option = document.createElement("option");
+//             option.value = key;
+//             option.textContent = `Voie ${key}`;
+//             dropdown.appendChild(option);
+
+//             const optionFast = document.createElement("option");
+//             optionFast.value = key;
+//             optionFast.textContent = `${key}`;
+//             dropdownFast.appendChild(optionFast);
+//         }
+//     }).fail(function () {
+//         console.error("Erreur de chargement des options.");
+//     });
+// }
+// function addRoute() {
+//     // Demander un numéro à l'utilisateur
+//     const number = prompt("Entrez un numéro de voie :");
+
+//     // Vérifier si l'utilisateur a entré quelque chose
+//     if (number !== null && number.trim() !== "") {
+//         console.log("Numéro saisi :", number);
+//         $.get(DIR_CGI + "action.cgi", { rout: "add", id: number}, function(rep){
+//             console.log("MAJ du json");
+//             loadOptions();
+//             const dropdown = document.getElementById("dropdown");
+//             const selectedKey = dropdown.value;
+//             console.log(`Voie selectionnee : ${selectedKey}`);
+
+//             console.log("Number : ", number);
+//             console.log("value dropdownFast : ", document.getElementById("dropdownFast").value);
+//         });
+
+//     } else alert("Action annulée ou numéro invalide.");
+// }
+
+function loadOptions(selectedKey = null) {
     // Clear existing options
     const dropdown = document.getElementById("dropdown");
     dropdown.innerHTML = ''; // Reset the dropdown content
@@ -108,10 +154,17 @@ function loadOptions() {
             optionFast.textContent = `${key}`;
             dropdownFast.appendChild(optionFast);
         }
+
+        // Sélectionner la clé spécifiée si elle est fournie
+        if (selectedKey !== null) {
+            dropdown.value = selectedKey;
+            dropdownFast.value = selectedKey;
+        }
     }).fail(function () {
         console.error("Erreur de chargement des options.");
     });
 }
+
 function addRoute() {
     // Demander un numéro à l'utilisateur
     const number = prompt("Entrez un numéro de voie :");
@@ -121,12 +174,12 @@ function addRoute() {
         console.log("Numéro saisi :", number);
         $.get(DIR_CGI + "action.cgi", { rout: "add", id: number}, function(rep){
             console.log("MAJ du json");
-            loadOptions();
-
+            loadOptions(number); // Passer la clé sélectionnée à loadOptions
         });
 
     } else alert("Action annulée ou numéro invalide.");
 }
+
 function removeRoute() {
     const dropdown = document.getElementById("dropdown");
     const selectedKey = dropdown.value;
