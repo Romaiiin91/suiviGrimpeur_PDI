@@ -65,21 +65,43 @@ static void signalHandler(int numSig){
     }
 }
  
+// void retourHTTP(){
+// 	int status = -1;
+
+// 	// Lecture du status dans le segment mémoire partagé
+// 	sscanf((char*) virtAddr, "%d", &status);
+// 	DEBUG_CGI_PRINT("action: Status : %d\n", status);
+
+//     // Envoyer la réponse HTTP
+//     printf("Content-type: text/html\n\n");
+//     if (status == 0) {
+//         printf("<html><body>Action exécutée avec succès</body>\n"); 
+//     } else if (status == -2){
+// 		// Je veux retourner une erreur ici pour la renvoyer a la page html qui devra mettre une popup disant que l'espace disque n'est pas suffisant
+// 		printf("<html><body><script>alert('Erreur: Espace disque insuffisant');</script></body></html>\n");
+// 	} 
+// 	else {
+//         printf("<html><body>Erreur lors de l'exécution de l'action</body></html>\n");
+//     }
+
+// }
+
 void retourHTTP(){
-	int status = -1;
+    int status = -1;
 
-	// Lecture du status dans le segment mémoire partagé
-	sscanf((char*) virtAddr, "%d", &status);
-	DEBUG_CGI_PRINT("action: Status : %d\n", status);
+    // Lecture du status dans le segment mémoire partagé
+    sscanf((char*) virtAddr, "%d", &status);
+    DEBUG_CGI_PRINT("action: Status : %d\n", status);
 
-    // Envoyer la réponse HTTP
-    printf("Content-type: text/html\n\n");
+    // Envoyer la réponse HTTP en JSON
+    // printf("Content-type: application/json\n\n");
     if (status == 0) {
-        printf("<html><body>Action exécutée avec succès</body>\n");
+        printf("{\"success\": true, \"message\": \"Action exécutée avec succès\"}\n");
+    } else if (status == -2) {
+        printf("{\"success\": false, \"error\": \"Espace disque insuffisant, veuillez supprimer des vidéos\"}\n");
     } else {
-        printf("<html><body>Erreur lors de l'exécution de l'action</body></html>\n");
+        printf("{\"success\": false, \"error\": \"Une erreur est survenue lors de l’exécution du CGI\"}\n");
     }
-
 }
 
 

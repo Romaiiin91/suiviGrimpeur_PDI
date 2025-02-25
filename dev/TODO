@@ -28,6 +28,7 @@
 - [ ] Faire une relecture du code avec commentaires
 
 - [ ] Maybe : Faire une liste des ordres en attentes. 
+- [ ] ConnexionWifi : sudo nmtui
 
 - [x] Mieux gérer les droits sur le raspberry et mettre les fichier serveur au bon endroit : 
         /var/www/html/

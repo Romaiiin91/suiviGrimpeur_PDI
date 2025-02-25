@@ -283,10 +283,28 @@ void gestionOrdres(){
     ack(status, pidCgi); 
 }
 
+
 int enregistrerVideo(const char * donnees){
     pid_t pidFils;
     char outputVideoFile[255] = "./videos/output.mp4";
     char prenom[25], nom[25], voie[10];
+
+    struct statvfs stat;
+
+    // Obtenir les informations sur le système de fichiers
+    CHECK(statvfs(PATH_VIDEOS, &stat), "main: enregistrerVideo - statvfs(PATH_VIDEOS)");
+
+    // Calculer l'espace disponible en octets
+    unsigned long long free_space = stat.f_bsize * stat.f_bavail;
+
+    // Afficher l'espace disponible
+    DEBUG_PRINT("Espace disque disponible dans PATH_VIDEO: %llu octets\n", free_space);
+
+    // Vérifier si l'espace disque est suffisant
+    if (free_space < MIN_DISK_SPACE) {
+        DEBUG_PRINT("Espace disque insuffisant pour l'enregistrement vidéo\n");
+        return -2;
+    }
 
 
     sscanf(donnees, "nom=%[^&]&prenom=%[^&]&voie=%s", nom, prenom, voie);

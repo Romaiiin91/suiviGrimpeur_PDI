@@ -73,7 +73,19 @@ function startEnregistrement(){
     voie = voie.trim() == "" ? "0" : voie;
     
 
-    $.get(DIR_CGI + "action.cgi", {enrg: "on", nom: nom, prenom: prenom, voie: voie});
+    // $.get(DIR_CGI + "action.cgi", {enrg: "on", nom: nom, prenom: prenom, voie: voie});
+    $.get(DIR_CGI + "action.cgi", { enrg: "on", nom: nom, prenom: prenom, voie: voie }, function(data) {
+        console.log("Réponse du serveur :", data); // Affiche la réponse dans la console
+        if (data.success) {
+            console.log("Succès: " + data.message);
+        } else {
+            alert("Erreur: " + data.error);  // Affiche une popup en cas d'erreur
+        }
+    }, "json").fail(function(jqXHR, textStatus, errorThrown) {
+        console.error("Erreur de communication :", textStatus, errorThrown); // Affiche les détails de l'erreur
+        console.error("Réponse du serveur :", jqXHR.responseText); // Affiche la réponse brute du serveur
+        alert("Erreur de communication avec le serveur");
+    });
 }
 // update video stream
 function updateVideoStream() {
