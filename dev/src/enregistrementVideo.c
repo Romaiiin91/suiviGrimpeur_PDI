@@ -4,6 +4,12 @@
 #include <jansson.h>
 
 #define VIDEO_TEMP "./data/videos/temp.mp4"
+
+#ifdef DEBUG
+    #define LOGLEVEL "-loglevel 32"
+#else
+    #define LOGLEVEL "-loglevel 8"
+#endif
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 static void signalHandler(int numSig);
@@ -45,12 +51,13 @@ int main(int argc, char * argv[]) {
 
     // commande ffmpeg
     char cmd[256];
+
     #ifdef PC
-    sprintf(cmd, "%s %s %s %s %s %s %s %s %s %s %s %s %s", "ffmpeg", "-y", "-loglevel 32", "-f rawvideo", "-fflags +discardcorrupt+genpts", "-pixel_format bgr24", "-s 1280x720", "-r 25", "-i pipe:0", "-c:v libx264 "  " -preset medium ", "-pix_fmt yuv420p", "-an", VIDEO_TEMP);
+    sprintf(cmd, "%s %s %s %s %s %s %s %s %s %s %s %s %s %s", "ffmpeg", "-y", LOGLEVEL, "-f rawvideo", "-fflags +discardcorrupt+genpts", "-pixel_format bgr24", "-s 1280x720", "-r 25",  "-framerate 25", "-i pipe:0", "-c:v libx264 "  " -preset medium ", "-pix_fmt yuv420p", "-an", VIDEO_TEMP);
     
     #else
 
-    sprintf(cmd, "%s %s %s %s %s %s %s %s %s %s %s %s %s", "ffmpeg", "-y", "-loglevel 32", "-f rawvideo", "-fflags +discardcorrupt+genpts", "-pixel_format bgr24", "-s 1280x720", "-r 25", "-i pipe:0", "-c:v h264_v4l2m2m "  " -b:v 5M ", "-pix_fmt yuv420p", "-an", VIDEO_TEMP);
+    sprintf(cmd, "%s %s %s %s %s %s %s %s %s %s %s %s %s %s", "ffmpeg", "-y", LOGLEVEL, "-f rawvideo", "-fflags +discardcorrupt+genpts", "-pixel_format bgr24", "-s 1280x720", "-r 25", "-framerate 25", "-i pipe:0", "-c:v h264_v4l2m2m "  " -b:v 5M ", "-pix_fmt yuv420p", "-an", VIDEO_TEMP);
     #endif
     DEBUG_PRINT("Commande FFMPEG : \"%s\"\n", cmd);
 
@@ -202,10 +209,10 @@ void decouperVideo(const char * nomFichier) {
     json_decref(root);
 
     frameDebut = MAX(0, frameDebut - numberFrameBeforeFirstMove);
-    frameFin = MAX(frameFin - 0.9*numberFrameWithoutMove, frameDebut + 1);
+    frameFin = MAX(frameFin - 0.6*numberFrameWithoutMove, frameDebut + 1);
 
     char cmd[256];
-    sprintf(cmd, "%s %s %s %s %s %s %s %.2f %s %.2f %s %s", "ffmpeg", "-y", "-loglevel", "32" ,"-i", VIDEO_TEMP, "-ss", frameDebut/25.0, "-to", frameFin/25.0, "-c copy", nomFichier);
+    sprintf(cmd, "%s %s %s %s %s %s %.2f %s %.2f %s %s", "ffmpeg", "-y", LOGLEVEL ,"-i", VIDEO_TEMP, "-ss", frameDebut/25.0, "-to", frameFin/25.0, "-c copy", nomFichier);
     
     DEBUG_PRINT("Commande FFMPEG : \"%s\"\n", cmd);
     system(cmd);

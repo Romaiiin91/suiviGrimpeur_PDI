@@ -15,7 +15,7 @@
     
     "numberFrameBetweenMove": 25,
     "numberFrameWithoutMove": 125,
-    "numberFrameBeforeFirstMove": 50
+    "numberFrameBeforeFirstMove": 75
 
 
 }

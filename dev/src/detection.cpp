@@ -75,7 +75,7 @@ int main(int argc, char const *argv[])
     float floatWidthDetectionArea = widthDetectionArea * 1.0;
 
     FILE *fvideo;
-    CHECK_NULL(fvideo = fopen("./bin/frameFirstMove", "w"), "fopen(frameFirstMove)");
+    CHECK_NULL(fvideo = fopen(PATH_FRAMES, "w"), "fopen(PATH_FRAMES)");
     fprintf(fvideo, "0\n"); // Reset du fichier
     fflush(fvideo);
     fclose(fvideo);
@@ -384,7 +384,7 @@ int main(int argc, char const *argv[])
     cv::destroyAllWindows();
 
     DEBUG_PRINT("Fin de la détection.\n");
-    std::cout << "frame first move : " << frameFirstMove << std::endl;
+    DEBUG_PRINT("FrameFirstMove : %d\n", frameFirstMove);
 
     CHECK_NULL(fvideo = fopen(PATH_FRAMES, "w"), "detection: fopen(PATH_FRAMES)");
     fprintf(fvideo, "%d\n%d\n", frameFirstMove, frame_count);

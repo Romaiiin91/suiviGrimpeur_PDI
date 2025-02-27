@@ -23,8 +23,9 @@
 - [x] Page html : choix rapide de voie sous les boutons
 - [ ] Faire en sorte que ca se lance au démarrage
 - [ ] Maybe : Status sur l'écran . 
+- [ ] Afficher la video en cours de lecture
 
-- [ ] Gérer le stockage max des videos 
+- [~] Gérer le stockage max des videos 
 - [ ] Faire une relecture du code avec commentaires
 
 - [ ] Maybe : Faire une liste des ordres en attentes. 

@@ -96,6 +96,7 @@
 
     <script>
         const videoFolder = 'data/videos/'; // ancien : '../../data/videos/';
+        const DIR_CGI = "/cgi-bin/"
 
         // Fonction pour extraire les informations depuis le nom de fichier
         function extractVideoInfo(fileName) {
@@ -196,20 +197,24 @@
         function deleteVideo(filePath){
             if (confirm('Êtes-vous sûr de vouloir supprimer cette vidéo ?')) {
                 console.log("Supprimer la vidéo : " + filePath); 
-                $.get("action.cgi", {supp: filePath});
+                $.get(DIR_CGI + "action.cgi", {supp: filePath}, function(data){
+                    console.log(data);
+                    location.reload();
+                });
             }
         }
 
-        // Charger la première vidéo par défaut lorsqu'on charge la page
-        window.onload = function() {
-           
-            const links = document.querySelectorAll('a');
-            console.log(links[1]);
+        // Charger la derniere vidéo par défaut lorsqu'on charge la page
+        
 
-            if (links[1] && links[1].textContent.trim() === "Voir") {
-                links[1].click();
+        window.addEventListener("load", function() {
+            const links = document.querySelectorAll('a');
+            const voirLinks = Array.from(links).filter(link => link.textContent.trim() === "Voir");
+
+            if (voirLinks.length > 0) {
+                voirLinks[voirLinks.length - 1].click();
             }
-        };
+        });
     </script>
 </body>
 </html>
