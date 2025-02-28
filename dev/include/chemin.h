@@ -31,8 +31,10 @@
 #endif
 
 #define SHM_IMAGE "/shmImage"
-#define WIDTH 1280
-#define HEIGHT 720
+// #define WIDTH 1280
+// #define HEIGHT 720
+#define WIDTH 720
+#define HEIGHT 1280
 #define CHANNELS 3
 #define FRAME_SIZE (WIDTH * HEIGHT * CHANNELS)
 #define SHM_FRAME_SIZE ((FRAME_SIZE + sysconf(_SC_PAGE_SIZE) - 1) / sysconf(_SC_PAGE_SIZE)) * sysconf(_SC_PAGE_SIZE) 

@@ -69,10 +69,10 @@ ExecDEBUG: bin/mainDEBUG serverDEBUG bin/detectionDEBUG bin/ecritureMemoireDEBUG
 
 
 action: server/cgi-bin/action.c
-	gcc $(CFLAGS) -I./server/cgi-bin $^ -o server/cgi-bin/action.cgi -lpthread
+	gcc $(CFLAGS) -I./server/cgi-bin $^ -o server/cgi-bin/action.cgi -lpthread -lrt
 
 actionDEBUG: server/cgi-bin/action.c
-	gcc $(CSTFLAGS) $(CFLAGS) -I./server/cgi-bin $^ -o server/cgi-bin/action.cgi -lpthread
+	gcc $(CSTFLAGS) $(CFLAGS) -I./server/cgi-bin $^ -o server/cgi-bin/action.cgi -lpthread -lrt
 
 video: server/cgi-bin/video.cpp
 	g++ $(CFLAGS) -I./server/cgi-bin $^ -o server/cgi-bin/video.cgi `pkg-config --cflags --libs opencv4` -lpthread -ljpeg -lrt

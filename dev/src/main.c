@@ -162,15 +162,26 @@ void gestionOrdres(){
         sscanf(champs2, "%[^&]&prec=%s", dir, angle);
         DEBUG_PRINT("Move - dir : %s, angle : %s\n", dir, angle);
         
-        if (strcmp(dir, "up")==0) status = requetePTZ("rtilt", angle);
-        else if (strcmp(dir, "down")==0) {
-            sprintf(newAngle, "-%s", angle);
+        // if (strcmp(dir, "down")==0) status = requetePTZ("rtilt", angle);
+        // else if (strcmp(dir, "up")==0) {
+        //     sprintf(newAngle, "-%s", angle); // - pour down normalmeent
+        //     status =  requetePTZ("rtilt", newAngle);
+        // }
+        
+        // else if (strcmp(dir, "left")==0) status = requetePTZ("rpan", angle);
+        // else if (strcmp(dir, "right")==0){
+        //     sprintf(newAngle, "-%s", angle); // - dans le bon sens pour left
+        //     status = requetePTZ("rpan", newAngle);
+        // }
+        if (strcmp(dir, "left")==0) status = requetePTZ("rtilt", angle);
+        else if (strcmp(dir, "right")==0) {
+            sprintf(newAngle, "-%s", angle); // - pour down normalmeent
             status =  requetePTZ("rtilt", newAngle);
         }
         
-        else if (strcmp(dir, "right")==0) status = requetePTZ("rpan", angle);
-        else if (strcmp(dir, "left")==0){
-            sprintf(newAngle, "-%s", angle);
+        else if (strcmp(dir, "up")==0) status = requetePTZ("rpan", angle);
+        else if (strcmp(dir, "down")==0){
+            sprintf(newAngle, "-%s", angle); // - dans le bon sens pour left
             status = requetePTZ("rpan", newAngle);
         }
     }

@@ -72,7 +72,7 @@ int main(int argc, char * argv[]) {
             break;
         }
 
-        
+        cv::rotate(frame, frame, cv::ROTATE_90_COUNTERCLOCKWISE);
 
         sem_wait(semWriter);  // Bloquer l'accès en écriture
 

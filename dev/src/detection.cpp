@@ -17,8 +17,10 @@
 /*                 V A R I A B L E S    G L O B A L E S                     */
 /* ------------------------------------------------------------------------ */
 
-#define WIDTH 1280
-#define HEIGHT 720
+// #define WIDTH 1280
+// #define HEIGHT 720
+#define WIDTH 720
+#define HEIGHT 1280
 
 bool detectionEnCours = true;
 int exitStatus = -1;
@@ -260,7 +262,8 @@ int main(int argc, char const *argv[])
                         mvmtVert = "Monte";
 
 #ifndef VIDEO
-                        requetePTZ("rtilt", std::to_string(increasePTZ).c_str());
+                        requetePTZ("rpan", std::to_string(increasePTZ).c_str());
+                        // requetePTZ("rtilt", std::to_string(increasePTZ).c_str());
                         lastFrameMoveCam = frame_count;
                         resetFrameReference = 1;
 #endif
@@ -283,7 +286,8 @@ int main(int argc, char const *argv[])
                         mvmtHoriz = "Gauche";
 
 #ifndef VIDEO
-                        requetePTZ("rpan", std::to_string(-1 * increasePTZ).c_str());
+                        requetePTZ("rtilt", std::to_string(1 * increasePTZ).c_str());
+                        // requetePTZ("rpan", std::to_string(-1 * increasePTZ).c_str());
                         lastFrameMoveCam = frame_count;
                         resetFrameReference = 1;
 #endif
@@ -294,7 +298,8 @@ int main(int argc, char const *argv[])
                         mvmtHoriz = "Droite";
 
 #ifndef VIDEO
-                        requetePTZ("rpan", std::to_string(increasePTZ).c_str());
+                        // requetePTZ("rpan", std::to_string(increasePTZ).c_str());
+                        requetePTZ("rtilt", std::to_string( -1* increasePTZ).c_str());
                         lastFrameMoveCam = frame_count;
                         resetFrameReference = 1;
 #endif

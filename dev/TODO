@@ -24,6 +24,8 @@
 - [ ] Faire en sorte que ca se lance au démarrage
 - [ ] Maybe : Status sur l'écran . 
 - [ ] Afficher la video en cours de lecture
+- [ ] Faire une variable globale pour choisir l'orientation
+- [ ] Detection en bas de l'écran après deux mouvement
 
 - [~] Gérer le stockage max des videos 
 - [ ] Faire une relecture du code avec commentaires

@@ -7,14 +7,14 @@
     "horizontalThreshold": 6.0,
     "nbMoveBeforeChangeDetectionArea": 1,
     
-    "increasePTZ" : 5.0,
+    "increasePTZ" : 3.0,
     
-    "widthResize": 640,
-    "heightResize": 360,
+    "widthResize": 360,
+    "heightResize": 640,
     "cropRatioDetectionArea": 4,
     
     "numberFrameBetweenMove": 25,
-    "numberFrameWithoutMove": 125,
+    "numberFrameWithoutMove": 200,
     "numberFrameBeforeFirstMove": 75
 
 

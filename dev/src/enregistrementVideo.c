@@ -50,14 +50,16 @@ int main(int argc, char * argv[]) {
     CHECK_NULL(virtAddr = mmap(0, SHM_FRAME_SIZE, PROT_WRITE, MAP_SHARED, shm_fd, 0), "enregistrementVideo: mmap(virtAddr)");
 
     // commande ffmpeg
-    char cmd[256];
+    char cmd[1000]; // a mieux definir
 
     #ifdef PC
-    sprintf(cmd, "%s %s %s %s %s %s %s %s %s %s %s %s %s %s", "ffmpeg", "-y", LOGLEVEL, "-f rawvideo", "-fflags +discardcorrupt+genpts", "-pixel_format bgr24", "-s 1280x720", "-r 25",  "-framerate 25", "-i pipe:0", "-c:v libx264 "  " -preset medium ", "-pix_fmt yuv420p", "-an", VIDEO_TEMP);
+    sprintf(cmd, "%s %s %s %s %s %s %s %s %s %s %s %s %s %s", "ffmpeg", "-y", LOGLEVEL, "-f rawvideo", "-fflags +discardcorrupt+genpts", "-pixel_format bgr24", "-s 720x1280", "-r 25",  "-framerate 25", "-i pipe:0", "-c:v libx264 "  " -preset medium ", "-pix_fmt yuv420p", "-an", VIDEO_TEMP);
     
     #else
 
-    sprintf(cmd, "%s %s %s %s %s %s %s %s %s %s %s %s %s %s", "ffmpeg", "-y", LOGLEVEL, "-f rawvideo", "-fflags +discardcorrupt+genpts", "-pixel_format bgr24", "-s 1280x720", "-r 25", "-framerate 25", "-i pipe:0", "-c:v h264_v4l2m2m "  " -b:v 5M ", "-pix_fmt yuv420p", "-an", VIDEO_TEMP);
+    sprintf(cmd, "%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s", "ffmpeg", "-y", LOGLEVEL, "-v debug ", "-f rawvideo", "-fflags +discardcorrupt+genpts", "-pixel_format bgr24", "-video_size 720x1280", "-r 25", "-framerate 25", "-display_rotation 90", "-i pipe:0", "-c:v h264_v4l2m2m "  " -b:v 5M ", "-pix_fmt yuv420p",  "-vf \"rotate=PI/2\"", "-an", VIDEO_TEMP);
+
+
     #endif
     DEBUG_PRINT("Commande FFMPEG : \"%s\"\n", cmd);
 
