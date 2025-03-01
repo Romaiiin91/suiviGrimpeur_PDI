@@ -24,10 +24,13 @@
 - [ ] Faire en sorte que ca se lance au démarrage
 - [ ] Maybe : Status sur l'écran . 
 - [ ] Afficher la video en cours de lecture
-- [ ] Faire une variable globale pour choisir l'orientation
-- [ ] Detection en bas de l'écran après deux mouvement
+
+- [x] Faire une variable globale pour choisir l'orientation
+- [x] Detection en bas de l'écran après deux mouvement
+- [x] Gérer les deux caméras
 
 - [~] Gérer le stockage max des videos 
+- [ ] Refaire proprement les includes
 - [ ] Faire une relecture du code avec commentaires
 
 - [ ] Maybe : Faire une liste des ordres en attentes. 

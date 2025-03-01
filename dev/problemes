@@ -16,3 +16,4 @@ Alors il faut executer la commande suivante: ```xhost +SI:localuser:www-data``` 
 Groupe suiGrimpeur ne fonctionne pas pour les semaphores
 
 - Les fps ne sont pas toujours force a 25, des fois je suis a 21 des fois 29
+- Possible: En mode portrait, lorsque l'on passe d'un coté ou de l'autre du plan vertical (orthogonal a la camera) l'image peut etre dans le bon sens ou retournée (normalement pas besoin de gerer car de lautre cote c'est la poutre)

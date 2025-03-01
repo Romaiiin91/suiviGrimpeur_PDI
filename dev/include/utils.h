@@ -38,7 +38,6 @@
 /* ------------------------------------------------------------------------ */
 
 #define ENTETE_HTTP         "http://serveur:serveur"
-#define IP                  "192.168.0.200" // 1.13
 #define SCRIPT_VIDEO        "axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25"
 #define SCRIPT_PTZ          "axis-cgi/com/ptz.cgi"
 
@@ -49,6 +48,23 @@
 /* ------------------------------------------------------------------------ */
 /*              D É F I N I T I O N S   D E   T Y P E S                     */
 /* ------------------------------------------------------------------------ */
+
+typedef struct Camera{
+    int id;
+    char ip[16];
+    int orientation; // 0 = normal, 180°, 90°, 270°
+    
+    int height;
+    int width;
+
+    int up;
+    int down;
+    int left;
+    int right;
+
+    char cmdVertical[6];
+    char cmdHorizontal[6];
+} camera_t;
 
 
 /* ------------------------------------------------------------------------ */

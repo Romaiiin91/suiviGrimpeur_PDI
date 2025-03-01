@@ -55,7 +55,11 @@ void processusDetection();
 static void signalHandler(int numSig);
 void gestionOrdres();
 void ack(int status, pid_t pidCgi);
-void init_semaphores();
+void initSemaphores();
+void initCamera();
+void initSegmentMemoire();
+void setParamCamera(camera_t *camera);
+int setActiveCamera(camera_t *camera);
 
 
 /* ------------------------------------------------------------------------ */

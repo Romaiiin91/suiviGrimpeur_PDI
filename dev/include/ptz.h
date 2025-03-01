@@ -33,7 +33,7 @@
 /*            P R O T O T Y P E S    D E    F O N C T I O N S               */
 /* ------------------------------------------------------------------------ */
 
-int requetePTZ(const char *cmd, const char *val);
+int requetePTZ(const char *dir, const float angle, const camera_t *cameraActive);
 
 
 

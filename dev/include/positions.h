@@ -28,6 +28,7 @@
 
 typedef struct{
     char * numVoie;
+    int camera;
     double pan, tilt, zoom;
 } positionPTZ;
 
@@ -43,15 +44,21 @@ struct MemoryStruct {
 /* ------------------------------------------------------------------------ */
 
 size_t writeMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp);
-void enregistrerPosition();
+
+
 int addPositionFile(const positionPTZ pos);
-int allerPosition(positionPTZ pos);
+int allerPosition(positionPTZ pos, const camera_t *cameraActive);
 
 double recupererValeur(const char *data, const char *key);
 void supprimerPositionFile();
 
-int addRoute(char * voie);
+positionPTZ recupererPosition(char * voie, const camera_t *cameraActive);
+
+int addRoute(char * voie, const camera_t *cameraActive);
 int removeRoute(char * voie);
-int showRoute(char * voie);
+int showRoute(char * voie, const camera_t *cameraActive);
+
+// Dans le main
+int setActiveCamera(camera_t *camera);
 
 

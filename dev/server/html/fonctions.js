@@ -1,4 +1,5 @@
 const POSITIONS_JSON_URL = "data/positionsEnregistrees.json";
+const CAMERAS_JSON_URL = "data/cameras.json";
 const DIR_CGI = "/cgi-bin/"
 
 
@@ -132,7 +133,7 @@ function addRoute() {
     const number = prompt("Entrez un numéro de voie :");
 
     // Vérifier si l'utilisateur a entré quelque chose
-    if (number !== null && number.trim() !== "") {
+    if (number !== null && number.trim() !== "" && number > 0 && number < 1000) {
         console.log("Numéro saisi :", number);
         $.get(DIR_CGI + "action.cgi", { rout: "add", id: number}, function(rep){
             console.log("MAJ du json");
@@ -157,15 +158,49 @@ function showRoute() {
     const dropdown = document.getElementById("dropdown");
     const selectedKey = dropdown.value;
     console.log(`Voie selectionnee : ${selectedKey}`);
-    $.get(DIR_CGI + "action.cgi", {rout:"shw", id: selectedKey});
+    $.get(DIR_CGI + "action.cgi", {rout:"shw", id: selectedKey}, function(rep){
+        console.log("Changement de caméra effectué");
+        updateVideoStream();
+    });
 }
 
 function showRouteFast() {
     const dropdown = document.getElementById("dropdownFast");
     const selectedKey = dropdown.value;
     console.log(`Voie selectionnee : ${selectedKey}`);
-    $.get(DIR_CGI + "action.cgi", {rout:"shw", id: selectedKey});
+    $.get(DIR_CGI + "action.cgi", {rout:"shw", id: selectedKey}, function(rep){
+        console.log("Changement de caméra effectué");
+        updateVideoStream();
+    });
 
     document.getElementById("dropdown").value = selectedKey;
 }
 
+function loadCameras() {
+    const dropdownCameras = document.getElementById("cameras");
+    dropdownCameras.innerHTML = ''; // Reset the dropdown content
+
+    // Fetch JSON data
+    $.getJSON(CAMERAS_JSON_URL, {timestamp: new Date().getTime()}, function(data) {
+        for (let key in data) {
+            const option = document.createElement("option");
+            option.value = key;
+            option.textContent = `${key}`;
+            dropdownCameras.appendChild(option);
+        }
+
+
+    }).fail(function() {
+        console.error("Erreur de chargement des caméras.");
+    });
+}
+
+function changeCamera() {
+    const dropdownCameras = document.getElementById("cameras");
+    const selectedKey = dropdownCameras.value;
+    console.log(`Camera selectionnee : ${selectedKey}`);
+    $.get(DIR_CGI + "action.cgi", {cam: selectedKey}, function(rep){
+        console.log("Changement de caméra effectué");
+        updateVideoStream();
+    });
+}

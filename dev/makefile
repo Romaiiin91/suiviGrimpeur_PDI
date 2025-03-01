@@ -18,7 +18,7 @@ execPC:
 	sudo -u www-data ./bin/mainDEBUG
 
 execPi: ExecDEBUG
-	sudo -u www-data env LD_LIBRARY_PATH=/usr/local/lib ./bin/mainDEBUG
+	sudo -u www-data env LD_LIBRARY_PATH=/usr/local/lib /home/pi/suiviGrimpeur/bin/mainDEBUG
 
 
 all: bin/detection bin/detectionDEBUG ./bin/detectionVIDEO bin/main bin/mainDEBUG action actionDEBUG video videoDEBUG bin/ecritureMemoire bin/ecritureMemoireDEBUG bin/enregistrementVideo bin/enregistrementVideoDEBUG
@@ -51,7 +51,7 @@ DetectionDirect: ./bin/detectionDEBUG
 bin/main: src/main.c src/positions.c src/ptz.c 
 	gcc $(CFLAGS) $^ -o $@ $(LIBS)
 
-bin/mainDEBUG: src/main.c src/positions.c src/ptz.c 
+bin/mainDEBUG: src/main.c  src/ptz.c src/positions.c
 	touch ./log/debug.log
 	sudo chown :suiviGrimpeur ./log/debug.log
 	sudo chmod g+w ./log/debug.log
@@ -60,7 +60,7 @@ bin/mainDEBUG: src/main.c src/positions.c src/ptz.c
 	sudo chmod g+w ./log/debugCgi.log
 	gcc $(CSTFLAGS) $(CFLAGS) $^ -o $@ $(LIBS)
 
-ExecDEBUG: bin/mainDEBUG serverDEBUG bin/detectionDEBUG bin/ecritureMemoireDEBUG bin/enregistrementVideoDEBUG
+ExecDEBUG: bin/mainDEBUG  bin/ecritureMemoireDEBUG serverDEBUG bin/detectionDEBUG bin/enregistrementVideoDEBUG
 
 
 ###########################
@@ -75,12 +75,12 @@ actionDEBUG: server/cgi-bin/action.c
 	gcc $(CSTFLAGS) $(CFLAGS) -I./server/cgi-bin $^ -o server/cgi-bin/action.cgi -lpthread -lrt
 
 video: server/cgi-bin/video.cpp
-	g++ $(CFLAGS) -I./server/cgi-bin $^ -o server/cgi-bin/video.cgi `pkg-config --cflags --libs opencv4` -lpthread -ljpeg -lrt
+	g++ $(CFLAGS) -I./server/cgi-bin $^ -o server/cgi-bin/video.cgi `pkg-config --cflags --libs opencv4` $(LIBS) -ljpeg
 
 videoDEBUG: server/cgi-bin/video.cpp
-	g++ $(CSTFLAGS) $(CFLAGS) -I./server/cgi-bin $^ -o server/cgi-bin/video.cgi `pkg-config --cflags --libs opencv4` -lpthread -ljpeg -lrt
+	g++ $(CSTFLAGS) $(CFLAGS) -I./server/cgi-bin $^ -o server/cgi-bin/video.cgi `pkg-config --cflags --libs opencv4` $(LIBS) -ljpeg
 
-serverDEBUG : actionDEBUG videoDEBUG
+serverDEBUG: actionDEBUG videoDEBUG
 
 ###########################
 #		 Mémoire		  #
@@ -108,11 +108,11 @@ bin/enregistrementVideoDEBUG: src/enregistrementVideo.c
 #		 CLEAN			  #
 ###########################	
 
-clean: resetLog
+clean: resetLog cleanServeur
 	@rm -f ./bin/*
 
 cleanServeur:
-	@rm -f ./server/*.cgi
+	@rm -f ./server/cgi-bin/*.cgi
 
 resetLog:
 	@echo 2> ./log/debug.log

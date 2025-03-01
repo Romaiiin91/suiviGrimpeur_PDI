@@ -15,6 +15,7 @@
 /*                 V A R I A B L E S    G L O B A L E S                     */
 /* ------------------------------------------------------------------------ */
 
+extern camera_t camera1, camera2;
 
 /* ------------------------------------------------------------------------ */
 /*            D E F I N I T I O N   D E    F O N C T I O N S                */
@@ -48,7 +49,7 @@ double recupererValeur(const char *data, const char *key){
     return 0.0;
 }
 
-positionPTZ recupererPosition(char * voie){
+positionPTZ recupererPosition(char * voie, const camera_t *cameraActive){
     positionPTZ pos = {NULL, 0.0, 0.0, 0.0};
 
     CURL *curl_handle;
@@ -60,7 +61,7 @@ positionPTZ recupererPosition(char * voie){
 
     // Url
     char url[256];
-    sprintf(url, "%s@%s/%s?query=position", ENTETE_HTTP, IP, SCRIPT_PTZ);
+    sprintf(url, "%s@%s/%s?query=position", ENTETE_HTTP, cameraActive->ip, SCRIPT_PTZ);
     DEBUG_PRINT("%s\n", url);
 
     curl_global_init(CURL_GLOBAL_ALL);
@@ -86,8 +87,8 @@ positionPTZ recupererPosition(char * voie){
         pos.tilt = recupererValeur(chunk.memory, "tilt");
         pos.zoom = recupererValeur(chunk.memory, "zoom");
 
-
-        pos.numVoie = voie; // risque de planter avec l'affectation des char *
+        pos.camera = cameraActive->id;
+        pos.numVoie = voie;
     }
     
     // Nettoyage
@@ -118,6 +119,7 @@ int addPositionFile(const positionPTZ pos){
     json_array_append_new(position_array, json_real(pos.pan));
     json_array_append_new(position_array, json_real(pos.tilt));
     json_array_append_new(position_array, json_real(pos.zoom));
+    json_array_append_new(position_array, json_integer(pos.camera));
 
     json_object_set_new(root, pos.numVoie, position_array);
 
@@ -132,12 +134,12 @@ int addPositionFile(const positionPTZ pos){
 
 
 
-int allerPosition(positionPTZ pos){
+int allerPosition(positionPTZ pos, const camera_t *cameraActive){
     int status = 0;
 
     // Url
     char url[256];
-    sprintf(url, "%s@%s/%s?pan=%.4f&tilt=%.4f&zoom=%.4f", ENTETE_HTTP, IP, SCRIPT_PTZ, pos.pan, pos.tilt, pos.zoom);
+    sprintf(url, "%s@%s/%s?pan=%.4f&tilt=%.4f&zoom=%.4f", ENTETE_HTTP, cameraActive->ip, SCRIPT_PTZ, pos.pan, pos.tilt, pos.zoom);
     DEBUG_PRINT("%s\n", url);
     
 
@@ -167,9 +169,9 @@ int allerPosition(positionPTZ pos){
 
 
 // Ajout d'une nouvelle voie dans le fichier json
-int addRoute(char * voie){
+int addRoute(char * voie, const camera_t *cameraActive){
     DEBUG_PRINT("Ajout de la voie n°%s\n", voie);
-    positionPTZ pos = recupererPosition(voie);
+    positionPTZ pos = recupererPosition(voie, cameraActive);
     if (pos.numVoie == NULL) {
         fprintf(stderr, "addRoute - Erreur lors de la recuperation de valeurs de PTZ\n");
         return -1;
@@ -214,9 +216,9 @@ int removeRoute(char * voie){
 }
 
 // Affichage d'une voie depuis le fichier json
-int showRoute(char * voie){
+int showRoute(char * voie, const camera_t *cameraActive){
     DEBUG_PRINT("Affichage de la voie n°%s\n", voie);
-    json_error_t error;
+    json_error_t error; 
     json_t *root = json_load_file(PATH_POSITIONS, 0, &error);
     
     if (!root) {
@@ -236,12 +238,22 @@ int showRoute(char * voie){
     pos.pan = json_real_value(json_array_get(position_array, 0));
     pos.tilt = json_real_value(json_array_get(position_array, 1));
     pos.zoom = json_real_value(json_array_get(position_array, 2));
+    pos.camera = json_integer_value(json_array_get(position_array, 3));
 
     json_decref(root);
 
     DEBUG_PRINT("Voie: %s, Pan: %.4f, Tilt: %.4f, Zoom: %.4f\n", pos.numVoie, pos.pan, pos.tilt, pos.zoom);
+
+    if (strcmp(voie, "0") != 0 && cameraActive->id != pos.camera) {
+        if (pos.camera == 1) setActiveCamera(&camera1);
+        else if (pos.camera == 2) setActiveCamera(&camera2);
+        else {
+            fprintf(stderr, "showRoute - Erreur : la caméra %d n'existe pas\n", pos.camera);
+            return -1;
+        }
+    }
     
-    return allerPosition(pos);
+    return allerPosition(pos, cameraActive);
 }
 
 

@@ -13,7 +13,7 @@
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 static void signalHandler(int numSig);
-void decouperVideo(const char * nomFichier);
+void decouperVideo(const char * nomFichier, int orientation);
 
 int enregistrementEnCours = 1;
 
@@ -21,10 +21,18 @@ int enregistrementEnCours = 1;
 int main(int argc, char * argv[]) {
     DEBUG_PRINT("[%d] Démarrage de l'enregistrement video\n", getpid());
 
+    if (argc < 5) {
+        DEBUG_PRINT("Pas assez d'arguments\n");
+        exit(EXIT_FAILURE);
+    }
+
     int shm_fd;
     void* virtAddr;
     sem_t *semReaders, *semWriter, *semMutex, *semNewFrame, *semActiveReaders;
     int reader_count;
+
+    int orientation;
+    orientation = atoi(argv[2]);
     
     
     // Installation du gestionnaire de signaux pour géré l'arrêt du programme
@@ -53,13 +61,13 @@ int main(int argc, char * argv[]) {
     char cmd[1000]; // a mieux definir
 
     #ifdef PC
-    sprintf(cmd, "%s %s %s %s %s %s %s %s %s %s %s %s %s %s", "ffmpeg", "-y", LOGLEVEL, "-f rawvideo", "-fflags +discardcorrupt+genpts", "-pixel_format bgr24", "-s 720x1280", "-r 25",  "-framerate 25", "-i pipe:0", "-c:v libx264 "  " -preset medium ", "-pix_fmt yuv420p", "-an", VIDEO_TEMP);
+    sprintf(cmd, "%s %s %s %s %s %s %s %s %s %s %s %s %s %s", "ffmpeg", "-y", LOGLEVEL, "-f rawvideo", "-fflags +discardcorrupt+genpts", "-pixel_format bgr24", "-s 1280x720", "-r 25",  "-framerate 25", "-i pipe:0", "-c:v libx264 "  " -preset medium", "-pix_fmt yuv420p", "-an", VIDEO_TEMP);
     
     #else
 
-    sprintf(cmd, "%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s", "ffmpeg", "-y", LOGLEVEL, "-v debug ", "-f rawvideo", "-fflags +discardcorrupt+genpts", "-pixel_format bgr24", "-video_size 720x1280", "-r 25", "-framerate 25", "-display_rotation 90", "-i pipe:0", "-c:v h264_v4l2m2m "  " -b:v 5M ", "-pix_fmt yuv420p",  "-vf \"rotate=PI/2\"", "-an", VIDEO_TEMP);
+    sprintf(cmd, "%s %s %s %s %s %s %s %s %s %s %s %s %s %s", "ffmpeg", "-y", LOGLEVEL, "-f rawvideo", "-fflags +discardcorrupt+genpts", "-pixel_format bgr24", "-s 1280x720", "-r 25", "-framerate 25", "-i pipe:0", "-c:v h264_v4l2m2m"  " -b:v 5M ", "-pix_fmt yuv420p", "-an", VIDEO_TEMP);
 
-
+    // "-vf \"rotate=PI/2\"" "-v debug"
     #endif
     DEBUG_PRINT("Commande FFMPEG : \"%s\"\n", cmd);
 
@@ -159,7 +167,7 @@ int main(int argc, char * argv[]) {
 
 
     // Découper la vidéo pour garder seulement la partie interessante
-    decouperVideo( argc > 1 ? argv[1] : "./data/videos/output.mp4");
+    decouperVideo( argc > 1 ? argv[1] : "./data/videos/output.mp4", orientation);
 
     
     exit(EXIT_SUCCESS);
@@ -187,7 +195,7 @@ static void signalHandler(int numSig)
 }
 
 
-void decouperVideo(const char * nomFichier) {
+void decouperVideo(const char * nomFichier, int orientation) {
     DEBUG_PRINT("Découpage de la vidéo \"%s\"\n", nomFichier);
     FILE* fvideo;
     float frameDebut = 0, frameFin = 0;
@@ -198,6 +206,10 @@ void decouperVideo(const char * nomFichier) {
     fclose(fvideo);
 
     DEBUG_PRINT("Frame de début : %f\nFrame de fin : %f\n", frameDebut, frameFin);
+
+    if (frameDebut == 0){
+        return;
+    }
 
     // Charger les paramètres depuis le fichier JSON
     json_error_t error;
@@ -214,7 +226,14 @@ void decouperVideo(const char * nomFichier) {
     frameFin = MAX(frameFin - 0.6*numberFrameWithoutMove, frameDebut + 1);
 
     char cmd[256];
-    sprintf(cmd, "%s %s %s %s %s %s %.2f %s %.2f %s %s", "ffmpeg", "-y", LOGLEVEL ,"-i", VIDEO_TEMP, "-ss", frameDebut/25.0, "-to", frameFin/25.0, "-c copy", nomFichier);
+
+    #ifdef PC
+    sprintf(cmd, "%s %s %s %s %s  %s %.2f %s %.2f %s %s", "ffmpeg", "-y", LOGLEVEL,  "-i", VIDEO_TEMP,  "-ss", frameDebut/25.0, "-to", frameFin/25.0, "-vf \"transpose=1\"", nomFichier);
+
+    #else
+        sprintf(cmd, "%s %s %s %s %d %s %s  %s %.2f %s %.2f %s %s", "ffmpeg", "-y", LOGLEVEL, "-display_rotation", 360 - orientation, "-i", VIDEO_TEMP,  "-ss", frameDebut/25.0, "-to", frameFin/25.0, "-c copy", nomFichier);
+
+    #endif
     
     DEBUG_PRINT("Commande FFMPEG : \"%s\"\n", cmd);
     system(cmd);

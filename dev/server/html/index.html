@@ -14,8 +14,10 @@
         window.addEventListener("load", function() {
             // Appelez la fonction loadOptions une fois que tout est chargé
             loadOptions();
-             // Appelez la fonction updateVideoStream pour mettre à jour l'image
-             updateVideoStream();
+            // Appelez la fonction updateVideoStream pour mettre à jour l'image
+            updateVideoStream();
+
+            loadCameras();
         });
 
         // Ajoutez le script au head pour qu'il soit chargé
@@ -266,10 +268,15 @@
         <div style="margin-top: 50px;">
             <h2>Paramètres avancés</h2>
         </div>
+        <div>
+            <h3>Caméras</h3>
+            <select id="cameras" onclick="changeCamera();" ></select>
+        </div>
 
         <div class="routes-group">
             <h3>Voies</h3>
             <select id="dropdown"></select>
+            
             <div class="button-group">
                 <input type="button" value="Sauvegarder la position de caméra" onclick="addRoute();"/> 
                 <input type="button" value="Supprimer la voie sélectionnée" onclick="removeRoute();"/> 

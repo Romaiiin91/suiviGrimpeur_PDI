@@ -11,8 +11,9 @@
 #define PATH_LOG                "/home/romain/Documents/suiviGrimpeur_PDI/dev/log/debug.log"
 #define PATH_LOG_CGI            "/home/romain/Documents/suiviGrimpeur_PDI/dev/log/debugCgi.log"
 #define PATH_PARAM_DETECTION    "/home/romain/Documents/suiviGrimpeur_PDI/dev/data/paramDetection.json"  
-
 #define PATH_POSITIONS          "/home/romain/Documents/suiviGrimpeur_PDI/dev/data/positionsEnregistrees.json"
+#define PATH_CAMERAS            "/home/romain/Documents/suiviGrimpeur_PDI/dev/data/cameras.json"
+#define PATH_CAMERA_ACTIVE      "/home/romain/Documents/suiviGrimpeur_PDI/dev/bin/cameraActive.json"
 #define PATH_FRAMES             "/home/romain/Documents/suiviGrimpeur_PDI/dev/bin/frames" 
 
 
@@ -26,17 +27,16 @@
 #define PATH_LOG_CGI            "/home/pi/suiviGrimpeur/log/debugCgi.log"
 #define PATH_PARAM_DETECTION    "/home/pi/suiviGrimpeur/data/paramDetection.json"  
 #define PATH_POSITIONS          "/home/pi/suiviGrimpeur/data/positionsEnregistrees.json"
+#define PATH_CAMERAS            "/home/pi/suiviGrimpeur/data/cameras.json"
+#define PATH_CAMERA_ACTIVE      "/home/pi/suiviGrimpeur/bin/cameraActive.json"
 #define PATH_FRAMES             "/home/pi/suiviGrimpeur/bin/frames"
 
 #endif
 
 #define SHM_IMAGE "/shmImage"
-// #define WIDTH 1280
-// #define HEIGHT 720
-#define WIDTH 720
-#define HEIGHT 1280
-#define CHANNELS 3
-#define FRAME_SIZE (WIDTH * HEIGHT * CHANNELS)
+#define HEIGHT 720
+#define WIDTH 1280
+#define FRAME_SIZE (WIDTH * HEIGHT * 3)// (WIDTH * HEIGHT * CHANNELS)
 #define SHM_FRAME_SIZE ((FRAME_SIZE + sysconf(_SC_PAGE_SIZE) - 1) / sysconf(_SC_PAGE_SIZE)) * sysconf(_SC_PAGE_SIZE) 
 
 #define SHM_ORDRE "/shmOrdre"

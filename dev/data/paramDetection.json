@@ -3,14 +3,14 @@
     "framesBetweenReferences": 5,
     "coefAverageMovingFilter": 0.3,
 
-    "verticalThreshold": 3.0, 
+    "verticalThreshold": 4.0, 
     "horizontalThreshold": 6.0,
     "nbMoveBeforeChangeDetectionArea": 1,
     
     "increasePTZ" : 3.0,
     
-    "widthResize": 360,
-    "heightResize": 640,
+    "widthResizeRatio": 2,
+    "heightResizeRatio": 2,
     "cropRatioDetectionArea": 4,
     
     "numberFrameBetweenMove": 25,

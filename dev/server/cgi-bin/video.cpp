@@ -85,12 +85,23 @@ int main() {
     sem_t *semReaders, *semWriter, *semMutex, *semNewFrame, *semActiveReaders;
     int reader_count;
 
-    cv::Mat frame(HEIGHT, WIDTH, CV_8UC3);
+    // Recuperer les dimensions de l'image depuis le fichier cameraActive.json
+    json_error_t error;
+    json_t *root = json_load_file(PATH_CAMERA_ACTIVE, 0, &error);
+
+    CHECK_NULL(root, "video.cgi: json_load_file(PATH_CAMERA_ACTIVE)");
+    int width = json_integer_value(json_object_get(root, "width"));
+    int height = json_integer_value(json_object_get(root, "height"));
+    int orientation = json_integer_value(json_object_get(root, "orientation"));
+    json_decref(root);
+
+
+    cv::Mat frame;
     cv::Mat frameRGB;   
 
     unsigned long jpeg_size = 0;
     unsigned char* jpeg_buffer; // Taille maximale possible
-    CHECK_NULL(jpeg_buffer = (unsigned char*) malloc(WIDTH * HEIGHT * CHANNELS), "video.cgi: malloc(jpeg_buffer)");
+    CHECK_NULL(jpeg_buffer = (unsigned char*) malloc(FRAME_SIZE), "video.cgi: malloc(jpeg_buffer)");
 
     // Installation du gestionnaire de signal
     struct sigaction newAction;
@@ -99,16 +110,8 @@ int main() {
     newAction.sa_flags = 0;
     CHECK(sigaction(SIGINT, &newAction, NULL), "sigaction (SIGINT)");
     CHECK(sigaction(SIGTERM, &newAction, NULL), "sigaction (SIGTERM)");
-    //CHECK(sigaction(SIGPIPE, &newAction, NULL), "sigaction (SIGPIPE)");
     
-    //Installation du gestionnaire de signal pour tous les signaux jusqu'à 31 sauf ceux qu'on ne peut écouter
-    // for (int sig = 1; sig <= 15; ++sig) {
-    //     if (sig == SIGKILL || sig == SIGSTOP) {
-    //         continue; // Ne pas écouter SIGKILL et SIGSTOP
-    //     }
-    //     DEBUG_CGI_PRINT("Installation du gestionnaire de signal pour le signal %d\n", sig);
-    //     CHECK(sigaction(sig, &newAction, NULL), "sigaction");
-    // }
+    
 
     // Overture des semaphores
     CHECK_NULL(semReaders = sem_open(SEM_READERS, 0), "video.cgi: sem_open(semReaders)");
@@ -125,6 +128,22 @@ int main() {
     // En-tête HTTP pour le flux MJPEG
     printf("Content-Type: multipart/x-mixed-replace; boundary=--myboundary\r\n\r\n");
 
+    cv::RotateFlags rotateCode;
+    switch (orientation)
+    {
+    case 90:
+        rotateCode = cv::ROTATE_90_CLOCKWISE;
+        break;
+    case 180:
+        rotateCode = cv::ROTATE_180;
+        break;
+    case 270:
+        rotateCode = cv::ROTATE_90_COUNTERCLOCKWISE;
+        break;
+    
+    default:
+        break;
+    }
  
     // Incrémenter le compteur de lecteurs actifs
     sem_post(semActiveReaders);
@@ -148,7 +167,7 @@ int main() {
 
 
         // Mettre à jour les données de la matrice frame
-        memcpy(frame.data, virtAddr, SHM_FRAME_SIZE);
+        frame = cv::Mat(720, 1280, CV_8UC3, virtAddr);
        
 
         sem_wait(semMutex);  // Acquérir le sémaphore de synchronisation
@@ -162,12 +181,16 @@ int main() {
 
         sem_post(semMutex);  // Relâcher le sémaphore de synchronisation
         
-   
+        // Rotation de l'image si nécessaire
+        if (orientation != 0) cv::rotate(frame, frame, rotateCode);
+
+
+
         // Convertir de BGR à RGB
         cv::cvtColor(frame, frameRGB, cv::COLOR_BGR2RGB);
 
         // Encoder l'image en JPEG
-        encode_jpeg(frameRGB.data, WIDTH, HEIGHT, CHANNELS, &jpeg_buffer, &jpeg_size);
+        encode_jpeg(frameRGB.data, width, height, 3, &jpeg_buffer, &jpeg_size);
 
         // Envoyer l'en-tête de la partie
         printf("--myboundary\r\n");

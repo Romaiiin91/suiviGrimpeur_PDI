@@ -17,10 +17,6 @@
 /*                 V A R I A B L E S    G L O B A L E S                     */
 /* ------------------------------------------------------------------------ */
 
-// #define WIDTH 1280
-// #define HEIGHT 720
-#define WIDTH 720
-#define HEIGHT 1280
 
 bool detectionEnCours = true;
 int exitStatus = -1;
@@ -57,8 +53,8 @@ int main(int argc, char const *argv[])
 
     float coefAverageMovingFilter = json_real_value(json_object_get(root, "coefAverageMovingFilter"));
     int coefGaussianBlur = json_integer_value(json_object_get(root, "coefGaussianBlur"));
-    int heightResize = json_integer_value(json_object_get(root, "heightResize"));
-    int widthResize = json_integer_value(json_object_get(root, "widthResize"));
+    int heightResizeRatio = json_integer_value(json_object_get(root, "heightResizeRatio"));
+    int widthResizeRatio = json_integer_value(json_object_get(root, "widthResizeRatio"));
     int nbMoveBeforeChangeDetectionArea = json_integer_value(json_object_get(root, "nbMoveBeforeChangeDetectionArea"));
 
     int cropRatioDetectionArea = json_integer_value(json_object_get(root, "cropRatioDetectionArea")); // 3 cetait bien
@@ -69,12 +65,43 @@ int main(int argc, char const *argv[])
     float increasePTZ = json_real_value(json_object_get(root, "increasePTZ"));
 
     json_decref(root);
+    DEBUG_PRINT("detection.cpp: ParamDetection chargés\n");
+    
+
+    
+
+    // Creation de la structure cameraActive
+    camera_t cameraActive;
+    CHECK_NULL(root = json_load_file(PATH_CAMERA_ACTIVE, 0, &error), "detectionVideo: json_load_file(PATH_CAMERA_ACTIVE)");
+    cameraActive.id = json_integer_value(json_object_get(root, "id"));
+    strcpy(cameraActive.ip, json_string_value(json_object_get(root, "IP")));
+    cameraActive.width = json_integer_value(json_object_get(root, "width"));
+    cameraActive.height = json_integer_value(json_object_get(root, "height"));
+    cameraActive.orientation = json_integer_value(json_object_get(root, "orientation"));
+    cameraActive.up = json_integer_value(json_object_get(root, "up"));
+    cameraActive.down = json_integer_value(json_object_get(root, "down"));
+    cameraActive.left = json_integer_value(json_object_get(root, "left"));
+    cameraActive.right = json_integer_value(json_object_get(root, "right"));
+    strcpy(cameraActive.cmdVertical, json_string_value(json_object_get(root, "cmdVertical")));
+    strcpy(cameraActive.cmdHorizontal, json_string_value(json_object_get(root, "cmdHorizontal")));
+    
+    json_decref(root); 
+    
+    DEBUG_PRINT("deteciton.cpp : cameraActive : \n\t id : %d\n\t ip : %s\n\t width : %d\n\t height : %d\n\t orientation : %d\n\t up : %d\n\t down : %d\n\t left : %d\n\t right : %d\n\t cmdVertical : %s\n\t cmdHorizontal : %s\n", cameraActive.id, cameraActive.ip, cameraActive.width, cameraActive.height, cameraActive.orientation, cameraActive.up, cameraActive.down, cameraActive.left, cameraActive.right, cameraActive.cmdVertical, cameraActive.cmdHorizontal); 
+
+
+    // Calcul des paramètres de detection
+    int widthResize = cameraActive.width / widthResizeRatio;
+    int heightResize = cameraActive.height / heightResizeRatio;
 
     int widthDetectionArea = (cropRatioDetectionArea - 2) * widthResize / cropRatioDetectionArea;
     int heightDetectionArea = (cropRatioDetectionArea - 2) * heightResize / cropRatioDetectionArea;
 
     float floatHeightDetectionArea = heightDetectionArea * 1.0;
     float floatWidthDetectionArea = widthDetectionArea * 1.0;
+
+
+
 
     FILE *fvideo;
     CHECK_NULL(fvideo = fopen(PATH_FRAMES, "w"), "fopen(PATH_FRAMES)");
@@ -103,8 +130,8 @@ int main(int argc, char const *argv[])
 
     // Forcer les FPS et la résolution
     cap.set(cv::CAP_PROP_FPS, 25);              // Définir les FPS à 25
-    cap.set(cv::CAP_PROP_FRAME_WIDTH, WIDTH);   // Largeur à 1280
-    cap.set(cv::CAP_PROP_FRAME_HEIGHT, HEIGHT); // Hauteur à 720
+    cap.set(cv::CAP_PROP_FRAME_WIDTH, cameraActive.width);   // Largeur à 1280
+    cap.set(cv::CAP_PROP_FRAME_HEIGHT,  cameraActive.height); // Hauteur à 720
 
 #else
 
@@ -145,6 +172,23 @@ int main(int argc, char const *argv[])
 
     int abscisseDetectionAreaTop = 0, abscisseDetectionAreaBottom = 0;
 
+    cv::RotateFlags rotateCode;
+    switch (cameraActive.orientation)
+    {
+    case 90:
+        rotateCode = cv::ROTATE_90_CLOCKWISE;
+        break;
+    case 180:
+        rotateCode = cv::ROTATE_180;
+        break;
+    case 270:
+        rotateCode = cv::ROTATE_90_COUNTERCLOCKWISE;
+        break;
+    
+    default:
+        break;
+    }
+
     while (detectionEnCours && frame_count < INT_MAX)
     {
 
@@ -177,7 +221,7 @@ int main(int argc, char const *argv[])
         sem_post(semMutex); // Relâcher le sémaphore de synchronisation
 
         // Lire les données de la mémoire partagée
-        frame = cv::Mat(HEIGHT, WIDTH, CV_8UC3, virtAddr);
+        frame = cv::Mat(720, 1280, CV_8UC3, virtAddr);
 
         sem_wait(semMutex); // Acquérir le sémaphore de synchronisation
 
@@ -191,7 +235,10 @@ int main(int argc, char const *argv[])
 
         sem_post(semMutex); // Relâcher le sémaphore de synchronisation
 
+        if (cameraActive.orientation != 0) cv::rotate(frame, frame, rotateCode);
+
 #endif
+
 
         cv::resize(frame, frame, cv::Size(widthResize, heightResize));
         cv::cvtColor(frame, gray, cv::COLOR_BGR2GRAY);
@@ -261,12 +308,11 @@ int main(int argc, char const *argv[])
                         // std::cout << "cy detection area : " << cY_detectionArea << " heightResize / verticalThreshold : " << heightResize / verticalThreshold << std::endl;
                         mvmtVert = "Monte";
 
-#ifndef VIDEO
-                        requetePTZ("rpan", std::to_string(increasePTZ).c_str());
-                        // requetePTZ("rtilt", std::to_string(increasePTZ).c_str());
-                        lastFrameMoveCam = frame_count;
-                        resetFrameReference = 1;
-#endif
+                        #ifndef VIDEO
+                            requetePTZ("up", increasePTZ, &cameraActive);
+                            lastFrameMoveCam = frame_count;
+                            resetFrameReference = 1;
+                        #endif
 
                         if (nbMoveUp == 0)
                         {
@@ -275,22 +321,28 @@ int main(int argc, char const *argv[])
                         }
 
                         ++nbMoveUp;
-                    }
-                    else
+                    } 
+                    else if (nbMoveUp > 1 && cY_detectionArea > floatHeightDetectionArea - floatHeightDetectionArea / verticalThreshold) // Mouvement vers le bas si la cam monte trop haut mais voir si il ne faut pas l'enlever au cas ou ca suit tout la descente
                     {
-                        mvmtVert = "";
+                        mvmtVert = "Descend";
+
+                        #ifndef VIDEO
+                            requetePTZ("down", increasePTZ, &cameraActive);
+                            lastFrameMoveCam = frame_count;
+                            resetFrameReference = 1;
+                        #endif
                     }
+                    else mvmtVert = "";
 
                     if (cX_detectionArea < floatWidthDetectionArea / horizontalThreshold)
                     {
                         mvmtHoriz = "Gauche";
 
-#ifndef VIDEO
-                        requetePTZ("rtilt", std::to_string(1 * increasePTZ).c_str());
-                        // requetePTZ("rpan", std::to_string(-1 * increasePTZ).c_str());
-                        lastFrameMoveCam = frame_count;
-                        resetFrameReference = 1;
-#endif
+                        #ifndef VIDEO
+                            requetePTZ("left", increasePTZ, &cameraActive);
+                            lastFrameMoveCam = frame_count;
+                            resetFrameReference = 1;
+                        #endif
                     }
 
                     else if (cX_detectionArea > floatWidthDetectionArea - floatWidthDetectionArea / horizontalThreshold)
@@ -299,17 +351,13 @@ int main(int argc, char const *argv[])
 
 #ifndef VIDEO
                         // requetePTZ("rpan", std::to_string(increasePTZ).c_str());
-                        requetePTZ("rtilt", std::to_string( -1* increasePTZ).c_str());
+                        requetePTZ("right", increasePTZ, &cameraActive);
                         lastFrameMoveCam = frame_count;
                         resetFrameReference = 1;
 #endif
                     }
-                    else
-                    {
-                        mvmtHoriz = "";
-                    }
-
-                    // Baisser la zone de detc apres le premier ou 2e mvt vers le haut
+                    else mvmtHoriz = "";
+                    
                 }
             }
         }
@@ -338,6 +386,8 @@ int main(int argc, char const *argv[])
         cv::rectangle(frame, cv::Point(widthResize / cropRatioDetectionArea, abscisseDetectionAreaTop), cv::Point(widthResize - widthResize / cropRatioDetectionArea, abscisseDetectionAreaBottom), cv::Scalar(0, 255, 0), 2);
 
         cv::line(frame, cv::Point(0, heightDetectionArea / verticalThreshold + abscisseDetectionAreaTop), cv::Point(widthResize, heightDetectionArea / verticalThreshold + abscisseDetectionAreaTop), cv::Scalar(0, 0, 255), 2);
+
+        cv::line(frame, cv::Point(0, heightDetectionArea - heightDetectionArea / verticalThreshold + abscisseDetectionAreaTop), cv::Point(widthResize, heightDetectionArea - heightDetectionArea / verticalThreshold + abscisseDetectionAreaTop), cv::Scalar(0, 0, 255), 2);
 
         cv::line(frame, cv::Point(widthResize / cropRatioDetectionArea + widthDetectionArea / horizontalThreshold, 0), cv::Point(widthResize / cropRatioDetectionArea + widthDetectionArea / horizontalThreshold, heightResize), cv::Scalar(0, 0, 255), 2);
 
