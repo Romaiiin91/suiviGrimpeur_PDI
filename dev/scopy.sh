@@ -9,7 +9,8 @@ LOCAL_PARAM_FILE="/home/romain/Documents/suiviGrimpeur_PDI/dev/data/paramDetecti
 LOCAL_CAMERAS_FILE="/home/romain/Documents/suiviGrimpeur_PDI/dev/data/cameras.json"
 LOCAL_MAKEFILE="/home/romain/Documents/suiviGrimpeur_PDI/dev/makefile"
 REMOTE_USER="pi"
-REMOTE_HOST="192.168.1.14"  # Remplacez par l'adresse IP de votre Raspberry Pi
+# REMOTE_HOST="192.168.1.14"  # Remplacez par l'adresse IP de votre Raspberry Pi
+REMOTE_HOST="192.168.0.196"
 REMOTE_DIR="/home/pi/suiviGrimpeur/"
 
 # Copier le dossier src

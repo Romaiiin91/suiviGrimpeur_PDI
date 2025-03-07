@@ -322,16 +322,16 @@ int main(int argc, char const *argv[])
 
                         ++nbMoveUp;
                     } 
-                    else if (nbMoveUp > 1 && cY_detectionArea > floatHeightDetectionArea - floatHeightDetectionArea / verticalThreshold) // Mouvement vers le bas si la cam monte trop haut mais voir si il ne faut pas l'enlever au cas ou ca suit tout la descente
-                    {
-                        mvmtVert = "Descend";
+                    // else if (nbMoveUp > 1 && cY_detectionArea > floatHeightDetectionArea - floatHeightDetectionArea / verticalThreshold) // Mouvement vers le bas si la cam monte trop haut mais voir si il ne faut pas l'enlever au cas ou ca suit tout la descente
+                    // {
+                    //     mvmtVert = "Descend";
 
-                        #ifndef VIDEO
-                            requetePTZ("down", increasePTZ, &cameraActive);
-                            lastFrameMoveCam = frame_count;
-                            resetFrameReference = 1;
-                        #endif
-                    }
+                    //     #ifndef VIDEO
+                    //         requetePTZ("down", increasePTZ, &cameraActive);
+                    //         lastFrameMoveCam = frame_count;
+                    //         resetFrameReference = 1;
+                    //     #endif
+                    // }
                     else mvmtVert = "";
 
                     if (cX_detectionArea < floatWidthDetectionArea / horizontalThreshold)

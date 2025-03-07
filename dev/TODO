@@ -27,7 +27,12 @@
 
 - [x] Faire une variable globale pour choisir l'orientation
 - [x] Detection en bas de l'écran après deux mouvement
-- [x] Gérer les deux caméras
+- [x] Gérer les deux caméras*
+
+- [ ] IncreasePtz en fx du zomm 
+- [ ] rechanger le debut laisser plus de temps
+- [ ] bien definir les zonnes en fx de l'orientation
+- [ ] 
 
 - [~] Gérer le stockage max des videos 
 - [ ] Refaire proprement les includes
