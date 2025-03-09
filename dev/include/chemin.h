@@ -17,6 +17,16 @@
 #define PATH_FRAMES             "/home/romain/Documents/suiviGrimpeur_PDI/dev/bin/frames" 
 
 
+#ifdef DEBUG
+#define PATH_EXE_ENREGISTREMENT_VIDEO            "/home/romain/Documents/suiviGrimpeur_PDI/dev/bin/enregistrementVideoDEBUG"
+#define PATH_EXE_DETECTION               "/home/romain/Documents/suiviGrimpeur_PDI/dev/bin/detectionDEBUG"
+#define PATH_EXE_ECRITURE_MEMOIRE         "/home/romain/Documents/suiviGrimpeur_PDI/dev/bin/ecritureMemoireDEBUG"
+#else
+#define PATH_EXE_ECRITURE_MEMOIRE               "/home/romain/Documents/suiviGrimpeur_PDI/dev/bin/ecritureMemoire"
+#define PATH_EXE_DETECTION                      "/home/romain/Documents/suiviGrimpeur_PDI/dev/bin/detection"
+#define PATH_EXE_ENREGISTREMENT_VIDEO           "/home/romain/Documents/suiviGrimpeur_PDI/dev/bin/enregistrementVideo"
+#endif
+
 
 #else
 
@@ -30,6 +40,19 @@
 #define PATH_CAMERAS            "/home/pi/suiviGrimpeur/data/cameras.json"
 #define PATH_CAMERA_ACTIVE      "/home/pi/suiviGrimpeur/bin/cameraActive.json"
 #define PATH_FRAMES             "/home/pi/suiviGrimpeur/bin/frames"
+
+
+
+
+#ifdef DEBUG
+#define PATH_EXE_ENREGISTREMENT_VIDEO    "/home/pi/suiviGrimpeur/bin/enregistrementVideoDEBUG"
+#define PATH_EXE_DETECTION               "/home/pi/suiviGrimpeur/bin/detectionDEBUG"
+#define PATH_EXE_ECRITURE_MEMOIRE         "/home/pi/suiviGrimpeur/bin/ecritureMemoireDEBUG"
+#else
+#define PATH_EXE_ECRITURE_MEMOIRE               "/home/pi/suiviGrimpeur/bin/ecritureMemoire"
+#define PATH_EXE_DETECTION                      "/home/pi/suiviGrimpeur/bin/detection"
+#define PATH_EXE_ENREGISTREMENT_VIDEO           "/home/pi/suiviGrimpeur/bin/enregistrementVideo"
+#endif
 
 #endif
 

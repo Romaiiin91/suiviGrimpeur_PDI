@@ -32,7 +32,7 @@
 /* ------------------------------------------------------------------------ */
 
 int shmOrdre;
-void* virtAddr;
+void* virtAddrOrdre;
 
 
 /* ------------------------------------------------------------------------ */
@@ -69,7 +69,7 @@ static void signalHandler(int numSig){
 // 	int status = -1;
 
 // 	// Lecture du status dans le segment mémoire partagé
-// 	sscanf((char*) virtAddr, "%d", &status);
+// 	sscanf((char*) virtAddrOrdre, "%d", &status);
 // 	DEBUG_CGI_PRINT("action: Status : %d\n", status);
 
 //     // Envoyer la réponse HTTP
@@ -90,7 +90,7 @@ void retourHTTP(){
     int status = -1;
 
     // Lecture du status dans le segment mémoire partagé
-    sscanf((char*) virtAddr, "%d", &status);
+    sscanf((char*) virtAddrOrdre, "%d", &status);
     DEBUG_CGI_PRINT("action: Status : %d\n", status);
 
     // Envoyer la réponse HTTP en JSON
@@ -109,8 +109,8 @@ void bye(){
     DEBUG_CGI_PRINT("[%d] --> Fin du programme CGI action\n", getpid());
 
 	// Fermeture du segment mémoire partagé
-    if (virtAddr != MAP_FAILED) {
-        munmap(virtAddr, SHM_ORDRE_SIZE);
+    if (virtAddrOrdre != MAP_FAILED) {
+        munmap(virtAddrOrdre, SHM_ORDRE_SIZE);
     }
     if (shmOrdre != -1) {
         close(shmOrdre);
@@ -157,10 +157,10 @@ int main(void) {
 	// Utilisation d'un segment mémoire partagé pour l'ordre
     CHECK(shmOrdre = shm_open(SHM_ORDRE, O_RDWR, 0666), "action: shm_open(SHM_ORDRE)");
     CHECK(ftruncate(shmOrdre, SHM_ORDRE_SIZE), "action: ftruncate(shmOrdre)");   
-    CHECK_NULL(virtAddr = mmap(0, SHM_ORDRE_SIZE, PROT_WRITE, MAP_SHARED, shmOrdre, 0), "action: mmap(virtAddr)");
+    CHECK_NULL(virtAddrOrdre = mmap(0, SHM_ORDRE_SIZE, PROT_WRITE, MAP_SHARED, shmOrdre, 0), "action: mmap(virtAddrOrdre)");
 
 	// Ecriture de l'ordre dans le segment mémoire partagé
-	sprintf((char*) virtAddr, "%d-%s", getpid(), buffer);
+	sprintf((char*) virtAddrOrdre, "%d-%s", getpid(), buffer);
 	
 	// Envoi du signal SIGUSR1 au programme principal
 	FILE *fpid;

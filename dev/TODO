@@ -21,7 +21,9 @@
 
 - [x] Mémoire partagée pour l'envoi d'ordre et meilleur optimisation des messages
 - [x] Page html : choix rapide de voie sous les boutons
-- [ ] Faire en sorte que ca se lance au démarrage
+
+
+- [ ] Faire en sorte que ca se lance au démarrage -> while ping les deux cameras attendre pour que ca se lance et apres lance le main et lancer top sur l'ecran
 - [ ] Maybe : Status sur l'écran . 
 - [ ] Afficher la video en cours de lecture
 
@@ -29,16 +31,16 @@
 - [x] Detection en bas de l'écran après deux mouvement
 - [x] Gérer les deux caméras*
 
-- [ ] IncreasePtz en fx du zomm 
-- [ ] rechanger le debut laisser plus de temps
-- [ ] bien definir les zonnes en fx de l'orientation
-- [ ] 
+- [x] IncreasePtz en fx du zomm 
+- [x] Rechanger le debut laisser plus de temps
+- [x] Bien definir les zones en fx de l'orientation
+
 
 - [~] Gérer le stockage max des videos 
 - [ ] Refaire proprement les includes
 - [ ] Faire une relecture du code avec commentaires
 
-- [ ] Maybe : Faire une liste des ordres en attentes. 
+- [ ] Maybe : Faire une liste des ordres en attentes. (bug a des moments long pour executer l'ordre)
 - [ ] ConnexionWifi : sudo nmtui
 
 - [x] Mieux gérer les droits sur le raspberry et mettre les fichier serveur au bon endroit : 

@@ -156,7 +156,9 @@ int main(int argc, char * argv[]) {
     munmap(virtAddr, SHM_FRAME_SIZE);
     close(shm_fd);
 
+    #ifdef PC
     printf("\n\n----------------- Fin de l'enregistrement vidéo. -----------------\n\n");
+    #endif
 
     // Fermer les sémaphores
     sem_close(semReaders);
@@ -238,5 +240,7 @@ void decouperVideo(const char * nomFichier, int orientation) {
     DEBUG_PRINT("Commande FFMPEG : \"%s\"\n", cmd);
     system(cmd);
 
+    #ifdef PC
     printf("\n\n----------------- Fin découpage vidéo. -----------------\n\n");
+    #endif
 }

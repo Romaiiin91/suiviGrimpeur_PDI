@@ -25,6 +25,50 @@ int exitStatus = -1;
 /*            D E F I N I T I O N   D E    F O N C T I O N S                */
 /* ------------------------------------------------------------------------ */
 
+
+size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* output) {
+    size_t totalSize = size * nmemb;
+    output->append((char*)contents, totalSize);
+    return totalSize;
+}
+
+float getActualZoom(const camera_t* cameraActive) {
+    CURL* curl;
+    CURLcode res;
+    std::string readBuffer;
+    float zoom = 1.0;
+
+    // Url
+    std::string url = ENTETE_HTTP + std::string("@") + cameraActive->ip + "/" + SCRIPT_PTZ + "?query=position";
+    
+
+    curl = curl_easy_init();
+    if (curl) {
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+        curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5L); // Timeout de 5 secondes
+
+        res = curl_easy_perform(curl);
+        if (res != CURLE_OK) {
+            std::cerr << "Erreur curl: " << curl_easy_strerror(res) << std::endl;
+            readBuffer.clear(); // Retourne une chaîne vide en cas d'erreur
+        }
+        else{
+            std::string zoomStr;
+            zoomStr = readBuffer.substr(readBuffer.find("zoom=") + 5, 4);
+            zoom = std::stof(zoomStr)/588 + 1; // min de zoom Camera = 1 et max = 9999 et zoomHumain = 0.1 à 18
+        }
+
+        curl_easy_cleanup(curl);
+    } else {
+        std::cerr << "Erreur: Impossible d'initialiser CURL" << std::endl;
+    }
+
+    return MAX(zoom,1.0);
+}
+
+
 int main(int argc, char const *argv[])
 {
     DEBUG_PRINT("[%d] Démarrage de detection video\n", getpid());
@@ -37,41 +81,13 @@ int main(int argc, char const *argv[])
     CHECK(sigaction(SIGINT, &newAction, NULL), "detectionVideo: sigaction (SIGINT)");
     CHECK(sigaction(SIGTERM, &newAction, NULL), "detectionVideo: sigaction (SIGTERM)");
 
-    // Charger les paramètres depuis le fichier JSON
-    json_error_t error;
-    json_t *root = json_load_file(PATH_PARAM_DETECTION, 0, &error);
-
-    if (!root)
-    {
-        std::cerr << "Erreur de lecture du fichier JSON: " << error.text << std::endl;
-        exit(EXIT_FAILURE);
-    }
-
-    int framesBetweenReference = json_integer_value(json_object_get(root, "framesBetweenReferences"));
-    float verticalThreshold = json_real_value(json_object_get(root, "verticalThreshold"));
-    float horizontalThreshold = json_real_value(json_object_get(root, "horizontalThreshold"));
-
-    float coefAverageMovingFilter = json_real_value(json_object_get(root, "coefAverageMovingFilter"));
-    int coefGaussianBlur = json_integer_value(json_object_get(root, "coefGaussianBlur"));
-    int heightResizeRatio = json_integer_value(json_object_get(root, "heightResizeRatio"));
-    int widthResizeRatio = json_integer_value(json_object_get(root, "widthResizeRatio"));
-    int nbMoveBeforeChangeDetectionArea = json_integer_value(json_object_get(root, "nbMoveBeforeChangeDetectionArea"));
-
-    int cropRatioDetectionArea = json_integer_value(json_object_get(root, "cropRatioDetectionArea")); // 3 cetait bien
-
-    int numberFrameBetweenMove = json_integer_value(json_object_get(root, "numberFrameBetweenMove"));
-    int numberFrameWithoutMove = json_integer_value(json_object_get(root, "numberFrameWithoutMove"));
-
-    float increasePTZ = json_real_value(json_object_get(root, "increasePTZ"));
-
-    json_decref(root);
-    DEBUG_PRINT("detection.cpp: ParamDetection chargés\n");
-    
-
-    
 
     // Creation de la structure cameraActive
     camera_t cameraActive;
+
+    json_error_t error;
+    json_t *root = NULL;
+
     CHECK_NULL(root = json_load_file(PATH_CAMERA_ACTIVE, 0, &error), "detectionVideo: json_load_file(PATH_CAMERA_ACTIVE)");
     cameraActive.id = json_integer_value(json_object_get(root, "id"));
     strcpy(cameraActive.ip, json_string_value(json_object_get(root, "IP")));
@@ -88,6 +104,38 @@ int main(int argc, char const *argv[])
     json_decref(root); 
     
     DEBUG_PRINT("deteciton.cpp : cameraActive : \n\t id : %d\n\t ip : %s\n\t width : %d\n\t height : %d\n\t orientation : %d\n\t up : %d\n\t down : %d\n\t left : %d\n\t right : %d\n\t cmdVertical : %s\n\t cmdHorizontal : %s\n", cameraActive.id, cameraActive.ip, cameraActive.width, cameraActive.height, cameraActive.orientation, cameraActive.up, cameraActive.down, cameraActive.left, cameraActive.right, cameraActive.cmdVertical, cameraActive.cmdHorizontal); 
+
+    // Charger les paramètres depuis le fichier JSON
+    CHECK_NULL(root = json_load_file(PATH_PARAM_DETECTION, 0, &error), "detection.cpp: json_load_file(PATH_PARAM_DETECTION)");
+
+    int framesBetweenReference = json_integer_value(json_object_get(root, "framesBetweenReferences"));
+    float verticalThreshold = json_real_value(json_object_get(root, "verticalThreshold"));
+    float horizontalThreshold = json_real_value(json_object_get(root, "horizontalThreshold"));
+
+    float coefAverageMovingFilter = json_real_value(json_object_get(root, "coefAverageMovingFilter"));
+    int coefGaussianBlur = json_integer_value(json_object_get(root, "coefGaussianBlur"));
+    int heightResizeRatio = json_integer_value(json_object_get(root, "heightResizeRatio"));
+    int widthResizeRatio = json_integer_value(json_object_get(root, "widthResizeRatio"));
+    int nbMoveBeforeChangeDetectionArea = json_integer_value(json_object_get(root, "nbMoveBeforeChangeDetectionArea"));
+
+    
+    int cropRatioDetectionArea;
+    if (cameraActive.orientation == 0 || cameraActive.orientation == 180) cropRatioDetectionArea = json_integer_value(json_object_get(root, "cropRatioDetectionAreaLandscape"));
+    else cropRatioDetectionArea = json_integer_value(json_object_get(root, "cropRatioDetectionAreaPortrait"));
+    
+
+    int numberFrameBetweenMove = json_integer_value(json_object_get(root, "numberFrameBetweenMove"));
+    int numberFrameWithoutMove = json_integer_value(json_object_get(root, "numberFrameWithoutMove"));
+
+    float increasePTZ = json_real_value(json_object_get(root, "increasePTZ"));
+
+    json_decref(root);
+    DEBUG_PRINT("detection.cpp: ParamDetection chargés\n");
+    
+
+    
+
+    
 
 
     // Calcul des paramètres de detection
@@ -109,31 +157,7 @@ int main(int argc, char const *argv[])
     fflush(fvideo);
     fclose(fvideo);
 
-#ifdef VIDEO
 
-    if (argc < 2)
-    {
-        DEBUG_PRINT("Pas url video");
-        exit(EXIT_FAILURE);
-    }
-
-    // Ouvrir la capture vidéo avec l'URL
-    cv::VideoCapture cap(argv[1]);
-    DEBUG_PRINT("Debut detection sur le lien : %s\n", argv[1]);
-
-    // Vérifier si la capture est ouverte
-    if (!cap.isOpened())
-    {
-        std::cerr << "Erreur: Impossible d'ouvrir le flux vidéo." << std::endl;
-        exit(EXIT_FAILURE);
-    }
-
-    // Forcer les FPS et la résolution
-    cap.set(cv::CAP_PROP_FPS, 25);              // Définir les FPS à 25
-    cap.set(cv::CAP_PROP_FRAME_WIDTH, cameraActive.width);   // Largeur à 1280
-    cap.set(cv::CAP_PROP_FRAME_HEIGHT,  cameraActive.height); // Hauteur à 720
-
-#else
 
     int shm_fd;
     void *virtAddr;
@@ -155,7 +179,11 @@ int main(int argc, char const *argv[])
     CHECK(ftruncate(shm_fd, SHM_FRAME_SIZE), "video.cgi: ftruncate(shm_fd)");
     CHECK_NULL(virtAddr = mmap(0, SHM_FRAME_SIZE, PROT_WRITE, MAP_SHARED, shm_fd, 0), "video.cgi: mmap(virtAddr)");
 
-#endif
+    // Get actual zoom value
+    float actualZoom = getActualZoom(&cameraActive);
+    DEBUG_PRINT("Actual zoom : %f\n", actualZoom);
+
+    increasePTZ = increasePTZ / actualZoom;
 
     int frame_count = 0, resetFrameReference = 0;
     cv::Moments m, mDetectionArea;
@@ -192,19 +220,6 @@ int main(int argc, char const *argv[])
     while (detectionEnCours && frame_count < INT_MAX)
     {
 
-#ifdef VIDEO
-        // Lire une image
-        cap >> frame;
-
-        // Vérifier si l'image est vide (fin du flux)
-        if (frame.empty())
-        {
-            std::cerr << "Erreur: Image vide capturée." << std::endl;
-            break;
-        }
-
-#else
-
         sem_wait(semNewFrame); // Attendre une nouvelle image
 
         sem_wait(semMutex); // Acquérir le sémaphore de synchronisation
@@ -221,7 +236,7 @@ int main(int argc, char const *argv[])
         sem_post(semMutex); // Relâcher le sémaphore de synchronisation
 
         // Lire les données de la mémoire partagée
-        frame = cv::Mat(720, 1280, CV_8UC3, virtAddr);
+        frame = cv::Mat(HEIGHT, WIDTH, CV_8UC3, virtAddr);
 
         sem_wait(semMutex); // Acquérir le sémaphore de synchronisation
 
@@ -236,8 +251,6 @@ int main(int argc, char const *argv[])
         sem_post(semMutex); // Relâcher le sémaphore de synchronisation
 
         if (cameraActive.orientation != 0) cv::rotate(frame, frame, rotateCode);
-
-#endif
 
 
         cv::resize(frame, frame, cv::Size(widthResize, heightResize));
@@ -259,13 +272,7 @@ int main(int argc, char const *argv[])
         cv::dilate(thresh, thresh, cv::Mat(), cv::Point(-1, -1), 2);
 
         // Forcer le reset de l'image de reference si trop de pixel blanc
-        if (cv::countNonZero(thresh) > 30000)
-        {
-            resetFrameReference = 1;
-#ifdef VIDEO
-            ++nbMoveUp;
-#endif
-        }
+        if (cv::countNonZero(thresh) > 30000) resetFrameReference = 1;
         else
         {
             // Zone de detection
@@ -322,39 +329,23 @@ int main(int argc, char const *argv[])
 
                         ++nbMoveUp;
                     } 
-                    // else if (nbMoveUp > 1 && cY_detectionArea > floatHeightDetectionArea - floatHeightDetectionArea / verticalThreshold) // Mouvement vers le bas si la cam monte trop haut mais voir si il ne faut pas l'enlever au cas ou ca suit tout la descente
-                    // {
-                    //     mvmtVert = "Descend";
-
-                    //     #ifndef VIDEO
-                    //         requetePTZ("down", increasePTZ, &cameraActive);
-                    //         lastFrameMoveCam = frame_count;
-                    //         resetFrameReference = 1;
-                    //     #endif
-                    // }
                     else mvmtVert = "";
 
                     if (cX_detectionArea < floatWidthDetectionArea / horizontalThreshold)
                     {
                         mvmtHoriz = "Gauche";
-
-                        #ifndef VIDEO
-                            requetePTZ("left", increasePTZ, &cameraActive);
-                            lastFrameMoveCam = frame_count;
-                            resetFrameReference = 1;
-                        #endif
+                        requetePTZ("left", increasePTZ, &cameraActive);
+                        lastFrameMoveCam = frame_count;
+                        resetFrameReference = 1;
+                       
                     }
 
                     else if (cX_detectionArea > floatWidthDetectionArea - floatWidthDetectionArea / horizontalThreshold)
                     {
                         mvmtHoriz = "Droite";
-
-#ifndef VIDEO
-                        // requetePTZ("rpan", std::to_string(increasePTZ).c_str());
                         requetePTZ("right", increasePTZ, &cameraActive);
                         lastFrameMoveCam = frame_count;
                         resetFrameReference = 1;
-#endif
                     }
                     else mvmtHoriz = "";
                     
@@ -401,25 +392,16 @@ int main(int argc, char const *argv[])
 
         frame_count++;
 
-#ifdef VIDEO
-        if (cv::waitKey(40) == 'q')
-        { // 25 fps
-            detectionEnCours = false;
-            exitStatus = 0;
-        }
-#else
+
         if (cv::waitKey(5) == 'q')
         { // en attente du semaphore
             detectionEnCours = false;
             exitStatus = 0;
         }
-#endif
+
     }
 
-// Libérer la capture
-#ifdef VIDEO
-    cap.release();
-#else
+
     // Décrémenter le compteur de lecteurs actifs à la fin de l'exécution du lecteur
     sem_wait(semActiveReaders);
 
@@ -434,12 +416,11 @@ int main(int argc, char const *argv[])
     sem_close(semNewFrame);
     sem_close(semActiveReaders);
 
-#endif
-
     cv::destroyAllWindows();
 
     DEBUG_PRINT("Fin de la détection.\n");
     DEBUG_PRINT("FrameFirstMove : %d\n", frameFirstMove);
+    DEBUG_PRINT("FrameCount : %d\n", frame_count);
 
     CHECK_NULL(fvideo = fopen(PATH_FRAMES, "w"), "detection: fopen(PATH_FRAMES)");
     fprintf(fvideo, "%d\n%d\n", frameFirstMove, frame_count);

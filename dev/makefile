@@ -27,20 +27,11 @@ all: bin/detection bin/detectionDEBUG ./bin/detectionVIDEO bin/main bin/mainDEBU
 #		DETECTION		  #
 ###########################																
 
-bin/detection: src/detection.cpp src/ptz.c
+bin/detection: src/detection.cpp src/ptz.c 
 	g++ $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4` $(LIBS)
 
-bin/detectionDEBUG: src/detection.cpp src/ptz.c
+bin/detectionDEBUG: src/detection.cpp src/ptz.c 
 	g++ $(CSTFLAGS) $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4` $(LIBS)
-
-bin/detectionVIDEO: src/detection.cpp src/ptz.c
-	g++ $(CSTFLAGS) -DVIDEO $(CFLAGS) $^ -o $@ `pkg-config --cflags --libs opencv4` $(LIBS)
-
-detectionTest : ./bin/detectionVIDEO
-	./bin/detectionVIDEO "server/videos/20250109_2148_2_2_voie1_resize.mp4"
-
-DetectionDirect: ./bin/detectionDEBUG
-	./bin/detectionDEBUG "http://serveur:serveur@192.168.1.1.4/axis-cgi/mjpg/video.cgi?resolution=1280x720&fps=25&compression=25"
 
 
 ###########################
@@ -62,6 +53,7 @@ bin/mainDEBUG: src/main.c  src/ptz.c src/positions.c
 
 ExecDEBUG: bin/mainDEBUG  bin/ecritureMemoireDEBUG serverDEBUG bin/detectionDEBUG bin/enregistrementVideoDEBUG
 
+build: bin/main bin/ecritureMemoire server bin/detection bin/enregistrementVideo
 
 ###########################
 #		 SERVEUR		  #
@@ -81,6 +73,8 @@ videoDEBUG: server/cgi-bin/video.cpp
 	g++ $(CSTFLAGS) $(CFLAGS) -I./server/cgi-bin $^ -o server/cgi-bin/video.cgi `pkg-config --cflags --libs opencv4` $(LIBS) -ljpeg
 
 serverDEBUG: actionDEBUG videoDEBUG
+
+server: action video
 
 ###########################
 #		 Mémoire		  #

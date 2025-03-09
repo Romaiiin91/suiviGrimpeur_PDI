@@ -54,6 +54,7 @@ void supprimerPositionFile();
 
 positionPTZ recupererPosition(char * voie, const camera_t *cameraActive);
 
+
 int addRoute(char * voie, const camera_t *cameraActive);
 int removeRoute(char * voie);
 int showRoute(char * voie, const camera_t *cameraActive);

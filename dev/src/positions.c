@@ -97,9 +97,8 @@ positionPTZ recupererPosition(char * voie, const camera_t *cameraActive){
     curl_global_cleanup();
 
     return pos;
-
-
 }
+
 
 int addPositionFile(const positionPTZ pos){
     // Chargement pas propre du fichier en cas d'erreur

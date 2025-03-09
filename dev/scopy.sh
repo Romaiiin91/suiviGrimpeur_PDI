@@ -8,9 +8,10 @@ LOCAL_HTML_DIR="/home/romain/Documents/suiviGrimpeur_PDI/dev/server/html"
 LOCAL_PARAM_FILE="/home/romain/Documents/suiviGrimpeur_PDI/dev/data/paramDetection.json"
 LOCAL_CAMERAS_FILE="/home/romain/Documents/suiviGrimpeur_PDI/dev/data/cameras.json"
 LOCAL_MAKEFILE="/home/romain/Documents/suiviGrimpeur_PDI/dev/makefile"
+LOCAL_START_SCRIPT="/home/romain/Documents/suiviGrimpeur_PDI/dev/startSuiviGrimpeur.sh"
 REMOTE_USER="pi"
-# REMOTE_HOST="192.168.1.14"  # Remplacez par l'adresse IP de votre Raspberry Pi
-REMOTE_HOST="192.168.0.196"
+REMOTE_HOST="192.168.1.14"  # Remplacez par l'adresse IP de votre Raspberry Pi
+#REMOTE_HOST="192.168.0.196"
 REMOTE_DIR="/home/pi/suiviGrimpeur/"
 
 # Copier le dossier src
@@ -33,6 +34,9 @@ rsync -avz --info=stats0 --update "$LOCAL_CAMERAS_FILE" "$REMOTE_USER@$REMOTE_HO
 
 # Copier le Makefile
 rsync -avz --info=stats0 --update "$LOCAL_MAKEFILE" "$REMOTE_USER@$REMOTE_HOST:$REMOTE_DIR/"
+
+# Copier le script de démarrage
+rsync -avz --info=stats0 --update "$LOCAL_START_SCRIPT" "$REMOTE_USER@$REMOTE_HOST:$REMOTE_DIR/"
 
 
 echo "Les dossiers src, include, html, et les fichiers spécifiques de cgi-bin et paramDetection.json ont été copiés avec succès sur le Raspberry Pi."

@@ -8,14 +8,15 @@
     "nbMoveBeforeChangeDetectionArea": 1,
     
     "increasePTZ" : 3.0,
-    
+
     "widthResizeRatio": 2,
     "heightResizeRatio": 2,
-    "cropRatioDetectionArea": 8,
+    "cropRatioDetectionAreaLandscape": 5,
+    "cropRatioDetectionAreaPortrait": 8,
     
     "numberFrameBetweenMove": 25,
     "numberFrameWithoutMove": 200,
-    "numberFrameBeforeFirstMove": 75
+    "numberFrameBeforeFirstMove": 200
 
 
 }

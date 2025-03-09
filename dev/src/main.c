@@ -74,12 +74,7 @@ void processusEcritureMemoire(){
     sprintf(url, "%s@%s/%s", ENTETE_HTTP, cameraActive->ip, SCRIPT_VIDEO);
     DEBUG_PRINT("Url de detection : %s\n", url);
 
-
-#ifdef DEBUG
-    const char * args[NB_ARGS_ECRITURE_MEMOIRE] = {"./bin/ecritureMemoireDEBUG", url, NULL};
-#else
-    const char * args[NB_ARGS_ECRITURE_MEMOIRE] = {"./bin/ecritureMemoire", url,  NULL};
-#endif
+    const char * args[NB_ARGS_ECRITURE_MEMOIRE] = {PATH_EXE_ECRITURE_MEMOIRE, url,  NULL};
 
 
     DEBUG_PRINT("Affichage des argument d'écriture mémoire:\n");
@@ -224,13 +219,8 @@ int setActiveCamera(camera_t *camera){
 void processusDetection(){
     DEBUG_PRINT("\t[%d] --> Début du processus fils de Detection [%d]\n", getppid(), getpid());
 
-    
-  
-#ifdef DEBUG
-    const char * args[2] = {"./bin/detectionDEBUG",  NULL};
-#else
-    const char * args[2] = {"./bin/detection",  NULL};
-#endif
+    const char * args[2] = {PATH_EXE_DETECTION,  NULL};
+
     DEBUG_PRINT("Affichage des argument de detection:\n");
     for (int i = 0; i<2;i++){
         DEBUG_PRINT("\targs[%d] = %s\n", i, args[i]);
@@ -318,7 +308,7 @@ void gestionOrdres(){
     // Zoom de la camera
     if (strcmp(champs1, "zoom")==0){
         float zoom = atof(champs2);
-        zoom = 588 * zoom - 587; // min de zoom = 1 et max = 9999 et zoom = 0.1 à 18
+        zoom = 588 * (zoom - 1); // min de zoom Camera = 1 et max = 9999 et zoomHumain = 0.1 à 18
         
         status = requetePTZ("zoom", zoom, cameraActive);
     }
@@ -481,11 +471,8 @@ int enregistrerVideo(const char * donnees){
         snprintf(widthStr, sizeof(widthStr), "%d", cameraActive->width);
         snprintf(heightStr, sizeof(heightStr), "%d", cameraActive->height);
 
-        #ifdef DEBUG
-            const char * args[NB_ARGS_ENREGISTREMENT_VIDEO] = {"./bin/enregistrementVideoDEBUG", outputVideoFile, orientationStr, widthStr, heightStr, NULL};
-        #else
-            const char * args[NB_ARGS_ENREGISTREMENT_VIDEO] = {"./bin/enregistrementVideo", outputVideoFile, orientationStr, widthStr, heightStr, NULL};
-        #endif
+        
+        const char * args[NB_ARGS_ENREGISTREMENT_VIDEO] = {PATH_EXE_ENREGISTREMENT_VIDEO, outputVideoFile, orientationStr, widthStr, heightStr, NULL};
         
         DEBUG_PRINT("Affichage des argument de capture video:\n");
         for (int i = 0; i<NB_ARGS_ENREGISTREMENT_VIDEO;i++) DEBUG_PRINT("\targs[%d] = %s\n", i, args[i]);
