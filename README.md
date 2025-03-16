@@ -72,27 +72,30 @@ Voici un aperçu de la structure des fichiers et dossiers du projet :
 
 ```
 suiviGrimpeur_PDI/
-├── bin/                    # Fichiers exécutables générés
-├── src/                # Code source principal
-│   ├── main.c          # Point d'entrée principal
-│   ├── detection.cpp   # Détection vidéo
-│   ├── positions.c     # Gestion des positions PTZ
-│   ├── ptz.c           # Contrôle des caméras PTZ
-│   ├── enregistrementVideo.c # Enregistrement vidéo
-│   ├── ecritureMemoire.c     # Gestion de la mémoire partagée
-│   ├── action.c    # Gestion des actions CGI
-│   └── video.cpp   # Gestion des vidéos CGI
+├── bin/                        # Fichiers exécutables générés
+├── src/                        # Code source principal
+│   ├── main.c                  # Point d'entrée principal
+│   ├── detection.cpp           # Détection vidéo
+│   ├── positions.c             # Gestion des positions PTZ
+│   ├── ptz.c                   # Contrôle des caméras PTZ
+│   ├── enregistrementVideo.c   # Enregistrement vidéo
+│   ├── ecritureMemoire.c       # Gestion de la mémoire partagée
+│   ├── action.c                # Gestion des actions CGI
+│   └── video.cpp               # Gestion des vidéos CGI
 │
-├── include/            # Fichiers d'en-tête
-└── server/
-    ├── html/        # Pages html et fonctions json pour l'affichage
-    └── 010-suiviGrimpeur.conf # Fichier de config pour le serveur apache 
-├── log/                    # Fichiers de logs
-├── Makefile                # Fichier de compilation
-├── README               # Documentation du projet
-└── data/                   # Fichiers de configuration et données
-    ├── paramDetection.json # Paramètres de détection
-    └── positions.json      # Positions PTZ enregistrées
+├── include/                    # Fichiers d'en-tête
+├── server/
+    ├── html/                   # Pages html et fonctions json pour l'affichage
+    └── 010-suiviGrimpeur.conf  # Fichier de config pour le serveur apache 
+├── script/
+    ├── scopy.sh                # Pour copier les fichier modifiés sur le raspberry
+    └── startSuiviGrimpeur.sh   # Script pour lancer le programme au démarrage du RPI (à appeler dans rc.local)
+├── log/                        # Fichiers de logs
+├── Makefile                    # Fichier de compilation
+├── README                      # Documentation du projet
+└── data/                       # Fichiers de configuration et données
+    ├── paramDetection.json     # Paramètres de détection
+    └── positions.json          # Positions PTZ enregistrées
 ```
 
 ## Développement
