@@ -4,9 +4,9 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/dev/include",
+                "${workspaceFolder}/include",
                 "/usr/include/opencv4/**",
-                "${workspaceFolder}/dev/server/cgi-bin"
+                "${workspaceFolder}/server/cgi-bin"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

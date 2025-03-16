@@ -1,6 +1,0 @@
-
-    <div class="cornerBox">
-      <div class="content">
-        <div id="popupContent">
-        <!--#if expr="$WizardFormAction != noAction" -->
-          <form name="WizardForm" action="<!--#echo var="WizardFormAction" option="encoding:url" -->" method="post" onsubmit="return false;">

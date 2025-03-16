@@ -1,0 +1,10 @@
+\babel@toc {french}{}\relax 
+\contentsline {section}{\numberline {1}Contexte}{2}{section.1}%
+\contentsline {section}{\numberline {2}Objectifs}{2}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Caméra}{2}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Serveur}{3}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Interface utilisateur sur tablette}{3}{subsection.2.3}%
+\contentsline {section}{\numberline {3}Périmètre}{4}{section.3}%
+\contentsline {section}{\numberline {4}Description fonctionnelle des besoins}{5}{section.4}%
+\contentsline {section}{\numberline {5}Délais}{5}{section.5}%
+\contentsfinish 

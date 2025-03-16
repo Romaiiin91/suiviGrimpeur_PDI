@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Suivi d'un grimpeur</title>
+    <link rel="icon" href="icone.ico" type="image/x-icon">
+    <script src="jquery.js"></script>
+    <script>
+        // Créez un élément script pour charger "fonctions.js"
+        var script = document.createElement("script");
+        script.src = "fonctions.js?v=" + new Date().getTime();
+
+        // Ajoutez l'écouteur d'événement "load" à l'objet window
+        window.addEventListener("load", function() {
+            // Appelez la fonction loadOptions une fois que tout est chargé
+            loadOptions();
+            // Appelez la fonction updateVideoStream pour mettre à jour l'image
+            updateVideoStream();
+
+            loadCameras();
+        });
+
+        // Ajoutez le script au head pour qu'il soit chargé
+        document.head.appendChild(script);
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h2 {
+            color: #333;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex-wrap: nowrap;
+        }
+
+        .video-container {
+            flex: 0 1 auto;
+        }
+
+        .button-group-container {
+            flex: 0 1 auto;
+            justify-content: center;
+            position: sticky;
+            top: 20px; /* Ajuste selon ton besoin */
+            align-self: flex-start;
+            margin-left: 20px;
+        }
+
+        
+        .button-group-container h2 {
+            text-align: center;
+            width: 100%;
+        }
+        .button-group-directions {
+            margin-bottom: 20px;
+            flex-direction: column;
+        }
+        .button-group {
+            margin-bottom: 20px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        input[type="button"] {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 2px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        input[type="button"]:hover {
+            background-color: #0056b3;
+        }
+        select {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        
+        .container-enregistrement {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .enregistrement-group, .detection-group, .routes-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 2px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        button i {
+            font-size: 20px; /* Ajustez la taille des icônes */
+        }
+
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            width: 90%;
+            margin-bottom: 3px;
+        }
+
+        .label-value-container {
+            display: flex;
+            align-items: center; /* Aligne le label et la valeur sur la même ligne */
+            gap: 10px; /* Espace entre le label et la valeur */
+            margin-bottom: 10px; /* Espace entre le label/valeur et le slider */
+            margin-top: 30px;
+        }
+
+        .slider-wrapper {
+            width: 100%; /* Le slider prend toute la largeur */
+        }
+
+        #slider-value-container {
+            white-space: nowrap; /* Empêche la valeur de passer à la ligne */
+        }
+
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            flex: 1;
+            margin-right: 10px;
+            font-weight: bold;
+            color: #1a1a1a;
+        }
+
+        .form-group input[type="text"] {
+            flex: 2;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+            width: 50%; /* Largeur fixe pour les champs input */
+            
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-group input[type="text"]:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        .form-group input[type="text"]::placeholder {
+            color: #aaa;
+            font-style: italic;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Vidéo -->
+        <div class="video-container">
+            <img id="videoStream" src="" alt="Image en temps réel">
+            
+        </div>
+
+        <!-- Boutons -->
+        <div class="button-group-container">
+            <h2>Contrôle de la caméra</h2>
+            <div class="button-group">
+                
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <button onclick="up();" style="margin-bottom: 3px;"><i class="fas fa-arrow-up"></i></button> 
+                    <div style="display: flex; justify-content: center; gap: 3px;">
+                        <button onclick="left();"><i class="fas fa-arrow-left"></i></button> 
+                        <button onclick="right();"><i class="fas fa-arrow-right"></i></button> 
+                    </div>
+                    <button onclick="down();" style="margin-top: 3px;"><i class="fas fa-arrow-down"></i></button> 
+                </div>
+                
+
+                <div class="slider-container">
+                    <div class="label-value-container">
+                        <label for="precision">Précision :</label>
+                        <span id="slider-value-container">
+                            <span id="precision-value">15</span>°
+                        </span>
+                    </div>
+                    <div class="slider-wrapper">
+                        <input type="range" id="precision" name="precision" min="0" max="30" step="0.1" value="15" oninput="updatePrecisionValue(this.value)">
+                    </div>
+                </div>
+
+
+                <div class="slider-container">
+                    <div class="label-value-container">
+                        <label for="zoom">Zoom :</label>
+                        <span id="slider-value-container">
+                            <span id="zoom-value">1</span>x
+                        </span>
+                    </div>
+                    <div class="slider-wrapper">
+                        <input type="range" id="zoom" name="zoom" min="1" max="18" step="0.1" value="1" oninput="updateZoomValue(this.value)" onmouseup="zoomUpdate();" ontouchend="zoomUpdate();">
+                    </div>
+                </div>
+
+                <div style="display: flex; align-items: center; margin-right: 10%; margin-top: 20px;">
+                    <div style="display: flex; justify-content: left; width: 60%;">
+                        <label for="voieAffichee">Voie affichée:</label>
+                    </div>
+                    <div style="display: flex; justify-content: right; width: 40%;">
+                        <select id="dropdownFast" onchange="showRouteFast();"></select>
+                    </div>
+                </div>
+                
+               
+            </div>
+        </div>
+    </div>
+
+    <div class="container container-enregistrement">
+        <div class="enregistrement-group">
+            <h2>Enregistrement</h2>
+            <div class="button-group">
+                <input type="button" value="Commencer l'enregistrement" onclick="startEnregistrement();"/>
+                <input type="button" value="Voir vidéos" onclick="window.location.href='videos.html';"/>
+            </div>
+            <div class="form-group">
+                <label for="nom">Nom :</label>
+                <input type="text" id="nom" name="nom" placeholder="Entrez le nom">
+            </div>
+            <div class="form-group">
+                <label for="prenom">Prénom :</label>
+                <input type="text" id="prenom" name="prenom" placeholder="Entrez le prénom">
+            </div>
+        </div>
+    </div>
+
+
+        <div style="margin-top: 50px;">
+            <h2>Paramètres avancés</h2>
+        </div>
+        <div>
+            <h3>Caméras</h3>
+            <select id="cameras" onclick="changeCamera();" ></select>
+        </div>
+
+        <div class="routes-group">
+            <h3>Voies</h3>
+            <select id="dropdown"></select>
+            
+            <div class="button-group">
+                <input type="button" value="Sauvegarder la position de caméra" onclick="addRoute();"/> 
+                <input type="button" value="Supprimer la voie sélectionnée" onclick="removeRoute();"/> 
+                <input type="button" value="Afficher la voie sélectionnée" onclick="showRoute();"/>
+                
+            </div>
+        </div>
+
+        <div class="detection-group">
+            <h3>Fonction seules</h3>
+            <div class="button-group">
+                <input type="button" value="Commencer la détection" onclick="startDetection();"/> 
+                <input type="button" value="Stopper la détection" onclick="stopDetection();"/> 
+                <input type="button" value="Commencer la capture" onclick="startRecord();"/> 
+                <input type="button" value="Stopper la capture" onclick="stopRecord();"/> 
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

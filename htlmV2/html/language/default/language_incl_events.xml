@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<language_xml>
-  <event_list>
-    <StateActiveTxt type="msgAsText" minor="0">Active</StateActiveTxt>
-    <StateAnyActiveTxt type="msgAsText" minor="0">Only active is supported</StateAnyActiveTxt>
-    <requestTimeoutAlert type="msgAsText" minor="0">Request Timeout</requestTimeoutAlert>
-    <unknownErrorAlert type="alert" minor="0">Request failed.&#10;Unknown error</unknownErrorAlert>
-  </event_list>
-</language_xml>

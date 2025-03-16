@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index des vidéos</title>
+    <link rel="icon" href="icone.ico" type="image/x-icon">
+    <script src="jquery.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #search-bar {
+            margin-bottom: 20px;
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        a {
+            text-decoration: none;
+            color: #007BFF;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        #video-player-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        #video-player {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div style="float: right;">
+        <a href="index.html" style="padding: 10px 20px; background-color: #007BFF; color: white; border-radius: 5px; text-decoration: none;">Retour à l'index</a>
+    </div>
+    <h1>Liste des vidéos</h1>
+   
+
+    <!-- Barre de recherche -->
+    <input 
+        type="text" 
+        id="search-bar" 
+        placeholder="Recherchez par nom, prénom, voie, date ou heure..." 
+        oninput="filterTable()"
+    >
+
+    <!-- Visionneur vidéo -->
+    <div id="video-player-container">
+        <video id="video-player" width="100%" controls>
+            <source id="video-source" src="" type="video/mp4">
+            Votre navigateur ne prend pas en charge les vidéos.
+        </video>
+    </div>
+
+    <!-- Tableau des vidéos -->
+    <table>
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Voie</th>
+                <th>Date</th>
+                <th>Heure</th>
+                <th>Lien</th> 
+                <!-- Voir si on peut le commencer directement au debut de la grimpe -->
+            </tr>
+        </thead>
+        <tbody id="video-table-body">
+            <!-- Les vidéos et leurs détails seront générés ici -->
+        </tbody>
+    </table>
+
+    <script>
+        const videoFolder = 'data/videos/'; // ancien : '../../data/videos/';
+        const DIR_CGI = "/cgi-bin/"
+
+        // Fonction pour extraire les informations depuis le nom de fichier
+        function extractVideoInfo(fileName) {
+            const regex = /^(\d{4})(\d{2})(\d{2})_(\d{2})(\d{2})_(\w+)_(\w+)_voie(\d+)\.mp4$/;
+            const match = fileName.match(regex);
+
+            if (match) {
+                return {
+                    year: match[1],
+                    month: match[2],
+                    day: match[3],
+                    hour: match[4],
+                    minute: match[5],
+                    lastName: match[6],
+                    firstName: match[7],
+                    voie: match[8],
+                };
+            }
+            return null;
+        }
+
+        // Fonction pour filtrer le tableau
+        function filterTable() {
+            const searchQuery = document.getElementById('search-bar').value.toLowerCase();
+            const rows = document.querySelectorAll('#video-table-body tr');
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchQuery) ? '' : 'none';
+            });
+        }
+
+        // Récupération des vidéos
+        fetch(videoFolder)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Impossible de récupérer les vidéos.');
+                }
+                return response.text();
+            })
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const tableBody = document.getElementById('video-table-body');
+
+                Array.from(doc.links).forEach(link => {
+                    const href = link.getAttribute('href');
+                    if (/\.(mp4|avi|mkv|webm)$/i.test(href)) {
+                        const videoInfo = extractVideoInfo(href);
+
+                        const row = document.createElement('tr');
+
+                        if (videoInfo) {
+                            row.innerHTML = `
+                                <td>${videoInfo.lastName}</td>
+                                <td>${videoInfo.firstName}</td>
+                                <td>${videoInfo.voie}</td>
+                                <td>${videoInfo.day}/${videoInfo.month}/${videoInfo.year}</td>
+                                <td>${videoInfo.hour}h${videoInfo.minute}</td>
+                                <td>
+                                    <a href="javascript:void(0);" onclick="loadVideo('${videoFolder + href}')">Voir</a> |
+                                    <a href="${videoFolder + href}" target="_blank">Visionner</a> | 
+                                    <a href="javascript:void(0);" onclick="deleteVideo('${href}')">Supprimer</a>
+                                </td>
+                            `;
+                        } else {
+
+                            // Ne pas afficher si le format du nom de fichier n'est pas reconnu
+                            // row.innerHTML = `
+                            //     <td colspan="6">Format non reconnu : ${href}</td>
+                            // `;
+                        }
+
+                        tableBody.appendChild(row);
+                    }
+                });
+            })
+            .catch(error => {
+                console.error(error);
+                document.body.innerHTML = '<p>Erreur : impossible de charger les vidéos.</p>';
+        });
+
+        // Fonction pour visionner une vidéo
+        function loadVideo(filePath) {
+            const videoPlayer = document.getElementById('video-player');
+            const videoSource = document.getElementById('video-source');
+            
+            // Met à jour la source de la vidéo dans le lecteur
+            videoSource.src = filePath;
+            
+            // Recharge la vidéo dans le lecteur
+            videoPlayer.load();
+            
+            // Joue la vidéo
+            videoPlayer.play();
+        }
+
+        // Fonction pour supprimer une vidéo
+        function deleteVideo(filePath){
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette vidéo ?')) {
+                console.log("Supprimer la vidéo : " + filePath); 
+                $.get(DIR_CGI + "action.cgi", {supp: filePath}, function(data){
+                    console.log(data);
+                    location.reload();
+                });
+            }
+        }
+
+        // Charger la derniere vidéo par défaut lorsqu'on charge la page
+        
+
+        window.addEventListener("load", function() {
+            const links = document.querySelectorAll('a');
+            const voirLinks = Array.from(links).filter(link => link.textContent.trim() === "Voir");
+
+            if (voirLinks.length > 0) {
+                voirLinks[voirLinks.length - 1].click();
+            }
+        });
+    </script>
+</body>
+</html>

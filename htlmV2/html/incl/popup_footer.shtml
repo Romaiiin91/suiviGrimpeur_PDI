@@ -1,9 +1,0 @@
-          <!--#if expr="$WizardFormAction != noAction" -->
-            </form>
-          <!--#endif -->
-        </div><!-- pageContent -->
-      </div>
-      <div class="footerLeft"><div class="footerRight"></div></div>
-    </div>
-  </body>
-</html>
