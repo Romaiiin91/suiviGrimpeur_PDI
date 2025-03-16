@@ -50,7 +50,7 @@ Avant de commencer, assurez-vous d'avoir les éléments suivants installés sur 
 
 ## Installation
 
-Pour les instructions détaillées d'installation, veuillez consulter le fichier [INSTALL](INSTALL).
+Pour les instructions détaillées d'installation, veuillez consulter le fichier [INSTALL](INSTALL.md).
 
 ## Utilisation 
 
@@ -118,4 +118,4 @@ Les contributions sont les bienvenues ! Si vous souhaitez contribuer :
 
 ## Licence
 
-Ce projet est sous licence MIT. Consultez le fichier [LICENSE](LICENSE) pour plus d'informations.
+Ce projet est sous licence MIT. Consultez le fichier [LICENSE](LICENSE.md) pour plus d'informations.
