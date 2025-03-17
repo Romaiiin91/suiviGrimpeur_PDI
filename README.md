@@ -95,7 +95,8 @@ suiviGrimpeur_PDI/
 ├── README                      # Documentation du projet
 └── data/                       # Fichiers de configuration et données
     ├── paramDetection.json     # Paramètres de détection
-    └── positions.json          # Positions PTZ enregistrées
+    ├── cameras.json            # Configuration des caméras
+    └── positionsEnregistrees.json          # Positions PTZ enregistrées
 ```
 
 ## Développement
