@@ -224,7 +224,7 @@ int main() {
 
 
         // Mettre à jour les données de la matrice frame
-        frame = cv::Mat(720, 1280, CV_8UC3, virtAddr);
+        frame = cv::Mat(HEIGHT, WIDTH, CV_8UC3, virtAddr);
        
 
         sem_wait(semMutex);  // Acquérir le sémaphore de synchronisation

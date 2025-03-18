@@ -223,20 +223,32 @@ Le serveur web est composée de deux pages web, la première permet de visualise
 \begin{figure}
   \centering
   \begin{subfigure}[b]{0.45\textwidth}
-    \includegraphics[width=\textwidth]{pageWeb.png}
+    % \includegraphics[width=\textwidth]{pageWeb.png}
     \caption{Index de l'application}
     \label{fig:pageWeb}
   \end{subfigure}
   \begin{subfigure}[b]{0.45\textwidth}
-    \includegraphics[width=\textwidth]{pageVideo.png}
+    % \includegraphics[width=\textwidth]{pageVideo.png}
     \caption{Page web de visualisation des vidéos}
     \label{fig:pageVideo}
   \end{subfigure}
   \caption{Pages web de l'application}
 \end{figure}
 
+\subsubsection{Page web Index}
+Au chargement de cette page, une fonction \texttt{javascript} permet de charger les voies disponibles dans la base de données et de les ajouter dans une liste déroulante pour permettre à l'utilisateur de sélectionner la voie qu'il souhaite visualiser. Une seconde fonction \texttt{js} charge les caméras disponibles et les ajoute dans une seconde liste déroulante. Puis le script \texttt{video.cgi} est exécuté pour afficher le flux vidéo de la caméra sélectionnée.
 
+Le processus lit dans la mémoire partagée les images brutes a l'aide d'\texttt{OPENCV} pour récupérer une matrice de pixel, puis le profil colorimétrique de l'image est changé car \texttt{OPENCV} travaille en \textit{BGR (blue green red)} et le \texttt{JPEG} utilise un profil (\textit{RGB (red green blue)}) puis est encodé en \texttt{JPEG} à l'aide de la librairie \texttt{libjpeg}. Enfin, on ajoute les entêtes \texttt{HTTP} pour que le navigateur puisse interpreter l'image et on écrit l'image encodée dans la sortie standard.
 
+Sur la gauche de cette page, on retrouve tout les boutons de contrôle de la caméra (haut, bas, gauche et droite) associé à un curseur pour la précision de l'angle afin de premettre un déplacement plus précis. On retrouve un second curseur pour gérer le zoom de la caméra entre 1x et 18x. La pression de l'un de ses boutons créent une requête \texttt{AJAX} pour exécuter le script \texttt{action.cgi} qui va écrire dans la mémoire partagée l'action à effectuer puis réveiller le programme principal pour qu'il effectue l'action et attendre le feedback du main ou un timeout de 5 secondes avec l'intruction \texttt{SIGALRM} (il récupère le pid du main dans un fichier que ce dernier crée au démarrage). Finalement, il envoie une réponse \texttt{HTTP} pour indiquer que l'action a bien été effectuée.
+
+En dessous de ces curseurs, il y a une liste déroulante pour choisir la voie que l'on souhaite observer. À la selection d'une voie on vient changer de caméra si besoin et la positionner au bon endroit.
+
+En dessous de la video, on retrouve un bouton pour enregistrer une vidéo avec deux champ pour entre le nom et prenom du grimpeur, un exemple de requête \texttt{AJAX} est présenté ci-contre : \texttt{http://localhost/cgi-bin/action.cgi?enrg=on\&nom=Chevalier\&prenom=Romain\&voie=0}. On récupère le nom et la voie afin de produire un nom de fichier unique et pouvoir le récupérer facilement dans la page de visualisation des vidéos.
+
+\paragraph{Paramètres avancés}  En bas de page, on trouve les options pour configurer une nouvelle voie. Il y a une liste déroulante pour choisir la caméra, puis une seconde liste déroulante pour choisir une voie que l'on souhaite supprimer ou afficher sur l'appuie du bouton adéquat. Il y a également un bouton pour sauvegarder une nouvelle position de la caméra dans la base de données en affichant une fenètre popup pour demander le numéro de voie. 
+
+\paragraph{Gestion des erreurs} En cas d'erreur, un message d'erreur est affiché en rouge en haut de la page pour informer l'utilisateur de l'erreur.
 
 
 
