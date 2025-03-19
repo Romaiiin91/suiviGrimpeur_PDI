@@ -23,17 +23,21 @@
 \contentsline {paragraph}{Libération des ressources}{8}{paragraph*.15}%
 \contentsline {paragraph}{Gestion des signaux}{8}{paragraph*.16}%
 \contentsline {subsubsection}{\numberline {3.1.3}Détection de mouvement}{8}{subsubsection.3.1.3}%
-\contentsline {subsubsection}{\numberline {3.1.4}Capture vidéo}{8}{subsubsection.3.1.4}%
 \contentsline {paragraph}{Initialisation du programme}{8}{paragraph*.17}%
 \contentsline {paragraph}{Boucle principale}{9}{paragraph*.18}%
-\contentsline {paragraph}{Découpage de la vidéo}{10}{paragraph*.19}%
-\contentsline {paragraph}{Libération des ressources}{10}{paragraph*.20}%
-\contentsline {paragraph}{Gestion des signaux}{10}{paragraph*.21}%
-\contentsline {subsection}{\numberline {3.2}Application web}{10}{subsection.3.2}%
-\contentsline {subsubsection}{\numberline {3.2.1}Page web index (figure~\ref {fig:pageIndex})}{10}{subsubsection.3.2.1}%
-\contentsline {paragraph}{Paramètres avancés}{11}{paragraph*.23}%
-\contentsline {subsubsection}{\numberline {3.2.2}Page web de visualisation des vidéos (figure~\ref {fig:pageVideo})}{12}{subsubsection.3.2.2}%
-\contentsline {subsection}{\numberline {3.3}Problèmes rencontrés}{12}{subsection.3.3}%
-\contentsline {section}{\numberline {4}Tests et résultats}{12}{section.4}%
-\contentsline {section}{\numberline {5}Perspectives d'amélioration}{12}{section.5}%
+\contentsline {paragraph}{Libération des ressources}{11}{paragraph*.19}%
+\contentsline {paragraph}{Gestion des signaux}{11}{paragraph*.20}%
+\contentsline {subsubsection}{\numberline {3.1.4}Capture vidéo}{11}{subsubsection.3.1.4}%
+\contentsline {paragraph}{Initialisation du programme}{12}{paragraph*.22}%
+\contentsline {paragraph}{Boucle principale}{13}{paragraph*.23}%
+\contentsline {paragraph}{Découpage de la vidéo}{13}{paragraph*.24}%
+\contentsline {paragraph}{Libération des ressources}{13}{paragraph*.25}%
+\contentsline {paragraph}{Gestion des signaux}{14}{paragraph*.26}%
+\contentsline {subsection}{\numberline {3.2}Application web}{14}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}Page web index (figure~\ref {fig:pageIndex})}{14}{subsubsection.3.2.1}%
+\contentsline {paragraph}{Paramètres avancés}{15}{paragraph*.28}%
+\contentsline {subsubsection}{\numberline {3.2.2}Page web de visualisation des vidéos (figure~\ref {fig:pageVideo})}{15}{subsubsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.3}Problèmes rencontrés}{15}{subsection.3.3}%
+\contentsline {section}{\numberline {4}Tests et résultats}{15}{section.4}%
+\contentsline {section}{\numberline {5}Perspectives d'amélioration}{15}{section.5}%
 \contentsfinish 

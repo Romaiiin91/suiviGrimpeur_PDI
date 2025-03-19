@@ -418,7 +418,7 @@ int main(int argc, char const *argv[])
         cv::putText(frame, std::to_string(frame_count - lastFrameWithMovement), cv::Point(10, 350), cv::FONT_HERSHEY_SIMPLEX, 1, cv::Scalar(255), 2);
 
         // Afficher l'image
-        // cv::imshow("Thresh", thresh);
+        cv::imshow("Thresh", thresh);
 
         cv::rectangle(frame, cv::Point(widthResize / cropRatioDetectionArea, abscisseDetectionAreaTop), cv::Point(widthResize - widthResize / cropRatioDetectionArea, abscisseDetectionAreaBottom), cv::Scalar(0, 255, 0), 2);
 

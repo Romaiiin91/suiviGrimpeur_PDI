@@ -1,6 +1,6 @@
 # Fdb version 3
-["pdflatex"] 1742386473 "/home/romain/Documents/suiviGrimpeur_PDI/Latex/RapportSuiviGrimpeur/rapportSuiviGrimpeur.tex" "rapportSuiviGrimpeur.pdf" "rapportSuiviGrimpeur" 1742386474
-  "/home/romain/Documents/suiviGrimpeur_PDI/Latex/RapportSuiviGrimpeur/rapportSuiviGrimpeur.tex" 1742386473 37106 ff09a5fdcdb3bbcab8ed1e409627b936 ""
+["pdflatex"] 1742399339 "/home/romain/Documents/suiviGrimpeur_PDI/Latex/RapportSuiviGrimpeur/rapportSuiviGrimpeur.tex" "rapportSuiviGrimpeur.pdf" "rapportSuiviGrimpeur" 1742399340
+  "/home/romain/Documents/suiviGrimpeur_PDI/Latex/RapportSuiviGrimpeur/rapportSuiviGrimpeur.tex" 1742399339 48128 8ac5947773d186a6c47a6fd09195c97f ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/ecrm1095.tfm" 1136768653 3584 929cdff2b7a8c11bd4d49fd68cb0ae70 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam10.tfm" 1246382020 916 f87d7c45f9c908e672703b83b72241a3 ""
@@ -308,13 +308,19 @@
   "Figures//Logo_CENTRALE_C.png" 1738410755 24501 30b769285d5cb116509184c0bb617bee ""
   "Figures//architectureLogicielle.png" 1742210167 133375 e8d7b9b4a1b654fdd02614bb15b3e54b ""
   "Figures//architectureMaterielle.png" 1742210167 129775 e168872f97263187ac5c0f8bb881941c ""
+  "Figures//detectionDeBase.png" 1742391360 450512 b3de2628e095ee5b9b607c1f64698686 ""
+  "Figures//detectionDroite.png" 1742391360 480341 ca7f9af3aa85fe9626185dba3629e907 ""
+  "Figures//detectionGauche.png" 1742391360 521063 2ab467645267771dd5226d1a2584a63e ""
+  "Figures//detectionHautPremier.png" 1742391360 506660 915adad13c3fb21184e3b0688ebb0cd2 ""
+  "Figures//detectionHautSecond.png" 1742391360 490420 8e2eb3ec7aa2c21b9ca8aed02416ed63 ""
+  "Figures//detectionHautTroisieme.png" 1742391360 504257 1d82c40a9270bcfed12de717df158c30 ""
   "Figures//pageIndex.png" 1742376152 919282 3f3f12f792c37094ddf456dd4518b919 ""
   "Figures//pageVideo.png" 1742376311 1482448 93086dc730e394455ec704d961c259f6 ""
   "Figures/cameraQ6304.jpg" 1738410755 4360 649a4d963b6e54e8a62de143dc1dcdc1 ""
-  "rapportSuiviGrimpeur.aux" 1742386474 6857 1f9847ea814197658b451f4ae7891ddc "pdflatex"
-  "rapportSuiviGrimpeur.out" 1742386474 2880 4ca05cfe710a0bf2c8acaa58e59af9e9 "pdflatex"
-  "rapportSuiviGrimpeur.tex" 1742386473 37106 ff09a5fdcdb3bbcab8ed1e409627b936 ""
-  "rapportSuiviGrimpeur.toc" 1742386474 3053 574369dfe43fce6f093e7ef90fb4bc5f "pdflatex"
+  "rapportSuiviGrimpeur.aux" 1742399340 8864 23fdcf9da92b6610fccf9926cfd0efdc "pdflatex"
+  "rapportSuiviGrimpeur.out" 1742399340 2880 7720086f7bbc325fabce0c443e032a39 "pdflatex"
+  "rapportSuiviGrimpeur.tex" 1742399339 48128 8ac5947773d186a6c47a6fd09195c97f ""
+  "rapportSuiviGrimpeur.toc" 1742399340 3335 2e512142b855b089bd1348f508fc10b1 "pdflatex"
   (generated)
   "rapportSuiviGrimpeur.aux"
   "rapportSuiviGrimpeur.log"
