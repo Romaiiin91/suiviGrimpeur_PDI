@@ -219,15 +219,22 @@ void decouperVideo(const char * nomFichier, int orientation) {
     float frameDebut = 0, frameFin = 0;
 
 
-    CHECK_NULL(fvideo = fopen(PATH_FRAMES, "r"), "detection: fopen(PATH_FRAMES)");
-    fscanf(fvideo, "%f\n%f", &frameDebut, &frameFin);
-    fclose(fvideo);
+    fvideo = fopen(PATH_FRAMES, "r");
+    if (fvideo == NULL) {
+        DEBUG_PRINT("Erreur lors de l'ouverture du fichier \"%s\"\n", PATH_FRAMES);
+        frameFin = 9999;
+    } else {
+        fscanf(fvideo, "%f\n%f", &frameDebut, &frameFin);
+        fclose(fvideo);
+    }
+    
 
     DEBUG_PRINT("Frame de début : %f\nFrame de fin : %f\n", frameDebut, frameFin);
 
-    if (frameDebut == 0){
-        return;
-    }
+    // Why ?
+    // if (frameDebut == 0){
+    //     return;
+    // }
 
     // Charger les paramètres depuis le fichier JSON
     json_error_t error;

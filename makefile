@@ -69,12 +69,13 @@ $(BIN_DIR)/detection: src/detection.cpp src/ptz.c
 directoriesSetup:
 	@if [ "$$(id -u)" -ne 0 ]; then echo "This script must be run as root. Use sudo." >&2; exit 1; fi
 	mkdir -p $(BIN_DIR) $(LOG_DIR) $(SERVER_DIR) $(VIDEO_DIR)
-	chown :suiviGrimpeur $(LOG_DIR) data $(BIN_DIR) $(SERVER_DIR) $(VIDEO_DIR)
-	chmod g+w $(LOG_DIR) $(BIN_DIR) $(SERVER_DIR)
+	chown :suiviGrimpeur $(LOG_DIR) data $(BIN_DIR) $(SERVER_DIR)
+	chown www-data:suiviGrimpeur $(VIDEO_DIR)
+	chmod 775 $(LOG_DIR) $(BIN_DIR) $(SERVER_DIR)
 	
 	touch $(LOG_DIR)/debug.log $(LOG_DIR)/debugCgi.log
 	chown :suiviGrimpeur $(LOG_DIR)/debug.log $(LOG_DIR)/debugCgi.log
-	chmod g+w $(LOG_DIR)/debug.log $(LOG_DIR)/debugCgi.log
+	chmod a+w $(LOG_DIR)/debug.log $(LOG_DIR)/debugCgi.log
 
 	chmod o+w data/positionsEnregistrees.json
 

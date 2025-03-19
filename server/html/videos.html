@@ -86,16 +86,14 @@
                 <th>Date</th>
                 <th>Heure</th>
                 <th>Lien</th> 
-                <!-- Voir si on peut le commencer directement au debut de la grimpe -->
             </tr>
         </thead>
         <tbody id="video-table-body">
-            <!-- Les vidéos et leurs détails seront générés ici -->
         </tbody>
     </table>
 
     <script>
-        const videoFolder = 'data/videos/'; // ancien : '../../data/videos/';
+        const videoFolder = 'data/videos/';
         const DIR_CGI = "/cgi-bin/"
 
         // Fonction pour extraire les informations depuis le nom de fichier
@@ -183,13 +181,10 @@
             const videoPlayer = document.getElementById('video-player');
             const videoSource = document.getElementById('video-source');
             
-            // Met à jour la source de la vidéo dans le lecteur
             videoSource.src = filePath;
             
-            // Recharge la vidéo dans le lecteur
             videoPlayer.load();
             
-            // Joue la vidéo
             videoPlayer.play();
         }
 
@@ -204,9 +199,8 @@
             }
         }
 
-        // Charger la derniere vidéo par défaut lorsqu'on charge la page
-        
 
+        // Charger la derniere vidéo par défaut lorsqu'on charge la page
         window.addEventListener("load", function() {
             const links = document.querySelectorAll('a');
             const voirLinks = Array.from(links).filter(link => link.textContent.trim() === "Voir");

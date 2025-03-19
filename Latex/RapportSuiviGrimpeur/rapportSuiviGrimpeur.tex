@@ -214,28 +214,144 @@ De l'autre côté, le programme principal (\textbf{main} programmé en \texttt{c
   \label{fig:architectureLogicielle}
 \end{figure}
 
+
+%-----------------------------------------------------------
+
 \section{Développement de l'application}
 Dans cette partie, nous allons détailler les différentes étapes de développement de l'application pour chaque brique du système présent dans l'architecture logicielle en figure \ref{fig:architectureLogicielle}.
 
-\subsection{Développement du serveur web}
-Le serveur web est composée de deux pages web, la première permet de visualiser le flux vidéo de la caméra, de la piloter et de piloter l'application. La seconde permet de visualiser les vidéos enregistrées et de les télécharger, le code de ces pages est écrit en \texttt{HTML}, \texttt{CSS} et \texttt{JAVASCRIPT} peut-être consulté sur la page \href{https://github.com/Romaiiin91/suiviGrimpeur_PDI/tree/main/server/html}{GitHub}.
+%-----------------------------------------------------------
+\subsection{Application système}
+
+Le programme principal est le cœur du système, il est en charge de faire la liaison avec entre le serveur web et les différents processus, de piloter la caméra et de gérer les positions remarquables de la caméra. 
+
+\subsubsection{Programme principal}
+
+Le fichier \texttt{main.c} constitue le cœur du système de gestion des caméras et de la communication inter-processus. Il est responsable de l'initialisation des caméras, de la gestion des enregistrements vidéo, de la détection des mouvements, et de l'interaction avec l'interface CGI via des segments de mémoire partagée et des sémaphores.
+
+\paragraph{Initialisation du programme}
+Lors de son démarrage, le programme effectue plusieurs étapes d'initialisation :
+\begin{itemize}
+    \item \textbf{Gestionnaire de fin d'exécution} : La fonction \texttt{atexit(bye)} garantit que toutes les ressources (mémoire partagée, sémaphores, processus enfants) sont correctement libérées à la fin du programme.
+    \item \textbf{Initialisation des sémaphores} : La fonction \texttt{initSemaphores()} crée ou ouvre des sémaphores nommés pour synchroniser les processus et gérer l'accès à la mémoire partagée, voir le paragraphe~\ref{par:semaphores} pour leur fonctionnement.
+    \item \textbf{Initialisation de la mémoire partagée} : La fonction \texttt{initSegmentMemoire()} configure deux segments de mémoire partagée : un pour les ordres envoyés par l'interface CGI et un autre pour stocker les images brutes capturées par les caméras.
+    \item \textbf{Initialisation des caméras} : La fonction \texttt{initCamera()} charge les paramètres des caméras depuis un fichier JSON et configure les caméras actives.
+\end{itemize}
+
+\paragraph{Gestion des signaux}
+Le programme installe un gestionnaire de signaux (\texttt{signalHandler}) pour répondre aux événements suivants :
+\begin{itemize}
+    \item \textbf{SIGINT} : Interruption manuelle (Ctrl+C) pour arrêter le programme proprement.
+    \item \textbf{SIGCHLD} : Gestion des processus enfants terminés pour éviter les processus zombies.
+    \item \textbf{SIGUSR1} : Signal utilisé pour indiquer qu'un nouvel ordre a été reçu via la mémoire partagée.
+\end{itemize}
+
+\paragraph{Boucle principale}
+Le programme entre dans une boucle infinie en appelant \texttt{pause()}, ce qui le met en attente d'un signal. Lorsqu'un signal est reçu, le gestionnaire de signaux (\texttt{signalHandler}) est exécuté pour traiter l'événement.
+
+\paragraph{Gestion des ordres}
+Lorsqu'un signal \texttt{SIGUSR1} est reçu, la fonction \texttt{gestionOrdres()} est appelée pour lire et exécuter les ordres envoyés par l'interface CGI. Les types d'ordres gérés incluent :
+\begin{itemize}
+    \item \textbf{Déplacement de la caméra} : Commandes de mouvement (\texttt{move}) ou de zoom (\texttt{zoom}).
+    \item \textbf{Enregistrement vidéo} : Commandes d'enregistrement (\texttt{reco}) pour démarrer ou arrêter un processus de capture vidéo.
+    \item \textbf{Détection de mouvement} : Commandes de détection (\texttt{detc}) pour analyser les images et suivre les mouvements.
+    \item \textbf{Gestion des positions prédéfinies} : Commandes (\texttt{rout}) pour ajouter, supprimer ou afficher des positions prédéfinies.
+    \item \textbf{Changement de caméra active} : Commandes (\texttt{cam}) pour basculer entre les caméras configurées.
+\end{itemize}
+
+\paragraph{Gestion des processus enfants}
+Le programme utilise des processus enfants pour effectuer des tâches spécifiques :
+\begin{itemize}
+    \item \textbf{Processus d'écriture mémoire} : Capture le flux vidéo brut des caméras et le stocke dans la mémoire partagée.
+    \item \textbf{Processus de détection} : Analyse les images pour détecter les mouvements.
+    \item \textbf{Processus d'enregistrement vidéo} : Encode les images en vidéo MP4 et les stocke sur le disque.
+\end{itemize}
+
+\paragraph{Libération des ressources}
+Lorsque le programme se termine, la fonction \texttt{bye()} est appelée pour libérer toutes les ressources :
+\begin{itemize}
+    \item Les processus enfants encore actifs sont arrêtés.
+    \item Les segments de mémoire partagée sont détachés et supprimés.
+    \item Les sémaphores sont fermés et supprimés.
+\end{itemize}
+
+%-----------------------------------------------------------
+
+\subsection{\'Ecriture mémoire}
+
+Le fichier \texttt{ecritureMemoire.cpp} est un processus dédié à la capture des images vidéo depuis une source donnée (par exemple, une caméra IP) et à leur écriture dans un segment de mémoire partagée. Ce processus est essentiel pour permettre la communication inter-processus entre les différents modules du système.
+
+\paragraph{Initialisation du programme}
+Lors de son démarrage, le programme effectue plusieurs étapes d'initialisation :
+\begin{itemize}
+    \item \textbf{Gestionnaire de signaux} : Le programme installe un gestionnaire de signaux (\texttt{signalHandler}) pour gérer les interruptions (\texttt{SIGINT}) et les arrêts (\texttt{SIGTERM}) de manière propre.
+    \item \textbf{Ouverture des sémaphores} \label{par:semaphores}: Les sémaphores nommés sont ouverts pour synchroniser l'accès à la mémoire partagée entre les processus :
+    \begin{itemize}
+        \item \texttt{SEM\_READERS} : Compte les lecteurs actifs.
+        \item \texttt{SEM\_WRITER} : Contrôle l'accès en écriture à la mémoire partagée.
+        \item \texttt{SEM\_NEW\_FRAME} : Indique qu'une nouvelle image est disponible.
+        \item \texttt{SEM\_ACTIVE\_READERS} : Compte les lecteurs actifs qui attendent une nouvelle image.
+    \end{itemize}
+    \item \textbf{Ouverture de la mémoire partagée} : Le segment de mémoire partagée est ouvert et mappé en mémoire virtuelle pour permettre l'écriture des images capturées.
+\end{itemize}
+
+\paragraph{Capture vidéo}
+Le programme utilise OpenCV pour capturer les images vidéo depuis une source spécifiée en argument :
+\begin{itemize}
+    \item \textbf{Initialisation de la capture vidéo} : La capture est ouverte avec \texttt{cv::VideoCapture} en utilisant l'argument passé au programme. Les propriétés de la capture sont configurées :
+    \begin{itemize}
+        \item Fréquence d'images (FPS) : 25 images par seconde.
+        \item Résolution : 1280x720 pixels.
+    \end{itemize}
+    \item \textbf{Vérification de la capture} : Si la capture ne peut pas être ouverte, le programme affiche une erreur et se termine.
+\end{itemize}
+
+\paragraph{Boucle principale}
+Le programme entre dans une boucle principale pour capturer les images et les écrire dans la mémoire partagée :
+\begin{itemize}
+    \item \textbf{Capture d'une image} : Une image est capturée à l'aide de \texttt{cap.read(frame)}. Si la capture échoue, le programme affiche une erreur et quitte la boucle.
+    \item \textbf{Écriture dans la mémoire partagée} : Le sémaphore \texttt{SEM\_WRITER} est utilisé pour bloquer l'accès en écriture pendant que l'image est copiée dans la mémoire partagée. Les données de l'image sont copiées avec \texttt{std::memcpy}.
+    \item \textbf{Notification des lecteurs} : Le programme utilise le sémaphore \texttt{SEM\_NEW\_FRAME} pour notifier tous les lecteurs actifs (\texttt{SEM\_ACTIVE\_READERS}) qu'une nouvelle image est disponible.
+\end{itemize}
+
+\paragraph{Libération des ressources}
+Lorsque le programme se termine (par un signal ou une erreur), il libère toutes les ressources utilisées :
+\begin{itemize}
+    \item \textbf{Libération de la mémoire partagée} : Le segment de mémoire partagée est détaché (\texttt{munmap}) et fermé (\texttt{close}).
+    \item \textbf{Fermeture des sémaphores} : Tous les sémaphores ouverts sont fermés avec \texttt{sem\_close}.
+    \item \textbf{Libération de la capture vidéo} : La capture vidéo est libérée avec \texttt{cap.release}.
+\end{itemize}
+
+\paragraph{Gestion des signaux}
+Le gestionnaire de signaux (\texttt{signalHandler}) permet de gérer les interruptions et les arrêts du programme :
+\begin{itemize}
+    \item \textbf{SIGINT} : Interrompt immédiatement le programme.
+    \item \textbf{SIGTERM} : Arrête proprement le programme en mettant fin à la boucle principale.
+\end{itemize}
+
+
+%-----------------------------------------------------------
+
+\subsection{Application web}
+Le serveur web est composée de deux pages web voir figure~\ref{fig:pagesWeb}, la première permet de visualiser le flux vidéo de la caméra, de la piloter et de piloter l'application. La seconde permet de visualiser les vidéos enregistrées et de les télécharger, le code de ces pages est écrit en \texttt{HTML}, \texttt{CSS} et \texttt{JAVASCRIPT} peut-être consulté sur la page \href{https://github.com/Romaiiin91/suiviGrimpeur_PDI/tree/main/server/html}{GitHub}.
 
 \begin{figure}
   \centering
   \begin{subfigure}[b]{0.45\textwidth}
-    % \includegraphics[width=\textwidth]{pageWeb.png}
+    \includegraphics[width=\textwidth]{pageIndex.png}
     \caption{Index de l'application}
-    \label{fig:pageWeb}
+    \label{fig:pageIndex}
   \end{subfigure}
   \begin{subfigure}[b]{0.45\textwidth}
-    % \includegraphics[width=\textwidth]{pageVideo.png}
+    \includegraphics[width=\textwidth]{pageVideo.png}
     \caption{Page web de visualisation des vidéos}
     \label{fig:pageVideo}
   \end{subfigure}
   \caption{Pages web de l'application}
+  \label{fig:pagesWeb}
 \end{figure}
 
-\subsubsection{Page web Index}
+\subsubsection{Page web index (figure~\ref{fig:pageIndex})}
 Au chargement de cette page, une fonction \texttt{javascript} permet de charger les voies disponibles dans la base de données et de les ajouter dans une liste déroulante pour permettre à l'utilisateur de sélectionner la voie qu'il souhaite visualiser. Une seconde fonction \texttt{js} charge les caméras disponibles et les ajoute dans une seconde liste déroulante. Puis le script \texttt{video.cgi} est exécuté pour afficher le flux vidéo de la caméra sélectionnée.
 
 Le processus lit dans la mémoire partagée les images brutes a l'aide d'\texttt{OPENCV} pour récupérer une matrice de pixel, puis le profil colorimétrique de l'image est changé car \texttt{OPENCV} travaille en \textit{BGR (blue green red)} et le \texttt{JPEG} utilise un profil (\textit{RGB (red green blue)}) puis est encodé en \texttt{JPEG} à l'aide de la librairie \texttt{libjpeg}. Enfin, on ajoute les entêtes \texttt{HTTP} pour que le navigateur puisse interpreter l'image et on écrit l'image encodée dans la sortie standard.
@@ -246,10 +362,11 @@ En dessous de ces curseurs, il y a une liste déroulante pour choisir la voie qu
 
 En dessous de la video, on retrouve un bouton pour enregistrer une vidéo avec deux champ pour entre le nom et prenom du grimpeur, un exemple de requête \texttt{AJAX} est présenté ci-contre : \texttt{http://localhost/cgi-bin/action.cgi?enrg=on\&nom=Chevalier\&prenom=Romain\&voie=0}. On récupère le nom et la voie afin de produire un nom de fichier unique et pouvoir le récupérer facilement dans la page de visualisation des vidéos.
 
-\paragraph{Paramètres avancés}  En bas de page, on trouve les options pour configurer une nouvelle voie. Il y a une liste déroulante pour choisir la caméra, puis une seconde liste déroulante pour choisir une voie que l'on souhaite supprimer ou afficher sur l'appuie du bouton adéquat. Il y a également un bouton pour sauvegarder une nouvelle position de la caméra dans la base de données en affichant une fenètre popup pour demander le numéro de voie. 
+\paragraph{Paramètres avancés}  En bas de page, on trouve les options pour configurer une nouvelle voie. Il y a une liste déroulante pour choisir la caméra, puis une seconde liste déroulante pour choisir une voie que l'on souhaite supprimer ou afficher sur l'appuie du bouton adéquat. Il y a également un bouton pour sauvegarder une nouvelle position de la caméra dans la base de données en affichant une fenêtre popup pour demander le numéro de voie. 
+En addition, on peut également lancer ou stop un enregistrement seul sans suivi du grimpeur et à l'inverse, on peut lancer seulement et stopper la détection du grimpeur sans enregistrement.
 
-\paragraph{Gestion des erreurs} En cas d'erreur, un message d'erreur est affiché en rouge en haut de la page pour informer l'utilisateur de l'erreur.
-
+\subsubsection{Page web de visualisation des vidéos (figure~\ref{fig:pageVideo})}
+Cette page permet de visualiser les vidéos enregistrées, de les télécharger et de les supprimer. Elles sont répertoriées dans un tableau avec le nom du grimpeur, la voie, la date et l'heure de l'enregistrement. On peut, de plus, rechercher une video particulière à l'aide de la barre de recherche en haut de page. Avec les fonction du navigateur, on peut lire, mettre en pause, accélérer, ralentir ou télécharger la vidéo. Enfin, on peut voir la video en haut de page en cliquant sur \texttt{voir}, la visionnier dans un nouvel onglet en cliquant sur \texttt{visionnier} ou la supprimer en cliquant sur \texttt{supprimer}.
 
 
 
