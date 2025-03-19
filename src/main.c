@@ -149,10 +149,10 @@ void setParamCamera(camera_t *camera){
     case 90:
         camera->height = 1280;
         camera->width = 720;
-        camera->up = -1; // a bien definir
+        camera->up = 1; // a bien definir
         camera->down = 1;
-        camera->left = 1;
-        camera->right = -1;
+        camera->left = -1;
+        camera->right = 1;
         strcpy(camera->cmdVertical, "rpan");
         strcpy(camera->cmdHorizontal, "rtilt");
         break;
@@ -169,10 +169,10 @@ void setParamCamera(camera_t *camera){
     case 270:    
         camera->height = 1280;
         camera->width = 720;
-        camera->up = 1;
-        camera->down = -1;
-        camera->left = 1;
-        camera->right = -1;
+        camera->up = -1;
+        camera->down = 1;
+        camera->left = -1;
+        camera->right = 1;
         strcpy(camera->cmdVertical, "rpan");
         strcpy(camera->cmdHorizontal, "rtilt");
         break;
@@ -488,7 +488,7 @@ int enregistrerVideo(const char * donnees){
 
         char orientationStr[4], widthStr[5], heightStr[5];
         snprintf(orientationStr, sizeof(orientationStr), "%d", cameraActive->orientation);
-        snprintf(widthStr, sizeof(widthStr), "%d", cameraActive->width);
+        snprintf(widthStr, sizeof(widthStr), "%d", cameraActive->width); // a supprimer
         snprintf(heightStr, sizeof(heightStr), "%d", cameraActive->height);
 
         

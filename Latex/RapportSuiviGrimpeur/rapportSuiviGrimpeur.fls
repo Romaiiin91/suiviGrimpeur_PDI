@@ -1494,6 +1494,19 @@ INPUT ./Figures//Logo_CENTRALE_C.png
 INPUT ./Figures//Logo_CENTRALE_C.png
 INPUT Figures//Logo_CENTRALE_C.png
 INPUT ./Figures//Logo_CENTRALE_C.png
+INPUT /usr/share/texmf/fonts/tfm/public/lm/ec-lmtk10.tfm
+INPUT ./Figures//Logo_CENTRALE_C.png
+INPUT ./Figures//Logo_CENTRALE_C.png
+INPUT Figures//Logo_CENTRALE_C.png
+INPUT ./Figures//Logo_CENTRALE_C.png
+INPUT ./Figures//Logo_CENTRALE_C.png
+INPUT ./Figures//Logo_CENTRALE_C.png
+INPUT Figures//Logo_CENTRALE_C.png
+INPUT ./Figures//Logo_CENTRALE_C.png
+INPUT ./Figures//Logo_CENTRALE_C.png
+INPUT ./Figures//Logo_CENTRALE_C.png
+INPUT Figures//Logo_CENTRALE_C.png
+INPUT ./Figures//Logo_CENTRALE_C.png
 INPUT ./Figures//Logo_CENTRALE_C.png
 INPUT ./Figures//Logo_CENTRALE_C.png
 INPUT Figures//Logo_CENTRALE_C.png
@@ -1537,4 +1550,5 @@ INPUT /usr/share/texmf/fonts/type1/public/lm/lmr9.pfb
 INPUT /usr/share/texmf/fonts/type1/public/lm/lmri10.pfb
 INPUT /usr/share/texmf/fonts/type1/public/lm/lmri12.pfb
 INPUT /usr/share/texmf/fonts/type1/public/lm/lmro10.pfb
+INPUT /usr/share/texmf/fonts/type1/public/lm/lmtk10.pfb
 INPUT /usr/share/texmf/fonts/type1/public/lm/lmtt10.pfb

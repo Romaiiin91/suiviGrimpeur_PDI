@@ -223,7 +223,7 @@ Dans cette partie, nous allons détailler les différentes étapes de développe
 %-----------------------------------------------------------
 \subsection{Application système}
 
-Le programme principal est le cœur du système, il est en charge de faire la liaison avec entre le serveur web et les différents processus, de piloter la caméra et de gérer les positions remarquables de la caméra. 
+La partie système de l'application est composée de plusieurs fichiers et programmes qui interagissent pour gérer les caméras, les enregistrements vidéo et la communication avec l'interface web.
 
 \subsubsection{Programme principal}
 
@@ -233,9 +233,9 @@ Le fichier \texttt{main.c} constitue le cœur du système de gestion des caméra
 Lors de son démarrage, le programme effectue plusieurs étapes d'initialisation :
 \begin{itemize}
     \item \textbf{Gestionnaire de fin d'exécution} : La fonction \texttt{atexit(bye)} garantit que toutes les ressources (mémoire partagée, sémaphores, processus enfants) sont correctement libérées à la fin du programme.
-    \item \textbf{Initialisation des sémaphores} : La fonction \texttt{initSemaphores()} crée ou ouvre des sémaphores nommés pour synchroniser les processus et gérer l'accès à la mémoire partagée, voir le paragraphe~\ref{par:semaphores} pour leur fonctionnement.
+    \item \textbf{Initialisation des sémaphores} : La fonction \texttt{initSemaphores()} crée des sémaphores nommés pour synchroniser les processus et gérer l'accès à la mémoire partagée, voir le paragraphe~\ref{par:semaphores} pour leur fonctionnement.
     \item \textbf{Initialisation de la mémoire partagée} : La fonction \texttt{initSegmentMemoire()} configure deux segments de mémoire partagée : un pour les ordres envoyés par l'interface CGI et un autre pour stocker les images brutes capturées par les caméras.
-    \item \textbf{Initialisation des caméras} : La fonction \texttt{initCamera()} charge les paramètres des caméras depuis un fichier JSON et configure les caméras actives.
+    \item \textbf{Initialisation des caméras} : La fonction \texttt{initCamera()} charge les paramètres des caméras depuis un fichier JSON et configure les caméras actives. Afin que le système puisse s'adapter à l'orientaiton de la caméra (portrait, paysage, portrait renversé ou paysage renversé), la fonction \texttt{setParamCamera} vient définir les paramètre de la caméra pour que le système puisse s'adapter automatiquement. En effet, on definit le mouvement d'inclinaison et le mouvement panoramique en fonction de l'orientaiton (par exemple, pour le mode paysage un déplacement vers le haut correspond à une augmentation de l'angle d'inclinaison et le mode portrait renverse correspond a une diminution de l'angle panoramique).
 \end{itemize}
 
 \paragraph{Gestion des signaux}
@@ -252,20 +252,62 @@ Le programme entre dans une boucle infinie en appelant \texttt{pause()}, ce qui 
 \paragraph{Gestion des ordres}
 Lorsqu'un signal \texttt{SIGUSR1} est reçu, la fonction \texttt{gestionOrdres()} est appelée pour lire et exécuter les ordres envoyés par l'interface CGI. Les types d'ordres gérés incluent :
 \begin{itemize}
-    \item \textbf{Déplacement de la caméra} : Commandes de mouvement (\texttt{move}) ou de zoom (\texttt{zoom}).
-    \item \textbf{Enregistrement vidéo} : Commandes d'enregistrement (\texttt{reco}) pour démarrer ou arrêter un processus de capture vidéo.
-    \item \textbf{Détection de mouvement} : Commandes de détection (\texttt{detc}) pour analyser les images et suivre les mouvements.
-    \item \textbf{Gestion des positions prédéfinies} : Commandes (\texttt{rout}) pour ajouter, supprimer ou afficher des positions prédéfinies.
+    \item \textbf{Déplacement de la caméra} : Commandes de mouvement (\texttt{move}) ou de zoom (\texttt{zoom}). Le programme reçoit une direction (haut, bas, gauche, droite) et une valeur de précision pour ajuster l'angle de déplacement (entre 0 et 30 degrés). Il execute ensuite la fonction \texttt{requetePTZ} qui crée une requête HTTP avec l'aide de la librairie \texttt{curl} pour envoyer l'ordre de déplacement à la caméra.
+    \item \textbf{Capture vidéo} : Commandes de capture (\texttt{reco}) pour démarrer ou arrêter un processus de capture vidéo. Cet ordre execute la fonction \texttt{enregistrerVideo} qui s'assure que le stockage disponible est suffisant, puis crée le nom de fichier en fonction du nom et prénom du grimpeur, de la voie et de la date et heure de l'enregistrement. Enfin, il crée un processus fils pour démarrer l'enregistrement. Voir section~\ref{par:capture} pour le détail de fonctionnement de la capture vidéo à l'aide du programme \texttt{ffmpeg}.
+    \item \textbf{Détection de mouvement} : Commandes de détection (\texttt{detc}) pour analyser les images et suivre les mouvements. Cet ordre fait appel à la fonction \texttt{processusDetection} qui crée un processus fils pour effectuer la détection de mouvement. Voir section~\ref{par:detection} pour le détail de fonctionnement de la détection de mouvement.
+    \item \textbf{Enregistrement vidéo} : Commandes d'enregistrement (\texttt{enrg}) pour démarrer ou arrêter un processus d'enregistrement vidéo. Ce ordre vient lancer un processus de capture vidéo et de détection de mouvement.
+    \item \textbf{Gestion des positions prédéfinies} : Commandes (\texttt{rout}) pour ajouter, supprimer ou afficher des positions prédéfinies, voir le paragraph suivant pour plus d'informations.
     \item \textbf{Changement de caméra active} : Commandes (\texttt{cam}) pour basculer entre les caméras configurées.
 \end{itemize}
 
-\paragraph{Gestion des processus enfants}
-Le programme utilise des processus enfants pour effectuer des tâches spécifiques :
-\begin{itemize}
-    \item \textbf{Processus d'écriture mémoire} : Capture le flux vidéo brut des caméras et le stocke dans la mémoire partagée.
-    \item \textbf{Processus de détection} : Analyse les images pour détecter les mouvements.
-    \item \textbf{Processus d'enregistrement vidéo} : Encode les images en vidéo MP4 et les stocke sur le disque.
-\end{itemize}
+\paragraph{Gestion des positions prédéfinies} 
+Le fichier \texttt{positions.c} est responsable de la gestion des positions des caméras PTZ et des voies associées. Il permet d'ajouter, de supprimer et d'afficher des positions prédéfinies en interagissant avec un fichier JSON pour stocker les données. Les fonctions principales de ce fichier sont \texttt{addRoute}, \texttt{removeRoute} et \texttt{showRoute}.
+
+\subparagraph{Ajout d'une route : \texttt{addRoute}}
+
+La fonction \texttt{addRoute} permet d'ajouter une nouvelle position PTZ associée à une voie dans le fichier JSON. Voici les étapes principales de son fonctionnement :
+\begin{enumerate}
+    \item \textbf{Récupération de la position actuelle de la caméra} :
+    La fonction \texttt{recupererPosition} est appelée pour obtenir les valeurs actuelles de \texttt{pan}, \texttt{tilt} et \texttt{zoom} de la caméra active via une requête HTTP. Pour cela, une URL est construite avec les informations de la caméra et envoyée à l'aide de la bibliothèque \texttt{libcurl} permettant d'afficher sur une page HTML les données de la caméra. Enfin, les données retournées par la caméra sont analysées pour extraire les valeurs de \texttt{pan}, \texttt{tilt} et \texttt{zoom}.
+    \item \textbf{Ajout de la position dans le fichier JSON} :
+    La fonction \texttt{addPositionFile} est appelée pour insérer les valeurs récupérées dans le fichier JSON. Si le fichier JSON n'existe pas, il est créé. Une nouvelle entrée est ajoutée sous la forme d'un tableau contenant les valeurs de \texttt{pan}, \texttt{tilt}, \texttt{zoom} et l'identifiant de la caméra.
+\end{enumerate}
+
+
+\subparagraph{Suppression d'une route : \texttt{removeRoute}}
+
+La fonction \texttt{removeRoute} permet de supprimer une position PTZ associée à une voie dans le fichier JSON. Voici les étapes principales de son fonctionnement :
+\begin{enumerate}
+    \item \textbf{Chargement du fichier JSON} :
+        Le fichier JSON contenant les positions PTZ est chargé en mémoire à l'aide de la bibliothèque \texttt{jansson}.
+
+    \item \textbf{Suppression de la clé associée à la voie} :
+        La clé correspondant à la voie spécifiée est supprimée du fichier JSON à l'aide de la fonction \texttt{json\_object\_del}.
+    
+    \item \textbf{Sauvegarde du fichier JSON modifié} :
+        Le fichier JSON est mis à jour et sauvegardé sur le disque. 
+    
+\end{enumerate}
+
+
+\subparagraph{Affichage d'une route : \texttt{showRoute}}
+
+La fonction \texttt{showRoute} permet d'afficher les informations d'une position PTZ associée à une voie et de déplacer la caméra vers cette position. Voici les étapes principales de son fonctionnement :
+\begin{enumerate}
+    \item \textbf{Chargement du fichier JSON} :
+        Le fichier JSON contenant les positions PTZ est chargé en mémoire à l'aide de la bibliothèque \texttt{jansson}. 
+        
+
+    \item \textbf{Récupération des données de la voie} :
+        Les données associées à la voie spécifiée sont extraites du fichier JSON.
+        Ces données incluent les valeurs de \texttt{pan}, \texttt{tilt}, \texttt{zoom} et l'identifiant de la caméra. Si la voie n'existe pas ou si les données sont invalides, un message d'erreur est affiché, et la fonction retourne \texttt{-1}.
+    
+    \item \textbf{Déplacement de la caméra} :
+        Si la caméra active n'est pas celle spécifiée dans les données, la fonction \texttt{setActiveCamera} est appelée pour activer la caméra correspondante.  fonction \texttt{allerPosition} est appelée pour envoyer une requête HTTP à la caméra afin de la déplacer vers la position spécifiée.
+    
+\end{enumerate}
+
+
 
 \paragraph{Libération des ressources}
 Lorsque le programme se termine, la fonction \texttt{bye()} est appelée pour libérer toutes les ressources :
@@ -277,9 +319,9 @@ Lorsque le programme se termine, la fonction \texttt{bye()} est appelée pour li
 
 %-----------------------------------------------------------
 
-\subsection{\'Ecriture mémoire}
+\subsubsection{\'Ecriture mémoire}
 
-Le fichier \texttt{ecritureMemoire.cpp} est un processus dédié à la capture des images vidéo depuis une source donnée (par exemple, une caméra IP) et à leur écriture dans un segment de mémoire partagée. Ce processus est essentiel pour permettre la communication inter-processus entre les différents modules du système.
+Le fichier \texttt{ecritureMemoire.cpp} est un processus dédié à la capture des images vidéo depuis une source donnée (on exécute le programme avec comme argument l'url de vidéo) et à leur écriture dans un segment de mémoire partagée. Ce processus est essentiel pour permettre la communication inter-processus entre les différents modules du système.
 
 \paragraph{Initialisation du programme}
 Lors de son démarrage, le programme effectue plusieurs étapes d'initialisation :
@@ -291,18 +333,15 @@ Lors de son démarrage, le programme effectue plusieurs étapes d'initialisation
         \item \texttt{SEM\_WRITER} : Contrôle l'accès en écriture à la mémoire partagée.
         \item \texttt{SEM\_NEW\_FRAME} : Indique qu'une nouvelle image est disponible.
         \item \texttt{SEM\_ACTIVE\_READERS} : Compte les lecteurs actifs qui attendent une nouvelle image.
+        \item \texttt{SEM\_MUTEX} : Protège l'accès aux compteurs de sémaphores.
     \end{itemize}
     \item \textbf{Ouverture de la mémoire partagée} : Le segment de mémoire partagée est ouvert et mappé en mémoire virtuelle pour permettre l'écriture des images capturées.
 \end{itemize}
 
 \paragraph{Capture vidéo}
-Le programme utilise OpenCV pour capturer les images vidéo depuis une source spécifiée en argument :
+Le programme utilise OpenCV pour capturer les images vidéo depuis la source spécifiée en argument :
 \begin{itemize}
-    \item \textbf{Initialisation de la capture vidéo} : La capture est ouverte avec \texttt{cv::VideoCapture} en utilisant l'argument passé au programme. Les propriétés de la capture sont configurées :
-    \begin{itemize}
-        \item Fréquence d'images (FPS) : 25 images par seconde.
-        \item Résolution : 1280x720 pixels.
-    \end{itemize}
+    \item \textbf{Initialisation de la capture vidéo} : La capture est ouverte avec \texttt{cv::VideoCapture} en sur l'URL de l'argument passé au programme. Les propriétés de la capture sont configurées pour être sur les même paramètres que la source vidéo.
     \item \textbf{Vérification de la capture} : Si la capture ne peut pas être ouverte, le programme affiche une erreur et se termine.
 \end{itemize}
 
@@ -329,6 +368,106 @@ Le gestionnaire de signaux (\texttt{signalHandler}) permet de gérer les interru
     \item \textbf{SIGTERM} : Arrête proprement le programme en mettant fin à la boucle principale.
 \end{itemize}
 
+
+
+%-----------------------------------------------------------
+\subsubsection{Détection de mouvement} \label{par:detection}
+
+
+%------------------------------------------------------------
+\subsubsection{Capture vidéo} \label{par:capture}
+
+Le fichier \texttt{enregistrementVideo.c} est un programme dédié à l'enregistrement des flux vidéo provenant de la mémoire partagée. Il utilise des sémaphores pour la synchronisation entre processus, la mémoire partagée pour l'accès aux images brutes, et \texttt{FFmpeg} pour encoder les vidéos dans un format compressé. Ce programme est conçu pour fonctionner de manière autonome et s'arrêter proprement en cas de signal d'interruption.
+
+
+\paragraph{Initialisation du programme}
+Lors de son démarrage, le programme effectue plusieurs étapes d'initialisation :
+\begin{itemize}
+    \item \textbf{Gestionnaire de signaux} : 
+    \begin{itemize}
+        \item Le programme installe un gestionnaire de signaux (\texttt{signalHandler}) pour gérer les interruptions (\texttt{SIGINT}) et les arrêts (\texttt{SIGTERM}) de manière propre.
+        \item En cas de réception d'un signal, le programme termine l'enregistrement en cours et libère les ressources.
+    \end{itemize}
+    \item \textbf{Ouverture des sémaphores} :
+    \begin{itemize}
+        \item Les sémaphores nommés (\texttt{SEM\_READERS}, \texttt{SEM\_WRITER}, \texttt{SEM\_NEW\_FRAME}, etc.) sont ouverts pour synchroniser l'accès à la mémoire partagée entre les processus.
+        \item Le compteur de lecteurs actifs (\texttt{SEM\_ACTIVE\_READERS}) est incrémenté pour indiquer qu'un nouveau lecteur est actif.
+    \end{itemize}
+    \item \textbf{Ouverture de la mémoire partagée} :
+    \begin{itemize}
+        \item Le segment de mémoire partagée contenant les images brutes est ouvert et mappé en mémoire virtuelle pour permettre la lecture des images.
+    \end{itemize}
+    \item \textbf{Préparation de la commande FFmpeg} :
+    Afin d'optimiser l'utilisation de FFmpeg, on utilise sur le raspberry l'accélération matériel pour l'encodage vidéo. Pour cela, on utilise l'encoder \texttt{v4l2m2m} qui permet d'utiliser le codec H.264 pour l'encodage vidéo. La commande FFmpeg est construite pour encoder les images brutes en vidéo compressée. 
+    \begin{itemize}
+        \item \texttt{-f rawvideo} : Spécifie que l'entrée est une vidéo brute.
+        \item \texttt{fflags +discardcorrupt+genpts} : Ignore les images corrompues et génère des horodatages.
+        \item \texttt{-pixel\_format bgr24} : Définit le format des pixels en BGR 24 bits.
+        \item \texttt{-s 1280x720} : Définit la résolution d'entrée.
+        \item \texttt{-r 25} : Définit le débit d'images d'entrée (25 FPS).
+        \item \texttt{-framerate 25} : Force le débit d'image sortant (25 FPS).
+        \item \texttt{-c:v h264\_v4l2m2m} : Utilise le codec H.264 pour l'encodage et l'acceleration matérielle sur le rpi. Sur une architechture x86, on peut utiliser \texttt{-c:v libx264} pour l'encodage.
+        \item \texttt{-pix\_fmt yuv420p} : Définit le format des pixels en YUV 4:2:0. Ce format est optimisé pour lire les vidéos sur navigateur web.
+        \item \texttt{-b:v 5M} : Définit le débit binaire de sortie à 5 Mbit/s (Meilleur débit pour de la 720p).
+        \item \texttt{-an} : Désactive l'audio.
+    \end{itemize}
+\end{itemize}
+
+
+
+\paragraph{Boucle principale}
+Le programme entre dans une boucle principale pour capturer les images et les écrire dans le pipe standard de \texttt{FFmpeg} :
+\begin{itemize}
+    \item \textbf{Attente d'une nouvelle image} :
+    \begin{itemize}
+        \item Le programme attend qu'une nouvelle image soit disponible en utilisant le sémaphore \texttt{SEM\_NEW\_FRAME}.
+    \end{itemize}
+    \item \textbf{Synchronisation avec les sémaphores} :
+    \begin{itemize}
+        \item Le sémaphore \texttt{SEM\_WRITER} est utilisé pour bloquer l'accès en écriture pendant que l'image est lue.
+        \item Le sémaphore \texttt{SEM\_READERS} est utilisé pour indiquer qu'un nouveau lecteur est en cours de lecture.
+    \end{itemize}
+    \item \textbf{Écriture dans le pipe FFmpeg} :
+    \begin{itemize}
+        \item L'image brute est lue depuis la mémoire partagée et écrite dans le pipe standard de \texttt{FFmpeg} à l'aide de la fonction \texttt{fwrite}. L'image est encodé dans une vidéo temporaire en attendant la fin de l'enregistrement.
+    \end{itemize}
+\end{itemize}
+
+
+\paragraph{Découpage de la vidéo}
+Une fois l'enregistrement terminé, la fonction \texttt{decouperVideo} est appelée pour découper la vidéo et ne conserver que la partie intéressante :
+\begin{itemize}
+    \item \textbf{Lecture des frames de début et de fin} :
+    \begin{itemize}
+        \item Les frames de début et de fin sont lues depuis un fichier (\texttt{PATH\_FRAMES}), qui sont écrites à la fin du processus de détection de mouvement.
+        \item Si le fichier n'existe pas, des valeurs par défaut sont utilisées.
+    \end{itemize}
+    \item \textbf{Ajustement des frames} :
+    \begin{itemize}
+        \item Les frames sont ajustées en fonction des paramètres définis, comme le nombre de frames avant le premier mouvement ou après l'absence de mouvement afin de garder une partie de la video juste avant le premier mouvement de la caméra. 
+    \end{itemize}
+    \item \textbf{Exécution de la commande FFmpeg} :
+    \begin{itemize}
+        \item Une commande \texttt{FFmpeg} est construite pour découper la vidéo en fonction des frames ajustées et si besoin la réorienter dans le bon sens en fonction de l'orientation de la caméra.
+        \item La vidéo temporaire (\texttt{VIDEO\_TEMP}) est utilisée comme entrée, et la vidéo finale est sauvegardée avec un nom personnalisé construit par le programme principal.
+    \end{itemize}
+\end{itemize}
+
+\paragraph{Libération des ressources}
+À la fin du programme, toutes les ressources utilisées sont libérées :
+\begin{itemize}
+    \item \textbf{Fermeture des sémaphores} : Tous les sémaphores ouverts sont fermés avec \texttt{sem\_close}.
+    \item \textbf{Libération de la mémoire partagée} : Le segment de mémoire partagée est détaché (\texttt{munmap}) et fermé (\texttt{close}).
+    \item \textbf{Fermeture du pipe FFmpeg} Le pipe standard vers \texttt{FFmpeg} est fermé avec \texttt{pclose}.
+\end{itemize}
+
+
+\paragraph{Gestion des signaux}
+Le gestionnaire de signaux (\texttt{signalHandler}) permet de gérer les interruptions et les arrêts du programme :
+\begin{itemize}
+    \item \textbf{SIGTERM} : Arrête proprement le programme en mettant fin à la boucle principale.
+    \item \textbf{SIGINT} : Interrompt immédiatement le programme.
+\end{itemize}
 
 %-----------------------------------------------------------
 
@@ -375,7 +514,7 @@ Cette page permet de visualiser les vidéos enregistrées, de les télécharger 
 
 
 
-
+\subsection{Problèmes rencontrés}
 
 
 
