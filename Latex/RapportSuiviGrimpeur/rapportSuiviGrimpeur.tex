@@ -34,9 +34,20 @@
 
 \graphicspath{{Figures/}{Photos/}}
 
+
+
 \usepackage{tikz}
 \usepackage{pgfplots}
 \usetikzlibrary{decorations.pathmorphing, shapes, automata,positioning}
+
+\usetikzlibrary{shapes.geometric, arrows}
+
+\tikzstyle{process} = [rectangle, rounded corners, minimum width=2.5cm, minimum height=1cm, text centered, draw=black, fill=blue!10, font=\small]
+\tikzstyle{decision} = [diamond, minimum width=2cm, minimum height=1cm, text centered, draw=black, fill=red!10]
+\tikzstyle{sharedmem} = [rectangle, minimum width=2.5cm, minimum height=8cm, text centered, draw=black, fill=yellow!30]
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=red!30]
+
+\tikzstyle{arrow} = [thick,->,>=stealth]
 
 
 
@@ -166,6 +177,8 @@ showstringspaces=false,
 
 %-----------------------------------------------------------------------------------
 
+\pgfplotsset{compat=1.18}
+
 
 \begin{document}
 \pagenumbering{roman}
@@ -290,12 +303,12 @@ De l'autre côté, le programme principal (\textbf{main} programmé en \texttt{c
 %-----------------------------------------------------------
 
 \section{Développement de l'application}
-Dans cette partie, nous allons détailler les différentes étapes de développement de l'application pour chaque brique du système présent dans l'architecture logicielle en figure \ref{fig:architectureLogicielle}.
+Dans cette partie, nous allons détailler les différentes étapes de développement de l'application pour chaque brique du système présent dans l'architecture logicielle en figure \ref{fig:architectureLogicielle}. Tout le code source est disponible sur le dépôt \href{https://github.com/Romaiiin91/suiviGrimpeur_PDI}{GitHub}.
 
 %-----------------------------------------------------------
 \subsection{Application système}
 
-La partie système de l'application est composée de plusieurs fichiers et programmes qui interagissent pour gérer les caméras, les enregistrements vidéo et la communication avec l'interface web.
+La partie système de l'application est composée de plusieurs fichiers et programmes qui interagissent pour gérer les caméras, les enregistrements vidéo et la communication avec l'interface web. 
 
 \subsubsection{Programme principal}
 
@@ -307,7 +320,7 @@ Lors de son démarrage, le programme effectue plusieurs étapes d'initialisation
     \item \textbf{Gestionnaire de fin d'exécution} : La fonction \texttt{atexit(bye)} garantit que toutes les ressources (mémoire partagée, sémaphores, processus enfants) sont correctement libérées à la fin du programme.
     \item \textbf{Initialisation des sémaphores} : La fonction \texttt{initSemaphores()} crée des sémaphores nommés pour synchroniser les processus et gérer l'accès à la mémoire partagée, voir le paragraphe~\ref{par:semaphores} pour leur fonctionnement.
     \item \textbf{Initialisation de la mémoire partagée} : La fonction \texttt{initSegmentMemoire()} configure deux segments de mémoire partagée : un pour les ordres envoyés par l'interface CGI et un autre pour stocker les images brutes capturées par les caméras.
-    \item \textbf{Initialisation des caméras} : La fonction \texttt{initCamera()} charge les paramètres des caméras depuis un fichier JSON et configure les caméras actives. Afin que le système puisse s'adapter à l'orientaiton de la caméra (portrait, paysage, portrait renversé ou paysage renversé), la fonction \texttt{setParamCamera} vient définir les paramètre de la caméra pour que le système puisse s'adapter automatiquement. En effet, on definit le mouvement d'inclinaison et le mouvement panoramique en fonction de l'orientaiton (par exemple, pour le mode paysage un déplacement vers le haut correspond à une augmentation de l'angle d'inclinaison et le mode portrait renverse correspond a une diminution de l'angle panoramique).
+    \item \textbf{Initialisation des caméras} : La fonction \texttt{initCamera()} charge les paramètres des caméras depuis un fichier JSON et configure les caméras actives. Afin que le système puisse s'adapter à l'orientation de la caméra (portrait, paysage, portrait renversé ou paysage renversé), la fonction \texttt{setParamCamera} vient définir les paramètre de la caméra pour que le système puisse s'adapter automatiquement. En effet, on definit le mouvement d'inclinaison et le mouvement panoramique en fonction de l'orientation (par exemple, pour le mode paysage un déplacement vers le haut correspond à une augmentation de l'angle d'inclinaison et le mode portrait renverse correspond a une diminution de l'angle panoramique).
 \end{itemize}
 
 \paragraph{Gestion des signaux}
@@ -399,7 +412,7 @@ Le fichier \texttt{ecritureMemoire.cpp} est un processus dédié à la capture d
 Lors de son démarrage, le programme effectue plusieurs étapes d'initialisation :
 \begin{itemize}
     \item \textbf{Gestionnaire de signaux} : Le programme installe un gestionnaire de signaux (\texttt{signalHandler}) pour gérer les interruptions (\texttt{SIGINT}) et les arrêts (\texttt{SIGTERM}) de manière propre.
-    \item \textbf{Ouverture des sémaphores} \label{par:semaphores}: Les sémaphores nommés sont ouverts pour synchroniser l'accès à la mémoire partagée entre les processus :
+    \item \textbf{Ouverture des sémaphores} \label{par:semaphores}: Les sémaphores nommés sont ouverts pour synchroniser l'accès à la mémoire partagée entre les processus. Voir la figure~\ref{fig:semaphores} pour comprendre l’enchaînement des différents sémaphores et voir ci-dessous pour leur description :
     \begin{itemize}
         \item \texttt{SEM\_READERS} : Compte les lecteurs actifs.
         \item \texttt{SEM\_WRITER} : Contrôle l'accès en écriture à la mémoire partagée.
@@ -409,6 +422,94 @@ Lors de son démarrage, le programme effectue plusieurs étapes d'initialisation
     \end{itemize}
     \item \textbf{Ouverture de la mémoire partagée} : Le segment de mémoire partagée est ouvert et mappé en mémoire virtuelle pour permettre l'écriture des images capturées.
 \end{itemize}
+
+
+\begin{figure}[!ht]
+    \centering
+    \begin{tikzpicture}[node distance=1.6cm, scale=0.75, transform shape]
+
+        
+
+        % Processus lecteur
+        \node (reader) [startstop] {Processus Lecteur};
+        \node (semActiveReaderPost) [process, below of=reader] {\texttt{sem\_post(SEM\_ACTIVE\_READERS)}};
+        \node (semNewFrame) [process, below of=semActiveReaderPost] {\texttt{sem\_wait(SEM\_NEW\_FRAME)}};
+        \node (semMutex1) [process, below of=semNewFrame] {\texttt{sem\_wait(SEM\_MUTEX)}};
+        \node (semReadersInc) [process, below of=semMutex1] {\texttt{sem\_post(SEM\_READERS)}};
+        \node (semPostMust1) [process, below of=semReadersInc] {\texttt{sem\_post(semMutex)}};
+        \node (readData) [process, below of=semPostMust1] {Lire mémoire partagée};
+
+        % Sémaphore Mutex (2e partie du lecteur)
+        \node (semMutex2) [process, below of=readData] {\texttt{sem\_wait(SEM\_MUTEX)}};
+        \node (semReadersDec) [process, below of=semMutex2] {\texttt{sem\_wait(SEM\_READERS)}};
+        \node (lastReader) [decision, below of=semReadersDec, yshift=-1cm, align=center] {Dernier \\ lecteur ?};
+        \node (semWriterPost2) [process, right of=lastReader, xshift=2.5cm] {\texttt{sem\_post(SEM\_WRITER)}};
+        \node (endReader) [process, below of=lastReader, yshift=-1cm] {\texttt{sem\_post(semMutex)}};
+
+        \node (checkLoopReader) [decision, below of=endReader, yshift=-1cm, align=center] {Lecture \\ continue ?};
+        \node (waitActiveReaderPost) [process, below of=checkLoopReader, yshift=-1cm] {\texttt{sem\_post(SEM\_ACTIVE\_READERS)}};
+        \node (finReader) [startstop, below of=waitActiveReaderPost] {Fin Lecteur};
+        
+        
+        % Mémoire partagée
+        \node (memory) [sharedmem, right of=readData, xshift=4cm, align=center] {Mémoire Partagée \\ Images brutes};
+
+        % Ecrivain
+        \node (copyData) [process, right of=memory, xshift=4cm] {Copier données (\texttt{memcpy})};
+        
+        \node (semWriterWait) [process, above of=copyData] {\texttt{sem\_wait(SEM\_WRITER)}};
+        \node (capture) [process, above of=semWriterWait] {Capture image};
+        \node (writer) [startstop, above of = capture] {Processus Écrivain};
+        
+        
+        \node (semWriterPost) [process, below of=copyData] {\texttt{sem\_post(SEM\_WRITER)}};
+        \node (getReaders) [process, below of=semWriterPost] {\texttt{sem\_getvalue(SEM\_ACTIVE\_READERS)}};
+        \node (checkReaders) [decision, below of=getReaders, yshift=-1cm, align=center] {Lecteurs en \\ attente ?};
+        \node (notifyReaders) [process, right of=checkReaders, xshift=2.5cm, align=center]  {\texttt{Boucle} \\ \texttt{sem\_post} \\ \texttt{(SEM\_NEW\_FRAME)}};
+
+        
+        \node (checkLoopWriter) [decision, below of=checkReaders, yshift=-2cm, align=center] {Écriture \\ continue ?};
+        \node (endWriter) [startstop, below of=checkLoopWriter, yshift=-1cm] {Fin Écrivain};
+
+        % Flèches écrivain
+        \draw [arrow] (writer) -- (capture);
+        \draw [arrow] (capture) -- (semWriterWait);
+        \draw [arrow] (semWriterWait) -- (copyData);
+        \draw [arrow] (copyData) -- (semWriterPost);
+        \draw [arrow] (copyData.west) -- (memory.east);
+        \draw [arrow] (semWriterPost) -- (getReaders);
+        \draw [arrow] (getReaders) -- (checkReaders);
+        \draw [arrow] (checkReaders.east) -- (notifyReaders.west) node[midway,above]{Oui};
+        \draw [arrow] (notifyReaders.south) |- (checkLoopWriter.north);
+        \draw [arrow] (checkReaders.south) -- (checkLoopWriter.north) node[near start,left]{Non};
+        \draw [arrow] (checkLoopWriter.east) -- ++(5cm,0) |- (capture.east) node[near start, right]{Oui};
+        \draw [arrow] (checkLoopWriter.south) -- (endWriter.north) node[near start,left]{Non};
+
+        % Flèches lecteur
+        \draw [arrow] (reader) -- (semActiveReaderPost);
+        \draw [arrow] (semActiveReaderPost) -- (semNewFrame);
+        \draw [arrow] (semNewFrame) -- (semMutex1);
+        \draw [arrow] (semMutex1) -- (semReadersInc);
+        \draw [arrow] (semReadersInc) -- (semPostMust1);
+        \draw [arrow] (semPostMust1) -- (readData);
+        \draw [arrow] (memory.west) -- (readData.east);
+
+        \draw [arrow] (readData) -- (semMutex2);
+        \draw [arrow] (semMutex2) -- (semReadersDec);
+        \draw [arrow] (semReadersDec) -- (lastReader);
+        \draw [arrow] (lastReader.east) -- (semWriterPost2.west) node[midway,above]{Oui};
+        \draw [arrow] (lastReader.south) -- (endReader.north);
+        \draw [arrow] (semWriterPost2.south) |- (endReader.east) ;
+        \draw [arrow] (endReader.south) -- (checkLoopReader.north) node[midway,left]{Non};
+        \draw [arrow] (checkLoopReader.west) -- ++(-1.6cm,0) |- (semNewFrame.west) node[near start,left]{Oui};
+        \draw [arrow] (checkLoopReader.south) -- (waitActiveReaderPost.north) node[near start,left]{Non};
+        \draw [arrow] (waitActiveReaderPost) -- (finReader);
+
+    \end{tikzpicture}
+    \caption{Synchronisation des lecteurs et écrivains avec sémaphores}
+    \label{fig:semaphores}
+\end{figure}
+
 
 \paragraph{Capture vidéo}
 Le programme utilise OpenCV pour capturer les images vidéo depuis la source spécifiée en argument :
@@ -480,7 +581,7 @@ Lors de son démarrage, le programme effectue plusieurs étapes d'initialisation
 
         \item \textbf{\texttt{nbMoveBeforeChangeDetectionArea}} : Nombre de mouvements verticaux nécessaires avant de modifier la position de la zone de détection. 
 
-        \item \textbf{\texttt{cropRatioDetectionAreaLandscape}} et \textbf{\texttt{cropRatioDetectionAreaPortrait}} : Ratios utilisés pour définir la taille et la position de la zone de détection en fonction de l'orientation de la caméra (paysage ou portrait). Les zones de detection diffèrent en fonction de l'orientation de l'image pour assurer un detection optimale.
+        \item \textbf{\texttt{cropRatioDetectionAreaLandscape}} et \textbf{\texttt{cropRatioDetectionAreaPortrait}} : Ratios utilisés pour définir la taille et la position de la zone de détection en fonction de l'orientation de la caméra (paysage ou portrait). Les zones de detection diffèrent en fonction de l'orientation de l'image pour assurer une detection optimale.
 
         \item \textbf{\texttt{numberFrameBetweenMove}} : Nombre minimum d'images entre deux mouvements consécutifs de la caméra. Empêche la caméra de se déplacer trop fréquemment, ce qui pourrait entraîner des oscillations.
 
@@ -505,7 +606,7 @@ Le programme entre dans une boucle principale pour analyser les images et détec
         \item Les images sont redimensionnées, leur taille est divisé par deux pour accélérer le traitement.
         \item Ensuite l'image est converties en niveaux de gris
         \item Puis, on applique une égalisation d'histogramme à l'image en niveaux de gris. Afin d'améliorer le contraste de l'image en redistribuant les intensités des pixels.
-        \item Enfin, un flou gaussien est appliqué pour réduire le bruit dûs à de faible mouvement, comme par exemple la corde qui bouge. Voir les images en noir et blanc sur la figure~\ref{fig:detectionArea}.
+        \item Enfin, un flou gaussien est appliqué pour réduire le bruit dus à de faible mouvement, comme par exemple la corde qui bouge. Voir les images en noir et blanc sur la figure~\ref{fig:detectionArea}.
     \end{itemize}
     \item \textbf{Détection des mouvements} :
     \begin{itemize}
@@ -527,7 +628,7 @@ Le programme entre dans une boucle principale pour analyser les images et détec
         \end{itemize}
         \item Les commandes PTZ sont envoyées à la caméra via des requêtes HTTP, comme pour le programme principal.
     \end{itemize}
-    \item \textbf{Arrêt de la détection} : Si aucun mouvement n'est détecté pendant un certain nombre de frames, la détection s'arrête automatiquement.
+    \item \textbf{Arrêt de la détection} : Si aucun mouvement n'est détecté pendant un certain nombre de images, la détection s'arrête automatiquement.
 \end{itemize}
 
 
@@ -654,18 +755,18 @@ Le programme entre dans une boucle principale pour capturer les images et les é
 \paragraph{Découpage de la vidéo}
 Une fois l'enregistrement terminé, la fonction \texttt{decouperVideo} est appelée pour découper la vidéo et ne conserver que la partie intéressante :
 \begin{itemize}
-    \item \textbf{Lecture des frames de début et de fin} :
+    \item \textbf{Lecture des images de début et de fin} :
     \begin{itemize}
-        \item Les frames de début et de fin sont lues depuis un fichier (\texttt{PATH\_FRAMES}), qui sont écrites à la fin du processus de détection de mouvement.
+        \item Les images de début et de fin sont lues depuis un fichier (\texttt{PATH\_FRAMES}), qui sont écrites à la fin du processus de détection de mouvement.
         \item Si le fichier n'existe pas, des valeurs par défaut sont utilisées.
     \end{itemize}
-    \item \textbf{Ajustement des frames} :
+    \item \textbf{Ajustement des images} :
     \begin{itemize}
-        \item Les frames sont ajustées en fonction des paramètres définis, comme le nombre de frames avant le premier mouvement ou après l'absence de mouvement afin de garder une partie de la video juste avant le premier mouvement de la caméra. 
+        \item Les images sont ajustées en fonction des paramètres définis, comme le nombre de images avant le premier mouvement ou après l'absence de mouvement afin de garder une partie de la video juste avant le premier mouvement de la caméra. 
     \end{itemize}
     \item \textbf{Exécution de la commande FFmpeg} :
     \begin{itemize}
-        \item Une commande \texttt{FFmpeg} est construite pour découper la vidéo en fonction des frames ajustées et si besoin la réorienter dans le bon sens en fonction de l'orientation de la caméra.
+        \item Une commande \texttt{FFmpeg} est construite pour découper la vidéo en fonction des images ajustées et si besoin la réorienter dans le bon sens en fonction de l'orientation de la caméra.
         \item La vidéo temporaire (\texttt{VIDEO\_TEMP}) est utilisée comme entrée, et la vidéo finale est sauvegardée avec un nom personnalisé construit par le programme principal.
     \end{itemize}
 \end{itemize}
@@ -711,7 +812,7 @@ Le serveur web est composée de deux pages web voir figure~\ref{fig:pagesWeb}, l
 Au chargement de cette page, une fonction \texttt{javascript} permet de charger les voies disponibles dans la base de données et de les ajouter dans une liste déroulante pour permettre à l'utilisateur de sélectionner la voie qu'il souhaite visualiser. Une seconde fonction \texttt{js} charge les caméras disponibles et les ajoute dans une seconde liste déroulante. Puis le script \texttt{video.cgi} est exécuté pour afficher le flux vidéo de la caméra sélectionnée, voir la sous section \ref{sec:video.cgi} pour plus d'information.
 
 
-Sur la gauche de cette page, on retrouve tout les boutons de contrôle de la caméra (haut, bas, gauche et droite) associé à un curseur pour la précision de l'angle afin de premettre un déplacement plus précis. On retrouve un second curseur pour gérer le zoom de la caméra entre 1x et 18x. La pression de l'un de ses boutons créent une requête \texttt{AJAX} pour exécuter le script \texttt{action.cgi}, voir la sous section \ref{sec:action.cgi} pour plus d'information.
+Sur la gauche de cette page, on retrouve tout les boutons de contrôle de la caméra (haut, bas, gauche et droite) associés à un curseur pour la précision de l'angle afin de premettre un déplacement plus précis. On retrouve un second curseur pour gérer le zoom de la caméra entre 1x et 18x. La pression des boutons créent une requête \texttt{AJAX} pour exécuter le script \texttt{action.cgi}, voir la sous section \ref{sec:action.cgi} pour plus d'information.
 
 
 En dessous de ces curseurs, il y a une liste déroulante pour choisir la voie que l'on souhaite observer. À la selection d'une voie on vient changer de caméra si besoin et la positionner au bon endroit.
@@ -820,7 +921,7 @@ Une fois la réponse reçue, le programme retourne un message HTTP au client en 
 
 
 \subsubsection{Page web de visualisation des vidéos (figure~\ref{fig:pageVideo})}
-Cette page permet de visualiser les vidéos enregistrées, de les télécharger et de les supprimer. Elles sont répertoriées dans un tableau avec le nom du grimpeur, la voie, la date et l'heure de l'enregistrement. On peut, de plus, rechercher une video particulière à l'aide de la barre de recherche en haut de page. Avec les fonction du navigateur, on peut lire, mettre en pause, accélérer, ralentir ou télécharger la vidéo. Enfin, on peut voir la video en haut de page en cliquant sur \texttt{voir}, la visionnier dans un nouvel onglet en cliquant sur \texttt{visionnier} ou la supprimer en cliquant sur \texttt{supprimer}.
+Cette page permet de visualiser les vidéos enregistrées, de les télécharger et de les supprimer. Elles sont répertoriées dans un tableau avec le nom du grimpeur, la voie, la date et l'heure de l'enregistrement. On peut, de plus, rechercher une video particulière à l'aide de la barre de recherche en haut de page. Avec les fonctions du navigateur, on peut lire, mettre en pause, accélérer, ralentir ou télécharger la vidéo. Enfin, on peut voir la video en haut de page en cliquant sur \texttt{voir}, la visionner dans un nouvel onglet en cliquant sur \texttt{visionner} ou la supprimer en cliquant sur \texttt{supprimer}.
 
 
 %-----------------------------------------------------------
@@ -829,30 +930,30 @@ Cette page permet de visualiser les vidéos enregistrées, de les télécharger 
 Lors du développement des différentes étapes de l'application, plusieurs problèmes ont été rencontrés. Les deux principaux problèmes sont liés à la détection de mouvement et à l'enregistrement vidéo.
 
 \subsubsection{Détection de mouvement}
-La détection de mouvement est une étape cruciale pour le suivi du grimpeur. En première approche, j'avais décidé d'utilisé la fonction de détection de personne avec OpenCV (HOG descriptor\footnote{Voir la \href{https://docs.opencv.org/3.4/d5/d33/structcv_1_1HOGDescriptor.html}{documentation en ligne} pour plus d'information}) pour détecter le grimpeur. Mais cette méthode n'était pastrès performante et perdait régulièrement la détection du grimpeur. 
+La détection de mouvement est une étape cruciale pour le suivi du grimpeur. En première approche, j'avais décidé d'utiliser la fonction de détection de personne avec OpenCV (HOG descriptor\footnote{Voir la \href{https://docs.opencv.org/3.4/d5/d33/structcv_1_1HOGDescriptor.html}{documentation en ligne} pour plus d'information}) pour détecter le grimpeur. Mais cette méthode n'était pas très performante et perdait régulièrement la détection du grimpeur. 
 
-Avec Mr Bourdeaud'hui, nous avons fait l'hypothese que la caméra n'a pas besoin de descendre et qu'un grimpeur ira toujours vers le haut ce qui a facilité la détection des grimpeur. Nous avons donc décidé de changer de méthode et de passer à une détection de mouvement plus simple basée sur la différence d'images. Cette méthode est plus rapide et plus fiable, mais elle est sensible aux changements de luminosité, aux ombres et aux petits mouvements parasites. Pour essayer de contourner ce problème, j'ai ajouté un filtre de moyenne glissante pour lisser les mouvements et un flou gaussien afin de réduire les fausses détections. J'ai aussi ajouté une condition sur le nombre de pixel minimun avec un movement pour détecter un barycentre.
+Avec Mr Bourdeaud'hui, nous avons fait l'hypothese que la caméra n'a pas besoin de descendre et qu'un grimpeur ira toujours vers le haut ce qui a facilité la détection des grimpeur. Nous avons donc décidé de changer de méthode et de passer à une détection de mouvement plus simple basée sur la différence d'images. Cette méthode est plus rapide et plus fiable, mais elle est sensible aux changements de luminosité, aux ombres et aux petits mouvements parasites. Pour essayer de contourner ce problème, j'ai ajouté un filtre de moyenne glissante pour lisser les mouvements et un flou gaussien afin de réduire les fausses détections. J'ai aussi ajouté une condition sur le nombre de pixel minimum avec un movement pour détecter un barycentre.
 
-Un autre problème fut le départ du grimpeur, en effet en bas de la voie, il est difficile de distinguer le grimpeur de l'assureur. Pour résoudre ce problème, j'ai décidé de déplacer la zone de détection vers le haut de l'image pour ne regarder que le grimpeur. Et je la recentre une fois que la caméra s'est déplacée vers le haut et donc l'assureur n'est plus sur l'image.
+Un autre problème fut le départ du grimpeur, en effet en bas de la voie, il est difficile de distinguer le grimpeur de l'assureur. Pour résoudre ce problème, j'ai décidé de déplacer la zone de détection vers le haut de l'image pour ne regarder que le grimpeur. Et je la recentre une fois que la caméra s'est déplacée vers le haut, l'assureur n'est donc plus sur l'image.
 
-Au départ, j'avais mis une valeur fixe pour l'angle de déplacement de la caméra, mais cela ne fonctionnait pas bien pour les différentes voies. Car en fonction du coefficient de zoom la caméra se déplaçait trop ou pas assez. J'ai donc décidé de mettre une valeur d'angle de déplacement en fonction du zoom actuel de la caméra (celui ci doit être bien défini lors de l'ajout d'une nouvelle voie). Cela a permis d'avoir un déplacement plus précis et plus adapté à la distane entre la voie et la caméra.
+Au départ, j'avais mis une valeur fixe pour l'angle de déplacement de la caméra, mais cela ne fonctionnait pas bien pour les différentes voies. Car en fonction du coefficient de zoom la caméra se déplaçait trop ou pas assez. J'ai donc décidé de mettre une valeur d'angle de déplacement en fonction du zoom actuel de la caméra (celui ci doit être bien défini lors de l'ajout d'une nouvelle voie). Cela a permis d'avoir un déplacement plus précis et plus adapté à la distance entre la voie et la caméra.
 
 %-----------------------------------------------------------
 
 \subsubsection{Enregistrement vidéo}
 
-Dans un premier temps, j'avais choisi d'utiliser un encodage en H.264 avec l'encodeur \texttt{libx264} de \texttt{FFmpeg}. Cette méthode fonctionnait très bien sur une architecture matérielle puissante (ordinateur portable avec un processur intel core i7 6 c\oe urs  2.6 GHz) Cependant, lorsque j'ai porté le programme sur un raspberry pi 4 (micro-processur Cortex-A72 disposant de 4 c\oe urs à 1,5 GHz 64 bits avec 4Go de RAM), j'ai rencontré des problèmes de performances et de latence lors de l'encodage des vidéos. En effet, l'encodage en H.264 est très gourmand en ressources CPU, ce qui entraînait des ralentissements et des décalages dans le flux vidéo. Le programme d'enregistrement vidéo consommait jusqu'a \(400\%\) de CPU pour sortir une vidéo à 5fps.
+Dans un premier temps, j'avais choisi d'utiliser un encodage en H.264 avec l'encodeur \texttt{libx264} de \texttt{FFmpeg}. Cette méthode fonctionnait très bien sur une architecture matérielle puissante (ordinateur portable avec un processeur Intel Core i7 6 c\oe urs  2.6 GHz) Cependant, lorsque j'ai porté le programme sur un raspberry pi 4 (micro-processeur Cortex-A72 disposant de 4 c\oe urs à 1,5 GHz 64 bits avec 4Go de RAM), j'ai rencontré des problèmes de performances et de latence lors de l'encodage des vidéos. En effet, l'encodage en H.264 est très gourmand en ressources CPU, ce qui entraînait des ralentissements et des décalages dans le flux vidéo. Le programme d'enregistrement vidéo consommait jusqu'à \(400\ \%\) de CPU pour sortir une vidéo à 5fps.
 
 Pour résoudre ce problème, après quelques recherches, j'ai découvert que le rpi possédait un encodeur matériel, j'ai décidé d'utiliser cet encodeur. Anciennement, l'encodeur vidéo était un encodeur \texttt{h264\_omx} mais sur le raspberry que je possède il a été déprécié et remplacé  par l'encodeur \texttt{v4l2m2m}. J'ai mis beaucoup de temps à comprendre ce problème et comment utiliser l'encodeur \texttt{v4l2m2m} et comment installer FFmpeg avec cet encodeur. Voir l'annexe \ref{ann:driverVideo} pour plus d'information sur le driver vidéo utilisé.
 
 Après avoir compris comment utiliser cet encodeur, j'ai modifié le programme d'enregistrement vidéo pour utiliser l'encodeur uniquement sur le raspberry pi, c'est pour cela que j'ai laissé une option de compilation \texttt{H264} pour pouvoir compiler le programme sur un ordinateur x86 avec la librairie \texttt{libx264}.
 
 
-Une fois ce problème résolu, j'ai rencontré un autre problème lié à l'encodage des vidéos qui n'était pas en mode paysage. En effet, dès lors que la vidéo était retourné les pixel s'échangeaient de place et la vidéo était illisible. Lorsque jj'ai développer cette fonctionnalité sur PC, la rotation de l'image se faisaient très simplement avec la librairie \texttt{libx264} avec l'argument \texttt{-transpose} mais sur le rpi avec l'encodeur \texttt{v4l2m2m} cet option ne fonctionnait pas. J'ai du encoder la vidéo en mode paysage une première fois puis la ré-encoder avec la bonne orientation. Cette solution n'est pas optimale car chaque programme qui utilise la vidéo doit retourner l'image avant de l'utiliser alors que le programme qui écrit l'image dans la mémoire pourrait le faire directement. Au final, j'ai profité de ce ré-encodage pour découper la vidéo en fonction des frames de début et de fin pour ne garder que la partie intéressante de la vidéo.
+Une fois ce problème résolu, j'ai rencontré un autre problème lié à l'encodage des vidéos qui n'était pas en mode paysage. En effet, dès lors que la vidéo était retournée les pixels s'échangeaient de place et la vidéo était illisible. Lorsque j'ai développé cette fonctionnalité sur PC, la rotation de l'image se faisait très simplement avec la librairie \texttt{libx264} avec l'argument \texttt{-transpose} mais sur le rpi avec l'encodeur \texttt{v4l2m2m} cette option ne fonctionnait pas. J'ai du encoder la vidéo en mode paysage une première fois puis la ré-encoder avec la bonne orientation. Cette solution n'est pas optimale car chaque programme qui utilise la vidéo doit retourner l'image avant utilisation alors que le programme qui écrit l'image dans la mémoire pourrait le faire directement. Au final, j'ai profité de ce ré-encodage pour découper la vidéo en fonction des images de début et de fin pour ne garder que la partie intéressante de la vidéo.
 
-Malheureusement, il reste un problème non résolu. Malgré le fait que je force un nombre d'image par seconde en sortie, parfois l'exécution de FFmpeg ne va pas être à ce nombre extact d'image mais dans un inteval de \(\pm 5\) fps et  la vidéo peut avoir un effet de ralenti ou d'accélérer. 
+Cependant, un problème persiste : bien que le nombre d'images par seconde en sortie soit forcé à 25, FFmpeg produit parfois un débit d'images dans un intervalle de \(25\pm 5\) fps, ce qui peut entraîner un effet de ralenti ou d'accélération.
 
-\subsubsection{Problèmes liés au matériel} Lors d'un essai en salle d'escalade avec un routeur peu performant, j'ai été tributaire de la connexion wifi et le programme ne recevait que très peu d'image par seconde de la caméra. A l'époque, chaque programme (video.cgi, detection.cgi et enregistrementVideo) récupérait le flux vidéo directement à partir du flux en direct HTTP crée par la caméra. Ainsi le réseau voyait passer trois fois les mêmes informations et saturait. J'ai donc décidé de récupérer le flux vidéo une seule fois et de le partager entre les différents programmes. Cela a permis de réduire la charge réseau et d'améliorer les performances de l'application.
+\subsubsection{Problèmes liés au matériel} Lors d'un essai en salle d'escalade avec un routeur peu performant, j'ai été tributaire de la connexion wifi et le programme ne recevait que très peu d'image par seconde de la caméra. Auparavant, chaque programme (video.cgi, detection.cgi et enregistrementVideo) récupérait directement le flux vidéo via HTTP généré par la caméra. Ainsi le réseau voyait passer trois fois les mêmes informations et saturait. J'ai donc décidé de récupérer le flux vidéo une seule fois et de le partager entre les différents programmes. Cela a permis de réduire la charge réseau et d'améliorer les performances de l'application.
 
 
 
@@ -860,14 +961,32 @@ Malheureusement, il reste un problème non résolu. Malgré le fait que je force
 
 %-----------------------------------------------------------
 \section{Tests et résultats}
+Je suis allé plusieurs fois dans la salle d'escalade afin de tester le programme en conditions réelles. J'ai pu tester la détection de mouvement, le suivi du grimpeur, l'enregistrement vidéo et la visualisation des vidéos. J'ai aussi pu affiner les paramètres de détection. On trouve en figure~\ref{fig:testDetection} un exemple de détection du grimpeur en mode paysage et en mode portrait.
 
-% copier les video sur pc portable pour montrer les résultats
+\begin{figure}[!ht]
+     \begin{center}
+        \begin{subfigure}[t]{0.70\textwidth}
+            \includegraphics[width=\textwidth]{exemplePaysage.png}
+            \caption{Détection du grimpeur en mode paysage}
+            \label{fig:test1}
+        \end{subfigure}
+        \begin{subfigure}[t]{0.22\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{exemplePortrait.png}
+            \caption{Détection du grimpeur en mode portrait}
+            \label{fig:test2}
+        \end{subfigure}
+        \caption{Détection du grimpeur}
+        \label{fig:testDetection}
+     \end{center}
+\end{figure}
 
 \section{Perspectives d'amélioration}
+L'application fonctionne correctement, mais il reste des améliorations à apporter pour la rendre plus robuste et plus performante. Voici quelques pistes d'amélioration pour le futur :
 \begin{itemize}
   \item Amélioration de l'interface Web, avoir une interface plus intuitive et plus ergonomique.
   \item Reformater le code et tout traduire en anglais
-  \item Afficher sur l'écran du Raspberry Pi, un meilleur status de l'execution de l'application.
+  \item Sur l'écran du Raspberry Pi, afficher un meilleur status de l'execution de l'application.
   \item Utiliser les boutons du Raspberry Pi pour relancer l'application.
   \item Ajouter un système de notification pour les erreurs.
   \item Mieux gérer le stockage des vidéos.
@@ -877,7 +996,12 @@ Malheureusement, il reste un problème non résolu. Malgré le fait que je force
 
 
 
+\section{Conclusion}
+Ce projet a permis de développer une application complète et fonctionnelle pour le suivi automatisé des grimpeurs dans une salle d'escalade à l'aide de caméras motorisées. En combinant des technologies variées telles que la détection de mouvement, l'encodage vidéo, et une interface web intuitive, nous avons pu répondre aux objectifs initiaux tout en surmontant plusieurs défis techniques.
 
+Les tests réalisés en conditions réelles ont démontré la robustesse et l'efficacité du système, bien que des améliorations soient encore possibles, notamment en termes d'ergonomie, de gestion des ressources, et d'optimisation des performances. Les perspectives d'amélioration identifiées ouvrent la voie à des évolutions futures pour rendre l'application encore plus performante et adaptée aux besoins des utilisateurs.
+
+En conclusion, ce projet offre une solution innovante et pratique pour l'analyse et le suivi des performances des grimpeurs.
 
 
 
@@ -895,7 +1019,8 @@ Malheureusement, il reste un problème non résolu. Malgré le fait que je force
 \printcontents[sections]{l}{1}{\setcounter{tocdepth}{2}}
 
 
-    \section{Glossaire}
+    \section{Github}
+    Le lien du dépôt GitHub contenant le code source de l'application est le suivant : \url{https://github.com/Romaiiin91/suiviGrimpeur_PDI}.
       
 \section{Driver vidéo} \label{ann:driverVideo}
 \begin{lstlisting}[caption={Propriétes du driver vidéo utilisé pour encoder le flux vidéo},captionpos=b]

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2025.3.5)  20 MAR 2025 11:36
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2025.3.5)  20 MAR 2025 18:09
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -917,7 +917,12 @@ File: pgflibraryshapes.multipart.code.tex 2021/05/15 v3.1.9a (3.1.9a)
 File: tikzlibraryautomata.code.tex 2021/05/15 v3.1.9a (3.1.9a)
 ) (/usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarypositioning.code.tex
 File: tikzlibrarypositioning.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-) (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
+) (/usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryarrows.code.tex
+File: tikzlibraryarrows.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+ (/usr/share/texlive/texmf-dist/tex/generic/pgf/libraries/pgflibraryarrows.code.tex
+File: pgflibraryarrows.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\arrowsize=\dimen328
+)) (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2020/03/24 1.8d listings language file
 ) (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2020/03/24 1.8d listings language file
@@ -927,32 +932,32 @@ Package csquotes Info: Checking for multilingual support...
 Package csquotes Info: ... found 'babel' package.
 Package csquotes Info: Adjusting default style.
 Package csquotes Info: Redefining alias 'default' -> 'french'.
-LaTeX Font Info:    Trying to load font information for T1+lmr on input line 170.
+LaTeX Font Info:    Trying to load font information for T1+lmr on input line 183.
  (/usr/share/texmf/tex/latex/lm/t1lmr.fd
 File: t1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 ) (./rapportSuiviGrimpeur.aux)
 \openout1 = `rapportSuiviGrimpeur.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 170.
-LaTeX Font Info:    ... okay on input line 170.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 170.
-LaTeX Font Info:    ... okay on input line 170.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 170.
-LaTeX Font Info:    ... okay on input line 170.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 170.
-LaTeX Font Info:    ... okay on input line 170.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 170.
-LaTeX Font Info:    ... okay on input line 170.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 170.
-LaTeX Font Info:    ... okay on input line 170.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 170.
-LaTeX Font Info:    ... okay on input line 170.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 170.
-LaTeX Font Info:    ... okay on input line 170.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 170.
-LaTeX Font Info:    ... okay on input line 170.
-LaTeX Info: Redefining \degres on input line 170.
-LaTeX Info: Redefining \up on input line 170.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 183.
+LaTeX Font Info:    ... okay on input line 183.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 183.
+LaTeX Font Info:    ... okay on input line 183.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 183.
+LaTeX Font Info:    ... okay on input line 183.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 183.
+LaTeX Font Info:    ... okay on input line 183.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 183.
+LaTeX Font Info:    ... okay on input line 183.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 183.
+LaTeX Font Info:    ... okay on input line 183.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 183.
+LaTeX Font Info:    ... okay on input line 183.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 183.
+LaTeX Font Info:    ... okay on input line 183.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 183.
+LaTeX Font Info:    ... okay on input line 183.
+LaTeX Info: Redefining \degres on input line 183.
+LaTeX Info: Redefining \up on input line 183.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -991,13 +996,13 @@ LaTeX Info: Redefining \up on input line 170.
 (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count373
-\scratchdimen=\dimen328
+\scratchdimen=\dimen329
 \scratchbox=\box153
 \nofMPsegments=\count374
 \nofMParguments=\count375
 \everyMPshowfont=\toks57
 \MPscratchCnt=\count376
-\MPscratchDim=\dimen329
+\MPscratchDim=\dimen330
 \MPnumerator=\count377
 \makeMPintoPDFobject=\count378
 \everyMPtoPDFconversion=\toks58
@@ -1008,7 +1013,7 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 48
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 ))
 \c@lstlisting=\count379
-Package hyperref Info: Link coloring ON on input line 170.
+Package hyperref Info: Link coloring ON on input line 183.
  (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2021-04-02 v2.47 Cross-referencing by name of section
  (/usr/share/texlive/texmf-dist/tex/latex/refcount/refcount.sty
@@ -1018,9 +1023,9 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
 \c@section@level=\count380
 )
-LaTeX Info: Redefining \ref on input line 170.
-LaTeX Info: Redefining \pageref on input line 170.
-LaTeX Info: Redefining \nameref on input line 170.
+LaTeX Info: Redefining \ref on input line 183.
+LaTeX Info: Redefining \pageref on input line 183.
+LaTeX Info: Redefining \nameref on input line 183.
  (./rapportSuiviGrimpeur.out) (./rapportSuiviGrimpeur.out)
 \@outlinefile=\write5
 \openout5 = `rapportSuiviGrimpeur.out'.
@@ -1029,50 +1034,48 @@ Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: float package is loaded.
 Package caption Info: End \AtBeginDocument code.
 
+Package pgfplots notification 'compat/show suggested version=true': document has been generated with the most recent feature set (\pgfplotsset{compat=1.18}).
 
-Package pgfplots Warning: running in backwards compatibility mode (unsuitable tick labels; missing features). Consider writing \pgfplotsset{compat=1.18} into your preamble.
- on input line 170.
-
-<Figures/cameraQ6304.jpg, id=142, 288.07625pt x 175.65625pt>
+<Figures/cameraQ6304.jpg, id=146, 288.07625pt x 175.65625pt>
 File: Figures/cameraQ6304.jpg Graphic file (type jpg)
 <use Figures/cameraQ6304.jpg>
-Package pdftex.def Info: Figures/cameraQ6304.jpg  used on input line 194.
+Package pdftex.def Info: Figures/cameraQ6304.jpg  used on input line 207.
 (pdftex.def)             Requested size: 386.95897pt x 235.95976pt.
-LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 202.
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 215.
 (/usr/share/texmf/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 202.
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 215.
  (/usr/share/texmf/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 202.
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 215.
  (/usr/share/texmf/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 202.
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 215.
  (/usr/share/texmf/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10.95> on input line 202.
+(Font)              <10.95> on input line 215.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 202.
+(Font)              <8> on input line 215.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 202.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 202.
+(Font)              <6> on input line 215.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 215.
  (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 202.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 215.
  (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Trying to load font information for U+rsfs on input line 202.
+LaTeX Font Info:    Trying to load font information for U+rsfs on input line 215.
  (/usr/share/texlive/texmf-dist/tex/latex/jknapltx/ursfs.fd
 File: ursfs.fd 1998/03/24 rsfs font definition file (jk)
 )
-LaTeX Font Info:    Trying to load font information for U+stmry on input line 202.
+LaTeX Font Info:    Trying to load font information for U+stmry on input line 215.
  (/usr/share/texlive/texmf-dist/tex/latex/stmaryrd/Ustmry.fd) [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./Figures/cameraQ6304.jpg>]
@@ -1085,163 +1088,183 @@ File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 \tf@toc=\write6
 \openout6 = `rapportSuiviGrimpeur.toc'.
 
-<Figures//Logo_CENTRALE_C.png, id=179, 244.5135pt x 261.3765pt>
+<Figures//Logo_CENTRALE_C.png, id=184, 244.5135pt x 261.3765pt>
 File: Figures//Logo_CENTRALE_C.png Graphic file (type png)
 <use Figures//Logo_CENTRALE_C.png>
-Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 229.
+Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 242.
 (pdftex.def)             Requested size: 24.45277pt x 26.13918pt.
  [1 <./Figures//Logo_CENTRALE_C.png>]
-LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 241.
+LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 254.
  (/usr/share/texmf/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 File: Figures//Logo_CENTRALE_C.png Graphic file (type png)
 <use Figures//Logo_CENTRALE_C.png>
-Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 261.
+Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 274.
 (pdftex.def)             Requested size: 24.45277pt x 26.13918pt.
  [2]
-<Figures//architectureMaterielle.png, id=205, 1445.4pt x 813.0375pt>
+<Figures//architectureMaterielle.png, id=210, 1445.4pt x 813.0375pt>
 File: Figures//architectureMaterielle.png Graphic file (type png)
 <use Figures//architectureMaterielle.png>
-Package pdftex.def Info: Figures//architectureMaterielle.png  used on input line 270.
+Package pdftex.def Info: Figures//architectureMaterielle.png  used on input line 283.
 (pdftex.def)             Requested size: 483.69687pt x 272.07462pt.
 File: Figures//Logo_CENTRALE_C.png Graphic file (type png)
 <use Figures//Logo_CENTRALE_C.png>
-Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 280.
+Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 293.
 (pdftex.def)             Requested size: 24.45277pt x 26.13918pt.
  [3 <./Figures//architectureMaterielle.png (PNG copy)>]
-<Figures//architectureLogicielle.png, id=212, 1445.4pt x 813.0375pt>
+<Figures//architectureLogicielle.png, id=217, 1445.4pt x 813.0375pt>
 File: Figures//architectureLogicielle.png Graphic file (type png)
 <use Figures//architectureLogicielle.png>
-Package pdftex.def Info: Figures//architectureLogicielle.png  used on input line 284.
+Package pdftex.def Info: Figures//architectureLogicielle.png  used on input line 297.
 (pdftex.def)             Requested size: 483.69687pt x 272.07462pt.
 File: Figures//Logo_CENTRALE_C.png Graphic file (type png)
 <use Figures//Logo_CENTRALE_C.png>
-Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 308.
+Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 321.
 (pdftex.def)             Requested size: 24.45277pt x 26.13918pt.
  [4 <./Figures//architectureLogicielle.png (PNG copy)>]
 File: Figures//Logo_CENTRALE_C.png Graphic file (type png)
 <use Figures//Logo_CENTRALE_C.png>
-Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 331.
+Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 344.
 (pdftex.def)             Requested size: 24.45277pt x 26.13918pt.
  [5]
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 338.
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 351.
 File: Figures//Logo_CENTRALE_C.png Graphic file (type png)
 <use Figures//Logo_CENTRALE_C.png>
-Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 376.
+Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 389.
 (pdftex.def)             Requested size: 24.45277pt x 26.13918pt.
  [6]
 File: Figures//Logo_CENTRALE_C.png Graphic file (type png)
 <use Figures//Logo_CENTRALE_C.png>
-Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 417.
+Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 518.
 (pdftex.def)             Requested size: 24.45277pt x 26.13918pt.
  [7]
 File: Figures//Logo_CENTRALE_C.png Graphic file (type png)
 <use Figures//Logo_CENTRALE_C.png>
-Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 461.
+Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 519.
 (pdftex.def)             Requested size: 24.45277pt x 26.13918pt.
  [8]
 File: Figures//Logo_CENTRALE_C.png Graphic file (type png)
 <use Figures//Logo_CENTRALE_C.png>
-Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 502.
+Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 564.
 (pdftex.def)             Requested size: 24.45277pt x 26.13918pt.
  [9]
 File: Figures//Logo_CENTRALE_C.png Graphic file (type png)
 <use Figures//Logo_CENTRALE_C.png>
-Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 538.
+Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 604.
 (pdftex.def)             Requested size: 24.45277pt x 26.13918pt.
  [10]
-<Figures//detectionDeBase.png, id=278, 1008.76875pt x 370.986pt>
+File: Figures//Logo_CENTRALE_C.png Graphic file (type png)
+<use Figures//Logo_CENTRALE_C.png>
+Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 639.
+(pdftex.def)             Requested size: 24.45277pt x 26.13918pt.
+ [11]
+<Figures//detectionDeBase.png, id=290, 1008.76875pt x 370.986pt>
 File: Figures//detectionDeBase.png Graphic file (type png)
 <use Figures//detectionDeBase.png>
-Package pdftex.def Info: Figures//detectionDeBase.png  used on input line 553.
+Package pdftex.def Info: Figures//detectionDeBase.png  used on input line 654.
 (pdftex.def)             Requested size: 232.17242pt x 85.38158pt.
-<Figures//detectionHautPremier.png, id=279, 1009.371pt x 313.17pt>
+<Figures//detectionHautPremier.png, id=291, 1009.371pt x 313.17pt>
 File: Figures//detectionHautPremier.png Graphic file (type png)
 <use Figures//detectionHautPremier.png>
-Package pdftex.def Info: Figures//detectionHautPremier.png  used on input line 558.
+Package pdftex.def Info: Figures//detectionHautPremier.png  used on input line 659.
 (pdftex.def)             Requested size: 232.17242pt x 72.03235pt.
-<Figures//detectionHautSecond.png, id=280, 1007.56425pt x 311.36325pt>
+<Figures//detectionHautSecond.png, id=292, 1007.56425pt x 311.36325pt>
 File: Figures//detectionHautSecond.png Graphic file (type png)
 <use Figures//detectionHautSecond.png>
-Package pdftex.def Info: Figures//detectionHautSecond.png  used on input line 566.
+Package pdftex.def Info: Figures//detectionHautSecond.png  used on input line 667.
 (pdftex.def)             Requested size: 232.17242pt x 71.74506pt.
-<Figures//detectionHautTroisieme.png, id=281, 1007.56425pt x 314.3745pt>
+<Figures//detectionHautTroisieme.png, id=293, 1007.56425pt x 314.3745pt>
 File: Figures//detectionHautTroisieme.png Graphic file (type png)
 <use Figures//detectionHautTroisieme.png>
-Package pdftex.def Info: Figures//detectionHautTroisieme.png  used on input line 571.
+Package pdftex.def Info: Figures//detectionHautTroisieme.png  used on input line 672.
 (pdftex.def)             Requested size: 232.17242pt x 72.43892pt.
-<Figures//detectionDroite.png, id=282, 1006.962pt x 311.36325pt>
+<Figures//detectionDroite.png, id=294, 1006.962pt x 311.36325pt>
 File: Figures//detectionDroite.png Graphic file (type png)
 <use Figures//detectionDroite.png>
-Package pdftex.def Info: Figures//detectionDroite.png  used on input line 579.
+Package pdftex.def Info: Figures//detectionDroite.png  used on input line 680.
 (pdftex.def)             Requested size: 232.17242pt x 71.78783pt.
-<Figures//detectionGauche.png, id=283, 1006.962pt x 310.761pt>
+<Figures//detectionGauche.png, id=295, 1006.962pt x 310.761pt>
 File: Figures//detectionGauche.png Graphic file (type png)
 <use Figures//detectionGauche.png>
-Package pdftex.def Info: Figures//detectionGauche.png  used on input line 584.
+Package pdftex.def Info: Figures//detectionGauche.png  used on input line 685.
 (pdftex.def)             Requested size: 232.17242pt x 71.64897pt.
 File: Figures//Logo_CENTRALE_C.png Graphic file (type png)
 <use Figures//Logo_CENTRALE_C.png>
-Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 598.
+Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 699.
 (pdftex.def)             Requested size: 24.45277pt x 26.13918pt.
- [11 <./Figures//detectionDeBase.png> <./Figures//detectionHautPremier.png> <./Figures//detectionHautSecond.png> <./Figures//detectionHautTroisieme.png> <./Figures//detectionDroite.png> <./Figures//detectionGauche.png>]
+ [12 <./Figures//detectionDeBase.png> <./Figures//detectionHautPremier.png> <./Figures//detectionHautSecond.png> <./Figures//detectionHautTroisieme.png> <./Figures//detectionDroite.png> <./Figures//detectionGauche.png>]
 File: Figures//Logo_CENTRALE_C.png Graphic file (type png)
 <use Figures//Logo_CENTRALE_C.png>
-Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 645.
-(pdftex.def)             Requested size: 24.45277pt x 26.13918pt.
- [12]
-File: Figures//Logo_CENTRALE_C.png Graphic file (type png)
-<use Figures//Logo_CENTRALE_C.png>
-Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 687.
+Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 746.
 (pdftex.def)             Requested size: 24.45277pt x 26.13918pt.
  [13]
-<Figures//pageIndex.png, id=314, 1243.64626pt x 1280.785pt>
+File: Figures//Logo_CENTRALE_C.png Graphic file (type png)
+<use Figures//Logo_CENTRALE_C.png>
+Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 788.
+(pdftex.def)             Requested size: 24.45277pt x 26.13918pt.
+ [14]
+<Figures//pageIndex.png, id=327, 1243.64626pt x 1280.785pt>
 File: Figures//pageIndex.png Graphic file (type png)
 <use Figures//pageIndex.png>
-Package pdftex.def Info: Figures//pageIndex.png  used on input line 697.
+Package pdftex.def Info: Figures//pageIndex.png  used on input line 798.
 (pdftex.def)             Requested size: 217.66211pt x 224.16028pt.
-<Figures//pageVideo.png, id=315, 1243.64626pt x 1280.785pt>
+<Figures//pageVideo.png, id=328, 1243.64626pt x 1280.785pt>
 File: Figures//pageVideo.png Graphic file (type png)
 <use Figures//pageVideo.png>
-Package pdftex.def Info: Figures//pageVideo.png  used on input line 702.
+Package pdftex.def Info: Figures//pageVideo.png  used on input line 803.
 (pdftex.def)             Requested size: 217.66211pt x 224.16028pt.
 File: Figures//Logo_CENTRALE_C.png Graphic file (type png)
 <use Figures//Logo_CENTRALE_C.png>
-Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 720.
+Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 821.
 (pdftex.def)             Requested size: 24.45277pt x 26.13918pt.
- [14 <./Figures//pageIndex.png> <./Figures//pageVideo.png>]
+ [15 <./Figures//pageIndex.png> <./Figures//pageVideo.png>]
 File: Figures//Logo_CENTRALE_C.png Graphic file (type png)
 <use Figures//Logo_CENTRALE_C.png>
-Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 753.
-(pdftex.def)             Requested size: 24.45277pt x 26.13918pt.
- [15]
-File: Figures//Logo_CENTRALE_C.png Graphic file (type png)
-<use Figures//Logo_CENTRALE_C.png>
-Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 802.
+Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 854.
 (pdftex.def)             Requested size: 24.45277pt x 26.13918pt.
  [16]
 File: Figures//Logo_CENTRALE_C.png Graphic file (type png)
 <use Figures//Logo_CENTRALE_C.png>
-Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 835.
+Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 903.
 (pdftex.def)             Requested size: 24.45277pt x 26.13918pt.
  [17]
 File: Figures//Logo_CENTRALE_C.png Graphic file (type png)
 <use Figures//Logo_CENTRALE_C.png>
-Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 856.
+Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 936.
 (pdftex.def)             Requested size: 24.45277pt x 26.13918pt.
  [18]
 File: Figures//Logo_CENTRALE_C.png Graphic file (type png)
 <use Figures//Logo_CENTRALE_C.png>
-Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 885.
+Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 957.
 (pdftex.def)             Requested size: 24.45277pt x 26.13918pt.
- [19] (./rapportSuiviGrimpeur.ptc)
+ [19]
+<Figures//exemplePaysage.png, id=372, 1284.8pt x 722.7pt>
+File: Figures//exemplePaysage.png Graphic file (type png)
+<use Figures//exemplePaysage.png>
+Package pdftex.def Info: Figures//exemplePaysage.png  used on input line 969.
+(pdftex.def)             Requested size: 338.58632pt x 190.45595pt.
+<Figures//exemplePortrait.png, id=373, 722.7pt x 1284.8pt>
+File: Figures//exemplePortrait.png Graphic file (type png)
+<use Figures//exemplePortrait.png>
+Package pdftex.def Info: Figures//exemplePortrait.png  used on input line 975.
+(pdftex.def)             Requested size: 106.4139pt x 189.16328pt.
 File: Figures//Logo_CENTRALE_C.png Graphic file (type png)
 <use Figures//Logo_CENTRALE_C.png>
-Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 945.
+Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 994.
 (pdftex.def)             Requested size: 24.45277pt x 26.13918pt.
- [20
+ [20 <./Figures//exemplePaysage.png> <./Figures//exemplePortrait.png>]
+File: Figures//Logo_CENTRALE_C.png Graphic file (type png)
+<use Figures//Logo_CENTRALE_C.png>
+Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 1009.
+(pdftex.def)             Requested size: 24.45277pt x 26.13918pt.
+ [21] (./rapportSuiviGrimpeur.ptc)
+File: Figures//Logo_CENTRALE_C.png Graphic file (type png)
+<use Figures//Logo_CENTRALE_C.png>
+Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 1066.
+(pdftex.def)             Requested size: 24.45277pt x 26.13918pt.
+ [22
 
 ]
 \tf@ptc=\write7
@@ -1249,20 +1272,20 @@ Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 945.
 
 File: Figures//Logo_CENTRALE_C.png Graphic file (type png)
 <use Figures//Logo_CENTRALE_C.png>
-Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 965.
+Package pdftex.def Info: Figures//Logo_CENTRALE_C.png  used on input line 1090.
 (pdftex.def)             Requested size: 24.45277pt x 26.13918pt.
- [21] (./rapportSuiviGrimpeur.aux)
+ [23] (./rapportSuiviGrimpeur.aux)
 Package rerunfilecheck Info: File `rapportSuiviGrimpeur.out' has not changed.
-(rerunfilecheck)             Checksum: 388D9692535AF5FA7E82D9BDB459D254;4128.
+(rerunfilecheck)             Checksum: 17FF6D1A2A7B6CD0867CF7302656BFFA;4206.
  ) 
 Here is how much of TeX's memory you used:
- 46548 strings out of 478287
- 1066912 string characters out of 5849290
- 2333449 words of memory out of 5000000
- 63785 multiletter control sequences out of 15000+600000
+ 47371 strings out of 478287
+ 1088176 string characters out of 5849290
+ 2293629 words of memory out of 5000000
+ 64595 multiletter control sequences out of 15000+600000
  540712 words of font info for 74 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 99i,17n,104p,1211b,2088s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 99i,17n,104p,1211b,2085s stack positions out of 5000i,500n,10000p,200000b,80000s
 pdfTeX warning (dest): name{Hfootnote.3} has been referenced but does not exist, replaced by a fixed one
 
 pdfTeX warning (dest): name{Hfootnote.2} has been referenced but does not exist, replaced by a fixed one
@@ -1270,10 +1293,10 @@ pdfTeX warning (dest): name{Hfootnote.2} has been referenced but does not exist,
 pdfTeX warning (dest): name{Hfootnote.1} has been referenced but does not exist, replaced by a fixed one
 
 {/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-ec.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-ts1.enc}</usr/share/texmf/fonts/type1/public/lm/lmbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx12.pfb></usr/share/texmf/fonts/type1/public/lm/lmcsc10.pfb></usr/share/texmf/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf/fonts/type1/public/lm/lmr12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr8.pfb></usr/share/texmf/fonts/type1/public/lm/lmr9.pfb></usr/share/texmf/fonts/type1/public/lm/lmri10.pfb></usr/share/texmf/fonts/type1/public/lm/lmri12.pfb></usr/share/texmf/fonts/type1/public/lm/lmro10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtk10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt10.pfb>
-Output written on rapportSuiviGrimpeur.pdf (22 pages, 8125967 bytes).
+Output written on rapportSuiviGrimpeur.pdf (24 pages, 11134328 bytes).
 PDF statistics:
- 533 PDF objects out of 1000 (max. 8388607)
- 431 compressed objects within 5 object streams
- 154 named destinations out of 1000 (max. 500000)
- 417 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 558 PDF objects out of 1000 (max. 8388607)
+ 450 compressed objects within 5 object streams
+ 159 named destinations out of 1000 (max. 500000)
+ 435 words of extra memory for PDF output out of 10000 (max. 10000000)
 
