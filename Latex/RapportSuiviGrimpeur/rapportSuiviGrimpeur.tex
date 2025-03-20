@@ -58,6 +58,78 @@
 \FrenchFootnotes
 
 %---------------------------------------------------------------
+\lstset{
+showstringspaces=false,
+  aboveskip=2mm,
+  belowskip=-5mm,
+  backgroundcolor=\color{darkWhite},
+  basicstyle=\ttfamily\small,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  commentstyle=\color{vert},
+  deletekeywords={...},
+  escapeinside={\%*}{*)},
+  framexleftmargin=10pt,
+  framextopmargin=-1pt,
+  framexbottommargin=0pt,
+  %frame=tb,
+  frame=trbl,
+  emph={[8]\$, \texttildelow}, % nom des fonctions
+  emphstyle={[8]\color{vert}},
+  emph={[3]gcc, &}, % nom des fonctions
+  emphstyle={[3]\color{blue}},
+  keepspaces=true,
+  keywordstyle=\color{blue},
+  language=bash,
+  literate=
+  {²}{{\textsuperscript{2}}}1
+  {⁴}{{\textsuperscript{4}}}1
+  {⁶}{{\textsuperscript{6}}}1
+  {⁸}{{\textsuperscript{8}}}1
+  {€}{{\euro{}}}1
+  {é}{{\'e}}1
+  {è}{{\`{e}}}1
+  {ê}{{\^{e}}}1
+  {ë}{{\¨{e}}}1
+  {É}{{\'{E}}}1
+  {Ê}{{\^{E}}}1
+  {û}{{\^{u}}}1
+  {ù}{{\`{u}}}1
+  {â}{{\^{a}}}1
+  {à}{{\`{a}}}1
+  {á}{{\'{a}}}1
+  {ã}{{\~{a}}}1
+  {Á}{{\'{A}}}1
+  {Â}{{\^{A}}}1
+  {Ã}{{\~{A}}}1
+  {ç}{{\c{c}}}1
+  {Ç}{{\c{C}}}1
+  {õ}{{\~{o}}}1
+  {ó}{{\'{o}}}1
+  {ô}{{\^{o}}}1
+  {Õ}{{\~{O}}}1
+  {Ó}{{\'{O}}}1
+  {Ô}{{\^{O}}}1
+  {î}{{\^{i}}}1
+  {Î}{{\^{I}}}1
+  {í}{{\'{i}}}1
+  {°}{{\textdegree}}1
+  {Í}{{\~{Í}}}1,
+  morekeywords={*,...},
+  numbers=left,
+  numbersep=3pt,
+  numberstyle=\footnotesize\color{black},
+  rulecolor=\color{black},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  stepnumber=1,
+  stringstyle=\color{orange},
+  tabsize=4,
+  title=\lstname,
+}
+
 
 %-----------------------------------------------------------------------------------
 
@@ -201,7 +273,7 @@ L’architecture ainsi mise en place assure une gestion centralisée et accessib
 \end{figure}
 
 \subsection{Architecture logicielle}
-L'architecture logicielle du système est représentée sur la figure \ref{fig:architectureLogicielle}. Le raspberry Pi divise ses tâches en deux parties distinctes : le serveur web et la partie gestion de l'application développée. En fonction des actions effectuées sur la page web, le serveur apache exécuté deux scripts \texttt{cgi} différents, le premier script, nommé \textbf{video.cgi} codé en \texttt{c++}, démarre au chargement de la page permet d'afficher le flux vidéo de la caméra sur la page web en lisant les images brutes dans la mémoire partagée et en les encodant en \texttt{JPEG}. Le second (\textbf{action.cgi} développé en \texttt{c}) permet de transmettre les ordres de déplacement de la caméra ou lancer un enregistrement vidéo via l'écriture de cet ordre dans un segment de mémoire partagé puis de réveillé le programme principal en lui envoyant un signal. 
+L'architecture logicielle du système est représentée sur la figure \ref{fig:architectureLogicielle}. Le raspberry Pi divise ses tâches en deux parties distinctes : le serveur web et la partie gestion de l'application développée. En fonction des actions effectuées sur la page web, le serveur apache exécuté deux scripts \texttt{CGI} (Common Gateway Interface) différents, le premier script, nommé \textbf{video.cgi} codé en \texttt{c++}, démarre au chargement de la page permet d'afficher le flux vidéo de la caméra sur la page web en lisant les images brutes dans la mémoire partagée et en les encodant en \texttt{JPEG}. Le second (\textbf{action.cgi} développé en \texttt{c}) permet de transmettre les ordres de déplacement de la caméra ou lancer un enregistrement vidéo via l'écriture de cet ordre dans un segment de mémoire partagé puis de réveillé le programme principal en lui envoyant un signal. 
 
 
 De l'autre côté, le programme principal (\textbf{main} programmé en \texttt{c}) est en charge de la gestion des caméras, de la détection de mouvement et de l'enregistrement des vidéos. Au démarrage, il crée un processus fils (\textbf{écriture mémoire})qui est en charge de récupérer le flux vidéo du serveur HTTP de la caméra et de le stocker en image brute dans une mémoire partagée. Le programme principal est ensuite en attente d'un signal pour effectuer une action, comme le déplacement de la caméra, l'enregistrement de position ou encore le lancement d'un enregistrement qui va crée un processus fils (\textbf{enregistrement vidéo}) qui encode le flux video en \texttt{MP4} afin de le stocker sur le disque dur et lance la détection du grimpeur pour suivre ces mouvements à l'aide d'un second fils (\textbf{détection}). Ces deux processus récupèrent les images en lisant la mémoire partagée et les traitent pour effectuer leur tâche. Enfin, le programme de détection peut directement agir sur la position de la caméra en lui envoyant une requête HTTP.
@@ -455,13 +527,10 @@ Le programme entre dans une boucle principale pour analyser les images et détec
         \end{itemize}
         \item Les commandes PTZ sont envoyées à la caméra via des requêtes HTTP, comme pour le programme principal.
     \end{itemize}
-    \item \textbf{Arrêt de la détection} :
-    \begin{itemize}
-        \item Si aucun mouvement n'est détecté pendant un certain nombre de frames, la détection s'arrête automatiquement.
-    \end{itemize}
+    \item \textbf{Arrêt de la détection} : Si aucun mouvement n'est détecté pendant un certain nombre de frames, la détection s'arrête automatiquement.
 \end{itemize}
 
-%% TODO
+
 \paragraph{Libération des ressources}
 À la fin du programme, toutes les ressources utilisées sont libérées :
 \begin{itemize}
@@ -639,33 +708,151 @@ Le serveur web est composée de deux pages web voir figure~\ref{fig:pagesWeb}, l
 \end{figure}
 
 \subsubsection{Page web index (figure~\ref{fig:pageIndex})}
-Au chargement de cette page, une fonction \texttt{javascript} permet de charger les voies disponibles dans la base de données et de les ajouter dans une liste déroulante pour permettre à l'utilisateur de sélectionner la voie qu'il souhaite visualiser. Une seconde fonction \texttt{js} charge les caméras disponibles et les ajoute dans une seconde liste déroulante. Puis le script \texttt{video.cgi} est exécuté pour afficher le flux vidéo de la caméra sélectionnée.
+Au chargement de cette page, une fonction \texttt{javascript} permet de charger les voies disponibles dans la base de données et de les ajouter dans une liste déroulante pour permettre à l'utilisateur de sélectionner la voie qu'il souhaite visualiser. Une seconde fonction \texttt{js} charge les caméras disponibles et les ajoute dans une seconde liste déroulante. Puis le script \texttt{video.cgi} est exécuté pour afficher le flux vidéo de la caméra sélectionnée, voir la sous section \ref{sec:video.cgi} pour plus d'information.
 
-Le processus lit dans la mémoire partagée les images brutes a l'aide d'\texttt{OPENCV} pour récupérer une matrice de pixel, puis le profil colorimétrique de l'image est changé car \texttt{OPENCV} travaille en \textit{BGR (blue green red)} et le \texttt{JPEG} utilise un profil (\textit{RGB (red green blue)}) puis est encodé en \texttt{JPEG} à l'aide de la librairie \texttt{libjpeg}. Enfin, on ajoute les entêtes \texttt{HTTP} pour que le navigateur puisse interpreter l'image et on écrit l'image encodée dans la sortie standard.
 
-Sur la gauche de cette page, on retrouve tout les boutons de contrôle de la caméra (haut, bas, gauche et droite) associé à un curseur pour la précision de l'angle afin de premettre un déplacement plus précis. On retrouve un second curseur pour gérer le zoom de la caméra entre 1x et 18x. La pression de l'un de ses boutons créent une requête \texttt{AJAX} pour exécuter le script \texttt{action.cgi} qui va écrire dans la mémoire partagée l'action à effectuer puis réveiller le programme principal pour qu'il effectue l'action et attendre le feedback du main ou un timeout de 5 secondes avec l'intruction \texttt{SIGALRM} (il récupère le pid du main dans un fichier que ce dernier crée au démarrage). Finalement, il envoie une réponse \texttt{HTTP} pour indiquer que l'action a bien été effectuée.
+Sur la gauche de cette page, on retrouve tout les boutons de contrôle de la caméra (haut, bas, gauche et droite) associé à un curseur pour la précision de l'angle afin de premettre un déplacement plus précis. On retrouve un second curseur pour gérer le zoom de la caméra entre 1x et 18x. La pression de l'un de ses boutons créent une requête \texttt{AJAX} pour exécuter le script \texttt{action.cgi}, voir la sous section \ref{sec:action.cgi} pour plus d'information.
+
 
 En dessous de ces curseurs, il y a une liste déroulante pour choisir la voie que l'on souhaite observer. À la selection d'une voie on vient changer de caméra si besoin et la positionner au bon endroit.
 
 En dessous de la video, on retrouve un bouton pour enregistrer une vidéo avec deux champ pour entre le nom et prenom du grimpeur, un exemple de requête \texttt{AJAX} est présenté ci-contre : \texttt{http://localhost/cgi-bin/action.cgi?enrg=on\&nom=Chevalier\&prenom=Romain\&voie=0}. On récupère le nom et la voie afin de produire un nom de fichier unique et pouvoir le récupérer facilement dans la page de visualisation des vidéos.
 
+
+
 \paragraph{Paramètres avancés}  En bas de page, on trouve les options pour configurer une nouvelle voie. Il y a une liste déroulante pour choisir la caméra, puis une seconde liste déroulante pour choisir une voie que l'on souhaite supprimer ou afficher sur l'appuie du bouton adéquat. Il y a également un bouton pour sauvegarder une nouvelle position de la caméra dans la base de données en affichant une fenêtre popup pour demander le numéro de voie. 
 En addition, on peut également lancer ou stop un enregistrement seul sans suivi du grimpeur et à l'inverse, on peut lancer seulement et stopper la détection du grimpeur sans enregistrement.
+
+\subsubsection{Programme CGI : \texttt{video.cpp}} \label{sec:video.cgi}
+
+
+Le fichier \texttt{video.cpp} compilé en tant que programme CGI permet de  diffuser le flux vidéo en continu au format MJPEG (Motion JPEG) via HTTP. Il lit les images depuis le segment de mémoire partagée, les encode au format JPEG, et les envoie au client sous forme de flux MJPEG. Le programme utilise des sémaphores pour la synchronisation entre processus et gère les signaux pour une terminaison propre.
+
+
+\paragraph{Initialisation du programme}
+Lors de son démarrage, le programme effectue plusieurs étapes d'initialisation :
+\begin{itemize}
+    \item \textbf{Chargement des paramètres de la caméra} Les dimensions (\texttt{width}, \texttt{height}) et l'orientation (\texttt{orientation}) de l'image sont récupérées depuis un fichier JSON (\texttt{PATH\_CAMERA\_ACTIVE}). Ce fichier est mis à jour par le programme principal à chaque changement de caméra.
+    \item \textbf{Installation des gestionnaires de signaux} :
+    \item \textbf{Ouverture des sémaphores et de la mémoire partagée} :
+    \item \textbf{Préparation du flux HTTP} : Le programme envoie un en-tête HTTP indiquant que le contenu est un flux MJPEG (\texttt{Content-Type: multipart/x-mixed-replace}). Cela permet de diffuser les images en continu sans interruption.
+\end{itemize}
+
+\paragraph{Boucle principale}
+Le programme entre dans une boucle principale pour diffuser les images en continu :
+\begin{itemize}
+    \item \textbf{Attente d'une nouvelle image} : Le programme attend qu'une nouvelle image soit disponible en utilisant le sémaphore \texttt{SEM\_NEW\_FRAME}. 
+    \item \textbf{Lecture de l'image depuis la mémoire partagée} : L'image brute est lue depuis la mémoire partagée et stockée dans une matrice OpenCV (\texttt{cv::Mat}).
+    \item \textbf{Pré-traitement de l'image} :
+    \begin{itemize}
+        \item Si nécessaire, l'image est tournée en fonction de l'orientation de la caméra (\texttt{cv::rotate}).
+        \item L'image est convertie du format  \textit{BGR (blue green red)} au format textit{RGB (red green blue)} à l'aide (\texttt{cv::cvtColor}) car le JPEG nécessite un profil colorimétrique en RGB.
+    \end{itemize}
+    \item \textbf{Encodage en JPEG} :  L'image est encodée au format JPEG à l'aide de la fonction \texttt{encode\_jpeg}, avec la librairie \texttt{libjpeg}. La qualité de l'encodage est fixée à 75 pour un bon compromis entre qualité et taille.
+    \item \textbf{Envoi de l'image au client} :  L'image encodée est envoyée au client avec un en-tête indiquant la taille et le type de contenu (\texttt{Content-Type: image/jpeg}).Il envoie les images au navigateur en écrivant les en-têtes appropriés et les images encodées sur la sortie standard. 
+\end{itemize}
+
+
+\paragraph{Libération des ressources}
+À la fin du programme, toutes les ressources utilisées sont libérées :
+\begin{itemize}
+    \item \textbf{Mémoire partagée} : Le segment de mémoire partagée est détaché (\texttt{munmap}) et fermé (\texttt{close}).
+    \item \textbf{Sémaphores} : Tous les sémaphores ouverts sont fermés avec \texttt{sem\_close}.
+    \item \textbf{Tampon JPEG} : Le tampon mémoire utilisé pour stocker les images encodées est libéré.
+\end{itemize}
+
+
+\subsubsection{Programme CGI : \texttt{action.c}} \label{sec:action.cgi}
+
+Le fichier \texttt{action.c} est un programme CGI utilisé pour gérer les interactions entre le serveur web Apache et le programme principal. Il reçoit les requêtes des utilisateurs via l'interface web, les traite, et communique avec le programme principal à l'aide de la mémoire partagée et des signaux.
+
+
+\paragraph{Initialisation du programme}
+Lors de son démarrage, le programme effectue plusieurs étapes d'initialisation :
+\begin{itemize}
+    \item \textbf{Gestionnaire de fin d'exécution} : La fonction \texttt{atexit(bye)} garantit que toutes les ressources (mémoire partagée, sémaphores) sont correctement libérées à la fin du programme.
+    \item \textbf{Installation des gestionnaires de signaux} :
+    \begin{itemize}
+        \item \texttt{SIGUSR1} : Utilisé pour recevoir une notification du programme principal indiquant que l'ordre a été traité.
+        \item \texttt{SIGALRM} : Utilisé pour gérer un délai d'attente (timeout) si aucune réponse n'est reçue dans un délai de 5 secondes.
+    \end{itemize}
+\end{itemize}
+
+\paragraph{Traitement des requêtes}
+Le programme traite les requêtes CGI comme suit :
+\begin{itemize}
+    \item \textbf{Lecture de la requête} :
+    \begin{itemize}
+        \item Les paramètres de la requête sont récupérés depuis de la variable \texttt{QUERY\_STRING}. Cette variable d'environnement contient la chaîne de requête envoyée par le client dans l'URL après le point d'interrogation (?).
+        \item Si aucun paramètre n'est reçu, le programme retourne une erreur HTTP.
+    \end{itemize}
+    \item \textbf{Écriture dans la mémoire partagée} :
+    \begin{itemize}
+        \item Le programme ouvre un segment de mémoire partagée nommé \texttt{SHM\_ORDRE}.
+        \item Il écrit l'ordre reçu dans ce segment, en incluant le PID du processus CGI et les paramètres de la requête. Afin que le programme puisse répondre à ce processus en retournant un signal à la fin de l'exécution de l'ordre.
+    \end{itemize}
+    \item \textbf{Envoi d'un signal au programme principal} :
+    \begin{itemize}
+        \item Le programme principal est identifié à l'aide de son PID, lu depuis un fichier (\texttt{PATH\_FPID}).
+        \item Un signal \texttt{SIGUSR1} est envoyé au programme principal pour notifier l'arrivée d'un nouvel ordre.
+    \end{itemize}
+    \item \textbf{Attente de la réponse} :
+    \begin{itemize}
+        \item Le programme attend une réponse du programme principal en utilisant la fonction \texttt{pause()} avec le signal \texttt{SIGUSR1}.
+        \item Si aucune réponse n'est reçue dans un délai de 5 secondes, un signal \texttt{SIGALRM} est déclenché pour retourner un message d'erreur HTTP.
+    \end{itemize}
+\end{itemize}
+
+\paragraph{Retour HTTP}
+Une fois la réponse reçue, le programme retourne un message HTTP au client en fonction du statut lu dans la mémoire partagée :
+\begin{itemize}
+    \item \textbf{Succès (\texttt{status == 0})} : Retourne un message JSON indiquant que l'action a été exécutée avec succès.
+    \item \textbf{Erreur disque (\texttt{status == -2})} : Retourne un message JSON indiquant que l'espace disque est insuffisant, code spécial pour le script de capture vidéo.
+    \item \textbf{Erreur générale} : Retourne un message JSON indiquant qu'une erreur est survenue.
+\end{itemize}
+
+\paragraph{Libération des ressources}
+À la fin du programme, toutes les ressources utilisées sont libérées :
+\begin{itemize}
+    \item \textbf{Mémoire partagée} : Le segment de mémoire partagée est détaché (\texttt{munmap}) et fermé (\texttt{close}).
+    \item \textbf{Gestion des signaux} : Les gestionnaires de signaux sont désinstallés automatiquement à la fin du programme.
+\end{itemize}
+
 
 \subsubsection{Page web de visualisation des vidéos (figure~\ref{fig:pageVideo})}
 Cette page permet de visualiser les vidéos enregistrées, de les télécharger et de les supprimer. Elles sont répertoriées dans un tableau avec le nom du grimpeur, la voie, la date et l'heure de l'enregistrement. On peut, de plus, rechercher une video particulière à l'aide de la barre de recherche en haut de page. Avec les fonction du navigateur, on peut lire, mettre en pause, accélérer, ralentir ou télécharger la vidéo. Enfin, on peut voir la video en haut de page en cliquant sur \texttt{voir}, la visionnier dans un nouvel onglet en cliquant sur \texttt{visionnier} ou la supprimer en cliquant sur \texttt{supprimer}.
 
 
-
-
-
-
-
+%-----------------------------------------------------------
 
 \subsection{Problèmes rencontrés}
+Lors du développement des différentes étapes de l'application, plusieurs problèmes ont été rencontrés. Les deux principaux problèmes sont liés à la détection de mouvement et à l'enregistrement vidéo.
+
+\subsubsection{Détection de mouvement}
+La détection de mouvement est une étape cruciale pour le suivi du grimpeur. En première approche, j'avais décidé d'utilisé la fonction de détection de personne avec OpenCV (HOG descriptor\footnote{Voir la \href{https://docs.opencv.org/3.4/d5/d33/structcv_1_1HOGDescriptor.html}{documentation en ligne} pour plus d'information}) pour détecter le grimpeur. Mais cette méthode n'était pastrès performante et perdait régulièrement la détection du grimpeur. 
+
+Avec Mr Bourdeaud'hui, nous avons fait l'hypothese que la caméra n'a pas besoin de descendre et qu'un grimpeur ira toujours vers le haut ce qui a facilité la détection des grimpeur. Nous avons donc décidé de changer de méthode et de passer à une détection de mouvement plus simple basée sur la différence d'images. Cette méthode est plus rapide et plus fiable, mais elle est sensible aux changements de luminosité, aux ombres et aux petits mouvements parasites. Pour essayer de contourner ce problème, j'ai ajouté un filtre de moyenne glissante pour lisser les mouvements et un flou gaussien afin de réduire les fausses détections. J'ai aussi ajouté une condition sur le nombre de pixel minimun avec un movement pour détecter un barycentre.
+
+Un autre problème fut le départ du grimpeur, en effet en bas de la voie, il est difficile de distinguer le grimpeur de l'assureur. Pour résoudre ce problème, j'ai décidé de déplacer la zone de détection vers le haut de l'image pour ne regarder que le grimpeur. Et je la recentre une fois que la caméra s'est déplacée vers le haut et donc l'assureur n'est plus sur l'image.
+
+Au départ, j'avais mis une valeur fixe pour l'angle de déplacement de la caméra, mais cela ne fonctionnait pas bien pour les différentes voies. Car en fonction du coefficient de zoom la caméra se déplaçait trop ou pas assez. J'ai donc décidé de mettre une valeur d'angle de déplacement en fonction du zoom actuel de la caméra (celui ci doit être bien défini lors de l'ajout d'une nouvelle voie). Cela a permis d'avoir un déplacement plus précis et plus adapté à la distane entre la voie et la caméra.
+
+%-----------------------------------------------------------
+
+\subsubsection{Enregistrement vidéo}
+
+Dans un premier temps, j'avais choisi d'utiliser un encodage en H.264 avec l'encodeur \texttt{libx264} de \texttt{FFmpeg}. Cette méthode fonctionnait très bien sur une architecture matérielle puissante (ordinateur portable avec un processur intel core i7 6 c\oe urs  2.6 GHz) Cependant, lorsque j'ai porté le programme sur un raspberry pi 4 (micro-processur Cortex-A72 disposant de 4 c\oe urs à 1,5 GHz 64 bits avec 4Go de RAM), j'ai rencontré des problèmes de performances et de latence lors de l'encodage des vidéos. En effet, l'encodage en H.264 est très gourmand en ressources CPU, ce qui entraînait des ralentissements et des décalages dans le flux vidéo. Le programme d'enregistrement vidéo consommait jusqu'a \(400\%\) de CPU pour sortir une vidéo à 5fps.
+
+Pour résoudre ce problème, après quelques recherches, j'ai découvert que le rpi possédait un encodeur matériel, j'ai décidé d'utiliser cet encodeur. Anciennement, l'encodeur vidéo était un encodeur \texttt{h264\_omx} mais sur le raspberry que je possède il a été déprécié et remplacé  par l'encodeur \texttt{v4l2m2m}. J'ai mis beaucoup de temps à comprendre ce problème et comment utiliser l'encodeur \texttt{v4l2m2m} et comment installer FFmpeg avec cet encodeur. Voir l'annexe \ref{ann:driverVideo} pour plus d'information sur le driver vidéo utilisé.
+
+Après avoir compris comment utiliser cet encodeur, j'ai modifié le programme d'enregistrement vidéo pour utiliser l'encodeur uniquement sur le raspberry pi, c'est pour cela que j'ai laissé une option de compilation \texttt{H264} pour pouvoir compiler le programme sur un ordinateur x86 avec la librairie \texttt{libx264}.
 
 
+Une fois ce problème résolu, j'ai rencontré un autre problème lié à l'encodage des vidéos qui n'était pas en mode paysage. En effet, dès lors que la vidéo était retourné les pixel s'échangeaient de place et la vidéo était illisible. Lorsque jj'ai développer cette fonctionnalité sur PC, la rotation de l'image se faisaient très simplement avec la librairie \texttt{libx264} avec l'argument \texttt{-transpose} mais sur le rpi avec l'encodeur \texttt{v4l2m2m} cet option ne fonctionnait pas. J'ai du encoder la vidéo en mode paysage une première fois puis la ré-encoder avec la bonne orientation. Cette solution n'est pas optimale car chaque programme qui utilise la vidéo doit retourner l'image avant de l'utiliser alors que le programme qui écrit l'image dans la mémoire pourrait le faire directement. Au final, j'ai profité de ce ré-encodage pour découper la vidéo en fonction des frames de début et de fin pour ne garder que la partie intéressante de la vidéo.
 
+Malheureusement, il reste un problème non résolu. Malgré le fait que je force un nombre d'image par seconde en sortie, parfois l'exécution de FFmpeg ne va pas être à ce nombre extact d'image mais dans un inteval de \(\pm 5\) fps et  la vidéo peut avoir un effet de ralenti ou d'accélérer. 
+
+\subsubsection{Problèmes liés au matériel} Lors d'un essai en salle d'escalade avec un routeur peu performant, j'ai été tributaire de la connexion wifi et le programme ne recevait que très peu d'image par seconde de la caméra. A l'époque, chaque programme (video.cgi, detection.cgi et enregistrementVideo) récupérait le flux vidéo directement à partir du flux en direct HTTP crée par la caméra. Ainsi le réseau voyait passer trois fois les mêmes informations et saturait. J'ai donc décidé de récupérer le flux vidéo une seule fois et de le partager entre les différents programmes. Cela a permis de réduire la charge réseau et d'améliorer les performances de l'application.
 
 
 
@@ -673,6 +860,8 @@ Cette page permet de visualiser les vidéos enregistrées, de les télécharger 
 
 %-----------------------------------------------------------
 \section{Tests et résultats}
+
+% copier les video sur pc portable pour montrer les résultats
 
 \section{Perspectives d'amélioration}
 \begin{itemize}
@@ -693,22 +882,83 @@ Cette page permet de visualiser les vidéos enregistrées, de les télécharger 
 
 
 %-----------------------------------------------------------
-% \clearpage
-% \newpage
+\clearpage
+\newpage
 
 
-% \section*{Annexes}
-% \addcontentsline{toc}{section}{Annexes}
+\section*{Annexes}
+\addcontentsline{toc}{section}{Annexes}
 
-% \appendix
+\appendix
 
-% \startcontents[sections]
-% \printcontents[sections]{l}{1}{\setcounter{tocdepth}{2}}
+\startcontents[sections]
+\printcontents[sections]{l}{1}{\setcounter{tocdepth}{2}}
 
 
-%     \section{Glossaire}
+    \section{Glossaire}
       
-
+\section{Driver vidéo} \label{ann:driverVideo}
+\begin{lstlisting}[caption={Propriétes du driver vidéo utilisé pour encoder le flux vidéo},captionpos=b]
+    pi@raspberrypi:~ $ v4l2-ctl --device=/dev/video11 --all
+    Driver Info:
+        Driver name      : bcm2835-codec
+        Card type        : bcm2835-codec-encode
+        Bus info         : platform:bcm2835-codec
+        Driver version   : 6.6.74
+        Capabilities     : 0x84204000
+            Video Memory-to-Memory Multiplanar
+            Streaming
+            Extended Pix Format
+            Device Capabilities
+        Device Caps      : 0x04204000
+            Video Memory-to-Memory Multiplanar
+            Streaming
+            Extended Pix Format
+    Media Driver Info:
+        Driver name      : bcm2835-codec
+        Model            : bcm2835-codec
+        Serial           : 0000
+        Bus info         : platform:bcm2835-codec
+        Media version    : 6.6.74
+        Hardware revision: 0x00000001 (1)
+        Driver version   : 6.6.74
+    Interface Info:
+        ID               : 0x0300001a
+        Type             : V4L Video
+    Entity Info:
+        ID               : 0x0000000f (15)
+        Name             : bcm2835-codec-encode-source
+        Function         : V4L2 I/O
+        Pad 0x01000010   : 0: Source
+          Link 0x02000016: to remote pad 0x1000012 of entity 'bcm2835-codec-encode-proc' (Video Encoder): Data, Enabled, Immutable
+    Priority: 2
+    Format Video Capture Multiplanar:
+        Width/Height      : 32/32
+        Pixel Format      : 'H264' (H.264)
+        Field             : None
+        Number of planes  : 1
+        Flags             : 
+        Colorspace        : Rec. 709
+        Transfer Function : Default
+        YCbCr/HSV Encoding: Default
+        Quantization      : Default
+        Plane 0           :
+           Bytes per Line : 0
+           Size Image     : 524288
+    Format Video Output Multiplanar:
+        Width/Height      : 32/32
+        Pixel Format      : 'YU12' (Planar YUV 4:2:0)
+        Field             : None
+        Number of planes  : 1
+        Flags             : 
+        Colorspace        : Rec. 709
+        Transfer Function : Default
+        YCbCr/HSV Encoding: Default
+        Quantization      : Default
+        Plane 0           :
+           Bytes per Line : 64
+           Size Image     : 3072
+    \end{lstlisting}
 
 
 

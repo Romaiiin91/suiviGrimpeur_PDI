@@ -69,7 +69,8 @@
         "numbers": "cpp",
         "semaphore": "cpp",
         "stop_token": "cpp",
-        "main.h": "c"
+        "main.h": "c",
+        "utilscgi.h": "c"
     },
     "cSpell.ignoreWords": [
         "requete"

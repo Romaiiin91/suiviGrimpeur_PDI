@@ -424,7 +424,7 @@ int main(int argc, char const *argv[])
 
         cv::line(frame, cv::Point(0, heightDetectionArea / verticalThreshold + abscisseDetectionAreaTop), cv::Point(widthResize, heightDetectionArea / verticalThreshold + abscisseDetectionAreaTop), cv::Scalar(0, 0, 255), 2);
 
-        cv::line(frame, cv::Point(0, heightDetectionArea - heightDetectionArea / verticalThreshold + abscisseDetectionAreaTop), cv::Point(widthResize, heightDetectionArea - heightDetectionArea / verticalThreshold + abscisseDetectionAreaTop), cv::Scalar(0, 0, 255), 2);
+        // cv::line(frame, cv::Point(0, heightDetectionArea - heightDetectionArea / verticalThreshold + abscisseDetectionAreaTop), cv::Point(widthResize, heightDetectionArea - heightDetectionArea / verticalThreshold + abscisseDetectionAreaTop), cv::Scalar(0, 0, 255), 2);
 
         cv::line(frame, cv::Point(widthResize / cropRatioDetectionArea + widthDetectionArea / horizontalThreshold, 0), cv::Point(widthResize / cropRatioDetectionArea + widthDetectionArea / horizontalThreshold, heightResize), cv::Scalar(0, 0, 255), 2);
 
