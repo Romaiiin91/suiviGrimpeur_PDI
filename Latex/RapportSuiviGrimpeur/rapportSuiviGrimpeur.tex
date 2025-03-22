@@ -955,8 +955,11 @@ Cependant, un problème persiste : bien que le nombre d'images par seconde en so
 
 \subsubsection{Problèmes liés au matériel} Lors d'un essai en salle d'escalade avec un routeur peu performant, j'ai été tributaire de la connexion wifi et le programme ne recevait que très peu d'image par seconde de la caméra. Auparavant, chaque programme (video.cgi, detection.cgi et enregistrementVideo) récupérait directement le flux vidéo via HTTP généré par la caméra. Ainsi le réseau voyait passer trois fois les mêmes informations et saturait. J'ai donc décidé de récupérer le flux vidéo une seule fois et de le partager entre les différents programmes. Cela a permis de réduire la charge réseau et d'améliorer les performances de l'application.
 
+\subsubsection{Problèmes web} Lors de l'envoi de requêtes \texttt{AJAX} pour piloter la caméra, j'ai rencontré des problèmes de latence et de synchronisation. En effet, les requêtes étaient envoyées de manière asynchrone, ce qui entraînait des problèmes de synchronisation entre les différentes actions. Pour résoudre ce problème, j'ai ajouté des fonctions de callback pour attendre les réponses des requêtes avant d'envoyer la suivante. J'ai aussi ajouté un système de timeout pour éviter les blocages en cas de non-réponse du serveur.
 
+Cependant, le problème n'est pas résolu. Depuis un pc, l'ordre s’exécute en 100 ms dans toutes les directions mais sur le raspberry pi, l'ordre vers le haut s'exécute aussi en moins de 100ms mais les autres ordres attend le signal \texttt{SIGALRM} fixé a 500ms car l'ordre est bien traité avant ces 500ms. 
 
+Voir cette \href{https://youtu.be/0Z2cE6WyGWY}{vidéo} pour voir le problème en action. Dans un premier temps, on fait le test sur le raspberry et dans un second sur un pc. On voit que sur le pc, les ordres sont exécutés en moins de 100ms alors que sur le raspberry, les ordres sont exécutés en 500ms sur la droite de l'écran dans l'inspecteur réseau.
 
 
 %-----------------------------------------------------------
