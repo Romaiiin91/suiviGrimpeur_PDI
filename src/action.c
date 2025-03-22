@@ -26,7 +26,7 @@
 /* ------------------------------------------------------------------------ */
 
 #include <utilsCgi.h>
-#define TIMEOUT 1 // Time to wait SIGALARM in seconds, Average time to execute request is less than 100ms according to web browser
+#define TIMEOUT_MS 500 // Time to wait SIGALARM in seconds, Average time to execute request is less than 100ms according to web browser )
 
 /* ------------------------------------------------------------------------ */
 /*                 V A R I A B L E S    G L O B A L E S                     */
@@ -58,7 +58,7 @@ static void signalHandler(int numSig){
 		case SIGALRM:
 			DEBUG_CGI_PRINT("\t[%d] --> SIGALRM recu... \n", getpid());
 			printf("Content-Type: text/plain\n\n");
-            printf("Timeout: Aucun signal SIGUSR1 reçu dans les 5 secondes.\n");
+            printf("Timeout: Aucun signal SIGUSR1 reçu dans les %d ms.\n", TIMEOUT_MS);
 			break;
         default :
             printf (" Signal %d non traité \n", numSig );
@@ -79,6 +79,7 @@ void retourHTTP(){
         printf("{\"success\": true, \"message\": \"Action exécutée avec succès\"}\n");
     } else if (status == -2) {
         printf("{\"success\": false, \"error\": \"Espace disque insuffisant, veuillez supprimer des vidéos\"}\n");
+        exit(EXIT_FAILURE);
     } else {
         printf("{\"success\": false, \"error\": \"Une erreur est survenue lors de l’exécution du CGI\"}\n");
     }
@@ -153,7 +154,7 @@ int main(void) {
     // Send the SIGUSR1 signal to the main process to notify the arrival of a new order
 	CHECK(kill(pid, SIGUSR1), "kill(pid, SIGUSR1)");
 
-	alarm(TIMEOUT);
+    ualarm(TIMEOUT_MS * 1000, 0); // alarm in microseconds
 	pause(); // waiting for a signal
 
     return EXIT_SUCCESS;	
