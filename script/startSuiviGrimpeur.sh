@@ -50,7 +50,7 @@ echo "]"
 
 # Lancer le programme en arrière-plan
 echo "Démarrage du programme..."
-sudo -u www-data env LD_LIBRARY_PATH=/usr/local/lib /home/pi/suiviGrimpeur/bin/mainDEBUG & 
+sudo -u www-data env LD_LIBRARY_PATH=/usr/local/lib /home/pi/suiviGrimpeur/bin/main & 
 
 sleep 3
 

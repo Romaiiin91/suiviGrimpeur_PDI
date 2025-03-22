@@ -69,6 +69,7 @@
     >
 
     <!-- Visionneur vidéo -->
+    
     <div id="video-player-container">
         <video id="video-player" width="100%" controls>
             <source id="video-source" src="" type="video/mp4">
@@ -155,7 +156,7 @@
                                 <td>${videoInfo.hour}h${videoInfo.minute}</td>
                                 <td>
                                     <a href="javascript:void(0);" onclick="loadVideo('${videoFolder + href}')">Voir</a> |
-                                    <a href="${videoFolder + href}" target="_blank">Visionner</a> | 
+                                    <a href="${videoFolder + href}" target="_blank" onclick="highlightPlayingRow('${videoFolder + href}')">Visionner</a> | 
                                     <a href="javascript:void(0);" onclick="deleteVideo('${href}')">Supprimer</a>
                                 </td>
                             `;
@@ -175,6 +176,20 @@
                 console.error(error);
                 document.body.innerHTML = '<p>Erreur : impossible de charger les vidéos.</p>';
         });
+        
+        
+        function highlightPlayingRow(filePath) {
+            console.log("Surligner la vidéo : " + filePath);
+            const rows = document.querySelectorAll('#video-table-body tr');
+            rows.forEach(row => {
+                const link = row.querySelector('a[onclick]');
+                if (link && link.getAttribute('onclick').includes(filePath)) {
+                    row.style.backgroundColor = '#d1e7dd'; // Highlight color
+                } else {
+                    row.style.backgroundColor = ''; // Reset color
+                }
+            });
+        }
 
         // Fonction pour visionner une vidéo
         function loadVideo(filePath) {
@@ -186,7 +201,11 @@
             videoPlayer.load();
             
             videoPlayer.play();
+
+            highlightPlayingRow(filePath);
         }
+        
+
 
         // Fonction pour supprimer une vidéo
         function deleteVideo(filePath){

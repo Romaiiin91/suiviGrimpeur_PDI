@@ -3,7 +3,6 @@
 # Variables
 LOCAL_SRC_DIR="/home/romain/Documents/suiviGrimpeur_PDI/src"
 LOCAL_INCLUDE_DIR="/home/romain/Documents/suiviGrimpeur_PDI/include"
-LOCAL_CGI_BIN_DIR="/home/romain/Documents/suiviGrimpeur_PDI/server/cgi-bin"
 LOCAL_HTML_DIR="/home/romain/Documents/suiviGrimpeur_PDI/server/html"
 LOCAL_PARAM_FILE="/home/romain/Documents/suiviGrimpeur_PDI/data/paramDetection.json"
 LOCAL_CAMERAS_FILE="/home/romain/Documents/suiviGrimpeur_PDI/data/cameras.json"
@@ -22,10 +21,6 @@ rsync -avz --info=stats0 --update "$LOCAL_SRC_DIR/" "$REMOTE_USER@$REMOTE_HOST:$
 # Copier le dossier include
 rsync -avz --info=stats0 --update "$LOCAL_INCLUDE_DIR/" "$REMOTE_USER@$REMOTE_HOST:$REMOTE_DIR/include/"
 
-# Copier les fichiers spécifiques du dossier cgi-bin
-rsync -avz --info=stats0 --update "$LOCAL_CGI_BIN_DIR/action.c" "$REMOTE_USER@$REMOTE_HOST:$REMOTE_DIR/server/cgi-bin/"
-rsync -avz --info=stats0 --update "$LOCAL_CGI_BIN_DIR/video.cpp" "$REMOTE_USER@$REMOTE_HOST:$REMOTE_DIR/server/cgi-bin/"
-rsync -avz --info=stats0 --update "$LOCAL_CGI_BIN_DIR/utilsCgi.h" "$REMOTE_USER@$REMOTE_HOST:$REMOTE_DIR/server/cgi-bin/"
 
 # Copier le dossier html
 rsync -avz --info=stats0 --update "$LOCAL_HTML_DIR/" "$REMOTE_USER@$REMOTE_HOST:$REMOTE_DIR/server/html/"
