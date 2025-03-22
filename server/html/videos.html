@@ -98,9 +98,12 @@
         const DIR_CGI = "/cgi-bin/"
 
         // Fonction pour extraire les informations depuis le nom de fichier
+        
         function extractVideoInfo(fileName) {
-            const regex = /^(\d{4})(\d{2})(\d{2})_(\d{2})(\d{2})_(\w+)_(\w+)_voie(\d+)\.mp4$/;
-            const match = fileName.match(regex);
+            const decodedFileName = decodeURIComponent(decodeURIComponent(fileName));
+
+const regex = /^(\d{4})(\d{2})(\d{2})_(\d{2})(\d{2})_([\w\s]+)_([\w\s]+)_voie(\d+)\.mp4$/;
+const match = decodedFileName.match(regex);
 
             if (match) {
                 return {
