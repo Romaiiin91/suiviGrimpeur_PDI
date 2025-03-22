@@ -213,11 +213,12 @@ const match = decodedFileName.match(regex);
         // Fonction pour supprimer une vidéo
         function deleteVideo(filePath){
             if (confirm('Êtes-vous sûr de vouloir supprimer cette vidéo ?')) {
-                console.log("Supprimer la vidéo : " + filePath); 
-                $.get(DIR_CGI + "action.cgi", {supp: filePath}, function(data){
+                console.log("Supprimer la vidéo : " + filePath);
+                $.get(DIR_CGI + "action.cgi", {supp: decodeURIComponent(decodeURIComponent(filePath))}, function(data){
                     console.log(data);
                     location.reload();
                 });
+                console.log("Supprimer la vidéo decode : " + decodeURIComponent(decodeURIComponent(filePath))); 
             }
         }
 
