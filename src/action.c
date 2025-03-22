@@ -26,7 +26,7 @@
 /* ------------------------------------------------------------------------ */
 
 #include <utilsCgi.h>
-
+#define TIMEOUT 1 // Time to wait SIGALARM in seconds, Average time to execute request is less than 100ms according to web browser
 
 /* ------------------------------------------------------------------------ */
 /*                 V A R I A B L E S    G L O B A L E S                     */
@@ -153,7 +153,7 @@ int main(void) {
     // Send the SIGUSR1 signal to the main process to notify the arrival of a new order
 	CHECK(kill(pid, SIGUSR1), "kill(pid, SIGUSR1)");
 
-	alarm(5);
+	alarm(TIMEOUT);
 	pause(); // waiting for a signal
 
     return EXIT_SUCCESS;	

@@ -135,6 +135,20 @@ function addRoute() {
     // Vérifier si l'utilisateur a entré quelque chose
     if (number !== null && number.trim() !== "" && number > 0 && number < 1000) {
         console.log("Numéro saisi :", number);
+        // Vérifier si le numéro existe déjà dans la liste déroulante
+        const options = Array.from(document.getElementById("dropdown").options);
+        const exists = options.some(option => option.value === number);
+
+        if (exists) {
+            
+            if (!confirm("Ce numéro de voie existe déjà. Voulez-vous le remplacer ?")) {
+                console.log("Action annulée.");
+                return;
+            }
+           
+        }
+
+
         $.get(DIR_CGI + "action.cgi", { rout: "add", id: number}, function(rep){
             console.log("MAJ du json");
             loadOptions(number); // Passer la clé sélectionnée à loadOptions
