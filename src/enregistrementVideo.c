@@ -236,7 +236,7 @@ void decouperVideo(const char * nomFichier, int orientation) {
     //     return;
     // }
 
-    // Charger les paramètres depuis le fichier JSON
+    // Charger les paramètres depuis le fichier JSON Peut etre supprimer car on ne découpe pu la vidéo
     json_error_t error;
     json_t *root = json_load_file(PATH_PARAM_DETECTION, 0, &error);
 
@@ -248,15 +248,19 @@ void decouperVideo(const char * nomFichier, int orientation) {
     json_decref(root);
 
     frameDebut = MAX(0, frameDebut - numberFrameBeforeFirstMove);
-    frameFin = MAX(frameFin - 0.6*numberFrameWithoutMove, frameDebut + 1);
+    frameFin = MAX(frameFin - 0.3*numberFrameWithoutMove, frameDebut + 1);
 
     char cmd[256];
 
     #ifdef X264
-    sprintf(cmd, "%s %s %s %s %s  %s %.2f %s %.2f %s %s", "ffmpeg", "-y", LOGLEVEL,  "-i", VIDEO_TEMP,  "-ss", frameDebut/25.0, "-to", frameFin/25.0, "-vf \"transpose=1\"", nomFichier);
+    sprintf(cmd, "%s %s %s %s %s %s %s", "ffmpeg", "-y", LOGLEVEL,  "-i", VIDEO_TEMP, "-vf \"transpose=1\"", nomFichier);
+
+    // sprintf(cmd, "%s %s %s %s %s  %s %.2f %s %.2f %s %s", "ffmpeg", "-y", LOGLEVEL,  "-i", VIDEO_TEMP,  "-ss", frameDebut/25.0, "-to", frameFin/25.0, "-vf \"transpose=1\"", nomFichier); // Ancien avec découpage
 
     #else
-        sprintf(cmd, "%s %s %s %s %d %s %s  %s %.2f %s %.2f %s %s", "ffmpeg", "-y", LOGLEVEL, "-display_rotation", 360 - orientation, "-i", VIDEO_TEMP,  "-ss", frameDebut/25.0, "-to", frameFin/25.0, "-c copy", nomFichier);
+    sprintf(cmd, "%s %s %s %s %d %s %s  %s %s", "ffmpeg", "-y", LOGLEVEL, "-display_rotation", 360 - orientation, "-i", VIDEO_TEMP, "-c copy", nomFichier);
+
+    // sprintf(cmd, "%s %s %s %s %d %s %s  %s %.2f %s %.2f %s %s", "ffmpeg", "-y", LOGLEVEL, "-display_rotation", 360 - orientation, "-i", VIDEO_TEMP,  "-ss", frameDebut/25.0, "-to", frameFin/25.0, "-c copy", nomFichier);
 
     #endif
     

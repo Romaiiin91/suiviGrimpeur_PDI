@@ -230,7 +230,7 @@ int removeRoute(char * voie){
 }
 
 // Affichage d'une voie depuis le fichier json
-int showRoute(char * voie, const camera_t *cameraActive){
+int showRoute(char * voie, camera_t *cameraActive){
     DEBUG_PRINT("Affichage de la voie n°%s\n", voie);
     json_error_t error; 
     json_t *root = json_load_file(PATH_POSITIONS, 0, &error);
@@ -259,14 +259,21 @@ int showRoute(char * voie, const camera_t *cameraActive){
     DEBUG_PRINT("Voie: %s, Pan: %.4f, Tilt: %.4f, Zoom: %.4f\n", pos.numVoie, pos.pan, pos.tilt, pos.zoom);
 
     if (strcmp(voie, "0") != 0 && cameraActive->id != pos.camera) {
-        if (pos.camera == 1) setActiveCamera(&camera1);
-        else if (pos.camera == 2) setActiveCamera(&camera2);
+        if (pos.camera == 1) {
+            setActiveCamera(&camera1);
+            cameraActive = &camera1;
+        }
+
+        else if (pos.camera == 2) {
+            setActiveCamera(&camera2);
+            cameraActive = &camera2;
+        }
         else {
             fprintf(stderr, "showRoute - Erreur : la caméra %d n'existe pas\n", pos.camera);
             return -1;
         }
     }
-    
+   
     return allerPosition(pos, cameraActive);
 }
 

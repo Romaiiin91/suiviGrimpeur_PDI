@@ -118,7 +118,7 @@ int removeRoute(char * voie);
  * @param cameraActive Pointer to the active camera.
  * @return int 0 if successful, -1 in case of error.
  */
-int showRoute(char * voie, const camera_t *cameraActive);
+int showRoute(char * voie, camera_t *cameraActive);
 
 
 /**

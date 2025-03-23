@@ -10,7 +10,7 @@ LOCAL_MAKEFILE="/home/romain/Documents/suiviGrimpeur_PDI/makefile"
 LOCAL_START_SCRIPT="/home/romain/Documents/suiviGrimpeur_PDI/script/startSuiviGrimpeur.sh"
 
 REMOTE_USER="pi"
-REMOTE_HOST="192.168.1.14"  # Remplacez par l'adresse IP de votre Raspberry Pi
+REMOTE_HOST="192.168.10.20"  # Remplacez par l'adresse IP de votre Raspberry Pi
 #REMOTE_HOST="192.168.0.196"
 REMOTE_DIR="/home/pi/suiviGrimpeur/"
 

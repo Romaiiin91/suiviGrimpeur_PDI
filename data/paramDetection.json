@@ -7,7 +7,7 @@
     "horizontalThreshold": 5.0,
     "nbMoveBeforeChangeDetectionArea": 1,
     
-    "increasePTZ" : 3.0,
+    "increasePTZ" : 5.0,
 
     "widthResizeRatio": 2,
     "heightResizeRatio": 2,
@@ -16,7 +16,7 @@
     
     "numberFrameBetweenMove": 25,
     "numberFrameWithoutMove": 200,
-    "numberFrameBeforeFirstMove": 200
+    "numberFrameBeforeFirstMove": 700
 
 
 }

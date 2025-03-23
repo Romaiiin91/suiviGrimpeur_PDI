@@ -149,7 +149,7 @@ void setParamCamera(camera_t *camera){
     case 90:
         camera->height = 1280;
         camera->width = 720;
-        camera->up = 1; // a bien definir
+        camera->up = -1; // a bien definir
         camera->down = 1;
         camera->left = -1;
         camera->right = 1;
@@ -169,10 +169,10 @@ void setParamCamera(camera_t *camera){
     case 270:    
         camera->height = 1280;
         camera->width = 720;
-        camera->up = -1;
-        camera->down = 1;
-        camera->left = -1;
-        camera->right = 1;
+        camera->up = 1;
+        camera->down = -1;
+        camera->left = 1;
+        camera->right = -1;
         strcpy(camera->cmdVertical, "rpan");
         strcpy(camera->cmdHorizontal, "rtilt");
         break;
