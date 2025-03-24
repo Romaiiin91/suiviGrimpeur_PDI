@@ -86,7 +86,8 @@ sudo systemctl restart apache2
 ```
 
 ### Configure the program
-Modify the file [chemin.h](include/chemin.h) to define the right path for file used or executed
+Modify the file [chemin.h](include/chemin.h) to define the right path for file used or executed. 
+Configure the IP for the cameras in file [camera.json](data/cameras.json)
 
 ### Build the program
 If you want to build the project for encoding with x264, add ```X264=1```. If you want to build in debug mode add ```DEBUG=1``` in this command. If you're using this program on a computer with a desktop environment you can add ```PC=1``` to see detection in real time. 

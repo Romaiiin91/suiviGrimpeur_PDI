@@ -67,6 +67,31 @@ xhost +SI:localuser:www-data
 sudo -u www-data env LD_LIBRARY_PATH=/usr/local/lib ./bin/main
 ```
 
+## Changement des paramètres de détection
+Il est possible de changer facilement les paramètres de détection dans le fichier [paramDetection.json](data/paramDetection.json) dont l'utilisation est donnée ci dessous.
+
+- **framesBetweenReferences** : Nombre d'images entre deux actualisations de l'image de référence utilisée pour la détection de mouvement.
+        
+- **verticalThreshold** : Seuil vertical utilisé pour détecter les mouvements dans la zone de détection. Définit la fraction de la hauteur de la zone de détection où un mouvement est considéré comme un déplacement vertical (haut seulement).
+
+- **horizontalThreshold** : Seuil horizontal utilisé pour détecter les mouvements dans la zone de détection. Définit la fraction de la largeur de la zone de détection où un mouvement est considéré comme un déplacement horizontal (gauche ou droite).
+
+- **coefAverageMovingFilter** : Coefficient du filtre de moyenne glissante appliqué au barycentre des mouvements détectés. 
+
+- **coefGaussianBlur** : Taille du noyau utilisé pour appliquer un flou gaussien aux images. 
+
+- **heightResizeRatio** et **widthResizeRatio** : Facteurs de redimensionnement pour réduire la taille des images avant le traitement. 
+
+- **nbMoveBeforeChangeDetectionArea** : Nombre de mouvements verticaux nécessaires avant de modifier la position de la zone de détection. 
+
+- **cropRatioDetectionAreaLandscape** et **cropRatioDetectionAreaPortrait** : Ratios utilisés pour définir la taille et la position de la zone de détection en fonction de l'orientation de la caméra (paysage ou portrait). Les zones de detection diffèrent en fonction de l'orientation de l'image pour assurer une detection optimale.
+
+- **numberFrameBetweenMove** : Nombre minimum d'images entre deux mouvements consécutifs de la caméra. Empêche la caméra de se déplacer trop fréquemment, ce qui pourrait entraîner des oscillations.
+
+- **numberFrameWithoutMove** : Nombre d'images sans mouvement détecté avant d'arrêter automatiquement la détection. 
+        
+- **increasePTZ** : Facteur d'augmentation utilisé pour ajuster les commandes PTZ en fonction du zoom actuel de la caméra. Permet de compenser les mouvements en fonction du niveau de zoom pour maintenir une précision constante.
+
 ## Structure du projet
 Voici un aperçu de la structure des fichiers et dossiers du projet :
 

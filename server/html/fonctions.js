@@ -84,6 +84,12 @@ function startEnregistrement(){
         alert("Erreur de communication avec le serveur");
     });
 }
+
+function stopEnregistrement() { 
+    console.log("record off"); 
+    $.get(DIR_CGI + "action.cgi", {enrg: "off"}); 
+}
+
 // update video stream
 function updateVideoStream() {
     var img = document.getElementById("videoStream");

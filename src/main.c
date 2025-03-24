@@ -348,7 +348,6 @@ void gestionOrdres(){
         else {
             if (pidCapture > 0) {
                 status = kill(pidCapture, SIGTERM); // Arrête le processus de capture
-                // pidCapture = -1; // Se met à jour a la reception du signal SIGCHLD
             }
         }
     }
@@ -369,7 +368,6 @@ void gestionOrdres(){
         } else {
             if (pidDetection > 0) {
                 status = kill(pidDetection, SIGTERM); // Arrête le processus de detection
-                // pidDetection = -1; // Se met à jour a la reception du signal SIGCHLD
             }
         }
     }
@@ -378,7 +376,7 @@ void gestionOrdres(){
     if (strcmp(champs1, "enrg") == 0){
         char action[4], donnees[255];
         sscanf(champs2, "%[^&]&%s", action, donnees);
-        DEBUG_PRINT("Record - Action : %s, Données : %s\n", action, donnees);
+        DEBUG_PRINT("Enregistrement - Action : %s, Données : %s\n", action, donnees);
 
         if (strcmp(action, "on") == 0){
 
@@ -395,6 +393,14 @@ void gestionOrdres(){
                 } 
                 else if (pidFils == 0) processusDetection();
                 else pidDetection = pidFils;
+            }
+        } else {
+            // Stop the detection and the recording
+            if (pidCapture > 0) {
+                status = kill(pidCapture, SIGTERM); // Arrête le processus de capture
+            }
+            if (pidDetection > 0) {
+                status = kill(pidDetection, SIGTERM); // Arrête le processus de detection
             }
         }
     }

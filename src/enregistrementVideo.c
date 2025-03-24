@@ -253,7 +253,7 @@ void decouperVideo(const char * nomFichier, int orientation) {
     char cmd[256];
 
     #ifdef X264
-    sprintf(cmd, "%s %s %s %s %s %s %s", "ffmpeg", "-y", LOGLEVEL,  "-i", VIDEO_TEMP, "-vf \"transpose=1\"", nomFichier);
+    sprintf(cmd, "%s %s %s %s %s %s%d%s %s", "ffmpeg", "-y", LOGLEVEL,  "-i", VIDEO_TEMP, "-vf \"transpose=", orientation/90, "\"", nomFichier); // A tester 
 
     // sprintf(cmd, "%s %s %s %s %s  %s %.2f %s %.2f %s %s", "ffmpeg", "-y", LOGLEVEL,  "-i", VIDEO_TEMP,  "-ss", frameDebut/25.0, "-to", frameFin/25.0, "-vf \"transpose=1\"", nomFichier); // Ancien avec découpage
 
