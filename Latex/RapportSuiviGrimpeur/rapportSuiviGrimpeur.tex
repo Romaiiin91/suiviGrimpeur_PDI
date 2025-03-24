@@ -177,7 +177,7 @@ showstringspaces=false,
 
 %-----------------------------------------------------------------------------------
 
-\pgfplotsset{compat=1.18}
+% \pgfplotsset{compat=1.16}
 
 
 \begin{document}
@@ -204,9 +204,9 @@ showstringspaces=false,
           
           \vfill
           % A cahnger pour les caméras installées 
-          \includegraphics[width=.8\textwidth]{Figures/cameraQ6304.jpg}
+        %   \includegraphics[width=.6\textwidth]{exemplePaysage.png}
           \vfill
-
+ 
           % Author and supervisor
           \begin{minipage}{0.4\textwidth}
             \begin{flushleft} \large
@@ -252,8 +252,7 @@ Afin de réalisé ce projet, nous sommes en possession de deux caméras IP dôme
 Les objectifs de ce projet sont multiples et sont résumés dans la liste suivante :
 \begin{itemize}
   \item Prendre en main les caméras IP dômes motorisées et les intégrer dans un réseau local.
-  \item Développer une interface web permettant de piloter les caméras, l'enregistrement de video et leur visualisation.
-  \item Avoir un retour visuel de la caméra en temps réel sur l'interface web.
+  \item Développer une interface web permettant de piloter les caméras, l'enregistrement de  \item Avoir un retour visuel de la caméra en temps réel sur l'interface web.
   \item Développer une méthode de communication entre l'application web et les programmes de contrôle des caméras.
   \item Développer un algorithme de suivi de grimpeur en temps réel.
   \item Développer une méthode permettant d'enregister sur un stockage une vidéo.
@@ -979,7 +978,20 @@ Je suis allé plusieurs fois dans la salle d'escalade afin de tester le programm
             \caption{Détection du grimpeur en mode portrait}
             \label{fig:test2}
         \end{subfigure}
-        \caption{Détection du grimpeur}
+
+        \begin{subfigure}[b]{0.45\textwidth}
+            \centering
+            \includegraphics[width=0.6\textwidth]{VinesioGrimpe.png}
+            \caption{Détection du grimpeur à Mons}
+            \label{fig:test3}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.45\textwidth}
+            \centering
+            \includegraphics[width=0.6\textwidth]{instalCamera.JPEG}
+            \caption{Détection du grimpeur en mode portrait}
+            \label{fig:test4}
+        \end{subfigure}
+        \caption{Test et installation}
         \label{fig:testDetection}
      \end{center}
 \end{figure}
@@ -995,7 +1007,7 @@ L'application fonctionne correctement, mais il reste des améliorations à appor
   \item Mieux gérer le stockage des vidéos.
   \item Serveur accessible depuis internet pour voir les vidéos (chiffrement des données).
   \item Ajouter un système de détection de chute.
-  \item Ajouter la possibilité d'enregistrer avec les deux caméras en même temps, voir si un changement de matériel est nécéssaire.
+  \item Ajouter la possibilité d'enregistrer avec les deux caméras en même temps, voir si un changement de matériel est nécessaire.
 \end{itemize}
 
 

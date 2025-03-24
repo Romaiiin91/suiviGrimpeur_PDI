@@ -1,4 +1,4 @@
-\babel@toc {french}{}\relax 
+\babel@toc {french}{}
 \contentsline {section}{\numberline {1}Contexte}{2}{section.1}%
 \contentsline {subsection}{\numberline {1.1}Objectifs}{2}{subsection.1.1}%
 \contentsline {section}{\numberline {2}Architecture du système}{2}{section.2}%
@@ -52,9 +52,9 @@
 \contentsline {subsubsection}{\numberline {3.3.3}Problèmes liés au matériel}{20}{subsubsection.3.3.3}%
 \contentsline {subsubsection}{\numberline {3.3.4}Problèmes web}{20}{subsubsection.3.3.4}%
 \contentsline {section}{\numberline {4}Tests et résultats}{20}{section.4}%
-\contentsline {section}{\numberline {5}Perspectives d'amélioration}{21}{section.5}%
+\contentsline {section}{\numberline {5}Perspectives d'amélioration}{20}{section.5}%
 \contentsline {section}{\numberline {6}Conclusion}{21}{section.6}%
-\contentsline {section}{Annexes}{22}{section.6}%
-\contentsline {section}{\numberline {A}Github}{22}{appendix.A}%
-\contentsline {section}{\numberline {B}Driver vidéo}{22}{appendix.B}%
+\contentsline {section}{Annexes}{23}{section.6}%
+\contentsline {section}{\numberline {A}Github}{23}{appendix.A}%
+\contentsline {section}{\numberline {B}Driver vidéo}{23}{appendix.B}%
 \contentsfinish 
