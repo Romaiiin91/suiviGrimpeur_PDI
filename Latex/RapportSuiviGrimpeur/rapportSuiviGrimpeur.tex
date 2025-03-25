@@ -204,7 +204,7 @@ showstringspaces=false,
           
           \vfill
           % A cahnger pour les caméras installées 
-        %   \includegraphics[width=.6\textwidth]{exemplePaysage.png}
+          \includegraphics[width=.8\textwidth]{exemplePaysage.png}
           \vfill
  
           % Author and supervisor
@@ -244,12 +244,12 @@ showstringspaces=false,
 %-------------------------------------------------------------
 
 \section{Contexte}
-Afin d'améliorer les services offerts aux utilisateurs de la salle d’escalade \textit{Sac à Pof} situé à  Mons-en-Barœul (59), on envisage de mettre en place un système de suivi automatisé des grimpeurs à l'aide de caméras IP dômes motorisées. Ces caméras permettront de suivre les mouvements des grimpeurs sur les différentes voies en ajustant automatiquement le cadrage et le zoom en fonction de leur position. Le services sera accessible via une application web hébergée sur un serveur local. Cette solution vise à offrir un support d'analyse post-session, afin de permettre aux grimpeur de comprendre leurs forces et faiblesses pour s'améliorer.
+Afin d'améliorer les services offerts aux utilisateurs de la salle d’escalade \textit{Sac à Pof} situé à  Mons-en-Barœul (59), on envisage de mettre en place un système de suivi automatisé des grimpeurs à l'aide de caméras IP dômes motorisées. Ces caméras permettront de suivre les mouvements des grimpeurs sur les différentes voies en ajustant automatiquement le cadrage et le zoom en fonction de leur position. Le service sera accessible via une application web hébergée sur un serveur local. Cette solution vise à offrir un support d'analyse post-session, afin de permettre aux grimpeur de comprendre leurs forces et faiblesses pour s'améliorer.
 
-Afin de réalisé ce projet, nous sommes en possession de deux caméras IP dômes motorisées de la marque \textit{AXIS} modèle \textit{Q6304-E\footnote{Voir \href{https://www.axis.com/dam/public/11/e4/20/cam\%C3\%A9ra-r\%C3\%A9seau-\%C3\%A0-d\%C3\%B4me-ptz-axis-q6034-e-fr-FR-201515.pdf}{fiche technique} pour plus d'informations}}, d'un routeur, d'une tablette Android et d'un raspberry pi 4.
+Afin de réaliser ce projet, nous sommes en possession de deux caméras IP dômes motorisées de la marque \textit{AXIS} modèle \textit{Q6304-E\footnote{Voir \href{https://www.axis.com/dam/public/11/e4/20/cam\%C3\%A9ra-r\%C3\%A9seau-\%C3\%A0-d\%C3\%B4me-ptz-axis-q6034-e-fr-FR-201515.pdf}{fiche technique} pour plus d'informations}}, d'un routeur, d'une tablette Android et d'un raspberry pi 4.
 
 \subsection{Objectifs}
-Les objectifs de ce projet sont multiples et sont résumés dans la liste suivante :
+Les objectifs de ce projet sont multiples et  résumés dans la liste suivante :
 \begin{itemize}
   \item Prendre en main les caméras IP dômes motorisées et les intégrer dans un réseau local.
   \item Développer une interface web permettant de piloter les caméras, l'enregistrement de  \item Avoir un retour visuel de la caméra en temps réel sur l'interface web.
@@ -935,22 +935,22 @@ Avec Mr Bourdeaud'hui, nous avons fait l'hypothese que la caméra n'a pas besoin
 
 Un autre problème fut le départ du grimpeur, en effet en bas de la voie, il est difficile de distinguer le grimpeur de l'assureur. Pour résoudre ce problème, j'ai décidé de déplacer la zone de détection vers le haut de l'image pour ne regarder que le grimpeur. Et je la recentre une fois que la caméra s'est déplacée vers le haut, l'assureur n'est donc plus sur l'image.
 
-Au départ, j'avais mis une valeur fixe pour l'angle de déplacement de la caméra, mais cela ne fonctionnait pas bien pour les différentes voies. Car en fonction du coefficient de zoom la caméra se déplaçait trop ou pas assez. J'ai donc décidé de mettre une valeur d'angle de déplacement en fonction du zoom actuel de la caméra (celui ci doit être bien défini lors de l'ajout d'une nouvelle voie). Cela a permis d'avoir un déplacement plus précis et plus adapté à la distance entre la voie et la caméra.
+Au départ, j'avais mis une valeur fixe pour l'angle de déplacement de la caméra, mais cela ne fonctionnait pas bien pour les différentes voies. Car en fonction du coefficient de zoom la caméra se déplaçait trop ou pas assez. J'ai donc décidé de mettre une valeur d'angle de déplacement en fonction du zoom actuel de la caméra (celui ci doit être bien défini lors de l'ajout d'une nouvelle voie). Cela a permis d'obtenir un déplacement plus précis et mieux adapté à la distance entre la voie et la caméra.
 
 %-----------------------------------------------------------
 
 \subsubsection{Enregistrement vidéo}
 
-Dans un premier temps, j'avais choisi d'utiliser un encodage en H.264 avec l'encodeur \texttt{libx264} de \texttt{FFmpeg}. Cette méthode fonctionnait très bien sur une architecture matérielle puissante (ordinateur portable avec un processeur Intel Core i7 6 c\oe urs  2.6 GHz) Cependant, lorsque j'ai porté le programme sur un raspberry pi 4 (micro-processeur Cortex-A72 disposant de 4 c\oe urs à 1,5 GHz 64 bits avec 4Go de RAM), j'ai rencontré des problèmes de performances et de latence lors de l'encodage des vidéos. En effet, l'encodage en H.264 est très gourmand en ressources CPU, ce qui entraînait des ralentissements et des décalages dans le flux vidéo. Le programme d'enregistrement vidéo consommait jusqu'à \(400\ \%\) de CPU pour sortir une vidéo à 5fps.
+Dans un premier temps, j'avais choisi d'utiliser un encodage en H.264 avec l'encodeur \texttt{libx264} de \texttt{FFmpeg}. Cette méthode fonctionnait très bien sur une architecture matérielle puissante (ordinateur portable avec un processeur Intel Core i7 6 c\oe urs  2.6 GHz) Cependant, lorsque j'ai porté le programme sur un raspberry pi 4 (micro-processeur Cortex-A72 disposant de 4 c\oe urs à 1,5 GHz 64 bits avec 4Go de RAM), j'ai rencontré des problèmes de performances et de latence lors de l'encodage des vidéos. En effet, l'encodage en H.264 est très gourmand en ressources CPU, ce qui entraînait des ralentissements et des décalages dans le flux vidéo. Le programme d'enregistrement vidéo consommait jusqu'à \(400\ \%\) de CPU pour sortir une vidéo à 5 FPS.
 
 Pour résoudre ce problème, après quelques recherches, j'ai découvert que le rpi possédait un encodeur matériel, j'ai décidé d'utiliser cet encodeur. Anciennement, l'encodeur vidéo était un encodeur \texttt{h264\_omx} mais sur le raspberry que je possède il a été déprécié et remplacé  par l'encodeur \texttt{v4l2m2m}. J'ai mis beaucoup de temps à comprendre ce problème et comment utiliser l'encodeur \texttt{v4l2m2m} et comment installer FFmpeg avec cet encodeur. Voir l'annexe \ref{ann:driverVideo} pour plus d'information sur le driver vidéo utilisé.
 
 Après avoir compris comment utiliser cet encodeur, j'ai modifié le programme d'enregistrement vidéo pour utiliser l'encodeur uniquement sur le raspberry pi, c'est pour cela que j'ai laissé une option de compilation \texttt{H264} pour pouvoir compiler le programme sur un ordinateur x86 avec la librairie \texttt{libx264}.
 
 
-Une fois ce problème résolu, j'ai rencontré un autre problème lié à l'encodage des vidéos qui n'était pas en mode paysage. En effet, dès lors que la vidéo était retournée les pixels s'échangeaient de place et la vidéo était illisible. Lorsque j'ai développé cette fonctionnalité sur PC, la rotation de l'image se faisait très simplement avec la librairie \texttt{libx264} avec l'argument \texttt{-transpose} mais sur le rpi avec l'encodeur \texttt{v4l2m2m} cette option ne fonctionnait pas. J'ai du encoder la vidéo en mode paysage une première fois puis la ré-encoder avec la bonne orientation. Cette solution n'est pas optimale car chaque programme qui utilise la vidéo doit retourner l'image avant utilisation alors que le programme qui écrit l'image dans la mémoire pourrait le faire directement. Au final, j'ai profité de ce ré-encodage pour découper la vidéo en fonction des images de début et de fin pour ne garder que la partie intéressante de la vidéo.
+Une fois ce problème résolu, j'ai rencontré un autre problème lié à l'encodage des vidéos qui n'était pas en mode paysage. En effet, dès lors que la vidéo était retournée, les pixels s'échangeaient de place et la vidéo était illisible. Lorsque j'ai développé cette fonctionnalité sur PC, la rotation de l'image se faisait très simplement avec la librairie \texttt{libx264} avec l'argument \texttt{-transpose} mais sur le rpi avec l'encodeur \texttt{v4l2m2m} cette option ne fonctionnait pas. J'ai du encoder la vidéo en mode paysage une première fois puis la ré-encoder avec la bonne orientation. Cette solution n'est pas optimale car chaque programme qui utilise la vidéo doit retourner l'image avant utilisation alors que le programme qui écrit l'image dans la mémoire pourrait le faire directement. Au final, j'ai profité de ce ré-encodage pour découper la vidéo en fonction des images de début et de fin pour ne garder que la partie intéressante de la vidéo.
 
-Cependant, un problème persiste : bien que le nombre d'images par seconde en sortie soit forcé à 25, FFmpeg produit parfois un débit d'images dans un intervalle de \(25\pm 5\) fps, ce qui peut entraîner un effet de ralenti ou d'accélération.
+Cependant, un problème persiste : bien que le nombre d'images par seconde en sortie soit forcé à 25 FPS, FFmpeg produit parfois un débit d'images dans un intervalle de \(25\pm 5\) fps, ce qui peut entraîner un effet de ralenti ou d'accélération de la vidéo.
 
 \subsubsection{Problèmes liés au matériel} Lors d'un essai en salle d'escalade avec un routeur peu performant, j'ai été tributaire de la connexion wifi et le programme ne recevait que très peu d'image par seconde de la caméra. Auparavant, chaque programme (video.cgi, detection.cgi et enregistrementVideo) récupérait directement le flux vidéo via HTTP généré par la caméra. Ainsi le réseau voyait passer trois fois les mêmes informations et saturait. J'ai donc décidé de récupérer le flux vidéo une seule fois et de le partager entre les différents programmes. Cela a permis de réduire la charge réseau et d'améliorer les performances de l'application.
 
@@ -963,7 +963,7 @@ Voir cette \href{https://youtu.be/0Z2cE6WyGWY}{vidéo} pour voir le problème en
 
 %-----------------------------------------------------------
 \section{Tests et résultats}
-Je suis allé plusieurs fois dans la salle d'escalade afin de tester le programme en conditions réelles. J'ai pu tester la détection de mouvement, le suivi du grimpeur, l'enregistrement vidéo et la visualisation des vidéos. J'ai aussi pu affiner les paramètres de détection. On trouve en figure~\ref{fig:testDetection} un exemple de détection du grimpeur en mode paysage et en mode portrait.
+Je suis allé plusieurs fois dans la salle d'escalade afin de tester le programme en conditions réelles. J'ai pu tester la détection de mouvement, le suivi du grimpeur, l'enregistrement vidéo et la visualisation des vidéos. J'ai aussi pu affiner les paramètres de détection. On trouve en figure~\ref{fig:testDetection} un exemple de détection du grimpeur en mode paysage et en mode portrait. Au final, lors de l'essai final à Mons le programme fonctionnait bien. J'ai pu enregistrer des vidéos de grimpeurs, les visualiser et les télécharger ainsi que paramétrer les voies. Pour voir un exemple de détection voir cette \href{https://youtu.be/jRj4fich-2w}{vidéo}.
 
 \begin{figure}[!ht]
      \begin{center}
@@ -1022,7 +1022,7 @@ En conclusion, ce projet offre une solution innovante et pratique pour l'analyse
 
 
 
-%-----------------------------------------------------------
+% %-----------------------------------------------------------
 \clearpage
 \newpage
 
@@ -1033,11 +1033,12 @@ En conclusion, ce projet offre une solution innovante et pratique pour l'analyse
 \appendix
 
 \startcontents[sections]
-\printcontents[sections]{l}{1}{\setcounter{tocdepth}{2}}
+% \printcontents[sections]{l}{1}{\setcounter{tocdepth}{2}}
 
 
-    \section{Github}
-    Le lien du dépôt GitHub contenant le code source de l'application est le suivant : \url{https://github.com/Romaiiin91/suiviGrimpeur_PDI}.
+\section{Github}
+
+Le lien du dépôt GitHub contenant le code source de l'application est le suivant \href{https://github.com/Romaiiin91/suiviGrimpeur_PDI}{page GitHub}.
       
 \section{Driver vidéo} \label{ann:driverVideo}
 \begin{lstlisting}[caption={Propriétes du driver vidéo utilisé pour encoder le flux vidéo},captionpos=b]
@@ -1102,6 +1103,12 @@ En conclusion, ce projet offre une solution innovante et pratique pour l'analyse
            Size Image     : 3072
     \end{lstlisting}
 
-
+\section{Notice utilisation}
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width=\textwidth]{noticeSuiviGrimpeur.pdf}
+    \caption{Notice d'utilisation}
+    \label{fig:noticeUtilisation}
+\end{figure}
 
 \end{document}

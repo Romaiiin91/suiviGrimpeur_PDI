@@ -57,4 +57,5 @@
 \contentsline {section}{Annexes}{23}{section.6}%
 \contentsline {section}{\numberline {A}Github}{23}{appendix.A}%
 \contentsline {section}{\numberline {B}Driver vidéo}{23}{appendix.B}%
+\contentsline {section}{\numberline {C}Notice utilisation}{24}{appendix.C}%
 \contentsfinish 
