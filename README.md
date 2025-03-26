@@ -52,6 +52,13 @@ Avant de commencer, assurez-vous d'avoir les éléments suivants installés sur 
 
 Pour les instructions détaillées d'installation, veuillez consulter le fichier [INSTALL](INSTALL.md).
 
+## Update le raspberry actuel
+
+S'assurer d'être connecté au même réseau WiFi et se trouver à la racine du projet [suiviGrimpeur_PDI](.) puis exécuter le script de copie:
+```sh
+./script/scopy.sh
+```
+
 ## Utilisation 
 
 Pour exécuter ce programme, vous devez le lancer en tant qu'utilisateur www-data (pour la mémoire partagée et les sémaphores, problème à corriger). Exécutez la commande suivante selon votre cas :
