@@ -145,7 +145,7 @@ int main(int argc, char const *argv[])
 
 
 
-    // Charger les paramètres depuis le fichier JSON
+    // Charger les paramètres depuis le fichier JSON --> cree une structure ParamDetection et initialiser en dehors
     CHECK_NULL(root = json_load_file(PATH_PARAM_DETECTION, 0, &error), "detection.cpp: json_load_file(PATH_PARAM_DETECTION)");
 
     int framesBetweenReference = json_integer_value(json_object_get(root, "framesBetweenReferences"));
