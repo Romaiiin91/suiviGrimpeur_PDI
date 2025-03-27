@@ -10,7 +10,7 @@
 \usepackage{engrec,titlesec,lipsum,xcolor}
 \usepackage{fancybox}
 \usepackage[skins, most]{tcolorbox}
-\usepackage[bookmarks={true},bookmarksopen={true}, pdftitle={Cahier des charges}, pdfauthor={Chevalier Romain}, pdfsubject={Caméra domes}, colorlinks=true, linkcolor=black, urlcolor=blue, citecolor=red]{hyperref}
+\usepackage[bookmarks={true},bookmarksopen={true}, pdftitle={Cahier des charges}, pdfauthor={Chevalier Romain}, pdfsubject={Caméra domes}, colorlinks=true, linkcolor=black, urlcolor=blue, citecolor=black]{hyperref}
 \usepackage{setspace}
 \usepackage{stmaryrd}
 \usepackage{multicol} 
@@ -141,6 +141,39 @@ showstringspaces=false,
   title=\lstname,
 }
 
+% Configuration pour afficher du JSON
+\lstdefinelanguage{json}{
+    basicstyle=\ttfamily\small,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    framexleftmargin=10pt,
+    framextopmargin=-1pt,
+    framexbottommargin=0pt,
+    belowskip=1mm,
+    stepnumber=1,
+    numbersep=2pt,
+    showstringspaces=false,
+    breaklines=true,
+    frame=lines,
+    backgroundcolor=\color{lightgray!20},
+    literate=
+     *{0}{{{\color{blue}0}}}{1}
+      {1}{{{\color{blue}1}}}{1}
+      {2}{{{\color{blue}2}}}{1}
+      {3}{{{\color{blue}3}}}{1}
+      {4}{{{\color{blue}4}}}{1}
+      {5}{{{\color{blue}5}}}{1}
+      {6}{{{\color{blue}6}}}{1}
+      {7}{{{\color{blue}7}}}{1}
+      {8}{{{\color{blue}8}}}{1}
+      {9}{{{\color{blue}9}}}{1}
+      {:}{{{\color{red}:}}}{1}
+      {,}{{{\color{red},}}}{1}
+      {\{}{{{\color{black}\{}}}{1}
+      {\}}{{{\color{black}\}}}}{1}
+      {[}{{{\color{black}[}}}{1}
+      {]}{{{\color{black}]}}}{1},
+}
 
 %-----------------------------------------------------------------------------------
 
@@ -176,7 +209,7 @@ showstringspaces=false,
 
 %-----------------------------------------------------------------------------------
 
-\usepackage[backend=biber,style=authoryear,citestyle=authoryear,sorting=nyt]{biblatex}
+\usepackage[backend=biber,style=numeric,sorting=none]{biblatex}
 \addbibresource{bibliographie.bib} % Fichier contenant les références
 
 
@@ -290,7 +323,7 @@ L’architecture ainsi mise en place assure une gestion centralisée et accessib
 \end{figure}
 
 \subsection{Architecture logicielle}
-L'architecture logicielle du système est représentée sur la figure \ref{fig:architectureLogicielle}. Le raspberry Pi divise ses tâches en deux parties distinctes : le serveur web et la partie gestion de l'application développée. En fonction des actions effectuées sur la page web, le serveur apache exécuté deux scripts \texttt{CGI} (Common Gateway Interface) différents, le premier script, nommé \textbf{video.cgi} codé en \texttt{c++}, démarre au chargement de la page permet d'afficher le flux vidéo de la caméra sur la page web en lisant les images brutes dans la mémoire partagée et en les encodant en \texttt{JPEG}. Le second (\textbf{action.cgi} développé en \texttt{c}) permet de transmettre les ordres de déplacement de la caméra ou lancer un enregistrement vidéo via l'écriture de cet ordre dans un segment de mémoire partagé puis de réveillé le programme principal en lui envoyant un signal. 
+L'architecture logicielle du système est représentée sur la figure \ref{fig:architectureLogicielle}. Le raspberry Pi divise ses tâches en deux parties distinctes : le serveur web et la partie gestion de l'application développée. En fonction des actions effectuées sur la page web, le serveur apache exécuté deux programmes \texttt{CGI} (Common Gateway Interface) différents, le premier programme, nommé \textbf{video.cgi} codé en \texttt{c++}, démarre au chargement de la page permet d'afficher le flux vidéo de la caméra sur la page web en lisant les images brutes dans la mémoire partagée et en les encodant en \texttt{JPEG}. Le second (\textbf{action.cgi} développé en \texttt{c}) permet de transmettre les ordres de déplacement de la caméra ou lancer un enregistrement vidéo via l'écriture de cet ordre dans un segment de mémoire partagé puis de réveillé le programme principal en lui envoyant un signal. 
 
 
 De l'autre côté, le programme principal (\textbf{main} programmé en \texttt{c}) est en charge de la gestion des caméras, de la détection de mouvement et de l'enregistrement des vidéos. Au démarrage, il crée un processus fils (\textbf{écriture mémoire})qui est en charge de récupérer le flux vidéo du serveur HTTP de la caméra et de le stocker en image brute dans une mémoire partagée. Le programme principal est ensuite en attente d'un signal pour effectuer une action, comme le déplacement de la caméra, l'enregistrement de position ou encore le lancement d'un enregistrement qui va crée un processus fils (\textbf{enregistrement vidéo}) qui encode le flux video en \texttt{MP4} afin de le stocker sur le disque dur et lance la détection du grimpeur pour suivre ces mouvements à l'aide d'un second fils (\textbf{détection}). Ces deux processus récupèrent les images en lisant la mémoire partagée et les traitent pour effectuer leur tâche. Enfin, le programme de détection peut directement agir sur la position de la caméra en lui envoyant une requête HTTP.
@@ -324,8 +357,38 @@ Lors de son démarrage, le programme effectue plusieurs étapes d'initialisation
     \item \textbf{Gestionnaire de fin d'exécution} : La fonction \texttt{atexit(bye)} garantit que toutes les ressources (mémoire partagée, sémaphores, processus enfants) sont correctement libérées à la fin du programme.
     \item \textbf{Initialisation des sémaphores} : La fonction \texttt{initSemaphores()} crée des sémaphores nommés pour synchroniser les processus et gérer l'accès à la mémoire partagée, voir le paragraphe~\ref{par:semaphores} pour leur fonctionnement.
     \item \textbf{Initialisation de la mémoire partagée} : La fonction \texttt{initSegmentMemoire()} configure deux segments de mémoire partagée : un pour les ordres envoyés par l'interface CGI et un autre pour stocker les images brutes capturées par les caméras.
-    \item \textbf{Initialisation des caméras} : La fonction \texttt{initCamera()} charge les paramètres des caméras depuis un fichier JSON et configure les caméras actives. Afin que le système puisse s'adapter à l'orientation de la caméra (portrait, paysage, portrait renversé ou paysage renversé), la fonction \texttt{setParamCamera} vient définir les paramètre de la caméra pour que le système puisse s'adapter automatiquement. En effet, on definit le mouvement d'inclinaison et le mouvement panoramique en fonction de l'orientation (par exemple, pour le mode paysage un déplacement vers le haut correspond à une augmentation de l'angle d'inclinaison et le mode portrait renverse correspond a une diminution de l'angle panoramique).
+    \item \textbf{Initialisation des caméras} : La fonction \texttt{initCamera()} charge les paramètres des caméras depuis un fichier JSON et configure les caméras actives. Ce fichier contient le numéro de la caméra, son adresse IP et son orientation, voir listing~\ref{lst:camerasSettings} pour un exemple de fichier de configuration.
+    Afin que le système puisse s'adapter à l'orientation de la caméra (portrait, paysage, portrait renversé ou paysage renversé), la fonction \texttt{setParamCamera} vient définir les paramètre de la caméra pour que le système puisse s'adapter automatiquement. En effet, on definit le mouvement d'inclinaison et le mouvement panoramique en fonction de l'orientation (par exemple, pour le mode paysage un déplacement vers le haut correspond à une augmentation de l'angle d'inclinaison et le mode portrait renverse correspond a une diminution de l'angle panoramique). Un exemple de fichier de configuration est donné dans le listing~\ref{lst:cameraActive} pour la caméra 1 en paysage.
 \end{itemize}
+
+\begin{lstlisting}[language=json, caption={Fichier json pour définir les caméras, \texttt{cameras.json}}, label={lst:camerasSettings}]
+{
+    "1": {
+        "IP": "192.168.10.21",
+        "orientation": 90
+    },
+    "2": {
+        "IP": "192.168.10.22",
+        "orientation": 270
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=json, caption={Fichier json pour partager la caméra active, \texttt{cameraActive.json}}, label={lst:cameraActive}]
+{
+    "id": 1, 
+    "IP": "192.168.1.13", 
+    "orientation": 0, 
+    "height": 720, 
+    "width": 1280, 
+    "up": 1, 
+    "down": -1, 
+    "left": -1, 
+    "right": 1, 
+    "cmdVertical": "rtilt", 
+    "cmdHorizontal": "rpan"
+}
+\end{lstlisting}
 
 \paragraph{Gestion des signaux}
 Le programme installe un gestionnaire de signaux (\texttt{signalHandler}) pour répondre aux événements suivants :
@@ -341,15 +404,18 @@ Le programme entre dans une boucle infinie en appelant \texttt{pause()}, ce qui 
 \paragraph{Gestion des ordres}
 Lorsqu'un signal \texttt{SIGUSR1} est reçu, la fonction \texttt{gestionOrdres()} est appelée pour lire et exécuter les ordres envoyés par l'interface CGI. Les types d'ordres gérés incluent :
 \begin{itemize}
-    \item \textbf{Déplacement de la caméra} : Commandes de mouvement (\texttt{move}) ou de zoom (\texttt{zoom}). Le programme reçoit une direction (haut, bas, gauche, droite) et une valeur de précision pour ajuster l'angle de déplacement (entre 0 et 30 degrés). Il execute ensuite la fonction \texttt{requetePTZ} qui crée une requête HTTP avec l'aide de la librairie \texttt{curl} pour envoyer l'ordre de déplacement à la caméra.
+    \item \textbf{Déplacement de la caméra} : Commandes de mouvement (\texttt{move}) ou de zoom (\texttt{zoom}). Le programme reçoit une direction (haut, bas, gauche, droite) et une valeur de précision pour ajuster l'angle de déplacement (entre 0 et 30 degrés). Il execute ensuite la fonction \texttt{requetePTZ} qui crée une requête HTTP avec l'aide de la librairie \texttt{curl} pour envoyer l'ordre de déplacement à la caméra. Voir le paragraph suivant pour plus de détails sur la communication avec les caméras.
     \item \textbf{Capture vidéo} : Commandes de capture (\texttt{reco}) pour démarrer ou arrêter un processus de capture vidéo. Cet ordre execute la fonction \texttt{enregistrerVideo} qui s'assure que le stockage disponible est suffisant, puis crée le nom de fichier en fonction du nom et prénom du grimpeur, de la voie et de la date et heure de l'enregistrement. Enfin, il crée un processus fils pour démarrer l'enregistrement. Voir section~\ref{par:capture} pour le détail de fonctionnement de la capture vidéo à l'aide du programme \texttt{ffmpeg}.
     \item \textbf{Détection de mouvement} : Commandes de détection (\texttt{detc}) pour analyser les images et suivre les mouvements. Cet ordre fait appel à la fonction \texttt{processusDetection} qui crée un processus fils pour effectuer la détection de mouvement. Voir section~\ref{par:detection} pour le détail de fonctionnement de la détection de mouvement.
     \item \textbf{Enregistrement vidéo} : Commandes d'enregistrement (\texttt{enrg}) pour démarrer ou arrêter un processus d'enregistrement vidéo. Ce ordre vient lancer un processus de capture vidéo et de détection de mouvement.
-    \item \textbf{Gestion des positions prédéfinies} : Commandes (\texttt{rout}) pour ajouter, supprimer ou afficher des positions prédéfinies, voir le paragraph suivant pour plus d'informations.
+    \item \textbf{Gestion des positions prédéfinies} : Commandes (\texttt{rout}) pour ajouter, supprimer ou afficher des positions prédéfinies, voir le paragraph~\ref{par:positions} suivant pour plus d'informations.
     \item \textbf{Changement de caméra active} : Commandes (\texttt{cam}) pour basculer entre les caméras configurées.
 \end{itemize}
 
-\paragraph{Gestion des positions prédéfinies} 
+\paragraph{Commande déplacement de la caméra}
+Pour déplacer la caméra, on utilise les fonction de l'api VAPIX fourni par AXIS \cite{manAPIAxis}. Pour cela, il faut appeler le programme CGI \texttt{axis-cgi/com/ptz.cgi} avec les mots clés \texttt{pan}, \texttt{tilt} et \texttt{zoom} pour déplacer la caméra avec des position d'angle absolues. On peut également utiliser les mots clés \texttt{rpan}, \texttt{rtilt} et \texttt{rzoom} pour déplacer la caméra avec des position d'angle relatives. Enfin, il est possible de la déplacer avec un angle fixe en choisissant la direction avec le mot clé \texttt{move} et les directement \texttt{up, down, left, right, upleft, upright, downleft} et  \texttt{downright} 
+
+\paragraph{Gestion des positions prédéfinies} \label{par:positions}
 Le fichier \texttt{positions.c} est responsable de la gestion des positions des caméras PTZ et des voies associées. Il permet d'ajouter, de supprimer et d'afficher des positions prédéfinies en interagissant avec un fichier JSON pour stocker les données. Les fonctions principales de ce fichier sont \texttt{addRoute}, \texttt{removeRoute} et \texttt{showRoute}.
 
 \subparagraph{Ajout d'une route : \texttt{addRoute}}
@@ -361,6 +427,32 @@ La fonction \texttt{addRoute} permet d'ajouter une nouvelle position PTZ associ�
     \item \textbf{Ajout de la position dans le fichier JSON} :
     La fonction \texttt{addPositionFile} est appelée pour insérer les valeurs récupérées dans le fichier JSON. Si le fichier JSON n'existe pas, il est créé. Une nouvelle entrée est ajoutée sous la forme d'un tableau contenant les valeurs de \texttt{pan}, \texttt{tilt}, \texttt{zoom} et l'identifiant de la caméra.
 \end{enumerate}
+
+On trouve sur le listing~\ref{lst:positions} un exemple du fichier \texttt{positionsEnregistrees.json} qui stocke les positions PTZ associées à chaque voie. La clé correspond au numéro de la voie, et les valeurs sont un tableau contenant les valeurs de \texttt{pan}, \texttt{tilt}, \texttt{zoom} et l'identifiant de la caméra.
+
+
+\begin{lstlisting}[language=json, caption={Exemple du fichier \texttt{positionsEnregistrees.json}}, label={lst:positions}]
+{
+    "89": [
+        10.624000000000001,
+        -55.091200000000001,
+        1.0,
+        1
+    ],
+    "5": [
+        -0.023599999999999999,
+        -28.608699999999999,
+        1.0,
+        1
+    ],
+    "1": [
+        176.99080000000001,
+        -77.443899999999999,
+        1.0,
+        1
+    ]
+}
+\end{lstlisting}
 
 
 \subparagraph{Suppression d'une route : \texttt{removeRoute}}
@@ -451,7 +543,7 @@ Lors de son démarrage, le programme effectue plusieurs étapes d'initialisation
         \node (endReader) [process, below of=lastReader, yshift=-1cm] {\texttt{sem\_post(semMutex)}};
 
         \node (checkLoopReader) [decision, below of=endReader, yshift=-1cm, align=center] {Lecture \\ continue ?};
-        \node (waitActiveReaderPost) [process, below of=checkLoopReader, yshift=-1cm] {\texttt{sem\_post(SEM\_ACTIVE\_READERS)}};
+        \node (waitActiveReaderPost) [process, below of=checkLoopReader, yshift=-1cm] {\texttt{sem\_wait(SEM\_ACTIVE\_READERS)}};
         \node (finReader) [startstop, below of=waitActiveReaderPost] {Fin Lecteur};
         
         
@@ -720,7 +812,7 @@ Lors de son démarrage, le programme effectue plusieurs étapes d'initialisation
         \item Le segment de mémoire partagée contenant les images brutes est ouvert et mappé en mémoire virtuelle pour permettre la lecture des images.
     \end{itemize}
     \item \textbf{Préparation de la commande FFmpeg} :
-    Afin d'optimiser l'utilisation de FFmpeg, on utilise sur le raspberry l'accélération matériel pour l'encodage vidéo. Pour cela, on utilise l'encoder \texttt{v4l2m2m} qui permet d'utiliser le codec H.264 pour l'encodage vidéo. La commande FFmpeg est construite pour encoder les images brutes en vidéo compressée. 
+    Afin d'optimiser l'utilisation de FFmpeg, on utilise sur le raspberry l'accélération matériel pour l'encodage vidéo. Pour cela, on utilise l'encoder \texttt{v4l2m2m} \cite{manFFmpegV4l2} qui permet d'utiliser le codec H.264 pour l'encodage vidéo. La commande FFmpeg est construite pour encoder les images brutes en vidéo compressée. 
     \begin{itemize}
         \item \texttt{-f rawvideo} : Spécifie que l'entrée est une vidéo brute.
         \item \texttt{fflags +discardcorrupt+genpts} : Ignore les images corrompues et génère des horodatages.
@@ -792,6 +884,10 @@ Le gestionnaire de signaux (\texttt{signalHandler}) permet de gérer les interru
 \end{itemize}
 
 %-----------------------------------------------------------
+\subsubsection{Script démarrage automatique du programme}
+
+Afin de démarrer le programme main au démarrage du raspberry pi, pour cela on utilise le service \texttt{rc.local} \cite{rcLocal}. Ce service permet d'exécuter après avoir initialiser tous les services du raspberry pi, le script \texttt{startSuiviGrimpeur.sh} qui va vérifier que les caméras sont bien accessible et lancer le programme. 
+%-----------------------------------------------------------
 
 \subsection{Application web}
 Le serveur web est composée de deux pages web voir figure~\ref{fig:pagesWeb}, la première permet de visualiser le flux vidéo de la caméra, de la piloter et de piloter l'application. La seconde permet de visualiser les vidéos enregistrées et de les télécharger, le code de ces pages est écrit en \texttt{HTML}, \texttt{CSS} et \texttt{JAVASCRIPT} peut-être consulté sur la page \href{https://github.com/Romaiiin91/suiviGrimpeur_PDI/tree/main/server/html}{GitHub}.
@@ -816,7 +912,7 @@ Le serveur web est composée de deux pages web voir figure~\ref{fig:pagesWeb}, l
 Au chargement de cette page, une fonction \texttt{javascript} permet de charger les voies disponibles dans la base de données et de les ajouter dans une liste déroulante pour permettre à l'utilisateur de sélectionner la voie qu'il souhaite visualiser. Une seconde fonction \texttt{js} charge les caméras disponibles et les ajoute dans une seconde liste déroulante. Puis le script \texttt{video.cgi} est exécuté pour afficher le flux vidéo de la caméra sélectionnée, voir la sous section \ref{sec:video.cgi} pour plus d'information.
 
 
-Sur la gauche de cette page, on retrouve tout les boutons de contrôle de la caméra (haut, bas, gauche et droite) associés à un curseur pour la précision de l'angle afin de premettre un déplacement plus précis. On retrouve un second curseur pour gérer le zoom de la caméra entre 1x et 18x. La pression des boutons créent une requête \texttt{AJAX} pour exécuter le script \texttt{action.cgi}, voir la sous section \ref{sec:action.cgi} pour plus d'information.
+Sur la gauche de cette page, on retrouve tout les boutons de contrôle de la caméra (haut, bas, gauche et droite) associés à un curseur pour la précision de l'angle afin de premettre un déplacement plus précis. On retrouve un second curseur pour gérer le zoom de la caméra entre 1x et 18x. La pression des boutons créent une requête \texttt{AJAX} pour exécuter le programme \texttt{action.cgi}, voir la sous section \ref{sec:action.cgi} pour plus d'information.
 
 
 En dessous de ces curseurs, il y a une liste déroulante pour choisir la voie que l'on souhaite observer. À la selection d'une voie on vient changer de caméra si besoin et la positionner au bon endroit.
@@ -912,7 +1008,7 @@ Le programme traite les requêtes CGI comme suit :
 Une fois la réponse reçue, le programme retourne un message HTTP au client en fonction du statut lu dans la mémoire partagée :
 \begin{itemize}
     \item \textbf{Succès (\texttt{status == 0})} : Retourne un message JSON indiquant que l'action a été exécutée avec succès.
-    \item \textbf{Erreur disque (\texttt{status == -2})} : Retourne un message JSON indiquant que l'espace disque est insuffisant, code spécial pour le script de capture vidéo.
+    \item \textbf{Erreur disque (\texttt{status == -2})} : Retourne un message JSON indiquant que l'espace disque est insuffisant, code spécial pour le programme de capture vidéo.
     \item \textbf{Erreur générale} : Retourne un message JSON indiquant qu'une erreur est survenue.
 \end{itemize}
 
@@ -936,7 +1032,7 @@ Lors du développement des différentes étapes de l'application, plusieurs prob
 \subsubsection{Détection de mouvement}
 La détection de mouvement est une étape cruciale pour le suivi du grimpeur. En première approche, j'avais décidé d'utiliser la fonction de détection de personne avec OpenCV (HOG descriptor\footnote{Voir la \href{https://docs.opencv.org/3.4/d5/d33/structcv_1_1HOGDescriptor.html}{documentation en ligne} pour plus d'information} \cite{hogDescriptor}) pour détecter le grimpeur. Mais cette méthode n'était pas très performante et perdait régulièrement la détection du grimpeur. 
 
-Une autre approche consistait à utiliser les réseau de neuronnes convolutifs pour détecter le mouvement mais je me suis limité dans un premier a temps à la détection de mouvement avec OpenCV. Comme cette dernière fonctionnait bien, je n'ai pas explorer cette piste mais cette méthode aurait pu être plus performante \cite{CNNclimbertDetection}.
+Une autre approche consistait à utiliser les réseau de neurones convolutifs pour détecter le mouvement mais je me suis limité dans un premier a temps à la détection de mouvement avec OpenCV. Comme cette dernière fonctionnait bien, je n'ai pas explorer cette piste mais cette méthode aurait pu être plus performante \cite{CNNclimbertDetection}.
 
 Avec Mr Bourdeaud'hui, nous avons fait l'hypothese que la caméra n'a pas besoin de descendre et qu'un grimpeur ira toujours vers le haut ce qui a facilité la détection des grimpeur. Nous avons donc décidé de changer de méthode et de passer à une détection de mouvement plus simple basée sur la différence d'images. Cette méthode est plus rapide et plus fiable, mais elle est sensible aux changements de luminosité, aux ombres et aux petits mouvements parasites. Pour essayer de contourner ce problème, j'ai ajouté un filtre de moyenne glissante pour lisser les mouvements et un flou gaussien afin de réduire les fausses détections. J'ai aussi ajouté une condition sur le nombre de pixel minimum avec un movement pour détecter un barycentre.
 
@@ -950,7 +1046,7 @@ Au départ, j'avais mis une valeur fixe pour l'angle de déplacement de la camé
 
 Dans un premier temps, j'avais choisi d'utiliser un encodage en H.264 avec l'encodeur \texttt{libx264} de \texttt{FFmpeg}. Cette méthode fonctionnait très bien sur une architecture matérielle puissante (ordinateur portable avec un processeur Intel Core i7 6 c\oe urs  2.6 GHz) Cependant, lorsque j'ai porté le programme sur un raspberry pi 4 (micro-processeur Cortex-A72 disposant de 4 c\oe urs à 1,5 GHz 64 bits avec 4Go de RAM), j'ai rencontré des problèmes de performances et de latence lors de l'encodage des vidéos. En effet, l'encodage en H.264 est très gourmand en ressources CPU, ce qui entraînait des ralentissements et des décalages dans le flux vidéo. Le programme d'enregistrement vidéo consommait jusqu'à \(400\ \%\) de CPU pour sortir une vidéo à 5 FPS.
 
-Pour résoudre ce problème, après quelques recherches, j'ai découvert que le rpi possédait un encodeur matériel, j'ai décidé d'utiliser cet encodeur. Anciennement, l'encodeur vidéo était un encodeur \texttt{h264\_omx} mais sur le raspberry que je possède il a été déprécié et remplacé  par l'encodeur \texttt{v4l2m2m}. J'ai mis beaucoup de temps à comprendre ce problème et comment utiliser l'encodeur \texttt{v4l2m2m} et comment installer FFmpeg avec cet encodeur. Voir l'annexe \ref{ann:driverVideo} pour plus d'information sur le driver vidéo utilisé.
+Pour résoudre ce problème, après quelques recherches, j'ai découvert que le rpi possédait un encodeur matériel, j'ai décidé d'utiliser cet encodeur. Anciennement, l'encodeur vidéo était un encodeur \texttt{h264\_omx} mais sur le raspberry que je possède il a été déprécié et remplacé  par l'encodeur \texttt{v4l2m2m}\cite{v4l2}. J'ai mis beaucoup de temps à comprendre ce problème et comment utiliser l'encodeur \texttt{v4l2m2m} et comment installer FFmpeg avec cet encodeur \cite{manFFmpegV4l2}. Voir l'annexe \ref{ann:driverVideo} pour plus d'information sur le driver vidéo utilisé.
 
 Après avoir compris comment utiliser cet encodeur, j'ai modifié le programme d'enregistrement vidéo pour utiliser l'encodeur uniquement sur le raspberry pi, c'est pour cela que j'ai laissé une option de compilation \texttt{H264} pour pouvoir compiler le programme sur un ordinateur x86 avec la librairie \texttt{libx264}.
 
@@ -1015,6 +1111,7 @@ L'application fonctionne correctement, mais il reste des améliorations à appor
   \item Serveur accessible depuis internet pour voir les vidéos (chiffrement des données).
   \item Ajouter un système de détection de chute.
   \item Ajouter la possibilité d'enregistrer avec les deux caméras en même temps, voir si un changement de matériel est nécessaire.
+  \item Changer l'implémentation des sémaphores pour synchroniser les nouvelles images. (Par exemple, utiliser 4 buffers et changer le buffer d'écriture le temps que les processus le lisent et swap les buffers). 
 \end{itemize}
 
 

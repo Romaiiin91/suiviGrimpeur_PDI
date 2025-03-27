@@ -1,17 +1,15 @@
 [0] Config.pm:307> INFO - This is Biber 2.17
 [0] Config.pm:310> INFO - Logfile is 'rapportSuiviGrimpeur.blg'
-[37] biber:340> INFO - === jeu. mars 27, 2025, 14:47:32
-[44] Biber.pm:418> INFO - Reading 'rapportSuiviGrimpeur.bcf'
-[70] Biber.pm:972> INFO - Found 3 citekeys in bib section 0
-[76] Biber.pm:4383> INFO - Processing section 0
-[81] Biber.pm:4574> INFO - Looking for bibtex file 'bibliographie.bib' for section 0
-[81] bibtex.pm:1713> INFO - LaTeX decoding ...
-[84] bibtex.pm:1518> INFO - Found BibTeX data source 'bibliographie.bib'
-[113] UCollate.pm:68> INFO - Overriding locale 'fr-FR' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[113] UCollate.pm:68> INFO - Overriding locale 'fr-FR' defaults 'variable = shifted' with 'variable = non-ignorable'
-[113] Biber.pm:4203> INFO - Sorting list 'nyt/global//global/global' of type 'entry' with template 'nyt' and locale 'fr-FR'
-[113] Biber.pm:4209> INFO - No sort tailoring available for locale 'fr-FR'
-[116] bbl.pm:654> INFO - Writing 'rapportSuiviGrimpeur.bbl' with encoding 'UTF-8'
-[117] bbl.pm:757> INFO - Output to rapportSuiviGrimpeur.bbl
-[118] Biber.pm:130> WARN - legacy month field 'December' in entry 'hogDescriptor' is not an integer - this will probably not sort properly.
-[118] Biber.pm:132> INFO - WARNINGS: 1
+[39] biber:340> INFO - === jeu. mars 27, 2025, 18:04:59
+[46] Biber.pm:418> INFO - Reading 'rapportSuiviGrimpeur.bcf'
+[72] Biber.pm:972> INFO - Found 7 citekeys in bib section 0
+[77] Biber.pm:4383> INFO - Processing section 0
+[82] Biber.pm:4574> INFO - Looking for bibtex file 'bibliographie.bib' for section 0
+[83] bibtex.pm:1713> INFO - LaTeX decoding ...
+[86] bibtex.pm:1518> INFO - Found BibTeX data source 'bibliographie.bib'
+[122] UCollate.pm:68> INFO - Overriding locale 'fr-FR' defaults 'variable = shifted' with 'variable = non-ignorable'
+[122] UCollate.pm:68> INFO - Overriding locale 'fr-FR' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[122] Biber.pm:4203> INFO - Sorting list 'none/global//global/global' of type 'entry' with template 'none' and locale 'fr-FR'
+[123] Biber.pm:4209> INFO - No sort tailoring available for locale 'fr-FR'
+[126] bbl.pm:654> INFO - Writing 'rapportSuiviGrimpeur.bbl' with encoding 'UTF-8'
+[128] bbl.pm:757> INFO - Output to rapportSuiviGrimpeur.bbl
