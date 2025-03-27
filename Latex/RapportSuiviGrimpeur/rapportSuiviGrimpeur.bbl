@@ -1,0 +1,155 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nyt/global//global/global}
+    \entry{manFFmpeg}{online}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=6709149d29a913e2e0d87a30b8612a0a}{%
+           family={developers},
+           familyi={d\bibinitperiod},
+           given={The\bibnamedelima FFmpeg},
+           giveni={T\bibinitperiod\bibinitdelim F\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{6709149d29a913e2e0d87a30b8612a0a}
+      \strng{fullhash}{6709149d29a913e2e0d87a30b8612a0a}
+      \strng{bibnamehash}{6709149d29a913e2e0d87a30b8612a0a}
+      \strng{authorbibnamehash}{6709149d29a913e2e0d87a30b8612a0a}
+      \strng{authornamehash}{6709149d29a913e2e0d87a30b8612a0a}
+      \strng{authorfullhash}{6709149d29a913e2e0d87a30b8612a0a}
+      \field{sortinit}{d}
+      \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Documentation FFmpeg}
+      \field{year}{2025}
+      \verb{urlraw}
+      \verb https://ffmpeg.org/ffmpeg.html
+      \endverb
+      \verb{url}
+      \verb https://ffmpeg.org/ffmpeg.html
+      \endverb
+    \endentry
+    \entry{CNNclimbertDetection}{inproceedings}{}
+      \name{author}{5}{}{%
+        {{un=0,uniquepart=base,hash=aca50f943c93f345e0eee142aeb46a9b}{%
+           family={Ivanova},
+           familyi={I\bibinitperiod},
+           given={Iustina},
+           giveni={I\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=c7b67787781f05795978b093b5a88259}{%
+           family={Andrić},
+           familyi={A\bibinitperiod},
+           given={Marina},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=c3506cf087aeb63d5bb59457ace1a45f}{%
+           family={Moaveninejad},
+           familyi={M\bibinitperiod},
+           given={Sadaf},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=745d2917e86e07ae4f4da24e03c7732f}{%
+           family={Janes},
+           familyi={J\bibinitperiod},
+           given={Andrea},
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=5abb1d77d80f46918651a5bbc5ee8371}{%
+           family={Ricci},
+           familyi={R\bibinitperiod},
+           given={Francesco},
+           giveni={F\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{location}{1}{%
+        {Seattle, WA, USA}%
+      }
+      \list{publisher}{1}{%
+        {Association for Computing Machinery}%
+      }
+      \strng{namehash}{804d450df8ad933c5ef6ad7161d0ad09}
+      \strng{fullhash}{7d58fd930847536ac48c62acaa1d227c}
+      \strng{bibnamehash}{804d450df8ad933c5ef6ad7161d0ad09}
+      \strng{authorbibnamehash}{804d450df8ad933c5ef6ad7161d0ad09}
+      \strng{authornamehash}{804d450df8ad933c5ef6ad7161d0ad09}
+      \strng{authorfullhash}{7d58fd930847536ac48c62acaa1d227c}
+      \field{sortinit}{I}
+      \field{sortinithash}{8d291c51ee89b6cd86bf5379f0b151d8}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the 3rd International Workshop on Multimedia Content Analysis in Sports}
+      \field{isbn}{9781450381499}
+      \field{series}{MMSports '20}
+      \field{title}{Video and Sensor-Based Rope Pulling Detection in Sport Climbing}
+      \field{year}{2020}
+      \field{pages}{53\bibrangedash 60}
+      \range{pages}{8}
+      \verb{doi}
+      \verb 10.1145/3422844.3423058
+      \endverb
+      \verb{urlraw}
+      \verb https://doi-org.ressources-electroniques.univ-lille.fr/10.1145/3422844.3423058
+      \endverb
+      \verb{url}
+      \verb https://doi-org.ressources-electroniques.univ-lille.fr/10.1145/3422844.3423058
+      \endverb
+      \keyw{climbing activity recognition,sensors,video analysis}
+    \endentry
+    \entry{hogDescriptor}{online}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=6e8ec9222cd6c9a86ea331d95422ec39}{%
+           family={Mallick},
+           familyi={M\bibinitperiod},
+           given={Satya},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{6e8ec9222cd6c9a86ea331d95422ec39}
+      \strng{fullhash}{6e8ec9222cd6c9a86ea331d95422ec39}
+      \strng{bibnamehash}{6e8ec9222cd6c9a86ea331d95422ec39}
+      \strng{authorbibnamehash}{6e8ec9222cd6c9a86ea331d95422ec39}
+      \strng{authornamehash}{6e8ec9222cd6c9a86ea331d95422ec39}
+      \strng{authorfullhash}{6e8ec9222cd6c9a86ea331d95422ec39}
+      \field{sortinit}{M}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{month}{12}
+      \field{title}{Histogram of Oriented Gradients}
+      \field{year}{2016}
+      \verb{urlraw}
+      \verb https://learnopencv.com/histogram-of-oriented-gradients/
+      \endverb
+      \verb{url}
+      \verb https://learnopencv.com/histogram-of-oriented-gradients/
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

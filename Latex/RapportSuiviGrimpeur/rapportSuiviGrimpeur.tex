@@ -174,6 +174,11 @@ showstringspaces=false,
 \newcounter{obj}
 \setcounter{obj}{1}
 
+%-----------------------------------------------------------------------------------
+
+\usepackage[backend=biber,style=authoryear,citestyle=authoryear,sorting=nyt]{biblatex}
+\addbibresource{bibliographie.bib} % Fichier contenant les références
+
 
 %-----------------------------------------------------------------------------------
 
@@ -694,7 +699,7 @@ Le gestionnaire de signaux (\texttt{signalHandler}) permet de gérer les interru
 %------------------------------------------------------------
 \subsubsection{Capture vidéo} \label{par:capture}
 
-Le fichier \texttt{enregistrementVideo.c} est un programme dédié à l'enregistrement des flux vidéo provenant de la mémoire partagée. Il utilise des sémaphores pour la synchronisation entre processus, la mémoire partagée pour l'accès aux images brutes, et \texttt{FFmpeg}\footnote{FFmpeg est une suite logicielle open-source puissante et polyvalente utilisée pour manipuler des fichiers multimédias (audio et vidéo). Elle permet de réaliser des tâches telles que la conversion de formats, l'encodage, le décodage, le montage, le streaming, et bien plus encore. Pour plus d'information voir \href{https://ffmpeg.org/ffmpeg.html}{la documentation en ligne}} pour encoder les vidéos dans un format compressé. Ce programme est conçu pour fonctionner de manière autonome et s'arrêter proprement en cas de signal d'interruption.
+Le fichier \texttt{enregistrementVideo.c} est un programme dédié à l'enregistrement des flux vidéo provenant de la mémoire partagée. Il utilise des sémaphores pour la synchronisation entre processus, la mémoire partagée pour l'accès aux images brutes, et \texttt{FFmpeg}\footnote{FFmpeg est une suite logicielle open-source puissante et polyvalente utilisée pour manipuler des fichiers multimédias (audio et vidéo). Elle permet de réaliser des tâches telles que la conversion de formats, l'encodage, le décodage, le montage, le streaming, et bien plus encore. Pour plus d'information voir \href{https://ffmpeg.org/ffmpeg.html}{la documentation en ligne}\cite{manFFmpeg} } pour encoder les vidéos dans un format compressé. Ce programme est conçu pour fonctionner de manière autonome et s'arrêter proprement en cas de signal d'interruption.
 
 
 \paragraph{Initialisation du programme}
@@ -929,7 +934,9 @@ Cette page permet de visualiser les vidéos enregistrées, de les télécharger 
 Lors du développement des différentes étapes de l'application, plusieurs problèmes ont été rencontrés. Les deux principaux problèmes sont liés à la détection de mouvement et à l'enregistrement vidéo.
 
 \subsubsection{Détection de mouvement}
-La détection de mouvement est une étape cruciale pour le suivi du grimpeur. En première approche, j'avais décidé d'utiliser la fonction de détection de personne avec OpenCV (HOG descriptor\footnote{Voir la \href{https://docs.opencv.org/3.4/d5/d33/structcv_1_1HOGDescriptor.html}{documentation en ligne} pour plus d'information}) pour détecter le grimpeur. Mais cette méthode n'était pas très performante et perdait régulièrement la détection du grimpeur. 
+La détection de mouvement est une étape cruciale pour le suivi du grimpeur. En première approche, j'avais décidé d'utiliser la fonction de détection de personne avec OpenCV (HOG descriptor\footnote{Voir la \href{https://docs.opencv.org/3.4/d5/d33/structcv_1_1HOGDescriptor.html}{documentation en ligne} pour plus d'information} \cite{hogDescriptor}) pour détecter le grimpeur. Mais cette méthode n'était pas très performante et perdait régulièrement la détection du grimpeur. 
+
+Une autre approche consistait à utiliser les réseau de neuronnes convolutifs pour détecter le mouvement mais je me suis limité dans un premier a temps à la détection de mouvement avec OpenCV. Comme cette dernière fonctionnait bien, je n'ai pas explorer cette piste mais cette méthode aurait pu être plus performante \cite{CNNclimbertDetection}.
 
 Avec Mr Bourdeaud'hui, nous avons fait l'hypothese que la caméra n'a pas besoin de descendre et qu'un grimpeur ira toujours vers le haut ce qui a facilité la détection des grimpeur. Nous avons donc décidé de changer de méthode et de passer à une détection de mouvement plus simple basée sur la différence d'images. Cette méthode est plus rapide et plus fiable, mais elle est sensible aux changements de luminosité, aux ombres et aux petits mouvements parasites. Pour essayer de contourner ce problème, j'ai ajouté un filtre de moyenne glissante pour lisser les mouvements et un flou gaussien afin de réduire les fausses détections. J'ai aussi ajouté une condition sur le nombre de pixel minimum avec un movement pour détecter un barycentre.
 
@@ -1020,6 +1027,11 @@ Les tests réalisés en conditions réelles ont démontré la robustesse et l'ef
 
 En conclusion, ce projet offre une solution innovante et pratique pour l'analyse et le suivi des performances des grimpeurs.
 
+%-----------------------------------------------------------
+
+\clearpage
+\newpage
+\printbibliography[nottype=none]  
 
 
 % %-----------------------------------------------------------
