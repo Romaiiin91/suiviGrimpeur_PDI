@@ -1,0 +1,15 @@
+[0] Config.pm:307> INFO - This is Biber 2.17
+[0] Config.pm:310> INFO - Logfile is 'rapportSuiviGrimpeur.blg'
+[38] biber:340> INFO - === ven. mars 28, 2025, 19:20:14
+[46] Biber.pm:418> INFO - Reading 'rapportSuiviGrimpeur.bcf'
+[71] Biber.pm:972> INFO - Found 8 citekeys in bib section 0
+[76] Biber.pm:4383> INFO - Processing section 0
+[81] Biber.pm:4574> INFO - Looking for bibtex file 'bibliographie.bib' for section 0
+[82] bibtex.pm:1713> INFO - LaTeX decoding ...
+[85] bibtex.pm:1518> INFO - Found BibTeX data source 'bibliographie.bib'
+[119] UCollate.pm:68> INFO - Overriding locale 'fr-FR' defaults 'variable = shifted' with 'variable = non-ignorable'
+[119] UCollate.pm:68> INFO - Overriding locale 'fr-FR' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[119] Biber.pm:4203> INFO - Sorting list 'none/global//global/global' of type 'entry' with template 'none' and locale 'fr-FR'
+[119] Biber.pm:4209> INFO - No sort tailoring available for locale 'fr-FR'
+[123] bbl.pm:654> INFO - Writing 'rapportSuiviGrimpeur.bbl' with encoding 'UTF-8'
+[125] bbl.pm:757> INFO - Output to rapportSuiviGrimpeur.bbl
